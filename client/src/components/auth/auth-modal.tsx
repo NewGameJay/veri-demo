@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { SignupForm } from "./signup-form";
 import { LoginForm } from "./login-form";
@@ -13,6 +13,13 @@ interface AuthModalProps {
 
 export function AuthModal({ isOpen, onClose, initialMode = "signup", onSuccess }: AuthModalProps) {
   const [mode, setMode] = useState<"login" | "signup">(initialMode);
+  
+  // Update mode when initialMode changes
+  useEffect(() => {
+    if (isOpen) {
+      setMode(initialMode);
+    }
+  }, [initialMode, isOpen]);
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   const handleAuthSuccess = () => {
