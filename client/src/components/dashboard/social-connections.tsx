@@ -3,10 +3,13 @@ import { Twitter, Youtube, Instagram } from "lucide-react";
 import { GlassCard } from "@/components/ui/glass-card";
 import { CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/contexts/auth-context";
 
 export function SocialConnections() {
+  const { user } = useAuth();
   const { data: connections, isLoading } = useQuery({
-    queryKey: ["/api/social-connections/1"],
+    queryKey: ["/api/social-connections", user?.id],
+    enabled: !!user?.id,
   });
 
   if (isLoading) {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { SignupForm } from "./signup-form";
 import { LoginForm } from "./login-form";
 import { OnboardingModal } from "@/components/modals/onboarding-modal";
@@ -16,8 +16,12 @@ export function AuthModal({ isOpen, onClose, initialMode = "signup", onSuccess }
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   const handleAuthSuccess = () => {
-    onClose();
-    onSuccess?.();
+    if (mode === "signup") {
+      setShowOnboarding(true);
+    } else {
+      onClose();
+      onSuccess?.();
+    }
   };
 
   const handleOnboardingComplete = () => {
@@ -33,6 +37,9 @@ export function AuthModal({ isOpen, onClose, initialMode = "signup", onSuccess }
             <DialogTitle>
               {mode === "signup" ? "Sign Up" : "Sign In"}
             </DialogTitle>
+            <DialogDescription>
+              {mode === "signup" ? "Create your Veri account to start earning points" : "Sign in to your Veri account"}
+            </DialogDescription>
           </DialogHeader>
           {mode === "signup" ? (
             <SignupForm 

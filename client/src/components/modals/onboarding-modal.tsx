@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,22 +26,22 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const handleConnectSocial = async (platform: string) => {
     setIsLoading(true);
     try {
-      await apiRequest("/api/social-connections", {
-        method: "POST",
-        body: {
-          platform,
-          isConnected: true,
-          followerCount: Math.floor(Math.random() * 10000) + 1000, // Demo data
-        },
+      const response = await apiRequest("POST", "/api/social-connections", {
+        userId: user?.id,
+        platform,
+        isConnected: true,
+        followerCount: Math.floor(Math.random() * 10000) + 1000, // Demo data
+        platformUsername: `@${user?.username}_${platform}`,
       });
       
       setConnectedPlatforms(prev => [...prev, platform]);
       
       toast({
         title: "Platform connected!",
-        description: `${platform} has been connected successfully. You earned 25 XP!`,
+        description: `${platform.charAt(0).toUpperCase() + platform.slice(1)} has been connected successfully. You earned 25 XP!`,
       });
     } catch (error) {
+      console.error("Connection error:", error);
       toast({
         title: "Connection failed",
         description: "Please try again later.",
@@ -215,7 +215,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       <DialogContent className="sm:max-w-lg glass-effect border-white/20 bg-gray-900/95">
         <DialogHeader>
           <DialogTitle className="text-white">{currentStep.title}</DialogTitle>
-          <p className="text-white/60">{currentStep.description}</p>
+          <DialogDescription className="text-white/60">{currentStep.description}</DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4">
