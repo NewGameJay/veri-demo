@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { VeriLogo } from "@/components/ui/veri-logo";
 import { TaskVerification } from "./task-verification";
 import { ProfileBuilder } from "./profile-builder";
 import { MemorizzIntegration } from "@/components/integrations/memorizz-integration";
@@ -60,11 +61,7 @@ export function VeriScoreCard() {
           {/* Header with Veri Icon */}
           <div className="flex items-center justify-center mb-8">
             <div className="w-16 h-16 veri-gradient rounded-2xl flex items-center justify-center shadow-lg pulse-glow">
-              <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" opacity="0.3"/>
-                <path d="M7 10.5c0-1.38 1.12-2.5 2.5-2.5S12 9.12 12 10.5 10.88 13 9.5 13 7 11.88 7 10.5zm7 0c0-1.38 1.12-2.5 2.5-2.5S19 9.12 19 10.5 17.88 13 16.5 13 14 11.88 14 10.5z"/>
-                <path d="M8.5 16.5c.83 1.24 2.24 2 3.5 2s2.67-.76 3.5-2"/>
-              </svg>
+              <VeriLogo size="lg" showText={false} />
             </div>
           </div>
 
