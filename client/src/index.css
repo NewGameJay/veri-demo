@@ -151,10 +151,19 @@
   
   .animate-fade-in {
     animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    animation-fill-mode: both;
   }
   
   .animate-bounce-in {
     animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    animation-fill-mode: both;
+  }
+  
+  /* Staggered Animation Utilities */
+  .animate-staggered {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: staggeredFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
   
   /* Brand Typography */
@@ -216,6 +225,17 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes staggeredFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
