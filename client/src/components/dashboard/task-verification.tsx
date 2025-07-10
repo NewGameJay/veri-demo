@@ -299,15 +299,15 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
               {availableTasks.map((task) => (
                 <div 
                   key={task.id} 
-                  className="group glass-effect p-4 rounded-lg border border-white/10 hover:border-white/30 transition-all duration-300 hover:transform hover:scale-[1.02] hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/20 cursor-pointer animate-fade-in"
+                  className="group glass-effect p-4 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300 hover:transform hover:scale-[1.01] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/10 cursor-pointer animate-fade-in hover:backdrop-blur-xl hover:bg-white/[0.03]"
                   style={{
                     animationDelay: `${task.id * 100}ms`
                   }}
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-lg bg-gray-500/20 flex items-center justify-center group-hover:bg-white/10 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
-                        <task.icon className={`h-5 w-5 ${task.color} group-hover:scale-110 transition-transform duration-300`} />
+                      <div className="w-10 h-10 rounded-lg bg-gray-500/20 flex items-center justify-center group-hover:bg-white/5 transition-all duration-300 group-hover:scale-105 group-hover:rotate-3">
+                        <task.icon className={`h-5 w-5 ${task.color} group-hover:scale-105 transition-transform duration-300`} />
                       </div>
                       <div className="group-hover:translate-x-1 transition-transform duration-300">
                         <h3 className="font-semibold text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
