@@ -52,7 +52,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gray-800">
+    <div className="min-h-screen relative overflow-hidden bg-background">
       <Header
         onDashboardToggle={() => setIsDashboardOpen(true)}
         onMobileMenuToggle={() => setIsDashboardOpen(true)}

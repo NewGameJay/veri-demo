@@ -1,9 +1,9 @@
+/* Typography - Veri Brand Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Typography - Veri Brand Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 :root {
   --font-termina: 'Termina', 'Helvetica Neue', Arial, sans-serif;
@@ -78,8 +78,6 @@
 
   body {
     @apply font-inter antialiased bg-background text-foreground;
-    background: hsl(var(--veri-neutral-800));
-    color: hsl(0, 0%, 98%);
   }
   
   /* Typography Hierarchy */
@@ -100,17 +98,23 @@
   /* Apple-like Glass Morphism */
   .glass-effect {
     backdrop-filter: blur(20px) saturate(180%);
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    @apply bg-white/5 dark:bg-white/10 border border-black/10 dark:border-white/20;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
+  .dark .glass-effect {
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  }
+  
   .glass-effect:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.25);
-    box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.45);
+    @apply bg-white/10 dark:bg-white/20 border-black/20 dark:border-white/30;
+    box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.2);
     transform: translateY(-2px);
+  }
+  
+  .dark .glass-effect:hover {
+    box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.45);
   }
   
   /* Enhanced Veri Brand Gradients */
