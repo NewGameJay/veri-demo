@@ -1,0 +1,158 @@
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Header } from "@/components/navigation/header";
+import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
+import { VeriScoreCard } from "@/components/dashboard/veri-score-card";
+import { TaskVerification } from "@/components/dashboard/task-verification";
+import { ProfileBuilder } from "@/components/dashboard/profile-builder";
+import { SocialConnections } from "@/components/dashboard/social-connections";
+import { Leaderboard } from "@/components/dashboard/leaderboard";
+import { MemorizzIntegration } from "@/components/integrations/memorizz-integration";
+import { useAuth } from "@/contexts/auth-context";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+export default function Dashboard() {
+  const [isDashboardOpen, setIsDashboardOpen] = useState(false);
+  const { user } = useAuth();
+
+  const { data: connections } = useQuery({
+    queryKey: ["/api/social-connections", user?.id],
+    enabled: !!user?.id,
+  });
+
+  const { data: userTasks } = useQuery({
+    queryKey: ["/api/tasks", user?.id],
+    enabled: !!user?.id,
+  });
+
+  if (!user) {
+    return null;
+  }
+
+  const userStreak = user.streak || 0;
+  const userXP = user.xpPoints || 0;
+  const isMemorizzUnlocked = userStreak >= 10;
+
+  return (
+    <div className="min-h-screen bg-gray-800">
+      <Header
+        onDashboardToggle={() => setIsDashboardOpen(true)}
+        onMobileMenuToggle={() => setIsDashboardOpen(true)}
+      />
+      
+      <DashboardSidebar
+        isOpen={isDashboardOpen}
+        onClose={() => setIsDashboardOpen(false)}
+      />
+
+      <main className="pt-20 px-4 lg:px-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Welcome Section */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-white mb-2">
+              Welcome back, {user.firstName || user.username}!
+            </h1>
+            <p className="text-white/60">
+              Here's your creator dashboard with all your progress and opportunities.
+            </p>
+          </div>
+
+          {/* Dashboard Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left Column - Main Content */}
+            <div className="lg:col-span-8 space-y-6">
+              {/* VeriScore Card */}
+              <VeriScoreCard />
+
+              {/* Main Dashboard Tabs */}
+              <Tabs defaultValue="tasks" className="w-full">
+                <TabsList className="grid w-full grid-cols-4 glass-effect border-white/20">
+                  <TabsTrigger value="tasks" className="text-white data-[state=active]:bg-white/20">
+                    Tasks
+                  </TabsTrigger>
+                  <TabsTrigger value="profile" className="text-white data-[state=active]:bg-white/20">
+                    Profile
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="ai-agent" 
+                    className="text-white data-[state=active]:bg-white/20"
+                    disabled={!isMemorizzUnlocked}
+                  >
+                    AI Agent
+                  </TabsTrigger>
+                  <TabsTrigger value="analytics" className="text-white data-[state=active]:bg-white/20">
+                    Analytics
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="tasks" className="mt-6">
+                  <TaskVerification 
+                    userId={user.id} 
+                    userStreak={userStreak}
+                    userXP={userXP}
+                  />
+                </TabsContent>
+
+                <TabsContent value="profile" className="mt-6">
+                  <ProfileBuilder 
+                    user={user} 
+                    profileType="creator"
+                  />
+                </TabsContent>
+
+                <TabsContent value="ai-agent" className="mt-6">
+                  <MemorizzIntegration 
+                    userStreak={userStreak}
+                    isUnlocked={isMemorizzUnlocked}
+                  />
+                </TabsContent>
+
+                <TabsContent value="analytics" className="mt-6">
+                  <div className="glass-effect p-6 rounded-xl border border-white/20">
+                    <h3 className="text-xl font-semibold text-white mb-4">Analytics Dashboard</h3>
+                    <p className="text-white/60">
+                      Detailed analytics and performance metrics coming soon. Track your engagement, 
+                      follower growth, and earnings across all connected platforms.
+                    </p>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
+
+            {/* Right Column - Sidebar Content */}
+            <div className="lg:col-span-4 space-y-6">
+              {/* Social Connections */}
+              <SocialConnections />
+
+              {/* Leaderboard */}
+              <Leaderboard />
+
+              {/* Quick Stats */}
+              <div className="glass-effect p-6 rounded-xl border border-white/20">
+                <h3 className="text-lg font-semibold text-white mb-4">Quick Stats</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Connected Platforms</span>
+                    <span className="text-white font-medium">{connections?.length || 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Completed Tasks</span>
+                    <span className="text-white font-medium">
+                      {userTasks?.filter((task: any) => task.isCompleted).length || 0}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Current Level</span>
+                    <span className="text-white font-medium">
+                      {Math.floor((userXP || 0) / 100) + 1}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}

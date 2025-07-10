@@ -17,7 +17,7 @@ interface OnboardingModalProps {
 }
 
 export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const { toast } = useToast();
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,6 +35,9 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       });
       
       setConnectedPlatforms(prev => [...prev, platform]);
+      
+      // Refresh user data to show updated XP
+      await refreshUser();
       
       toast({
         title: "Platform connected!",
