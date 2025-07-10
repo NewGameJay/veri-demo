@@ -29,6 +29,11 @@ export function AuthModal({ isOpen, onClose, initialMode = "signup", onSuccess }
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="sm:max-w-md p-0 bg-transparent border-none">
+          <DialogHeader className="sr-only">
+            <DialogTitle>
+              {mode === "signup" ? "Sign Up" : "Sign In"}
+            </DialogTitle>
+          </DialogHeader>
           {mode === "signup" ? (
             <SignupForm 
               onSwitchToLogin={() => setMode("login")}

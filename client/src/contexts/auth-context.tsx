@@ -47,10 +47,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
-      const userData = await apiRequest("/api/auth/login", {
-        method: "POST",
-        body: { email, password },
-      });
+      const response = await apiRequest("POST", "/api/auth/login", { email, password });
+      const userData = await response.json();
       setUser(userData);
     } catch (error) {
       console.error("Login error:", error);
@@ -60,10 +58,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signup = async (data: SignupData) => {
     try {
-      const userData = await apiRequest("/api/auth/signup", {
-        method: "POST",
-        body: data,
-      });
+      const response = await apiRequest("POST", "/api/auth/signup", data);
+      const userData = await response.json();
       setUser(userData);
     } catch (error) {
       console.error("Signup error:", error);
@@ -73,7 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      await apiRequest("/api/auth/logout", { method: "POST" });
+      await apiRequest("POST", "/api/auth/logout");
       setUser(null);
     } catch (error) {
       console.error("Logout error:", error);
