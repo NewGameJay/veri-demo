@@ -36,7 +36,7 @@ export default function Dashboard() {
   const userXP = user.xpPoints || 0;
   const isMemorizzUnlocked = userStreak >= 10;
 
-  // Simplified menu behavior - auto-collapse when not hovering
+  // Auto-collapse when not hovering
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -55,20 +55,27 @@ export default function Dashboard() {
     };
   }, [isDashboardOpen, isPinned]);
 
-  // Handle menu behavior
+  // Auto-collapse timer
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isDashboardOpen && !isPinned && !isHovering) {
+      timer = setTimeout(() => {
+        setIsDashboardOpen(false);
+      }, 3000); // Auto-close after 3 seconds
+    }
+    return () => clearTimeout(timer);
+  }, [isDashboardOpen, isPinned, isHovering]);
+
   const handleSidebarHover = () => {
+    setIsHovering(true);
     if (!isPinned) {
-      setIsHovering(true);
       setIsDashboardOpen(true);
     }
   };
 
   const handleSidebarLeave = () => {
-    if (!isPinned) {
-      setIsHovering(false);
-      // Close immediately when not hovering
-      setIsDashboardOpen(false);
-    }
+    setIsHovering(false);
+    // Will auto-close via useEffect if not pinned
   };
 
   return (

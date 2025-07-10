@@ -6,8 +6,8 @@ import { useTheme } from "@/contexts/theme-context";
 import { useAuth } from "@/contexts/auth-context";
 
 interface HeaderProps {
-  onDashboardToggle: () => void;
-  onMobileMenuToggle: () => void;
+  onDashboardToggle?: () => void;
+  onMobileMenuToggle?: () => void;
   onSignIn?: () => void;
 }
 
@@ -42,15 +42,17 @@ export function Header({ onDashboardToggle, onMobileMenuToggle, onSignIn }: Head
           <Menu className="w-5 h-5" />
         </Button>
 
-        {/* Dashboard Toggle */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onDashboardToggle}
-          className="hidden lg:block p-2 hover:bg-accent rounded-xl transition-colors text-foreground"
-        >
-          <Menu className="w-5 h-5" />
-        </Button>
+        {/* Dashboard Toggle - Only show on dashboard page */}
+        {onDashboardToggle && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onDashboardToggle}
+            className="hidden lg:block p-2 hover:bg-accent rounded-xl transition-colors text-foreground"
+          >
+            <Menu className="w-5 h-5" />
+          </Button>
+        )}
 
         <VeriLogo />
       </div>
