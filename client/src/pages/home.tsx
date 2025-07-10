@@ -57,7 +57,6 @@ export default function Home() {
         onDashboardToggle={() => setIsDashboardOpen(true)}
         onMobileMenuToggle={() => setIsDashboardOpen(true)}
         onSignIn={handleSignIn}
-        onGetStarted={handleGetStarted}
       />
       
       <DashboardSidebar
@@ -66,7 +65,7 @@ export default function Home() {
       />
       
       <main className="pt-20 pb-24 lg:pb-8">
-        <HeroSection onGetStarted={handleGetStarted} onSignIn={handleSignIn} />
+        <HeroSection onGetStarted={handleGetStarted} />
         <GettingStarted />
         
         {/* Who Veri is For Section */}

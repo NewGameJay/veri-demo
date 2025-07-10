@@ -9,10 +9,9 @@ interface HeaderProps {
   onDashboardToggle: () => void;
   onMobileMenuToggle: () => void;
   onSignIn?: () => void;
-  onGetStarted?: () => void;
 }
 
-export function Header({ onDashboardToggle, onMobileMenuToggle, onSignIn, onGetStarted }: HeaderProps) {
+export function Header({ onDashboardToggle, onMobileMenuToggle, onSignIn }: HeaderProps) {
   const { theme, setTheme } = useTheme();
   const { user } = useAuth();
 
@@ -94,22 +93,14 @@ export function Header({ onDashboardToggle, onMobileMenuToggle, onSignIn, onGetS
             </div>
           </>
         ) : (
-          /* Auth buttons for non-authenticated users */
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              onClick={onSignIn}
-              className="px-4 py-2 text-white hover:bg-white/10 rounded-xl transition-colors font-inter"
-            >
-              Sign In
-            </Button>
-            <Button
-              onClick={onGetStarted}
-              className="px-4 py-2 veri-gradient rounded-xl font-semibold text-white hover-scale transition-all duration-200 font-inter"
-            >
-              Get Started
-            </Button>
-          </div>
+          /* Sign In button for non-authenticated users */
+          <Button
+            variant="ghost"
+            onClick={onSignIn}
+            className="px-4 py-2 text-white hover:bg-white/10 rounded-xl transition-colors font-inter"
+          >
+            Sign In
+          </Button>
         )}
       </div>
     </header>

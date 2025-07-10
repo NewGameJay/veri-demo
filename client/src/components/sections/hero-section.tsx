@@ -2,10 +2,9 @@ import { Button } from "@/components/ui/button";
 
 interface HeroSectionProps {
   onGetStarted: () => void;
-  onSignIn?: () => void;
 }
 
-export function HeroSection({ onGetStarted, onSignIn }: HeroSectionProps) {
+export function HeroSection({ onGetStarted }: HeroSectionProps) {
   return (
     <section className="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-t from-gray-800/60 via-transparent to-gray-800/20"></div>
@@ -26,21 +25,12 @@ export function HeroSection({ onGetStarted, onSignIn }: HeroSectionProps) {
         <p className="text-xl lg:text-2xl text-white/80 mb-8 max-w-2xl mx-auto">
           Build your audience, drive genuine engagement, and turn your influence into meaningful earnings. Join creators, brands, and communities.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button
-            onClick={onGetStarted}
-            className="px-8 py-4 veri-gradient rounded-xl font-semibold text-white hover-scale transition-all duration-200"
-          >
-            Get Started
-          </Button>
-          <Button
-            variant="outline"
-            onClick={onSignIn}
-            className="px-8 py-4 glass-effect rounded-xl font-semibold hover-scale transition-all duration-200 border-white/20 text-white hover:bg-white/10"
-          >
-            Sign In
-          </Button>
-        </div>
+        <Button
+          onClick={onGetStarted}
+          className="px-8 py-4 veri-gradient rounded-xl font-semibold text-white hover-scale transition-all duration-200"
+        >
+          Get Started
+        </Button>
       </div>
     </section>
   );
