@@ -102,7 +102,7 @@ export default function Home() {
               
               <GlassCard hover className="p-8 text-center">
                 <CardContent className="p-0">
-                  <div className="w-16 h-16 veri-gradient rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <div className="w-16 h-16 veri-gradient rounded-2xl flex items-center justify-center mx-auto mb-4 bg-[424242]">
                     <Briefcase className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold mb-4 text-foreground dark:text-white">Brands</h3>
