@@ -1,6 +1,8 @@
 import { GlassCard } from "@/components/ui/glass-card";
 import { CardContent } from "@/components/ui/card";
 
+import Screenshot_2025_07_10_at_2_22_43_PM_1 from "@assets/Screenshot 2025-07-10 at 2.22.43 PM 1.png";
+
 export function GettingStarted() {
   const steps = [
     {
@@ -56,7 +58,7 @@ export function GettingStarted() {
           <GlassCard className="p-8">
             <CardContent className="p-0">
               <img 
-                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" 
+                src={Screenshot_2025_07_10_at_2_22_43_PM_1} 
                 alt="Social media analytics dashboard" 
                 className="w-full h-auto rounded-xl mb-6"
               />
