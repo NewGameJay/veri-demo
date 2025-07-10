@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export default function Dashboard() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
@@ -90,8 +91,10 @@ export default function Dashboard() {
         <DashboardSidebar
           isOpen={isDashboardOpen || isPinned}
           isPinned={isPinned}
+          isCollapsed={isCollapsed}
           onClose={() => setIsDashboardOpen(false)}
           onPin={() => setIsPinned(!isPinned)}
+          onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
           onMouseEnter={handleSidebarHover}
           onMouseLeave={handleSidebarLeave}
         />

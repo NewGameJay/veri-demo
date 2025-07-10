@@ -16,7 +16,7 @@ The MVP is now fully functional with:
 - Mobile-first responsive design with Lottie-style effects
 - PostgreSQL database integration for persistent data storage
 - Full social media platform connection functionality
-- Enhanced hamburger menu with auto-collapse and pin functionality
+- Enhanced hamburger menu with auto-collapse, pin functionality, and collapsible sidebar with icon-only mode
 
 ## User Preferences
 
@@ -121,3 +121,9 @@ The application uses a PostgreSQL database with these main entities:
 - `npm run db:push`: Database schema synchronization
 
 The application is designed to scale from MVP to full marketplace functionality, with the current implementation focusing on core creator onboarding, social connections, and gamification features.
+
+## Recent Updates (July 10, 2025)
+- ✅ Implemented collapsible dashboard sidebar with three states: open, collapsed (icon-only), and hidden
+- ✅ Fixed light mode text visibility across all sections, especially "Getting Started" with proper contrast
+- ✅ Enhanced dashboard navigation with smooth transitions and intuitive collapse/expand functionality
+- ✅ Improved accessibility with tooltips for collapsed menu items

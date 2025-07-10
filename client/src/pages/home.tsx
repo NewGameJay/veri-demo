@@ -18,6 +18,8 @@ import { useAuth } from "@/contexts/auth-context";
 
 export default function Home() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
+  const [isPinned, setIsPinned] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "signup">("signup");
@@ -61,7 +63,11 @@ export default function Home() {
       
       <DashboardSidebar
         isOpen={isDashboardOpen}
+        isPinned={isPinned}
+        isCollapsed={isCollapsed}
         onClose={() => setIsDashboardOpen(false)}
+        onPin={() => setIsPinned(!isPinned)}
+        onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
       />
       
       <main className="pt-20 pb-24 lg:pb-8">

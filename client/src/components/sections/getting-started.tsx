@@ -36,20 +36,20 @@ export function GettingStarted() {
     <section className="py-20 px-4 lg:px-6">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4 text-white">Getting started</h2>
-          <p className="text-xl text-white/60">The steps to get your revenue flowing from social</p>
+          <h2 className="text-4xl font-bold mb-4 text-foreground dark:text-white">Getting started</h2>
+          <p className="text-xl text-muted-foreground dark:text-white/60">The steps to get your revenue flowing from social</p>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
             {steps.map((step) => (
               <div key={step.number} className="flex items-start gap-4">
-                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center font-bold text-sm text-white">
+                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center font-bold text-sm text-white shadow-lg">
                   {step.number}
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold mb-2 text-white">{step.title}</h3>
-                  <p className="text-white/60">{step.description}</p>
+                  <h3 className="text-lg font-semibold mb-2 text-foreground dark:text-white">{step.title}</h3>
+                  <p className="text-muted-foreground dark:text-white/60">{step.description}</p>
                 </div>
               </div>
             ))}
@@ -64,7 +64,7 @@ export function GettingStarted() {
               />
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-500 mb-2">Join 10,000+ creators</div>
-                <p className="text-white/60">Already earning with Veri</p>
+                <p className="text-muted-foreground dark:text-white/60">Already earning with Veri</p>
               </div>
             </CardContent>
           </GlassCard>
