@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Users, Heart, Briefcase, Twitter, Instagram, Youtube } from "lucide-react";
+import { Users, Heart, Briefcase } from "lucide-react";
 import { Header } from "@/components/navigation/header";
 import { MobileNav } from "@/components/navigation/mobile-nav";
 import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
@@ -7,12 +7,13 @@ import { OnboardingModal } from "@/components/modals/onboarding-modal";
 import { AuthModal } from "@/components/auth/auth-modal";
 import { HeroSection } from "@/components/sections/hero-section";
 import { GettingStarted } from "@/components/sections/getting-started";
-import { DashboardPreviewShowcase } from "@/components/sections/dashboard-preview-showcase";
+import { DashboardPreview } from "@/components/sections/dashboard-preview";
 import { CreatorShowcase } from "@/components/sections/creator-showcase";
 import { GlassCard } from "@/components/ui/glass-card";
 import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { VeriLogo } from "@/components/ui/veri-logo";
+import { Twitter, Instagram, Youtube } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 
 export default function Home() {
@@ -53,10 +54,12 @@ export default function Home() {
   return (
     <div className="min-h-screen relative overflow-hidden bg-background">
       <Header
+        onDashboardToggle={() => setIsDashboardOpen(true)}
+        onMobileMenuToggle={() => setIsDashboardOpen(true)}
         onSignIn={handleSignIn}
       />
       
-      <MobileNav 
+      <DashboardSidebar
         isOpen={isDashboardOpen}
         onClose={() => setIsDashboardOpen(false)}
       />
@@ -107,7 +110,7 @@ export default function Home() {
           </div>
         </section>
         
-        <DashboardPreviewShowcase />
+        <DashboardPreview />
         <CreatorShowcase />
         
         {/* Partnerships Section */}
@@ -217,7 +220,7 @@ export default function Home() {
         </div>
       </footer>
       
-
+      <MobileNav />
       
       <OnboardingModal
         isOpen={isOnboardingOpen}
