@@ -8,9 +8,11 @@ import { useAuth } from "@/contexts/auth-context";
 interface HeaderProps {
   onDashboardToggle: () => void;
   onMobileMenuToggle: () => void;
+  onSignIn?: () => void;
+  onGetStarted?: () => void;
 }
 
-export function Header({ onDashboardToggle, onMobileMenuToggle }: HeaderProps) {
+export function Header({ onDashboardToggle, onMobileMenuToggle, onSignIn, onGetStarted }: HeaderProps) {
   const { theme, setTheme } = useTheme();
   const { user } = useAuth();
 
@@ -65,28 +67,50 @@ export function Header({ onDashboardToggle, onMobileMenuToggle }: HeaderProps) {
           {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
         </Button>
 
-        {/* Enhanced Notifications with Animation */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 hover-scale relative"
-        >
-          <Bell className="w-5 h-5" />
-          <div className="absolute -top-1 -right-1 w-4 h-4 veri-gradient rounded-full flex items-center justify-center pulse-glow">
-            <span className="text-xs font-medium text-white">3</span>
-          </div>
-        </Button>
+        {/* Show user info only when authenticated */}
+        {user ? (
+          <>
+            {/* Enhanced Notifications with Animation */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 hover-scale relative"
+            >
+              <Bell className="w-5 h-5" />
+              <div className="absolute -top-1 -right-1 w-4 h-4 veri-gradient rounded-full flex items-center justify-center pulse-glow">
+                <span className="text-xs font-medium text-white">3</span>
+              </div>
+            </Button>
 
-        {/* Profile */}
-        <div className="flex items-center gap-3 animate-slide-in">
-          <div className="text-right hidden sm:block">
-            <div className="text-sm font-medium text-white font-inter">{displayName}</div>
-            <div className="text-xs text-green-400 font-medium">{userXP.toLocaleString()} XP</div>
+            {/* Profile */}
+            <div className="flex items-center gap-3 animate-slide-in">
+              <div className="text-right hidden sm:block">
+                <div className="text-sm font-medium text-white font-inter">{displayName}</div>
+                <div className="text-xs text-green-400 font-medium">{userXP.toLocaleString()} XP</div>
+              </div>
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center font-bold text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                {userInitials}
+              </div>
+            </div>
+          </>
+        ) : (
+          /* Auth buttons for non-authenticated users */
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              onClick={onSignIn}
+              className="px-4 py-2 text-white hover:bg-white/10 rounded-xl transition-colors font-inter"
+            >
+              Sign In
+            </Button>
+            <Button
+              onClick={onGetStarted}
+              className="px-4 py-2 veri-gradient rounded-xl font-semibold text-white hover-scale transition-all duration-200 font-inter"
+            >
+              Get Started
+            </Button>
           </div>
-          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center font-bold text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-            {userInitials}
-          </div>
-        </div>
+        )}
       </div>
     </header>
   );

@@ -32,6 +32,11 @@ export default function Home() {
     }
   };
 
+  const handleSignIn = () => {
+    setAuthMode("login");
+    setIsAuthModalOpen(true);
+  };
+
   const handleSignUp = () => {
     if (user) {
       setIsOnboardingOpen(true);
@@ -51,6 +56,8 @@ export default function Home() {
       <Header
         onDashboardToggle={() => setIsDashboardOpen(true)}
         onMobileMenuToggle={() => setIsDashboardOpen(true)}
+        onSignIn={handleSignIn}
+        onGetStarted={handleGetStarted}
       />
       
       <DashboardSidebar
@@ -59,7 +66,7 @@ export default function Home() {
       />
       
       <main className="pt-20 pb-24 lg:pb-8">
-        <HeroSection onGetStarted={handleGetStarted} />
+        <HeroSection onGetStarted={handleGetStarted} onSignIn={handleSignIn} />
         <GettingStarted />
         
         {/* Who Veri is For Section */}

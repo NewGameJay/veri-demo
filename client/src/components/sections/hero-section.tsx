@@ -2,9 +2,10 @@ import { Button } from "@/components/ui/button";
 
 interface HeroSectionProps {
   onGetStarted: () => void;
+  onSignIn?: () => void;
 }
 
-export function HeroSection({ onGetStarted }: HeroSectionProps) {
+export function HeroSection({ onGetStarted, onSignIn }: HeroSectionProps) {
   return (
     <section className="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-t from-gray-800/60 via-transparent to-gray-800/20"></div>
@@ -34,9 +35,10 @@ export function HeroSection({ onGetStarted }: HeroSectionProps) {
           </Button>
           <Button
             variant="outline"
+            onClick={onSignIn}
             className="px-8 py-4 glass-effect rounded-xl font-semibold hover-scale transition-all duration-200 border-white/20 text-white hover:bg-white/10"
           >
-            Learn More
+            Sign In
           </Button>
         </div>
       </div>
