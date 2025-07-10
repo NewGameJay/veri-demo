@@ -1,0 +1,1642 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { User, BarChart3, Target, Trophy, Settings, Star, Play, Users, TrendingUp, Calendar, Award, MessageSquare, Share2, Eye, Heart, ExternalLink, CheckCircle, Clock, ArrowUp, ArrowDown, Plus, Filter, Edit, Camera, Globe, Link, Twitter, Youtube, Instagram, Zap, Crown, Gift, Bell, Home, Menu, X, Flame, ChevronRight, TrendingDown, Activity, Sparkles } from 'lucide-react';
+
+const VeriMVPDemo = () => {
+  const [currentScreen, setCurrentScreen] = useState('dashboard');
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [profileComplete, setProfileComplete] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [animatedXP, setAnimatedXP] = useState(2500);
+  const [isMobile, setIsMobile] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [liveActivity, setLiveActivity] = useState([]);
+  const [showLiveActivityModal, setShowLiveActivityModal] = useState(false);
+
+  // Add custom CSS for animations
+  React.useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slide-in-right {
+        from {
+          opacity: 0;
+          transform: translateX(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      .animate-slide-in-right {
+        animation: slide-in-right 0.3s ease-out;
+      }
+      .bg-grid-pattern {
+        background-image: radial-gradient(circle, #e5e7eb 1px, transparent 1px);
+        background-size: 20px 20px;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
+
+  // Leaderboard with Integrated Live Activity
+  const LeaderboardWithLiveActivity = () => (
+    <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+      <div className="p-6 border-b border-gray-100">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-yellow-50 rounded-xl flex items-center justify-center">
+              <Trophy className="w-5 h-5 text-yellow-600" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900">Global Leaderboard</h2>
+              <p className="text-sm text-gray-600">Your current rank: #{user.rank}</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            {/* Live Activity Popup Button */}
+            <button 
+              onClick={() => setShowLiveActivityModal(true)}
+              className="flex items-center space-x-2 bg-green-50 hover:bg-green-100 px-3 py-2 rounded-lg transition-colors duration-200"
+            >
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium text-green-600">Live Activity</span>
+              <ChevronRight className="w-4 h-4 text-green-600" />
+            </button>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium text-green-600">LIVE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
+        {/* Leaderboard - Left Side */}
+        <div className="lg:col-span-2 p-6 lg:border-r border-gray-100">
+          <div className="space-y-3">
+            {leaderboardData.slice(0, 4).map((creator) => (
+              <div 
+                key={creator.rank} 
+                className={`flex items-center justify-between p-4 rounded-xl transition-all duration-200 hover:scale-105 ${
+                  creator.isCurrentUser 
+                    ? 'bg-blue-50 border border-blue-200' 
+                    : 'bg-gray-50 hover:bg-gray-100'
+                }`}
+              >
+                <div className="flex items-center space-x-4">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
+                    creator.rank === 1 ? 'bg-yellow-500' : 
+                    creator.rank === 2 ? 'bg-gray-400' : 
+                    creator.rank === 3 ? 'bg-orange-500' : 'bg-purple-500'
+                  }`}>
+                    {creator.rank}
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className={`relative w-10 h-10 rounded-full flex items-center justify-center text-white font-medium ${
+                      creator.isCurrentUser ? 'bg-blue-500' : 'bg-purple-500'
+                    }`}>
+                      {creator.avatar}
+                      {creator.online && (
+                        <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                      )}
+                    </div>
+                    <div>
+                      <div className="flex items-center space-x-2">
+                        <span className="font-semibold text-gray-900">{creator.name}</span>
+                        {creator.verified && <CheckCircle className="w-4 h-4 text-blue-500" />}
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
+                          {creator.tier}
+                        </span>
+                        <span className="text-xs text-gray-600">{creator.category}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="font-bold text-gray-900">{creator.score.toLocaleString()}</div>
+                  <div className={`flex items-center justify-end space-x-1 text-sm ${
+                    creator.change > 0 ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {creator.change > 0 ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}
+                    <span>{Math.abs(creator.change)}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <button 
+            onClick={() => navigateToScreen('leaderboard')}
+            className="w-full mt-6 bg-gray-900 hover:bg-gray-800 text-white py-3 px-4 rounded-xl font-medium transition-all duration-200 hover:scale-105"
+          >
+            View Full Leaderboard
+          </button>
+        </div>
+
+        {/* Live Activity - Right Side */}
+        <div className="p-6 bg-gray-50 border-t lg:border-t-0 border-gray-100">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-semibold text-gray-900">Recent Activity</h3>
+            <button 
+              onClick={() => setShowLiveActivityModal(true)}
+              className="text-xs text-blue-600 hover:text-blue-700 font-medium"
+            >
+              View All
+            </button>
+          </div>
+          <div className="space-y-3 max-h-64 overflow-y-auto">
+            {liveActivity.length > 0 ? liveActivity.slice(0, 3).map((activity) => (
+              <div key={activity.id} className="flex items-start space-x-3 p-3 bg-white rounded-xl animate-slide-in-right">
+                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <p className="text-xs text-gray-900">{activity.text}</p>
+                  <p className="text-xs text-gray-500">
+                    {new Date(activity.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+              </div>
+            )) : (
+              <div className="text-center py-6">
+                <Activity className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                <p className="text-xs text-gray-500">Waiting for updates...</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Live Activity Modal
+  const LiveActivityModal = () => {
+    if (!showLiveActivityModal) return null;
+    
+    return (
+      <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[80vh] overflow-hidden shadow-2xl">
+          <div className="p-6 border-b border-gray-100">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
+                  <Activity className="w-5 h-5 text-green-600" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Live Activity Feed</h2>
+                  <p className="text-sm text-gray-600">Real-time creator community updates</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setShowLiveActivityModal(false)}
+                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all duration-200"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+          
+          <div className="p-6 overflow-y-auto max-h-[60vh]">
+            <div className="space-y-4">
+              {liveActivity.length > 0 ? liveActivity.map((activity) => (
+                <div key={activity.id} className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl animate-slide-in-right">
+                  <div className="w-3 h-3 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-900">{activity.text}</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {new Date(activity.time).toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              )) : (
+                <div className="text-center py-12">
+                  <Activity className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No Recent Activity</h3>
+                  <p className="text-sm text-gray-500">Live updates will appear here as they happen</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const [user, setUser] = useState({
+    name: 'Sam Huber',
+    handle: '@samhuber',
+    bio: 'Creator focused on lifestyle content and authentic storytelling. Building community through genuine connections.',
+    veriScore: 99,
+    veriPoints: 2500,
+    connectedPlatforms: ['x', 'youtube'],
+    tasksCompleted: 2,
+    totalTasks: 6,
+    rank: 2,
+    avatar: 'S',
+    bannerColor: 'from-blue-500 to-purple-600',
+    badges: ['Top 10%', 'Lifestyle Creator', 'Community Builder'],
+    streak: 7,
+    level: 12,
+    nextLevelXP: 3000
+  });
+
+  const [taskStates, setTaskStates] = useState({
+    follow_veri_x: 'completed',
+    join_telegram: 'completed', 
+    invite_friend: 'available',
+    retweet: 'available',
+    create_veri_id: 'available',
+    share_achievement: 'available'
+  });
+
+  const [bonusTaskStates, setBonusTaskStates] = useState({
+    create_viral_content: 'available',
+    mentor_creator: 'available',
+    host_collaboration: 'available',
+    community_leadership: 'completed'
+  });
+
+  const [achievements, setAchievements] = useState([
+    { id: 'first_task', name: 'First Steps', description: 'Complete your first task', unlocked: true, icon: '🎯' },
+    { id: 'social_butterfly', name: 'Social Butterfly', description: 'Connect 2+ platforms', unlocked: true, icon: '🦋' },
+    { id: 'community_builder', name: 'Community Builder', description: 'Invite 5 friends', unlocked: false, icon: '🏗️' },
+    { id: 'content_creator', name: 'Content Creator', description: 'Upload 10 pieces of content', unlocked: false, icon: '🎨' }
+  ]);
+
+  // Detect mobile
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Live activity simulation
+  useEffect(() => {
+    const activities = [
+      'Alex Chen completed "Create Viral Content" (+1000 XP)',
+      'Maya Rodriguez moved up to rank #2',
+      'Jordan Kim unlocked "Mentor Badge"',
+      'Taylor Swift joined Veri Community',
+      'Emma Davis completed collaboration task'
+    ];
+
+    const interval = setInterval(() => {
+      const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+      setLiveActivity(prev => [
+        { id: Date.now(), text: randomActivity, time: new Date() },
+        ...prev.slice(0, 4)
+      ]);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Animated XP counter
+  useEffect(() => {
+    let interval;
+    if (animatedXP !== user.veriPoints) {
+      interval = setInterval(() => {
+        setAnimatedXP(prev => {
+          const diff = user.veriPoints - prev;
+          if (Math.abs(diff) < 10) return user.veriPoints;
+          return prev + Math.sign(diff) * Math.max(1, Math.abs(diff) / 10);
+        });
+      }, 50);
+    }
+    return () => clearInterval(interval);
+  }, [user.veriPoints, animatedXP]);
+
+  const platforms = [
+    { 
+      name: 'X', 
+      connected: true, 
+      points: 500, 
+      icon: Twitter,
+      handle: '@samhuber',
+      followers: '8.7K',
+      verification: true,
+      color: 'blue'
+    },
+    { 
+      name: 'YouTube', 
+      connected: true, 
+      points: 500, 
+      icon: Youtube,
+      handle: 'Sam Huber',
+      followers: '45.2K',
+      verification: true,
+      color: 'red'
+    },
+    { 
+      name: 'Instagram', 
+      connected: false, 
+      points: 500, 
+      icon: Instagram,
+      handle: '',
+      followers: '0',
+      verification: false,
+      color: 'purple'
+    }
+  ];
+
+  const tasks = [
+    { id: 'follow_veri_x', title: 'Follow Veri on X', points: 100, state: taskStates.follow_veri_x, category: 'Social', difficulty: 'Easy' },
+    { id: 'join_telegram', title: 'Join Veri Community', points: 150, state: taskStates.join_telegram, category: 'Community', difficulty: 'Easy' },
+    { id: 'invite_friend', title: 'Invite a Friend', points: 500, state: taskStates.invite_friend, category: 'Growth', difficulty: 'Medium' },
+    { id: 'retweet', title: 'Share Veri Post', points: 75, state: taskStates.retweet, category: 'Social', difficulty: 'Easy' },
+    { id: 'create_veri_id', title: 'Verify Identity', points: 300, state: taskStates.create_veri_id, category: 'Profile', difficulty: 'Medium' },
+    { id: 'share_achievement', title: 'Share Achievement', points: 200, state: taskStates.share_achievement, category: 'Social', difficulty: 'Easy' }
+  ];
+
+  const bonusTasks = [
+    { id: 'create_viral_content', title: 'Create Viral Content', description: 'Post content that reaches 10K+ views', points: 1000, state: bonusTaskStates.create_viral_content, difficulty: 'Hard' },
+    { id: 'mentor_creator', title: 'Mentor New Creator', description: 'Help onboard and guide a new community member', points: 750, state: bonusTaskStates.mentor_creator, difficulty: 'Medium' },
+    { id: 'host_collaboration', title: 'Host Collaboration', description: 'Organize content collaboration with 3+ creators', points: 1200, state: bonusTaskStates.host_collaboration, difficulty: 'Hard' },
+    { id: 'community_leadership', title: 'Community Leadership', description: 'Lead community discussion and engagement', points: 500, state: bonusTaskStates.community_leadership, difficulty: 'Easy' }
+  ];
+
+  const smartRecommendations = [
+    { type: 'task', title: 'Best time to post', description: 'Your audience is most active at 7 PM EST', action: 'Schedule Post' },
+    { type: 'collaboration', title: 'Creator match found', description: 'Maya Rodriguez has similar audience', action: 'Connect' },
+    { type: 'trend', title: 'Trending topic', description: '#CreatorEconomy2025 is gaining traction', action: 'Create Content' },
+    { type: 'optimization', title: 'Content suggestion', description: 'Gaming content performs 23% better for you', action: 'View Insights' }
+  ];
+
+  const leaderboardData = [
+    { rank: 1, name: 'Alex Chen', score: 15420, change: 15, tier: 'Veri+ Creator', category: 'FPS', avatar: 'A', verified: true, online: true },
+    { rank: 2, name: 'Sam Huber', score: 12500, change: 8, tier: 'Top 10%', category: 'Lifestyle', avatar: 'S', isCurrentUser: true, verified: true, online: true },
+    { rank: 3, name: 'Maya Rodriguez', score: 11800, change: -1, tier: 'Top 1%', category: 'Battle Royale', avatar: 'M', verified: true, online: false },
+    { rank: 4, name: 'Jordan Kim', score: 10950, change: 3, tier: 'Rising Star', category: 'RPG', avatar: 'J', verified: false, online: true },
+    { rank: 5, name: 'Taylor Swift', score: 9800, change: 2, tier: 'Veri+ Creator', category: 'Lifestyle', avatar: 'T', verified: true, online: true }
+  ];
+
+  const analyticsData = {
+    totalFollowers: '66,200',
+    totalViews: '2.5M',
+    engagementRate: '8.7%',
+    veriScore: 99,
+    platforms: [
+      { name: 'YouTube', followers: '45,200', engagement: '12.3%', growth: 5.7, icon: Youtube, color: 'text-red-500' },
+      { name: 'Instagram', followers: '12,500', engagement: '6.8%', growth: 2.3, icon: Instagram, color: 'text-purple-500' },
+      { name: 'X', followers: '8,700', engagement: '4.2%', growth: 1.9, icon: Twitter, color: 'text-blue-500' },
+      { name: 'LinkedIn', followers: '2,500', engagement: '3.1%', growth: 12.1, icon: Users, color: 'text-blue-600' }
+    ],
+    topContent: [
+      { title: 'How to grow on social media in 2025', platform: 'YouTube', views: '125,000', engagement: '15.2%', time: '1 week ago' },
+      { title: 'Building the future of creator economy', platform: 'Twitter', views: '45,000', engagement: '8.7%', time: '2 days ago' },
+      { title: 'Behind the scenes content creation', platform: 'Instagram', views: '32,000', engagement: '12.1%', time: '3 days ago' },
+      { title: 'AI tools every creator needs', platform: 'YouTube', views: '89,000', engagement: '11.4%', time: '5 days ago' }
+    ]
+  };
+
+  // Screen transition with animation
+  const navigateToScreen = (screen) => {
+    if (screen === currentScreen) return;
+    
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentScreen(screen);
+      setIsTransitioning(false);
+      setShowMobileMenu(false);
+    }, 150);
+  };
+
+  // Confetti animation
+  const triggerConfetti = () => {
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 3000);
+  };
+
+  // Show notification
+  const showSuccessNotification = (message) => {
+    setShowNotification({ message, type: 'success' });
+    setTimeout(() => setShowNotification(false), 3000);
+  };
+
+  // Complete task with animations
+  const completeTask = (taskId) => {
+    setTaskStates(prev => ({
+      ...prev,
+      [taskId]: 'completed'
+    }));
+    
+    const task = tasks.find(t => t.id === taskId);
+    const newPoints = user.veriPoints + task.points;
+    
+    setUser(prev => ({
+      ...prev,
+      veriPoints: newPoints,
+      tasksCompleted: prev.tasksCompleted + 1
+    }));
+
+    triggerConfetti();
+    showSuccessNotification(`+${task.points} XP earned! ${task.title} completed.`);
+
+    // Check for level up
+    if (newPoints >= user.nextLevelXP) {
+      setTimeout(() => {
+        showSuccessNotification(`🎉 Level Up! You reached level ${user.level + 1}!`);
+        setUser(prev => ({
+          ...prev,
+          level: prev.level + 1,
+          nextLevelXP: prev.nextLevelXP + 500
+        }));
+      }, 1000);
+    }
+  };
+
+  const completeBonusTask = (taskId) => {
+    setBonusTaskStates(prev => ({
+      ...prev,
+      [taskId]: 'completed'
+    }));
+    
+    const task = bonusTasks.find(t => t.id === taskId);
+    setUser(prev => ({
+      ...prev,
+      veriPoints: prev.veriPoints + task.points
+    }));
+
+    triggerConfetti();
+    showSuccessNotification(`🚀 Premium task completed! +${task.points} XP earned.`);
+  };
+
+  const completeProfile = () => {
+    setProfileComplete(true);
+    setUser(prev => ({
+      ...prev,
+      veriPoints: prev.veriPoints + 1000
+    }));
+    triggerConfetti();
+    showSuccessNotification('🎉 Profile completed! Create to Earn unlocked!');
+  };
+
+  // Confetti Component
+  const Confetti = () => {
+    if (!showConfetti) return null;
+    
+    return (
+      <div className="fixed inset-0 pointer-events-none z-50">
+        {[...Array(50)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded animate-bounce"
+            style={{
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${2 + Math.random() * 2}s`
+            }}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  // Notification Component
+  const Notification = () => {
+    if (!showNotification) return null;
+    
+    return (
+      <div className="fixed top-20 right-4 bg-white border border-green-200 rounded-2xl p-4 shadow-lg z-50 animate-slide-in-right">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+            <CheckCircle className="w-5 h-5 text-green-600" />
+          </div>
+          <p className="text-sm font-medium text-gray-900">{showNotification.message}</p>
+        </div>
+      </div>
+    );
+  };
+
+  // Loading Skeleton
+  const LoadingSkeleton = () => (
+    <div className="animate-pulse">
+      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+      <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+    </div>
+  );
+
+  // Mobile Navigation
+  const MobileNavigation = () => {
+    if (!isMobile) return null;
+
+    return (
+      <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-gray-200 z-40">
+        <div className="flex items-center justify-around py-2">
+          {[
+            { key: 'dashboard', label: 'Home', icon: Home },
+            { key: 'profile', label: 'Profile', icon: User },
+            { key: 'analytics', label: 'Analytics', icon: BarChart3 },
+            { key: 'leaderboard', label: 'Rankings', icon: Trophy }
+          ].map(({ key, label, icon: Icon }) => (
+            <button
+              key={key}
+              onClick={() => navigateToScreen(key)}
+              className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-200 ${
+                currentScreen === key 
+                  ? 'text-blue-600' 
+                  : 'text-gray-600'
+              }`}
+            >
+              <Icon className="w-5 h-5" />
+              <span className="text-xs font-medium">{label}</span>
+            </button>
+          ))}
+          {profileComplete && (
+            <button
+              onClick={() => navigateToScreen('create-to-earn')}
+              className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-200 relative ${
+                currentScreen === 'create-to-earn' 
+                  ? 'text-purple-600' 
+                  : 'text-purple-600'
+              }`}
+            >
+              <Zap className="w-5 h-5" />
+              <span className="text-xs font-medium">Earn</span>
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // Enhanced Navigation
+  const Navigation = () => (
+    <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-8">
+            <button 
+              onClick={() => navigateToScreen('dashboard')}
+              className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200"
+            >
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">V</span>
+              </div>
+              <span className="text-xl font-semibold tracking-tight">veri</span>
+            </button>
+            
+            {!isMobile && (
+              <nav className="flex space-x-1">
+                {[
+                  { key: 'dashboard', label: 'Dashboard', icon: BarChart3 },
+                  { key: 'profile', label: 'Profile', icon: User },
+                  { key: 'analytics', label: 'Analytics', icon: TrendingUp },
+                  { key: 'leaderboard', label: 'Leaderboard', icon: Trophy }
+                ].map(({ key, label, icon: Icon }) => (
+                  <button
+                    key={key}
+                    onClick={() => navigateToScreen(key)}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                      currentScreen === key 
+                        ? 'bg-gray-100 text-gray-900' 
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{label}</span>
+                  </button>
+                ))}
+                {profileComplete && (
+                  <button
+                    onClick={() => navigateToScreen('create-to-earn')}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 relative ${
+                      currentScreen === 'create-to-earn' 
+                        ? 'bg-purple-100 text-purple-900' 
+                        : 'text-purple-600 hover:text-purple-900 hover:bg-purple-50'
+                    }`}
+                  >
+                    <Zap className="w-4 h-4" />
+                    <span>Create to Earn</span>
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                  </button>
+                )}
+              </nav>
+            )}
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            {!isMobile && (
+              <div className="flex items-center space-x-2 text-sm text-gray-600">
+                <span>{user.handle}</span>
+              </div>
+            )}
+            
+            {/* Live XP Counter */}
+            <div className="bg-green-50 text-green-700 px-3 py-1.5 rounded-full text-sm font-medium border border-green-200 transition-all duration-300">
+              {Math.round(animatedXP).toLocaleString()} XP
+            </div>
+            
+            {/* Level Badge */}
+            <div className="bg-purple-50 text-purple-700 px-3 py-1.5 rounded-full text-sm font-medium border border-purple-200">
+              Lv.{user.level}
+            </div>
+            
+            {/* Notification Bell */}
+            <button className="relative p-2 text-gray-600 hover:text-gray-900 transition-colors duration-200">
+              <Bell className="w-5 h-5" />
+              {liveActivity.length > 0 && (
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+              )}
+            </button>
+            
+            <button 
+              onClick={() => isMobile && setShowMobileMenu(!showMobileMenu)}
+              className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium"
+            >
+              {isMobile ? <Menu className="w-4 h-4" /> : user.avatar}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Enhanced Dashboard with Multi-Column Grid Layout
+  const Dashboard = () => (
+    <div className={`max-w-7xl mx-auto px-6 py-8 transition-all duration-300 ${isTransitioning ? 'opacity-0 transform translate-x-4' : 'opacity-100'}`}>
+      {/* Main Multi-Column Grid Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
+        
+        {/* Left Column - Main Content */}
+        <div className="lg:col-span-8 space-y-6">
+          
+          {/* Top Row: Hero + Quick Action Cards */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            {/* Hero Section */}
+            <div className="lg:col-span-2 relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-3xl border border-gray-200/50">
+              <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]"></div>
+              <div className="relative p-6">
+                <div className="mb-4">
+                  <h1 className="text-2xl font-bold tracking-tight text-gray-900 mb-1">
+                    Welcome back, {user.name}
+                  </h1>
+                  <p className="text-gray-600">
+                    Your creator journey continues. Track performance, complete challenges.
+                  </p>
+                </div>
+                
+                {/* Level Progress */}
+                <div className="bg-white/60 rounded-2xl p-4 mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">Level {user.level} Progress</span>
+                    <div className="flex items-center space-x-2">
+                      <Flame className="w-4 h-4 text-orange-500" />
+                      <span className="text-sm font-bold text-gray-900">{user.streak} day streak</span>
+                    </div>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${(user.veriPoints / user.nextLevelXP) * 100}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-600 mt-1">{user.veriPoints}/{user.nextLevelXP} XP</p>
+                </div>
+
+                {/* Smart Recommendations */}
+                <div className="bg-white/60 rounded-2xl p-4">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center space-x-2">
+                    <Sparkles className="w-4 h-4 text-blue-500" />
+                    <span>Smart Recommendations</span>
+                  </h3>
+                  <div className="space-y-2">
+                    {smartRecommendations.slice(0, 2).map((rec, index) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">{rec.title}</p>
+                          <p className="text-xs text-gray-600">{rec.description}</p>
+                        </div>
+                        <button className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-lg hover:bg-blue-200 transition-colors duration-200">
+                          {rec.action}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Action - Profile */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg hover:scale-105 transition-all duration-200">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
+                  <User className="w-5 h-5 text-blue-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900">Profile</h3>
+              </div>
+              <p className="text-gray-600 text-sm mb-4">
+                {profileComplete ? 'Manage your creator profile' : 'Complete your creator profile'}
+              </p>
+              <button 
+                onClick={() => navigateToScreen('profile')}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-xl font-medium transition-all duration-200 hover:scale-105"
+              >
+                {profileComplete ? 'View Profile' : 'Complete Setup'}
+              </button>
+            </div>
+          </div>
+
+          {/* Middle Row: Platform Connections */}
+          <div className="space-y-4">
+            <h2 className="text-lg font-semibold text-gray-900">Connected Platforms</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {platforms.map((platform, index) => {
+                const IconComponent = platform.icon;
+                return (
+                  <div 
+                    key={index} 
+                    className={`bg-white rounded-2xl border transition-all duration-200 hover:shadow-lg hover:scale-105 ${
+                      platform.connected 
+                        ? 'border-green-200 shadow-sm' 
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center space-x-3">
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                            platform.connected ? 'bg-green-50' : 'bg-gray-50'
+                          }`}>
+                            <IconComponent className={`w-5 h-5 ${
+                              platform.connected ? 'text-green-600' : 'text-gray-400'
+                            }`} />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-gray-900 text-sm">{platform.name}</h3>
+                            {platform.connected && (
+                              <p className="text-xs text-gray-600">{platform.followers} followers</p>
+                            )}
+                          </div>
+                        </div>
+                        {platform.connected && platform.verification && (
+                          <CheckCircle className="w-4 h-4 text-blue-500" />
+                        )}
+                      </div>
+                      
+                      {platform.connected ? (
+                        <div className="bg-green-50 rounded-xl p-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-medium text-green-700">Connected</span>
+                            <span className="text-xs font-semibold text-green-700">+{platform.points} XP</span>
+                          </div>
+                        </div>
+                      ) : (
+                        <button className="w-full bg-gray-900 hover:bg-gray-800 text-white py-2 px-3 rounded-xl font-medium text-sm transition-all duration-200 hover:scale-105">
+                          Connect +{platform.points} XP
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Bottom Row: More Quick Actions */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Tasks */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg hover:scale-105 transition-all duration-200">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center">
+                  <Target className="w-5 h-5 text-purple-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900">Creator Tasks</h3>
+              </div>
+              <div className="mb-4">
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="text-gray-600">Progress</span>
+                  <span className="font-medium">{user.tasksCompleted}/{user.totalTasks}</span>
+                </div>
+                <div className="w-full bg-gray-100 rounded-full h-2">
+                  <div 
+                    className="bg-purple-600 h-2 rounded-full transition-all duration-500"
+                    style={{ width: `${(user.tasksCompleted / user.totalTasks) * 100}%` }}
+                  ></div>
+                </div>
+              </div>
+              <button 
+                onClick={() => navigateToScreen('tasks')}
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2.5 px-4 rounded-xl font-medium transition-all duration-200 hover:scale-105"
+              >
+                View Tasks
+              </button>
+            </div>
+
+            {/* Analytics */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg hover:scale-105 transition-all duration-200">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
+                  <BarChart3 className="w-5 h-5 text-green-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900">Analytics</h3>
+              </div>
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between">
+                  <span className="text-gray-600 text-sm">Followers</span>
+                  <span className="font-medium text-sm">{analyticsData.totalFollowers}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 text-sm">Engagement</span>
+                  <span className="font-medium text-sm">{analyticsData.engagementRate}</span>
+                </div>
+              </div>
+              <button 
+                onClick={() => navigateToScreen('analytics')}
+                className="w-full bg-green-600 hover:bg-green-700 text-white py-2.5 px-4 rounded-xl font-medium transition-all duration-200 hover:scale-105"
+              >
+                View Analytics
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column - VeriScore + Live Features */}
+        <div className="lg:col-span-4 space-y-6">
+          
+          {/* VeriScore Card */}
+          <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl p-6 text-white relative overflow-hidden hover:scale-105 transition-transform duration-200">
+            <div className="absolute inset-0 bg-white/5 rounded-2xl"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-4">
+                <Trophy className="w-8 h-8 text-white/80" />
+                <span className="text-white/60 text-sm font-medium">Rank #{user.rank}</span>
+              </div>
+              <div className="text-4xl font-bold mb-1">{user.veriScore}</div>
+              <div className="text-white/80 text-sm mb-4">VeriScore</div>
+              <div className="bg-white/10 rounded-xl p-3">
+                <div className="text-2xl font-bold">{Math.round(animatedXP).toLocaleString()}</div>
+                <div className="text-white/70 text-sm">XP Balance</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Create to Earn (if unlocked) */}
+          {profileComplete && (
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 border-2 border-purple-200 rounded-2xl p-6 hover:shadow-lg hover:scale-105 transition-all duration-200">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center">
+                  <Zap className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="font-semibold text-gray-900">Create to Earn</h3>
+              </div>
+              <p className="text-gray-600 text-sm mb-4">
+                Access premium tasks and earn exclusive rewards
+              </p>
+              <button 
+                onClick={() => navigateToScreen('create-to-earn')}
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2.5 px-4 rounded-xl font-medium transition-all duration-200 hover:scale-105"
+              >
+                Unlock Premium Tasks
+              </button>
+            </div>
+          )}
+
+          {/* Live Activity Feed */}
+          <div className="bg-white rounded-2xl border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Live Activity</h3>
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-xs font-medium text-green-600">LIVE</span>
+              </div>
+            </div>
+            <div className="space-y-3 max-h-64 overflow-y-auto">
+              {liveActivity.length > 0 ? liveActivity.slice(0, 4).map((activity) => (
+                <div key={activity.id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-xl animate-slide-in-right">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <p className="text-sm text-gray-900">{activity.text}</p>
+                    <p className="text-xs text-gray-500">
+                      {new Date(activity.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                </div>
+              )) : (
+                <div className="text-center py-6">
+                  <Activity className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                  <p className="text-sm text-gray-500">Waiting for live updates...</p>
+                </div>
+              )}
+            </div>
+            <button 
+              onClick={() => setShowLiveActivityModal(true)}
+              className="w-full mt-4 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-xl font-medium transition-all duration-200 text-sm"
+            >
+              View All Activity
+            </button>
+          </div>
+
+          {/* Mini Leaderboard */}
+          <div className="bg-white rounded-2xl border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-yellow-50 rounded-xl flex items-center justify-center">
+                  <Trophy className="w-4 h-4 text-yellow-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">Top Creators</h3>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-xs font-medium text-green-600">LIVE</span>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              {leaderboardData.slice(0, 3).map((creator) => (
+                <div 
+                  key={creator.rank} 
+                  className={`flex items-center justify-between p-3 rounded-xl transition-all duration-200 hover:scale-105 ${
+                    creator.isCurrentUser 
+                      ? 'bg-blue-50 border border-blue-200' 
+                      : 'bg-gray-50 hover:bg-gray-100'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white font-bold text-xs ${
+                      creator.rank === 1 ? 'bg-yellow-500' : 
+                      creator.rank === 2 ? 'bg-gray-400' : 
+                      'bg-orange-500'
+                    }`}>
+                      {creator.rank}
+                    </div>
+                    <div className={`relative w-8 h-8 rounded-full flex items-center justify-center text-white font-medium text-sm ${
+                      creator.isCurrentUser ? 'bg-blue-500' : 'bg-purple-500'
+                    }`}>
+                      {creator.avatar}
+                      {creator.online && (
+                        <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-green-500 border border-white rounded-full"></div>
+                      )}
+                    </div>
+                    <div>
+                      <div className="flex items-center space-x-1">
+                        <span className="font-semibold text-sm text-gray-900">{creator.name}</span>
+                        {creator.verified && <CheckCircle className="w-3 h-3 text-blue-500" />}
+                      </div>
+                      <span className="text-xs text-gray-600">{creator.category}</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-bold text-sm text-gray-900">{creator.score.toLocaleString()}</div>
+                    <div className={`flex items-center justify-end space-x-1 text-xs ${
+                      creator.change > 0 ? 'text-green-600' : 'text-red-600'
+                    }`}>
+                      {creator.change > 0 ? <ArrowUp className="w-2 h-2" /> : <ArrowDown className="w-2 h-2" />}
+                      <span>{Math.abs(creator.change)}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <button 
+              onClick={() => navigateToScreen('leaderboard')}
+              className="w-full mt-4 bg-gray-900 hover:bg-gray-800 text-white py-2 px-4 rounded-xl font-medium transition-all duration-200 hover:scale-105 text-sm"
+            >
+              View Full Leaderboard
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Enhanced Tasks Modal
+  const TasksModal = () => (
+    <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className={`bg-white rounded-3xl max-w-5xl w-full max-h-[90vh] overflow-hidden shadow-2xl transition-all duration-300 ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+        <div className="p-8 border-b border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">Creator Tasks</h2>
+              <p className="text-gray-600 mt-1">Complete tasks to earn XP and improve your VeriScore</p>
+            </div>
+            <button 
+              onClick={() => navigateToScreen('dashboard')}
+              className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all duration-200 hover:scale-110"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+        
+        <div className="p-8 overflow-y-auto max-h-[calc(90vh-120px)]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+            {tasks.map((task) => (
+              <div 
+                key={task.id} 
+                className={`bg-white border-2 rounded-2xl p-6 transition-all duration-200 hover:scale-105 ${
+                  task.state === 'completed' 
+                    ? 'border-green-200 bg-green-50' 
+                    : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-2">
+                    <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+                      task.difficulty === 'Easy' ? 'bg-green-100 text-green-700' :
+                      task.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-700' :
+                      'bg-red-100 text-red-700'
+                    }`}>
+                      {task.difficulty}
+                    </span>
+                    <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                      {task.category}
+                    </span>
+                  </div>
+                  <span className="text-lg font-bold text-purple-600">+{task.points}</span>
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-4">{task.title}</h4>
+                {task.state === 'completed' ? (
+                  <div className="bg-green-100 text-green-700 py-2.5 px-4 rounded-xl text-center font-medium flex items-center justify-center space-x-2">
+                    <CheckCircle className="w-4 h-4" />
+                    <span>Completed</span>
+                  </div>
+                ) : (
+                  <button 
+                    onClick={() => completeTask(task.id)}
+                    className="w-full bg-gray-900 hover:bg-gray-800 text-white py-2.5 px-4 rounded-xl font-medium transition-all duration-200 hover:scale-105"
+                  >
+                    Complete Task
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+          
+          {/* Premium Tasks Unlock */}
+          <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl p-8 text-white text-center">
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <Crown className="w-8 h-8" />
+            </div>
+            <h3 className="text-2xl font-bold mb-4">Unlock Premium Tasks</h3>
+            <p className="text-purple-100 mb-6 max-w-2xl mx-auto">
+              Complete your profile to access exclusive high-value tasks and unlock the Create to Earn program.
+            </p>
+            <div className="text-3xl font-bold mb-6">+5,000 XP Available</div>
+            <button 
+              onClick={() => navigateToScreen('profile')}
+              className="bg-white text-purple-600 px-8 py-3 rounded-xl font-semibold hover:bg-purple-50 transition-all duration-200 hover:scale-105"
+            >
+              Complete Profile Setup
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Enhanced Profile Builder
+  const ProfileBuilder = () => (
+    <div className={`max-w-4xl mx-auto p-6 transition-all duration-300 ${isTransitioning ? 'opacity-0 transform translate-x-4' : 'opacity-100'}`}>
+      <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-lg">
+        {/* Profile Header */}
+        <div className={`bg-gradient-to-br ${user.bannerColor} p-8 text-white relative`}>
+          <div className="absolute top-6 right-6 flex space-x-2">
+            {profileComplete && (
+              <button 
+                onClick={() => navigateToScreen('public-profile')}
+                className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 flex items-center space-x-2"
+              >
+                <Globe className="w-4 h-4" />
+                <span>View Public</span>
+              </button>
+            )}
+            <button className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 flex items-center space-x-2">
+              <Camera className="w-4 h-4" />
+              <span>Edit Banner</span>
+            </button>
+          </div>
+          
+          <div className="flex items-center space-x-6 mb-8">
+            <div className="relative">
+              <div className="w-24 h-24 bg-white/20 rounded-2xl flex items-center justify-center text-3xl font-bold">
+                {user.avatar}
+              </div>
+              <button className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200">
+                <Camera className="w-4 h-4 text-gray-600" />
+              </button>
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold mb-2">{user.name}</h1>
+              <p className="text-white/80 text-lg">{user.handle}</p>
+              <div className="flex items-center space-x-2 mt-3">
+                {user.badges.map((badge, index) => (
+                  <span key={index} className="bg-white/20 px-3 py-1 rounded-full text-sm">
+                    {badge}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Profile Content */}
+        <div className="p-8">
+          {/* Bio Section */}
+          <div className="mb-8">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">About</h2>
+            <div className="bg-gray-50 rounded-2xl p-6 hover:bg-gray-100 transition-colors duration-200">
+              <textarea 
+                className="w-full bg-transparent resize-none text-gray-700 placeholder-gray-500 focus:outline-none"
+                rows={3}
+                placeholder="Tell us about your world..."
+                defaultValue={user.bio}
+              />
+            </div>
+          </div>
+
+          {/* Profile Setup Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+            {[
+              { icon: User, label: 'Account Info', color: 'gray' },
+              { icon: MessageSquare, label: 'Social Links', color: 'gray' },
+              { icon: Plus, label: 'Upload Content', color: 'gray' },
+              { icon: Target, label: 'Tasks & XP', color: 'gray' },
+              { icon: Star, label: 'AI Assistant', color: 'gray' },
+              { icon: Crown, label: 'Veri+ Creator', color: 'orange' }
+            ].map(({ icon: Icon, label, color }, index) => (
+              <button 
+                key={index}
+                className={`p-6 rounded-2xl text-center transition-all duration-200 hover:scale-105 ${
+                  color === 'orange' 
+                    ? 'bg-gradient-to-br from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white' 
+                    : 'bg-gray-50 hover:bg-gray-100'
+                }`}
+              >
+                <Icon className={`w-6 h-6 mx-auto mb-2 ${color === 'orange' ? 'text-white' : 'text-gray-600'}`} />
+                <span className={`text-sm font-medium ${color === 'orange' ? 'text-white' : 'text-gray-900'}`}>{label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* AI Profile Generation */}
+          <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-8 text-center border border-green-200">
+            <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <Zap className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-4">AI Profile Generation</h3>
+            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+              Let our AI analyze your connected social accounts to automatically generate an optimized profile, bio, and showcase your best content.
+            </p>
+            {!profileComplete ? (
+              <button 
+                onClick={completeProfile}
+                className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 mx-auto"
+              >
+                <Zap className="w-5 h-5" />
+                <span>Generate Profile & Complete Setup</span>
+              </button>
+            ) : (
+              <div className="bg-green-500 text-white px-8 py-3 rounded-xl font-semibold flex items-center justify-center space-x-2 mx-auto">
+                <CheckCircle className="w-5 h-5" />
+                <span>Profile Complete!</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Public Profile Showcase - Enhanced
+  const PublicProfile = () => (
+    <div className={`max-w-4xl mx-auto p-6 transition-all duration-300 ${isTransitioning ? 'opacity-0 transform translate-x-4' : 'opacity-100'}`}>
+      <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-lg">
+        {/* Profile Header */}
+        <div className={`bg-gradient-to-br ${user.bannerColor} p-8 text-white relative`}>
+          <div className="absolute top-6 right-6">
+            <button 
+              onClick={() => navigateToScreen('profile')}
+              className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 flex items-center space-x-2"
+            >
+              <Edit className="w-4 h-4" />
+              <span>Edit Profile</span>
+            </button>
+          </div>
+          
+          <div className="flex items-center space-x-6 mb-8">
+            <div className="w-24 h-24 bg-white/20 rounded-2xl flex items-center justify-center text-3xl font-bold">
+              {user.avatar}
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold mb-2">{user.name}</h1>
+              <p className="text-white/80 text-lg">{user.handle}</p>
+              <div className="flex items-center space-x-2 mt-3">
+                {user.badges.map((badge, index) => (
+                  <span key={index} className="bg-white/20 px-3 py-1 rounded-full text-sm">
+                    {badge}
+                  </span>
+                ))}
+                <CheckCircle className="w-5 h-5 text-white" />
+              </div>
+            </div>
+          </div>
+          
+          {/* Stats Row */}
+          <div className="grid grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="text-2xl font-bold">{user.veriScore}</div>
+              <div className="text-white/70 text-sm">VeriScore</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold">{analyticsData.totalFollowers}</div>
+              <div className="text-white/70 text-sm">Total Followers</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold">{analyticsData.engagementRate}</div>
+              <div className="text-white/70 text-sm">Engagement</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Profile Content */}
+        <div className="p-8">
+          {/* Bio */}
+          <div className="mb-8">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">About</h2>
+            <p className="text-gray-700 leading-relaxed">{user.bio}</p>
+          </div>
+
+          {/* Connected Platforms */}
+          <div className="mb-8">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Connected Platforms</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {platforms.filter(p => p.connected).map((platform, index) => {
+                const IconComponent = platform.icon;
+                return (
+                  <div key={index} className="bg-gray-50 rounded-2xl p-4 flex items-center space-x-4 hover:bg-gray-100 transition-colors duration-200">
+                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                      <IconComponent className="w-6 h-6 text-gray-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900">{platform.name}</h3>
+                      <p className="text-sm text-gray-600">{platform.followers} followers</p>
+                    </div>
+                    {platform.verification && (
+                      <CheckCircle className="w-5 h-5 text-blue-500" />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Achievements */}
+          <div className="mb-8">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Achievements</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {achievements.filter(a => a.unlocked).map((achievement, index) => (
+                <div key={index} className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-4 text-center border border-yellow-200">
+                  <div className="text-2xl mb-2">{achievement.icon}</div>
+                  <h3 className="font-semibold text-gray-900 text-sm">{achievement.name}</h3>
+                  <p className="text-xs text-gray-600 mt-1">{achievement.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Recent Activity */}
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h2>
+            <div className="space-y-3">
+              <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                    <CheckCircle className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">Completed community engagement task</p>
+                    <p className="text-sm text-gray-600">2 hours ago • +150 XP</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                    <ArrowUp className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">Moved up to rank #2 on leaderboard</p>
+                    <p className="text-sm text-gray-600">1 day ago</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Enhanced Create to Earn
+  const CreateToEarn = () => (
+    <div className={`max-w-6xl mx-auto p-6 transition-all duration-300 ${isTransitioning ? 'opacity-0 transform translate-x-4' : 'opacity-100'}`}>
+      {/* Header */}
+      <div className="text-center mb-8">
+        <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+          <Zap className="w-8 h-8 text-white" />
+        </div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">Create to Earn</h1>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          Unlock exclusive high-value tasks and earn premium rewards. Available only to verified creators.
+        </p>
+      </div>
+
+      {/* Stats Row */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center hover:shadow-lg hover:scale-105 transition-all duration-200">
+          <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <Gift className="w-6 h-6 text-purple-600" />
+          </div>
+          <div className="text-2xl font-bold text-gray-900 mb-1">4</div>
+          <div className="text-sm text-gray-600">Premium Tasks Available</div>
+        </div>
+        <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center hover:shadow-lg hover:scale-105 transition-all duration-200">
+          <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <Target className="w-6 h-6 text-green-600" />
+          </div>
+          <div className="text-2xl font-bold text-gray-900 mb-1">3,450</div>
+          <div className="text-sm text-gray-600">Total XP Available</div>
+        </div>
+        <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center hover:shadow-lg hover:scale-105 transition-all duration-200">
+          <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <Crown className="w-6 h-6 text-orange-600" />
+          </div>
+          <div className="text-2xl font-bold text-gray-900 mb-1">500</div>
+          <div className="text-sm text-gray-600">XP Already Earned</div>
+        </div>
+      </div>
+
+      {/* Premium Tasks */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {bonusTasks.map((task) => (
+          <div 
+            key={task.id}
+            className={`bg-white rounded-2xl border-2 p-6 transition-all duration-200 hover:scale-105 ${
+              task.state === 'completed'
+                ? 'border-green-200 bg-green-50'
+                : 'border-gray-200 hover:border-purple-300 hover:shadow-lg'
+            }`}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <span className={`text-xs font-medium px-3 py-1 rounded-full ${
+                task.difficulty === 'Easy' ? 'bg-green-100 text-green-700' :
+                task.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-700' :
+                'bg-red-100 text-red-700'
+              }`}>
+                {task.difficulty}
+              </span>
+              <span className="text-xl font-bold text-purple-600">+{task.points}</span>
+            </div>
+            
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{task.title}</h3>
+            <p className="text-gray-600 text-sm mb-6">{task.description}</p>
+            
+            {task.state === 'completed' ? (
+              <div className="bg-green-100 text-green-700 py-3 px-4 rounded-xl text-center font-medium flex items-center justify-center space-x-2">
+                <CheckCircle className="w-5 h-5" />
+                <span>Completed • +{task.points} XP Earned</span>
+              </div>
+            ) : (
+              <button 
+                onClick={() => completeBonusTask(task.id)}
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-4 rounded-xl font-medium transition-all duration-200 hover:scale-105"
+              >
+                Start Task
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Call to Action */}
+      <div className="mt-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl p-8 text-white text-center">
+        <h2 className="text-2xl font-bold mb-4">Become a Veri+ Creator</h2>
+        <p className="text-purple-100 mb-6 max-w-2xl mx-auto">
+          Unlock even more exclusive opportunities, higher reward multipliers, and early access to new features.
+        </p>
+        <button className="bg-white text-purple-600 px-8 py-3 rounded-xl font-semibold hover:bg-purple-50 transition-all duration-200 hover:scale-105">
+          Upgrade to Veri+ • 5,000 XP
+        </button>
+      </div>
+    </div>
+  );
+
+  // Enhanced Analytics
+  const Analytics = () => (
+    <div className={`max-w-7xl mx-auto p-6 space-y-8 transition-all duration-300 ${isTransitioning ? 'opacity-0 transform translate-x-4' : 'opacity-100'}`}>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Creator Analytics</h1>
+          <p className="text-gray-600">Comprehensive performance insights</p>
+        </div>
+        <div className="flex space-x-1 bg-gray-100 rounded-xl p-1">
+          <button className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-lg transition-colors duration-200">7 Days</button>
+          <button className="px-4 py-2 text-sm font-medium bg-white text-gray-900 rounded-lg shadow-sm">30 Days</button>
+          <button className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-lg transition-colors duration-200">90 Days</button>
+        </div>
+      </div>
+      
+      {/* Key Metrics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {[
+          { title: 'Total Followers', value: analyticsData.totalFollowers, change: '+15.3%', icon: Users, color: 'blue' },
+          { title: 'Total Views', value: analyticsData.totalViews, change: '+23.4%', icon: Eye, color: 'purple' },
+          { title: 'Engagement Rate', value: analyticsData.engagementRate, change: '+1.2%', icon: Heart, color: 'green' },
+          { title: 'VeriScore', value: analyticsData.veriScore, change: '+5', icon: BarChart3, color: 'orange' }
+        ].map((metric, index) => (
+          <div key={index} className="bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg hover:scale-105 transition-all duration-200">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center bg-${metric.color}-50`}>
+                <metric.icon className={`w-5 h-5 text-${metric.color}-600`} />
+              </div>
+              <h3 className="font-semibold text-gray-800">{metric.title}</h3>
+            </div>
+            <div className="text-3xl font-bold text-gray-900 mb-2">{metric.value}</div>
+            <div className="text-green-600 text-sm font-medium">{metric.change} this month</div>
+          </div>
+        ))}
+      </div>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Platform Performance */}
+        <div className="bg-white rounded-2xl border border-gray-200 p-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">Platform Performance</h2>
+          <div className="space-y-4">
+            {analyticsData.platforms.map((platform, index) => {
+              const IconComponent = platform.icon;
+              return (
+                <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                      <IconComponent className={`w-5 h-5 ${platform.color}`} />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">{platform.name}</h3>
+                      <p className="text-sm text-gray-600">{platform.followers} followers • {platform.engagement} engagement</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-green-600 font-bold">+{platform.growth}%</div>
+                    <div className="text-xs text-gray-500">30d growth</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        
+        {/* Top Performing Content */}
+        <div className="bg-white rounded-2xl border border-gray-200 p-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">Top Performing Content</h2>
+          <div className="space-y-4">
+            {analyticsData.topContent.map((content, index) => (
+              <div key={index} className="p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200">
+                <h3 className="font-semibold text-gray-900 mb-2">{content.title}</h3>
+                <div className="flex items-center justify-between text-sm text-gray-600">
+                  <span>{content.views} views • {content.engagement} engagement</span>
+                  <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-lg font-medium">{content.platform}</span>
+                </div>
+                <div className="text-xs text-gray-500 mt-1">{content.time}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      
+      <div className="flex items-center justify-between text-sm text-gray-600 bg-white rounded-2xl border border-gray-200 p-6">
+        <span>Data updated 2 minutes ago</span>
+        <div className="flex space-x-4">
+          <button className="text-blue-600 hover:text-blue-700 font-medium">Export Data</button>
+          <button className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-105">
+            Detailed Report
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Enhanced Leaderboard
+  const Leaderboard = () => (
+    <div className={`max-w-6xl mx-auto p-6 space-y-8 transition-all duration-300 ${isTransitioning ? 'opacity-0 transform translate-x-4' : 'opacity-100'}`}>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <div className="w-12 h-12 bg-yellow-50 rounded-xl flex items-center justify-center">
+            <Trophy className="w-6 h-6 text-yellow-600" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Global Leaderboard</h1>
+            <p className="text-gray-600">Compete with creators worldwide</p>
+          </div>
+        </div>
+        <div className="flex items-center space-x-2">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <span className="text-sm font-medium text-green-600">LIVE</span>
+        </div>
+      </div>
+      
+      {/* Category Filters */}
+      <div className="flex flex-wrap gap-2">
+        {['All', 'FPS', 'Fighting', 'Adventure', 'Battle Royale', 'RPG', 'Racing'].map((category, index) => (
+          <button 
+            key={category}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 ${
+              index === 0 
+                ? 'bg-purple-600 text-white' 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+      
+      {/* Leaderboard List */}
+      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        {leaderboardData.map((creator) => (
+          <div 
+            key={creator.rank} 
+            className={`flex items-center justify-between p-6 border-b border-gray-100 last:border-b-0 transition-all duration-200 hover:scale-105 ${
+              creator.isCurrentUser ? 'bg-blue-50' : 'hover:bg-gray-50'
+            }`}
+          >
+            <div className="flex items-center space-x-4">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
+                creator.rank === 1 ? 'bg-yellow-500' : 
+                creator.rank === 2 ? 'bg-gray-400' : 
+                creator.rank === 3 ? 'bg-orange-500' : 'bg-purple-500'
+              }`}>
+                {creator.rank}
+              </div>
+              <div className={`relative w-12 h-12 rounded-full flex items-center justify-center text-white font-bold ${
+                creator.isCurrentUser ? 'bg-blue-500' : 'bg-purple-500'
+              }`}>
+                {creator.avatar}
+                {creator.online && (
+                  <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                )}
+              </div>
+              <div>
+                <div className="flex items-center space-x-2">
+                  <span className="font-bold text-lg text-gray-900">{creator.name}</span>
+                  {creator.verified && <CheckCircle className="w-5 h-5 text-blue-500" />}
+                  {creator.tier === 'Veri+ Creator' && <Crown className="w-5 h-5 text-yellow-500" />}
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-medium">
+                    {creator.tier}
+                  </span>
+                  <span className="text-xs text-gray-600">{creator.category}</span>
+                </div>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="font-bold text-xl text-gray-900">{creator.score.toLocaleString()}</div>
+              <div className={`flex items-center justify-end space-x-1 text-sm ${
+                creator.change > 0 ? 'text-green-600' : 'text-red-600'
+              }`}>
+                {creator.change > 0 ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />}
+                <span>+{Math.abs(creator.change)}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <div className="text-center">
+        <button className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105">
+          View Full Leaderboard
+        </button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation />
+      <Confetti />
+      <Notification />
+      <LiveActivityModal />
+      
+      {/* Page Content with Transitions */}
+      <div className={`${isMobile ? 'pb-20' : ''}`}>
+        {currentScreen === 'dashboard' && <Dashboard />}
+        {currentScreen === 'tasks' && <TasksModal />}
+        {currentScreen === 'profile' && <ProfileBuilder />}
+        {currentScreen === 'public-profile' && <PublicProfile />}
+        {currentScreen === 'analytics' && <Analytics />}
+        {currentScreen === 'leaderboard' && <Leaderboard />}
+        {currentScreen === 'create-to-earn' && profileComplete && <CreateToEarn />}
+      </div>
+      
+      <MobileNavigation />
+    </div>
+  );
+};
+
+export default VeriMVPDemo;

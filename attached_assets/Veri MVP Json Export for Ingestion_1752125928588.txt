@@ -1,0 +1,444 @@
+{
+  "project": {
+    "name": "Veri MVP Creator Platform",
+    "version": "2025-07-07_v01",
+    "scope": "UX & Design Flow (Creator-first MVP)",
+    "type": "ng_plus_platform",
+    "status": "design_phase"
+  },
+  
+  "design_system": {
+    "style_guide_source": "# style guide – veri creator app",
+    "color_tokens": {
+      "primary_500": "#00d6a2",
+      "accent_violet_500": "#8456ff", 
+      "neutral_800": "#1a1b25",
+      "surface_100": "#f6f7f8",
+      "surface_900": "#131417"
+    },
+    "typography": {
+      "primary_font": "Inter",
+      "fallback": "system-ui",
+      "scale": ["12px", "14px", "16px", "20px", "24px", "32px", "40px"],
+      "line_height": 1.4,
+      "letter_spacing": "-0.2% for sizes >20px"
+    },
+    "spacing_tokens": {
+      "base_unit": "4pt",
+      "scale": {
+        "sp_1": "4px",
+        "sp_2": "8px", 
+        "sp_3": "12px",
+        "sp_4": "16px",
+        "sp_5": "20px",
+        "sp_6": "24px",
+        "sp_8": "32px",
+        "sp_10": "40px"
+      }
+    },
+    "motion_principles": {
+      "interaction_feedback": "120ms ease-out",
+      "page_transitions": "240ms ease-in-out",
+      "loading_threshold": "400ms skeleton > spinners",
+      "mobile_haptics": "light impact on primary actions"
+    }
+  },
+
+  "user_personas": [
+    {
+      "type": "community_users",
+      "focus": "Basic engagement, task completion",
+      "key_features": ["social_tasks", "leaderboard_participation", "point_earning"]
+    },
+    {
+      "type": "creators", 
+      "focus": "Content optimization, analytics, monetization",
+      "key_features": ["ai_profile_generation", "analytics_dashboard", "creator_tools", "earnings_tracking"]
+    },
+    {
+      "type": "studios",
+      "focus": "Campaign creation, creator discovery, ROI tracking", 
+      "key_features": ["campaign_builder", "creator_matching", "performance_analytics", "white_label_support"]
+    }
+  ],
+
+  "core_flows": [
+    {
+      "flow_name": "onboarding",
+      "priority": "P0",
+      "estimated_effort": "2-3 sprints",
+      "file_references": [
+        "2025-07-07_veri-design-mvp-dashboard_v01.jpeg",
+        "LiquidGlassButton.tsx",
+        "VeriLogo.tsx"
+      ],
+      "success_metrics": {
+        "homepage_conversion": "15%",
+        "signup_completion": "85%", 
+        "social_connection": "70%",
+        "onboarding_time": "<5 minutes"
+      },
+      "firebase_events": ["accountCreation", "userSignIn", "socialConnect"],
+      "features": [
+        {
+          "feature": "website_home",
+          "components": ["hero_section", "value_proposition", "cta_buttons", "getting_started_preview"],
+          "design_elements": ["radial_gradient", "glass_morphism", "partnership_logos"]
+        },
+        {
+          "feature": "sign_up_flow", 
+          "steps": ["email_password", "oauth_options", "verification"],
+          "integrations": ["firebase_auth", "google_oauth", "twitter_oauth"]
+        },
+        {
+          "feature": "social_connection",
+          "platforms": ["twitter", "youtube", "instagram", "linkedin", "twitch"],
+          "incentives": ["+500 points per platform", "profile_completeness_scoring"]
+        }
+      ]
+    },
+    
+    {
+      "flow_name": "profile_builder",
+      "priority": "P0", 
+      "estimated_effort": "3-4 sprints",
+      "file_references": [
+        "2025-07-07_veri-design-mvp-profile-builder_v01.jpeg",
+        "BasicProfileBuilderAudienceOrCreator.tsx"
+      ],
+      "features": [
+        {
+          "feature": "profile_showcase",
+          "components": ["hero_banner", "bio_editor", "achievement_gallery", "platform_indicators"],
+          "customization": ["themes", "layouts", "color_schemes"]
+        },
+        {
+          "feature": "ai_profile_generation",
+          "capabilities": ["bio_optimization", "content_categorization", "audience_analysis", "performance_benchmarking"],
+          "success_target": "80% adoption of AI suggestions"
+        },
+        {
+          "feature": "profile_selection",
+          "user_types": ["studio_builder", "creator_builder"],
+          "criteria": ["verification_level", "platform_types", "follower_thresholds"]
+        }
+      ]
+    },
+
+    {
+      "flow_name": "dashboard_creator_tools",
+      "priority": "P0",
+      "estimated_effort": "4-5 sprints", 
+      "file_references": [
+        "2025-07-07_veri-design-mvp-dashboard_v01.jpeg",
+        "Leaderboard.tsx",
+        "VeriScore.tsx"
+      ],
+      "features": [
+        {
+          "feature": "veri_score_system",
+          "calculation_weights": {
+            "content_quality": 30,
+            "community_impact": 25,
+            "platform_performance": 20, 
+            "consistency": 15,
+            "collaboration": 10
+          },
+          "display_components": ["score_badge", "trend_line", "category_breakdown"]
+        },
+        {
+          "feature": "streak_system", 
+          "types": ["daily_login", "content_creation", "engagement", "task_completion"],
+          "rewards": ["7_day: 200pts", "14_day: 500pts + badge", "30_day: 1000pts + features", "90_day: VIP_status"]
+        },
+        {
+          "feature": "analytics_dashboard",
+          "metrics": ["follower_growth", "engagement_trends", "content_performance", "revenue_tracking"],
+          "visualization": ["recharts", "real_time_updates", "export_functionality"]
+        }
+      ]
+    },
+
+    {
+      "flow_name": "engagement_tasks",
+      "priority": "P1", 
+      "estimated_effort": "3-4 sprints",
+      "file_references": [
+        "2025-07-07_veri-design-mvp-engagement-tasks_v01.jpeg"
+      ],
+      "task_categories": [
+        {
+          "category": "social_tasks",
+          "point_range": "50-200",
+          "examples": ["follow_creators", "meaningful_comments", "content_sharing"]
+        },
+        {
+          "category": "content_tasks", 
+          "point_range": "200-500",
+          "examples": ["upload_content", "trending_hashtags", "collaborations"]
+        },
+        {
+          "category": "referral_tasks",
+          "point_range": "500-1000", 
+          "examples": ["invite_friends", "p2p_transfers", "community_building"]
+        },
+        {
+          "category": "challenge_tasks",
+          "point_range": "1000+",
+          "examples": ["creative_challenges", "competitions", "long_form_content"]
+        }
+      ],
+      "p2p_system": {
+        "matera_integration": true,
+        "features": ["email_targeting", "blockchain_logging", "staking_mechanics"],
+        "limits": {
+          "daily": 5000,
+          "weekly": 20000
+        }
+      }
+    },
+
+    {
+      "flow_name": "creator_analytics", 
+      "priority": "P1",
+      "estimated_effort": "3-4 sprints",
+      "file_references": [
+        "2025-07-07_veri-design-mvp-creator-analytics_v01.jpeg"
+      ],
+      "analytics_categories": [
+        {
+          "category": "engagement_analytics",
+          "metrics": ["like_to_view_ratio", "comment_quality", "save_share_percentage", "growth_velocity"]
+        },
+        {
+          "category": "content_analytics", 
+          "metrics": ["top_content_types", "hashtag_effectiveness", "cross_platform_performance"]
+        },
+        {
+          "category": "audience_analytics",
+          "metrics": ["demographics", "geographic_distribution", "interest_patterns", "churn_analysis"]
+        },
+        {
+          "category": "revenue_tracking",
+          "metrics": ["partnership_earnings", "creator_fund_payments", "merchandise_sales", "p2p_conversions"]
+        }
+      ],
+      "ai_recommendations": [
+        "optimal_posting_schedules",
+        "content_format_suggestions", 
+        "audience_targeting",
+        "collaboration_opportunities"
+      ]
+    },
+
+    {
+      "flow_name": "global_leaderboard",
+      "priority": "P1",
+      "estimated_effort": "2-3 sprints",
+      "file_references": [
+        "2025-07-07_veri-design-mvp-global-leaderboard_v01.jpeg"
+      ],
+      "ranking_algorithm": {
+        "veri_score": 40,
+        "recent_activity": 25,
+        "community_impact": 20,
+        "consistency": 15
+      },
+      "category_filters": [
+        "gaming_genres": ["fps", "fighting", "adventure", "battle_royale", "rpg", "racing"],
+        "content_types": ["streaming", "educational", "entertainment", "reviews"],
+        "geographic_regions": ["global", "north_america", "europe", "asia_pacific"],
+        "creator_tiers": ["community", "rising_star", "top_10_percent", "top_1_percent", "veri_plus"]
+      ],
+      "features": [
+        "real_time_updates",
+        "position_change_indicators", 
+        "trending_highlights",
+        "social_interactions",
+        "recognition_badges"
+      ]
+    },
+
+    {
+      "flow_name": "campaign_creation",
+      "priority": "P2",
+      "estimated_effort": "4-5 sprints", 
+      "access_requirement": "studio_verified",
+      "features": [
+        {
+          "feature": "campaign_builder",
+          "steps": ["objective_definition", "audience_targeting", "content_requirements", "budget_allocation", "timeline_setup"],
+          "firebase_events": ["createCampaign", "campaignTaskCreated"]
+        },
+        {
+          "feature": "creator_matching",
+          "algorithm_weights": {
+            "audience_alignment": 30,
+            "content_fit": 25,
+            "performance_history": 20,
+            "availability": 15, 
+            "budget_compatibility": 10
+          }
+        },
+        {
+          "feature": "white_label_support",
+          "customization": ["brand_theming", "logo_placement", "domain_mapping", "template_library"],
+          "enterprise_features": ["team_management", "advanced_reporting", "custom_integrations"]
+        }
+      ]
+    }
+  ],
+
+  "technical_integrations": {
+    "firebase": {
+      "auth_events": [
+        "accountCreation",
+        "userSignIn", 
+        "socialConnect",
+        "connectedBoot"
+      ],
+      "user_management": [
+        "updateUser",
+        "setUserType", 
+        "verifyTaskCompletion"
+      ]
+    },
+    "matera_blockchain": {
+      "features": [
+        "p2p_point_transfers",
+        "reputation_staking",
+        "cross_chain_compatibility",
+        "defi_integration"
+      ],
+      "smart_contracts": [
+        "point_transfer_validation",
+        "staking_rewards",
+        "campaign_payments",
+        "creator_royalties"
+      ]
+    },
+    "social_platforms": {
+      "twitter_api_v2": {
+        "endpoints": ["user_auth", "profile_data", "follower_metrics", "tweet_analytics"],
+        "rate_limits": "standard_tier"
+      },
+      "youtube_data_api": {
+        "endpoints": ["channel_info", "subscriber_counts", "video_performance", "community_data"],
+        "quota_management": "required"
+      },
+      "instagram_basic_display": {
+        "endpoints": ["profile_info", "media_count", "engagement_data"],
+        "business_account_required": true
+      }
+    }
+  },
+
+  "success_metrics": {
+    "user_acquisition": {
+      "homepage_conversion": "15%",
+      "signup_completion": "85%", 
+      "social_connection": "70%",
+      "profile_completion": "60%"
+    },
+    "engagement": {
+      "daily_active_users": "60%",
+      "session_duration": "8+ minutes",
+      "feature_adoption": "80%",
+      "streak_maintenance": "40%"
+    },
+    "revenue_targets": {
+      "monthly_campaign_volume": "$100K+",
+      "average_campaign_size": "$5K+", 
+      "studio_retention": "75%",
+      "creator_monetization": "30% within 90 days"
+    },
+    "performance_benchmarks": {
+      "page_load_time": "<2 seconds",
+      "mobile_performance": "90+ Lighthouse score",
+      "api_response_time": "<500ms",
+      "uptime_requirement": "99.9%"
+    }
+  },
+
+  "implementation_timeline": {
+    "phase_1_foundation": {
+      "duration": "weeks_1_4",
+      "deliverables": [
+        "design_system_implementation",
+        "core_component_library", 
+        "authentication_flow",
+        "basic_dashboard",
+        "social_platform_connections"
+      ]
+    },
+    "phase_2_engagement": {
+      "duration": "weeks_5_8",
+      "deliverables": [
+        "veri_score_engine",
+        "task_system",
+        "leaderboard_functionality",
+        "profile_builder_completion",
+        "analytics_dashboard"
+      ]
+    },
+    "phase_3_advanced": {
+      "duration": "weeks_9_12", 
+      "deliverables": [
+        "ai_profile_generation",
+        "campaign_creation_tools",
+        "p2p_transfer_system",
+        "advanced_analytics",
+        "white_label_support"
+      ]
+    },
+    "phase_4_optimization": {
+      "duration": "weeks_13_16",
+      "deliverables": [
+        "performance_optimization",
+        "mobile_app_development", 
+        "advanced_gamification",
+        "creator_monetization_tools",
+        "enterprise_features"
+      ]
+    }
+  },
+
+  "file_asset_mapping": {
+    "design_assets": [
+      "2025-07-07_veri-design-mvp-dashboard_v01.jpeg",
+      "2025-07-07_veri-design-mvp-profile-builder_v01.jpeg",
+      "2025-07-07_veri-design-mvp-engagement-tasks_v01.jpeg", 
+      "2025-07-07_veri-design-mvp-creator-analytics_v01.jpeg",
+      "2025-07-07_veri-design-mvp-global-leaderboard_v01.jpeg"
+    ],
+    "component_files": [
+      "LiquidGlassButton.tsx",
+      "VeriLogo.tsx",
+      "Leaderboard.tsx", 
+      "VeriScore.tsx",
+      "BasicProfileBuilderAudienceOrCreator.tsx"
+    ],
+    "flow_documentation": [
+      "Veri MVP Flow for Claude.pdf",
+      "mvp_flow_mermaid.mermaid",
+      "2025-07-07_veri-design-mvp-flow-mermaid_v01"
+    ]
+  },
+
+  "design_handoff": {
+    "token_extraction": "via Figtree CLI from Figma",
+    "component_standards": "documented in style guide",
+    "accessibility_requirements": "WCAG 2.1 AA compliance",
+    "browser_support": ["Chrome 90+", "Safari 14+", "Firefox 88+", "Edge 90+"],
+    "mobile_first": true,
+    "responsive_breakpoints": ["480px", "768px", "1024px", "1280px"]
+  },
+
+  "next_steps": [
+    "technical_architecture_definition",
+    "api_integration_specifications",
+    "database_schema_design", 
+    "security_implementation_plan",
+    "testing_strategy_and_qa_protocols"
+  ]
+}

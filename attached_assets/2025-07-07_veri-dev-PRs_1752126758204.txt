@@ -1,0 +1,2408 @@
+# Veri MVP UX Flow Overview (Creator-Focused)
+**Version:** 2025-07-07 v01  
+**Scope:** Creator-first MVP with tokenized reputation mechanics
+
+---
+
+## 🎯 Core User Journey
+
+```
+Website Entry → Creator Onboarding → Social Connect → Creator Dashboard → Profile/Tasks/Analytics
+```
+
+The MVP centers around a **creator-focused dashboard experience** where creators connect social accounts, build verified profiles, complete engagement tasks for VeriPoints, and access AI-powered tools for content optimization.
+
+---
+
+## 📋 Module Breakdown
+
+### 1. **Creator Onboarding Flow** 
+*Files: `mvp_flow_mermaid.mermaid`, `Veri MVP Flow for Claude.pdf`*
+
+**Entry Point:** Website home page targeting creators  
+**Goal:** Get creators authenticated + socially connected  
+**Key Components:**
+- Creator-focused landing page with value prop
+- Sign up/sign in (email + Google/X oauth)
+- Immediate social account linking (X, YouTube, Instagram)
+- Direct path to creator dashboard
+
+### 2. **Creator Profile Builder**
+*Files: `2025-07-07_veri-design-mvp-profile-builder_v01.jpeg`*
+
+**Goal:** Create verified, AI-enhanced creator profiles  
+**Key Components:**
+- Profile showcase (public-facing creator portfolio)
+- Profile editor (account info, social connections)
+- AI profile generation from connected accounts
+- Content upload + verification system
+- "Become a Veri+ Creator" upgrade path
+
+### 3. **Creator Dashboard**
+*Files: `2025-07-07_veri-design-mvp-dashboard_v01.jpeg`*
+
+**Goal:** Central hub for creator activity + growth tools  
+**Key Components:**
+- VeriScore card (99 score, weekly calculated)
+- VeriPoints balance (2500XP system)
+- Social connection status with point rewards
+- AI Agent tools access
+- Profile building progress
+- Task completion tracking
+
+### 4. **Creator Engagement Tasks**
+*Files: `2025-07-07_veri-design-mvp-engagement-tasks_v01.jpeg`*
+
+**Goal:** Gamified creator community building + point accumulation  
+**Key Components:**
+- Creator onboarding tasks (Follow Veri, Join community)
+- Creator verification tasks (Create Veri ID, Share achievement)
+- Friend referral system for creator network growth
+- Premium creator unlock (+5,000pts threshold)
+
+### 5. **Creator Analytics**
+*Files: `2025-07-07_veri-design-mvp-creator-analytics_v01.jpeg`*
+
+**Goal:** Cross-platform performance insights for creators  
+**Key Components:**
+- Aggregated creator metrics (followers, views, engagement)
+- Platform breakdown (YouTube, Instagram, X, LinkedIn)
+- Top-performing content tracking
+- Creator-specific growth insights
+
+### 6. **Creator Leaderboard**
+*Files: `2025-07-07_veri-design-mvp-global-leaderboard_v01.jpeg`*
+
+**Goal:** Creator discovery + competitive ranking  
+**Key Components:**
+- Gaming category filters for creator niches
+- Creator tier badges (Veri+ Creator, Top 1%, Rising Star)
+- Live creator rankings with VeriScore changes
+- Creator verification + category specialization
+
+### 7. **Creator AI Agent**
+*Files: `2025-07-07_veri-design-mvp-dashboard_v01.jpeg`*
+
+**Goal:** AI-powered creator growth tools  
+**Key Components:**
+- Content generation for creators
+- AI clipping tool for highlight reels
+- Cross-platform content optimization
+- Creator-specific analytics insights
+
+---
+
+# PR-001: Creator Onboarding Flow
+
+## Overview
+**Module:** Creator Acquisition + Authentication  
+**Goal:** Convert creator website visitors to authenticated users with connected social accounts  
+**Success Metrics:** Creator registration rate, social connection rate, time-to-creator-dashboard
+
+---
+
+## User Stories
+
+### Primary Flow
+**As a content creator, I want to quickly understand how Veri can help grow my audience and revenue, create an account, and connect my social platforms so I can start building my verified creator profile and earning VeriPoints.**
+
+### Creator Personas
+- **Gaming Creator:** Established YouTube/Twitch presence, 10k-100k followers
+- **Emerging Creator:** Building across multiple platforms, 1k-10k followers  
+- **Multi-Platform Creator:** Active on 3+ platforms, needs unified analytics
+
+---
+
+## UI States + Wireframe Annotations
+
+### State 1: Creator-Focused Website Home
+*Reference: `mvp_flow_mermaid.mermaid` - Node A*
+
+**Components:**
+- Hero: "The Creator Platform Built for Growth"
+- Creator value props: "Verify your content • Track cross-platform analytics • Earn VeriPoints"
+- "Join as Creator" primary CTA
+- Creator testimonials/case studies
+- Platform logos (YouTube, X, Instagram, TikTok)
+
+**Creator-Specific Messaging:**
+- "Connect all your platforms in one place"
+- "AI-powered content optimization"
+- "Earn rewards for authentic engagement"
+
+---
+
+### State 2: Creator Authentication
+*Reference: `mvp_flow_mermaid.mermaid` - Nodes B, C*
+
+**Components:**
+- "Join the Creator Economy" header
+- Streamlined creator signup form
+- OAuth providers optimized for creators
+- "Already a creator? Sign in" toggle
+
+**Creator Sign Up Inputs:**
+- Creator name/handle (required)
+- Email address (required)
+- Password (required)
+- Primary platform (dropdown: YouTube, X, Instagram, TikTok)
+- Creator terms acceptance
+
+**Creator OAuth Options:**
+- "Continue with Google" (YouTube integration hint)
+- "Continue with X" (Twitter creator verification)
+- Platform-specific benefits messaging
+
+---
+
+### State 3: Creator Account Success
+*Reference: `mvp_flow_mermaid.mermaid` - Nodes H, I*
+
+**Components:**
+- "Welcome to the Creator Community!" message
+- Immediate social connection prompt
+- Creator dashboard preview
+- Email verification (background process)
+
+**Firebase Events:**
+- `creatorAccountCreation`
+- `userSignIn` (with userType: creator)
+
+---
+
+### State 4: Creator Social Connection
+*Reference: `mvp_flow_mermaid.mermaid` - Nodes P, Q, R, S*
+
+**Components:**
+- "Connect Your Creator Platforms" header
+- Creator-optimized platform cards
+- Platform-specific creator benefits
+- "Connect at least 1 platform to continue"
+
+**Creator Platform Cards:**
+- **YouTube:** "Import subscriber count • Track video performance • +500 VeriPoints"
+- **X (Twitter):** "Verify your tweets • Track engagement • +500 VeriPoints"  
+- **Instagram:** "Showcase your content • Track story performance • +500 VeriPoints"
+- **TikTok:** "Coming soon" (disabled state)
+
+**Creator Connection Benefits:**
+- Each platform shows specific creator metrics it will track
+- Points preview for each connection
+- "More platforms = higher VeriScore" messaging
+
+---
+
+### State 5: Creator Dashboard Redirect
+*Reference: `mvp_flow_mermaid.mermaid` - Node V*
+
+**Components:**
+- "Setting up your creator dashboard..." loading state
+- Platform data import progress
+- Creator onboarding checklist preview
+- Auto-redirect to creator dashboard
+
+**Creator Onboarding Checklist:**
+- ✅ Account created
+- ✅ Platform(s) connected  
+- ⏳ Build your creator profile
+- ⏳ Complete creator verification tasks
+- ⏳ Invite fellow creators
+
+---
+
+## Technical Requirements
+
+### Creator-Focused Firebase Auth
+- Creator-optimized registration flow
+- Platform-prioritized OAuth (YouTube via Google, X direct)
+- Creator profile data structure
+- Creator-specific event tracking
+
+### Creator Event Tracking
+**Firebase Events:**
+- `creatorAccountCreation`
+- `creatorSignIn` 
+- `creatorSocialConnect` (platform-specific)
+
+**BrightMatter Events:**
+- `setUserType: creator` (automatic)
+- `creatorConnectedBoot`
+
+### Creator Data Model
+```json
+{
+  "userId": "firebase_uid",
+  "userType": "creator",
+  "creatorProfile": {
+    "handle": "string",
+    "primaryPlatform": "youtube|x|instagram",
+    "connectedPlatforms": ["youtube", "x"],
+    "veriPoints": 1000,
+    "veriScore": null,
+    "profileComplete": false
+  },
+  "platformData": {
+    "youtube": { "channelId": "...", "subscriberCount": 50000 },
+    "x": { "username": "...", "followerCount": 12000 }
+  }
+}
+```
+
+---
+
+## Creator Navigation Flow
+
+```
+Creator Landing → Creator Auth → Platform Connect → Creator Dashboard
+```
+
+**Creator-Specific Exit Points:**
+- Incomplete platform connection → Dashboard with connection prompts
+- Skip profile building → Dashboard with profile completion CTA
+- Complete flow → Full creator dashboard access
+
+---
+
+## Design Assets Required
+- Creator-focused landing page
+- Creator authentication flow
+- Platform connection cards with creator benefits
+- Creator loading states
+- Creator dashboard preview
+- Creator onboarding checklist
+
+---
+
+# PR-002: Creator Profile Builder
+
+## Overview
+**Module:** Creator Profile Creation + Management  
+**Goal:** Enable creators to build comprehensive, AI-enhanced profiles that showcase their content and verify their authenticity  
+**Success Metrics:** Profile completion rate, AI generation usage, profile view-to-follow conversion
+
+---
+
+## User Stories
+
+### Primary Flow
+**As a creator, I want to build a comprehensive profile that showcases my content across platforms, uses AI to optimize my presentation, and helps other creators and brands discover me.**
+
+### Secondary Flows
+- **Profile Discovery:** Other creators can view and follow my profile
+- **AI Enhancement:** AI analyzes my connected accounts to generate optimized profile content
+- **Verification:** Profile elements get verified through connected social accounts
+- **Upgrade Path:** Clear progression to Veri+ Creator status
+
+---
+
+## UI States + Wireframe Annotations
+
+### State 1: Profile Dashboard Overview
+*Reference: `2025-07-07_veri-design-mvp-profile-builder_v01.jpeg`*
+
+**Layout:** Modal/overlay design with gradient background
+**Header Components:**
+- "Your Profile" title
+- "View Profile" button (public profile preview)
+- "Update Banner & Avatar" button
+- Close (X) button
+
+**Profile Section:**
+- Circular avatar placeholder (default user icon)
+- Creator name: "Sam Huber" 
+- Bio prompt: "Edit bio and tell us about your world..."
+- Profile completion indicator (implicit)
+
+**Action Grid (6 cards):**
+```
+[Account Info]     [Social Connections]    [Upload Content]
+[Earn Veri Points] [Meet Your Veri Agent]  [Become a Veri+ Creator]
+```
+
+**AI Profile Generation Section:**
+- Highlighted section with description
+- "Let our AI analyze your connected social accounts to automatically generate an optimized profile, bio, and showcase your best content"
+- Primary CTA: "Generate My Profile with AI ✨"
+
+---
+
+### State 2: Account Info Editor
+*Reference: `mvp_flow_mermaid.mermaid` - Profile Editor nodes*
+
+**Components:**
+- Creator handle/username (editable)
+- Display name
+- Bio/description (rich text editor)
+- Location (optional)
+- Website/portfolio link
+- Creator category selection (Gaming, Lifestyle, Tech, etc.)
+- Content themes/tags
+
+**Validation:**
+- Handle uniqueness check
+- Bio character limits (280 chars recommended)
+- URL validation for external links
+
+---
+
+### State 3: Social Connections Manager
+*Reference: Dashboard image showing connected platforms*
+
+**Connected Platforms Display:**
+- Platform cards showing connection status
+- "Connected ✓" with point values (+500 Points)
+- Platform-specific metrics preview
+- "Connect [Platform]" for unconnected accounts
+
+**Per Platform Card:**
+- Platform logo + name
+- Connection status indicator
+- Points earned (+500 Pts)
+- Quick disconnect/reconnect option
+- Data sync status ("Last updated: 2 minutes ago")
+
+**Additional Platforms:**
+- Instagram: "Connect Instagram +500 Pts" 
+- TikTok: "Coming Soon"
+- Twitch: Available for connection
+- LinkedIn: Available for gaming industry creators
+
+---
+
+### State 4: Content Upload System
+*Reference: Profile builder interface*
+
+**Upload Interface:**
+- Drag-and-drop content area
+- Supported formats: Images, videos, GIFs
+- Content categorization (Highlights, Recent Work, Achievements)
+- Automatic content import from connected platforms
+
+**Content Management:**
+- Grid view of uploaded content
+- Content verification status
+- Platform origin tags (YouTube, X, Instagram)
+- Performance metrics integration
+- Content scheduling/featured selection
+
+---
+
+### State 5: AI Profile Generation Flow
+*Reference: Green button in profile builder*
+
+**AI Analysis Process:**
+- "Analyzing your connected accounts..." loading state
+- Platform data processing indicator
+- Content analysis progress bar
+- Estimated completion time
+
+**AI Generated Output:**
+- Optimized bio based on content themes
+- Suggested profile tags/categories
+- Content highlights selection
+- Cross-platform activity summary
+- Recommended profile improvements
+
+**Review + Edit Interface:**
+- Side-by-side: Current vs AI-generated
+- Individual element approval (bio, tags, highlights)
+- "Accept All" or selective adoption
+- "Regenerate" option for different AI approach
+
+---
+
+### State 6: Veri+ Creator Upgrade Path
+*Reference: Orange/gradient button in profile builder*
+
+**Upgrade Benefits Display:**
+- Enhanced analytics dashboard
+- Priority in creator leaderboards
+- Advanced AI tools access
+- Campaign collaboration opportunities
+- Higher VeriPoint earning multipliers
+
+**Requirements:**
+- Profile completion (80%+)
+- Social verification across 2+ platforms
+- Minimum VeriScore threshold
+- Content authenticity verification
+
+**Upgrade Process:**
+- Profile completion checklist
+- Social account verification steps
+- Content review process
+- Veri+ Creator badge activation
+
+---
+
+## Creator Profile Components
+
+### Profile Data Structure
+```json
+{
+  "creatorProfile": {
+    "handle": "@samhuber",
+    "displayName": "Sam Huber",
+    "bio": "Gaming content creator focusing on FPS and strategy games...",
+    "location": "Los Angeles, CA",
+    "website": "https://samhuber.gg",
+    "categories": ["Gaming", "FPS", "Strategy"],
+    "contentHighlights": [
+      {
+        "type": "video",
+        "platform": "youtube",
+        "url": "...",
+        "metrics": { "views": 125000, "engagement": 15.2 }
+      }
+    ],
+    "verification": {
+      "verified": true,
+      "platforms": ["youtube", "x"],
+      "veriPlusStatus": false
+    },
+    "aiGenerated": {
+      "bio": true,
+      "tags": true,
+      "highlights": false
+    }
+  }
+}
+```
+
+### Profile Completion Scoring
+- **Basic Info (20%):** Handle, name, bio, category
+- **Social Connections (30%):** 2+ verified platforms
+- **Content Showcase (25%):** 3+ content pieces uploaded
+- **AI Enhancement (15%):** AI profile generation used
+- **Verification (10%):** Platform verification completed
+
+---
+
+## Technical Requirements
+
+### AI Profile Generation
+- Integration with BrightMatter AI analysis
+- Social platform data ingestion
+- Content theme extraction
+- Bio optimization algorithms
+- Performance prediction modeling
+
+### Content Management
+- Multi-platform content import
+- Image/video optimization
+- Content verification pipeline
+- Performance metrics integration
+- Featured content rotation
+
+### Profile Verification
+- Cross-platform identity verification
+- Content authenticity checks
+- Social account ownership validation
+- VeriScore calculation integration
+
+### Event Tracking
+**Firebase Events:**
+- `profileUpdateStarted`
+- `aiProfileGenerated`
+- `contentUploaded`
+- `socialConnectionUpdated`
+
+**BrightMatter Events:**
+- `updateUser` (profile completion)
+- `profileVerified`
+- `veriPlusUpgrade`
+
+---
+
+## Navigation Flow
+
+```
+Profile Dashboard → [Account Info | Social | Content | AI Gen] → Profile Complete → Veri+ Upgrade
+```
+
+**Profile Building Paths:**
+- Manual profile building → Account Info → Social → Content
+- AI-assisted building → AI Generation → Review/Edit → Manual refinement
+- Quick setup → AI Generation → Social verification → Complete
+
+---
+
+## Design Specifications
+
+### Visual Hierarchy
+- Primary actions: AI Generation, Veri+ Upgrade (prominent buttons)
+- Secondary actions: Individual profile sections (card grid)
+- Tertiary actions: View profile, update banner (header buttons)
+
+### Color System
+- AI Generation: Green gradient (#00D4AA)
+- Veri+ Upgrade: Orange gradient (#FF6B35 to #F7931E)
+- Connected platforms: Green accent (#00D4AA)
+- Pending connections: Blue CTA (#4285F4)
+
+### Interaction States
+- Loading states for AI generation
+- Progress indicators for profile completion
+- Success confirmations for updates
+- Error handling for failed connections
+
+---
+
+## Creator Profile Success Metrics
+
+### Completion Funnel
+1. Profile modal opened: 100%
+2. AI generation started: 60%
+3. Manual edits made: 40%
+4. Profile completion >80%: 35%
+5. Veri+ upgrade initiated: 15%
+
+### Engagement Metrics
+- Time spent in profile builder
+- AI generation adoption rate
+- Content upload frequency
+- Social connection maintenance
+- Profile view-to-follow conversion
+
+---
+
+# PR-003: Creator Dashboard + Tools
+
+## Overview
+**Module:** Creator Central Hub + Growth Tools  
+**Goal:** Provide creators with a unified dashboard for managing their presence, tracking performance, and accessing AI-powered growth tools  
+**Success Metrics:** Daily active users, tool engagement rate, VeriScore improvement, task completion rate
+
+---
+
+## User Stories
+
+### Primary Flow
+**As a creator, I want a centralized dashboard where I can see my performance across platforms, access AI tools for content optimization, track my progress, and discover growth opportunities.**
+
+### Secondary Flows
+- **Performance Monitoring:** Track VeriScore + VeriPoints progress
+- **Social Management:** Monitor connection status across platforms
+- **AI Tool Access:** Use content generation and optimization tools
+- **Task Engagement:** Complete challenges to earn points and improve ranking
+- **Community Discovery:** View global leaderboard and connect with other creators
+
+---
+
+## UI States + Wireframe Annotations
+
+### State 1: Dashboard Header + User Context
+*Reference: `2025-07-07_veri-design-mvp-dashboard_v01.jpeg` - Top section*
+
+**Header Components:**
+- Veri logo (top-left)
+- User identifier: "@samhuber.matera.id" 
+- Current points balance: "2500 points" (green indicator)
+- Settings/menu access
+
+**Welcome Section:**
+- Personalized greeting: "Hi Sam Huber 👋"
+- Context message: "Connect social accounts and keep creating content as usual. Boost your score and collect points once a week."
+- Call-to-action orientation for new creators
+
+---
+
+### State 2: Social Connection Status Bar
+*Reference: Dashboard showing connected platforms*
+
+**Platform Connection Cards (Horizontal Layout):**
+
+**Connected Platforms:**
+- **X (Twitter):** "Connected" + "500+ Points ✓" (green checkmark)
+- **YouTube:** "Connected" + "500+ Points ✓" (green checkmark)
+
+**Available Connections:**
+- **Instagram:** "Connect Instagram" + "+500 Pts" (purple CTA button)
+
+**Connection Benefits Display:**
+- Points earned per platform clearly visible
+- Visual connection status (connected vs available)
+- One-click connection for available platforms
+- Connection rewards highlighting (+500 points incentive)
+
+---
+
+### State 3: VeriScore + Points Card
+*Reference: Right side card in dashboard*
+
+**VeriScore Display:**
+- Large score number: "99"
+- Score label: "VeriScore" 
+- Calculation context: "Calculated Weekly Based on VeriScore Analytics™"
+- Score range indicator (0-100 implied)
+
+**VeriPoints Display:**
+- Point balance: "2500XP"
+- Points label: "VeriPoints"
+- Creator name: "Sam Huber"
+- Visual card design with gradient/branding
+
+**Performance Context:**
+- Weekly calculation schedule
+- Analytics-driven scoring
+- Points accumulation tracking
+- Creator identity integration
+
+---
+
+### State 4: Primary Action Cards Grid
+*Reference: Three main cards in dashboard center*
+
+**Layout:** 3-card horizontal grid with distinct visual branding per category
+
+### Card 1: AI Agent (Purple Theme)
+**Header:** "AI Agent 🔒" (lock indicates gated access)
+**Description:** "Your personal AI assistant with tools for content optimization and growth analytics."
+
+**Feature List:**
+- 24/7 intelligent automation
+- Multi-platform insights  
+- Advanced analytics tools
+
+**Access Control:**
+- "Build Profile to Unlock" CTA button
+- Gated by profile completion status
+- Premium feature positioning
+
+### Card 2: Build Your Veri Profile (Teal Theme)  
+**Header:** "Build Your Veri Profile"
+**Description:** "Create your professional Veri profile and showcase your content across platforms."
+
+**Feature List:**
+- AI-powered profile generation
+- Cross-platform showcase
+- Professional presence
+
+**Action:** "Build Profile" CTA (primary action)
+**Integration:** Links to Profile Builder (PR-002)
+
+### Card 3: Start Creating (Blue/Purple Gradient)
+**Header:** "Start Creating"  
+**Description:** "Complete tasks, earn points, and boost your VeriScore ranking."
+
+**Progress Indicator:**
+- "Completed Tasks: 2/6"
+- Progress bar visualization
+- "+1,825 points available" (earning potential)
+
+**Action:** "View Tasks" CTA (purple button)
+**Integration:** Links to Engagement Tasks (PR-004)
+
+---
+
+### State 5: Global Leaderboard Preview
+*Reference: Bottom section of dashboard*
+
+**Section Header:**
+- "Global Leaderboard" title with Veri icon
+- "Compete with creators worldwide" subtitle
+- Filter options: "All", "FPS", "Fighting", "Adventure", "Battle Royale", "RPG", "Racing"
+- "Live Rankings LIVE" indicator (green dot)
+
+**Creator Rankings (Top 4 Preview):**
+1. **Alex Chen** - Veri+ Creator, Top 1%, FPS - 15,420 points (+15 ↗️)
+2. **Sam Huber** - Top 10%, Lifestyle - 12,500 points (+8 ↗️) [Current user highlighted]
+3. **Maya Rodriguez** - Top 1%, Battle Royale - 11,800 points (-1 ↘️)
+4. **Jordan Kim** - Rising Star, RPG - 10,950 points (+3 ↗️)
+
+**Leaderboard Elements:**
+- Ranking position numbers (1, 2, 3, 4...)
+- Creator avatars (circular profile images)
+- Creator names with verification badges
+- Creator tier badges (Veri+ Creator, Top 1%, Rising Star)
+- Content category tags (FPS, Lifestyle, Battle Royale, RPG)
+- Point totals with recent changes (+15, +8, -1, +3)
+- Directional arrows showing rank movement
+
+---
+
+## Dashboard State Management
+
+### Real-Time Updates
+**Live Data Elements:**
+- VeriPoints balance (updates after task completion)
+- Social connection status (real-time platform sync)
+- Leaderboard rankings (live position changes)
+- Task completion progress (immediate feedback)
+
+**Update Frequencies:**
+- VeriScore: Weekly calculation (Mondays)
+- VeriPoints: Real-time accumulation
+- Social sync: Every 15 minutes
+- Leaderboard: Every 5 minutes
+- Platform metrics: Hourly refresh
+
+### Responsive Behavior
+**Mobile Adaptations:**
+- Stack cards vertically on mobile
+- Collapse leaderboard to top 3
+- Condense social connection bar
+- Maintain CTA button prominence
+
+**Loading States:**
+- Skeleton screens for initial load
+- Progressive enhancement for secondary data
+- Graceful degradation for offline scenarios
+
+---
+
+## Technical Requirements
+
+### Dashboard Data APIs
+**User Dashboard Data:**
+```json
+{
+  "user": {
+    "handle": "@samhuber.matera.id",
+    "displayName": "Sam Huber",
+    "veriPoints": 2500,
+    "veriScore": 99,
+    "lastScoreUpdate": "2025-07-01T00:00:00Z"
+  },
+  "connectedPlatforms": [
+    {"platform": "x", "connected": true, "pointsEarned": 500},
+    {"platform": "youtube", "connected": true, "pointsEarned": 500},
+    {"platform": "instagram", "connected": false, "pointsAvailable": 500}
+  ],
+  "taskProgress": {
+    "completed": 2,
+    "total": 6,
+    "pointsAvailable": 1825
+  },
+  "profileStatus": {
+    "complete": false,
+    "completionPercentage": 65,
+    "aiAgentUnlocked": false
+  }
+}
+```
+
+**Leaderboard API:**
+```json
+{
+  "leaderboard": {
+    "userRank": 2,
+    "topCreators": [
+      {
+        "rank": 1,
+        "username": "Alex Chen",
+        "score": 15420,
+        "change": 15,
+        "badges": ["veri_plus", "top_1_percent"],
+        "category": "fps"
+      }
+    ],
+    "lastUpdated": "2025-07-07T12:00:00Z"
+  }
+}
+```
+
+### Event Tracking
+**Firebase Events:**
+- `dashboardViewed`
+- `aiAgentAccessAttempted`
+- `profileBuildStarted`
+- `tasksViewed`
+- `leaderboardViewed`
+- `socialConnectionInitiated`
+
+**BrightMatter Events:**
+- `connectedBoot` (when returning user loads dashboard)
+- `getAnalytics` (VeriScore calculation)
+- `socialConnect` (platform connection updates)
+
+---
+
+## Navigation Integration
+
+### Dashboard as Hub
+**Navigation Paths FROM Dashboard:**
+- AI Agent → Profile Builder (if locked) or AI Tools (if unlocked)
+- Build Profile → Profile Builder (PR-002)
+- Start Creating → Engagement Tasks (PR-004)  
+- Leaderboard → Global Leaderboard (PR-006)
+- Social Connect → Platform OAuth flows
+
+**Navigation Paths TO Dashboard:**
+- Post-onboarding landing
+- Return visits (bookmark/direct)
+- Task completion redirects
+- Profile updates completion
+- Cross-platform deep links
+
+### State Persistence
+- Remember last dashboard state
+- Preserve filter selections
+- Cache performance data
+- Maintain scroll positions
+- Store expanded/collapsed card states
+
+---
+
+## Creator Engagement Mechanics
+
+### Progress Gamification
+**Visual Progress Indicators:**
+- Task completion progress bar (2/6)
+- Profile completion percentage (implicit)
+- Points accumulation counter
+- Rank change animations
+- Achievement badge displays
+
+**Psychological Triggers:**
+- Fear of missing out (limited time bonuses)
+- Social proof (leaderboard positioning)  
+- Progression clarity (next milestone visibility)
+- Achievement celebration (points earned notifications)
+- Community belonging (creator tier badges)
+
+### Notification System
+**Dashboard Notifications:**
+- Weekly VeriScore updates
+- Task completion rewards
+- Rank changes
+- New feature unlocks
+- Community highlights
+
+---
+
+## Performance Optimization
+
+### Dashboard Loading
+**Critical Path:**
+1. User authentication
+2. Core dashboard skeleton
+3. VeriScore + points data
+4. Social connection status
+5. Task progress
+6. Leaderboard preview
+
+**Progressive Enhancement:**
+- Load above-the-fold content first
+- Lazy load leaderboard data
+- Background sync for platform updates
+- Cached static elements (badges, icons)
+
+### Real-Time Features
+- WebSocket connections for live leaderboard
+- Push notifications for score changes
+- Background platform sync
+- Optimistic UI updates for task completion
+
+---
+
+**Next PR:** Creator Engagement Tasks (PR-004)
+
+Ready for the Engagement Tasks PR, or any adjustments needed for the Dashboard specification?
+
+# PR-004: Creator Engagement Tasks
+
+## Overview
+**Module:** Gamified Task System + Community Building  
+**Goal:** Drive creator engagement through structured tasks that build community, verify authenticity, and reward participation  
+**Success Metrics:** Task completion rate, friend referral conversion, premium unlock rate, community growth
+
+---
+
+## User Stories
+
+### Primary Flow
+**As a creator, I want to complete engaging tasks that help me earn VeriPoints, build my reputation in the community, and unlock premium features that accelerate my growth.**
+
+### Secondary Flows
+- **Community Building:** Tasks that grow the Veri creator ecosystem
+- **Verification:** Tasks that establish creator authenticity and platform presence
+- **Social Expansion:** Friend referral system for network growth
+- **Premium Progression:** Task completion unlocks advanced features
+
+---
+
+## UI States + Wireframe Annotations
+
+### State 1: Task Dashboard Modal
+*Reference: `2025-07-07_veri-design-mvp-engagement-tasks_v01.jpeg`*
+
+**Modal Structure:**
+- **Header:** "Engage to Earn Points" with back arrow and close (X)
+- **Title:** "Complete Basic Veri Tasks & Earn VeriPoints"
+- **Subtitle:** "Complete engagement tasks to boost your VeriScore and earn rewards"
+- **Background:** Gradient overlay maintaining brand consistency
+
+**Modal Behavior:**
+- Overlay design maintaining dashboard context
+- Scrollable content area for task grid
+- Persistent header with navigation
+- Mobile-responsive layout
+
+---
+
+### State 2: Basic Tasks Grid (6 Tasks)
+*Reference: Task cards in main section*
+
+**Layout:** 2x3 grid of task cards with distinct completion states
+
+### Completed Tasks (Green State):
+**Task 1: Follow Veri on X**
+- Points: "+100"
+- Status: "Completed ✓" (green background)
+- Platform: X (Twitter) integration
+- Verification: Automatic through connected account
+
+**Task 2: Join Veri Community on Telegram**  
+- Points: "+150"
+- Status: "Completed ✓" (green background)
+- Platform: Telegram community link
+- Verification: Community membership check
+
+### Available Tasks (Blue CTA State):
+**Task 3: Invite a Friend**
+- Points: "+500" (highest basic task reward)
+- Status: "Start Task" (blue button)
+- Action: Friend referral system
+- Verification: Email-based invitation tracking
+
+**Task 4: Retweet Veri Announcement**
+- Points: "+75"
+- Status: "Start Task" (blue button)  
+- Action: Social amplification
+- Verification: Retweet tracking through X API
+
+**Task 5: Create and Verify your Veri ID**
+- Points: "+300"
+- Status: "Start Task" (blue button)
+- Action: Identity verification process
+- Verification: Profile creation + social validation
+
+**Task 6: Share your first achievement**
+- Points: "+200"  
+- Status: "Start Task" (blue button)
+- Action: Social proof sharing
+- Verification: Achievement post tracking
+
+---
+
+### State 3: Premium Tasks Unlock Section
+*Reference: Bottom section of modal*
+
+**Visual Design:**
+- Star icon (premium indicator)
+- Purple gradient background
+- Prominent unlock messaging
+
+**Content Structure:**
+- **Header:** "Unlock Premium Tasks & Higher Rewards"
+- **Description:** "Build your Veri profile to access exclusive tasks, earn bigger rewards, and discover all the opportunities waiting for you in the creator economy."
+- **Reward Preview:** "+5,000 Additional Points Available"
+- **Primary CTA:** "Build Veri Profile To Unlock All Tasks" (purple gradient button)
+
+**Premium Benefits List:**
+- 🟣 Premium Creator Tasks
+- 🔵 Higher Point Rewards  
+- 🟡 Exclusive Opportunities
+
+---
+
+### State 4: Task Execution Flows
+
+### Friend Invitation Flow:
+**Step 1: Invitation Interface**
+- Email input field
+- Personal message customization
+- Preview of invitation content
+- "Send Invitation" CTA
+
+**Step 2: Tracking Dashboard**
+- Sent invitations list
+- Pending/completed status
+- Points earned tracker
+- Follow-up reminder system
+
+**Step 3: Reward Distribution**
+- Automatic point allocation upon friend signup
+- Notification confirmation
+- Social sharing option for achievement
+
+### Social Task Flow (Retweet):
+**Step 1: Task Initiation**
+- "Start Task" → Redirect to X (Twitter)
+- Pre-populated retweet content
+- Platform authentication check
+
+**Step 2: Verification Process**
+- Automatic retweet detection
+- API verification of task completion
+- Point allocation confirmation
+
+**Step 3: Completion Feedback**
+- Task status update to "Completed ✓"
+- Points added to balance
+- Progress tracking update
+
+### Identity Verification Flow:
+**Step 1: Veri ID Creation**
+- Username selection
+- Profile information completion
+- Social account linking verification
+
+**Step 2: Verification Process**
+- Cross-platform identity matching
+- Content authenticity checks
+- Community validation period
+
+**Step 3: ID Activation**
+- Verified badge assignment
+- Point reward distribution
+- Premium feature unlock eligibility
+
+---
+
+## Task Progression System
+
+### Basic Task Categories
+
+**Community Building (250 points total):**
+- Follow Veri on X: +100 points
+- Join Telegram: +150 points
+
+**Social Amplification (275 points total):**
+- Retweet announcement: +75 points
+- Share achievement: +200 points
+
+**Identity & Verification (800 points total):**
+- Create Veri ID: +300 points
+- Invite a friend: +500 points
+
+**Total Basic Points Available:** 1,325 points
+
+### Premium Task Tiers
+
+**Tier 1: Profile Complete (Unlocks +2,000 points)**
+- Advanced social verification tasks
+- Cross-platform content challenges
+- Community leadership opportunities
+
+**Tier 2: Creator Verified (+2,000 points)**
+- Brand partnership preparation tasks
+- Advanced analytics challenges
+- Mentor/mentee matching
+
+**Tier 3: Veri+ Creator (+1,000 points)**
+- Exclusive collaboration opportunities
+- Premium feature beta testing
+- Creator economy leadership tasks
+
+**Total Premium Points:** +5,000 points
+
+---
+
+## Technical Requirements
+
+### Task Management System
+**Task State Tracking:**
+```json
+{
+  "tasks": {
+    "basic": [
+      {
+        "id": "follow_veri_x",
+        "name": "Follow Veri on X",
+        "points": 100,
+        "status": "completed",
+        "completedAt": "2025-07-05T10:30:00Z",
+        "verificationMethod": "x_api_follow_check"
+      },
+      {
+        "id": "invite_friend",
+        "name": "Invite a Friend", 
+        "points": 500,
+        "status": "available",
+        "verificationMethod": "email_signup_tracking"
+      }
+    ],
+    "premium": {
+      "unlocked": false,
+      "requiresProfile": true,
+      "availablePoints": 5000
+    }
+  }
+}
+```
+
+### Verification Systems
+**Social Platform APIs:**
+- X (Twitter): Follow verification, retweet tracking
+- Telegram: Community membership verification
+- Email: Friend invitation delivery + tracking
+- Cross-platform: Identity verification matching
+
+**Point Allocation:**
+- Immediate reward for automatic verifications
+- Delayed reward for manual review tasks
+- Batch processing for friend referral rewards
+- Real-time dashboard updates
+
+### Event Tracking
+**Firebase Events:**
+- `taskStarted` (taskId, taskType)
+- `taskCompleted` (taskId, pointsEarned)
+- `friendInvited` (invitationId, email)
+- `premiumTasksViewed`
+- `profileUnlockInitiated`
+
+**BrightMatter Events:**
+- `verifyTaskCompletion` (platform-specific verification)
+- `completeTask` (point allocation)
+- `socialConnect` (verification integration)
+
+---
+
+## Friend Referral System
+
+### P2P Point Transfer Mechanics
+**Referral Structure:**
+- Inviter: +500 points immediately upon friend signup
+- Invitee: Welcome bonus +250 points for joining
+- Bonus multiplier: +50 points for inviter when invitee completes first task
+
+**Email Integration:**
+- Customizable invitation messages
+- Branded email templates
+- Tracking links for attribution
+- Follow-up sequences for incomplete signups
+
+**Matera-Compatible Point Architecture:**
+- Point transactions logged for tokenization readiness
+- P2P transfer infrastructure for future staking mechanics
+- Reputation scoring integration
+- Fraud prevention and validation systems
+
+---
+
+## Task Verification Infrastructure
+
+### Automated Verification
+**Social Platform Integration:**
+- Real-time API checking for follow/retweet completion
+- Webhook integration for immediate task completion
+- Platform-specific authentication handling
+- Rate limiting and API usage optimization
+
+### Manual Verification Queue
+**For Complex Tasks:**
+- Identity verification review process
+- Achievement sharing content review
+- Community moderator approval workflow
+- Appeal and dispute resolution system
+
+### Fraud Prevention
+**Security Measures:**
+- Bot detection algorithms
+- Duplicate account prevention
+- Social graph analysis for fake follower detection
+- Time-based completion validation
+
+---
+
+## Premium Task Unlocking
+
+### Profile Completion Requirements
+**Minimum Criteria for Premium Access:**
+- Profile 80%+ complete
+- At least 2 social platforms connected
+- Basic task completion rate >50%
+- Identity verification completed
+
+**Progressive Unlock Tiers:**
+- **Bronze:** Profile complete → +2,000 points available
+- **Silver:** Creator verified → +2,000 additional points
+- **Gold:** Veri+ status → +1,000 exclusive points
+
+### Premium Task Examples
+**Advanced Engagement (Bronze Tier):**
+- Create viral content challenge: +400 points
+- Cross-platform growth milestone: +600 points
+- Community leadership role: +1,000 points
+
+**Creator Collaboration (Silver Tier):**
+- Mentor new creator: +800 points
+- Joint content creation: +1,200 points
+
+**Ecosystem Leadership (Gold Tier):**
+- Beta test new features: +500 points
+- Community feedback and insights: +500 points
+
+---
+
+## UI/UX Design Specifications
+
+### Visual Hierarchy
+**Completion States:**
+- Completed: Green background, checkmark, points earned
+- Available: Blue CTA button, point preview, clear action
+- Locked: Grayed out, lock icon, unlock requirements
+
+**Point Value Emphasis:**
+- Large, prominent point values (+500, +300, +150)
+- Color coding: Higher points = warmer colors
+- Progress tracking toward next milestone
+
+### Micro-Interactions
+**Task Completion:**
+- Smooth state transition from blue CTA to green completed
+- Point addition animation to dashboard balance
+- Celebration micro-animation for high-value completions
+- Progress bar updates for overall task completion
+
+### Mobile Optimization
+**Responsive Design:**
+- Single column task layout on mobile
+- Thumb-friendly button sizing
+- Swipe gestures for task navigation
+- Condensed premium unlock section
+
+---
+
+# PR-005: Creator Analytics
+
+## Overview
+**Module:** Cross-Platform Performance Analytics  
+**Goal:** Provide creators with comprehensive insights across all connected platforms to optimize content strategy and track growth  
+**Success Metrics:** Analytics engagement time, data export usage, content optimization actions, platform connection growth
+
+---
+
+## User Stories
+
+### Primary Flow
+**As a creator, I want to see unified analytics across all my connected platforms so I can understand what content performs best, identify growth opportunities, and make data-driven decisions about my content strategy.**
+
+### Secondary Flows
+- **Performance Tracking:** Monitor follower growth, views, and engagement across platforms
+- **Content Optimization:** Identify top-performing content patterns and themes
+- **Platform Comparison:** Compare performance metrics across different social platforms
+- **Trend Analysis:** Track growth over different time periods (7/30/90 days)
+- **Data Export:** Export analytics data for external analysis and reporting
+
+---
+
+## UI States + Wireframe Annotations
+
+### State 1: Analytics Dashboard Header
+*Reference: `2025-07-07_veri-design-mvp-creator-analytics_v01.jpeg` - Top section*
+
+**Header Components:**
+- **Title:** "Creator Analytics" with chart icon
+- **Subtitle:** "Comprehensive performance insights"
+- **Time Period Selector:** Toggle buttons for "7 Days", "30 Days", "90 Days"
+- **Active State:** "30 Days" highlighted in green
+- **Visual Design:** Clean header with clear hierarchy
+
+**Time Period Functionality:**
+- Default: 30 Days view
+- Real-time data filtering based on selection
+- Consistent time period applied across all metrics
+- Smooth transition between time periods
+
+---
+
+### State 2: Key Metrics Overview Cards
+*Reference: Four metric cards in top section*
+
+**Layout:** 4-card horizontal grid with distinct color themes
+
+### Card 1: Total Followers (Blue Theme)
+- **Icon:** User group icon
+- **Primary Metric:** "66,200"
+- **Growth Indicator:** "+15.3% this month" (green text)
+- **Context:** Aggregated across all connected platforms
+- **Calculation:** Real-time sum of all platform followers
+
+### Card 2: Total Views (Purple Theme)
+- **Icon:** Eye/view icon  
+- **Primary Metric:** "2.5M"
+- **Growth Indicator:** "+23.4% this month" (green text)
+- **Context:** Combined video views, post impressions, content reach
+- **Calculation:** Platform-specific view metrics aggregated
+
+### Card 3: Engagement Rate (Green Theme)
+- **Icon:** Heart/engagement icon
+- **Primary Metric:** "8.7%"
+- **Growth Indicator:** "+1.2% this month" (green text)
+- **Context:** Weighted average engagement across platforms
+- **Calculation:** (Total engagements / Total reach) * 100
+
+### Card 4: VeriScore (Orange Theme)
+- **Icon:** Chart/analytics icon
+- **Primary Metric:** "99"
+- **Growth Indicator:** "+5 this week" (green text)
+- **Context:** Veri's proprietary creator reputation score
+- **Calculation:** Weekly algorithmic assessment
+
+---
+
+### State 3: Platform Performance Section
+*Reference: Left side of main content area*
+
+**Section Header:** "Platform Performance"
+**Layout:** Vertical list of connected platform cards
+
+### Platform Card Structure (4 platforms shown):
+
+**YouTube Card (Red Branding):**
+- Platform logo + "Y" icon
+- Follower count: "45,200 followers"
+- Engagement rate: "12.3% engagement"  
+- Growth metric: "+5.7%" with "30d growth" label
+- **Status:** Primary platform (highest metrics)
+
+**Instagram Card (Purple Branding):**
+- Platform logo + "I" icon
+- Follower count: "12,500 followers"
+- Engagement rate: "6.8% engagement"
+- Growth metric: "+2.3%" with "30d growth" label
+- **Status:** Secondary platform
+
+**X (Twitter) Card (Blue Branding):**
+- Platform logo + "X" icon  
+- Follower count: "8,700 followers"
+- Engagement rate: "4.2% engagement"
+- Growth metric: "+1.9%" with "30d growth" label
+- **Status:** Active platform
+
+**LinkedIn Card (Blue Branding):**
+- Platform logo + "L" icon
+- Follower count: "2,500 followers" 
+- Engagement rate: "3.1% engagement"
+- Growth metric: "+12.1%" with "30d growth" label
+- **Status:** Fastest growing platform (highest growth %)
+
+### Platform Card Interaction:
+- Click to view platform-specific detailed analytics
+- Hover states showing additional metrics
+- Connect new platform CTAs for unconnected accounts
+
+---
+
+### State 4: Top Performing Content Section
+*Reference: Right side of main content area*
+
+**Section Header:** "Top Performing Content"
+**Layout:** Vertical list of content performance cards
+
+### Content Performance Cards (4 items shown):
+
+**Content Item 1:**
+- **Title:** "How to grow on social media in 2025"
+- **Timeframe:** "1 week ago"
+- **Views:** "125,000 views"
+- **Engagement:** "15.2% engagement"
+- **Platform:** "YouTube" (blue tag)
+- **Performance:** Top performer (highest views + engagement)
+
+**Content Item 2:**
+- **Title:** "Building the future of creator economy"
+- **Timeframe:** "2 days ago"  
+- **Views:** "45,000 views"
+- **Engagement:** "8.7% engagement"
+- **Platform:** "Twitter" (blue tag)
+- **Performance:** Recent high-performer
+
+**Content Item 3:**
+- **Title:** "Behind the scenes content creation"
+- **Timeframe:** "3 days ago"
+- **Views:** "32,000 views" 
+- **Engagement:** "12.1% engagement"
+- **Platform:** "Instagram" (blue tag)
+- **Performance:** Strong engagement rate
+
+**Content Item 4:**
+- **Title:** "AI tools every creator needs"
+- **Timeframe:** "5 days ago"
+- **Views:** "89,000 views"
+- **Engagement:** "11.4% engagement"  
+- **Platform:** "YouTube" (blue tag)
+- **Performance:** Consistent performer
+
+### Content Card Interaction:
+- Click to view detailed content analytics
+- Platform tag indicates source platform
+- Sorting options (views, engagement, recency)
+- Content type indicators (video, post, story)
+
+---
+
+### State 5: Analytics Footer + Actions
+*Reference: Bottom section of analytics dashboard*
+
+**Data Status:**
+- **Update Indicator:** "Data updated 2 minutes ago"
+- **Real-time Status:** Live data sync indicator
+- **Refresh Option:** Manual refresh capability
+
+**Action Buttons:**
+- **Export Data:** Secondary button for CSV/PDF export
+- **Detailed Report:** Primary green button for comprehensive reporting
+- **Platform Integration:** Links to connect additional platforms
+
+---
+
+## Analytics Data Architecture
+
+### Data Collection Sources
+**Platform APIs:**
+- **YouTube Analytics API:** Subscriber count, video views, watch time, engagement
+- **X (Twitter) API:** Follower count, tweet impressions, engagement rate, retweets
+- **Instagram Basic Display API:** Follower count, media insights, reach, impressions
+- **LinkedIn API:** Connection count, post views, engagement metrics
+
+### Data Processing Pipeline
+**Real-Time Aggregation:**
+```json
+{
+  "analyticsSnapshot": {
+    "timestamp": "2025-07-07T12:00:00Z",
+    "period": "30d",
+    "aggregatedMetrics": {
+      "totalFollowers": 66200,
+      "totalViews": 2500000,
+      "avgEngagementRate": 8.7,
+      "veriScore": 99
+    },
+    "platformBreakdown": [
+      {
+        "platform": "youtube",
+        "followers": 45200,
+        "views": 1800000,
+        "engagementRate": 12.3,
+        "growth": 5.7
+      }
+    ],
+    "topContent": [
+      {
+        "title": "How to grow on social media in 2025",
+        "platform": "youtube",
+        "views": 125000,
+        "engagementRate": 15.2,
+        "publishedAt": "2025-06-30T12:00:00Z"
+      }
+    ]
+  }
+}
+```
+
+### VeriScore Calculation
+**Scoring Algorithm Components:**
+- **Platform Diversity:** Bonus for multi-platform presence
+- **Growth Rate:** Recent follower/engagement growth trends  
+- **Content Quality:** Engagement rate vs. platform averages
+- **Consistency:** Regular posting frequency and engagement
+- **Authenticity:** Verification status and organic growth patterns
+
+**Score Range:** 0-100 (99 indicates top-tier creator performance)
+**Update Frequency:** Weekly recalculation (Mondays)
+**Historical Tracking:** Score change tracking for trend analysis
+
+---
+
+## Technical Requirements
+
+### Data Synchronization
+**Update Frequencies:**
+- **Real-time:** VeriScore, follower counts (every 15 minutes)
+- **Hourly:** View counts, engagement metrics
+- **Daily:** Content performance analysis, growth calculations
+- **Weekly:** VeriScore recalculation, detailed reporting
+
+### Platform Integration
+**API Rate Limiting:**
+- Efficient API usage across platforms
+- Cached data with strategic refresh intervals
+- Fallback data sources for API failures
+- Queue management for bulk data requests
+
+### Performance Optimization
+**Dashboard Loading:**
+- Progressive data loading (key metrics first)
+- Cached historical data for faster rendering
+- Lazy loading for detailed content analysis
+- Background sync for real-time updates
+
+### Event Tracking
+**Firebase Events:**
+- `analyticsViewed` (timePeriod, platformsConnected)
+- `platformDetailViewed` (platform)
+- `contentDetailViewed` (contentId, platform)
+- `dataExported` (format, timePeriod)
+- `detailedReportGenerated`
+
+**BrightMatter Events:**
+- `getAnalytics` (platform-specific data retrieval)
+- `calculateVeriScore` (weekly score update)
+- `generateReport` (comprehensive analytics compilation)
+
+---
+
+## Advanced Analytics Features
+
+### Content Performance Analysis
+**Content Insights:**
+- **Best Publishing Times:** Optimal posting schedule analysis
+- **Content Type Performance:** Video vs. image vs. text post comparison
+- **Hashtag Analysis:** Top-performing hashtags and trending topics
+- **Audience Demographics:** Age, location, interest breakdowns per platform
+
+### Growth Prediction Modeling
+**Predictive Analytics:**
+- **Follower Growth Projection:** Based on current trajectory
+- **Engagement Rate Forecasting:** Content strategy impact prediction
+- **Platform Optimization Recommendations:** AI-driven growth suggestions
+- **Content Topic Recommendations:** Trending topic analysis for creator niche
+
+### Competitive Analysis
+**Creator Benchmarking:**
+- **Industry Averages:** Engagement rate comparisons by category
+- **Similar Creator Analysis:** Performance vs. creators in same niche
+- **Growth Rate Comparisons:** How creator ranks against peers
+- **Content Strategy Insights:** What works for similar creators
+
+---
+
+## Data Export + Reporting
+
+### Export Options
+**Data Formats:**
+- **CSV Export:** Raw metrics data for spreadsheet analysis
+- **PDF Report:** Formatted analytics summary with visualizations
+- **API Access:** Programmatic data access for advanced users
+- **Dashboard Screenshots:** Visual summary sharing
+
+### Detailed Reporting
+**Comprehensive Reports Include:**
+- **Executive Summary:** Key performance highlights
+- **Platform Deep Dives:** Individual platform analysis
+- **Content Performance Ranking:** Top/bottom performing content
+- **Growth Recommendations:** AI-generated optimization suggestions
+- **Historical Trend Analysis:** 6-month performance trajectory
+
+### Report Customization
+**Configurable Elements:**
+- **Time Range Selection:** Custom date ranges beyond preset options
+- **Platform Filtering:** Include/exclude specific platforms
+- **Metric Selection:** Choose relevant KPIs for specific goals
+- **Brand Customization:** White-label reporting for agencies
+
+---
+
+## Mobile Analytics Experience
+
+### Mobile-Optimized Views
+**Responsive Design:**
+- **Single Column Layout:** Stacked metric cards on mobile
+- **Swipeable Platform Cards:** Horizontal scroll for platform performance
+- **Condensed Content List:** Compact top-performing content display
+- **Touch-Friendly Interactions:** Optimized tap targets and gestures
+
+### Mobile-Specific Features
+**Quick Insights:**
+- **Push Notifications:** Weekly VeriScore updates, milestone achievements
+- **Widget Support:** Home screen analytics widgets
+- **Offline Access:** Cached data for limited connectivity scenarios
+- **Voice Commands:** "Hey Siri, what's my VeriScore?"
+
+---
+
+**Next PR:** Global Leaderboard (PR-006)
+
+Ready for the Global Leaderboard PR, or any adjustments needed for the Creator Analytics specification?
+
+# PR-006: Global Leaderboard
+
+## Overview
+**Module:** Creator Discovery + Competitive Ranking System  
+**Goal:** Foster creator community engagement through competitive ranking, category-based discovery, and real-time performance tracking  
+**Success Metrics:** Leaderboard engagement time, creator profile clicks, category filter usage, ranking improvement motivation
+
+---
+
+## User Stories
+
+### Primary Flow
+**As a creator, I want to see how I rank against other creators globally and in my specific content categories so I can discover peers, track my competitive position, and stay motivated to improve my VeriScore.**
+
+### Secondary Flows
+- **Creator Discovery:** Find and connect with creators in similar categories
+- **Performance Benchmarking:** Compare ranking and score against category leaders
+- **Category Exploration:** Explore different gaming/content verticals
+- **Competitive Motivation:** Track ranking changes and progress over time
+- **Community Building:** Identify trending creators and rising stars
+
+---
+
+## UI States + Wireframe Annotations
+
+### State 1: Leaderboard Header + Controls
+*Reference: `2025-07-07_veri-design-mvp-global-leaderboard_v01.jpeg` - Top section*
+
+**Header Components:**
+- **Title:** "Global Leaderboard" with Veri icon
+- **Subtitle:** "Compete with creators worldwide"
+- **Live Status:** "Live Rankings LIVE" with green indicator dot
+- **Real-time Update:** Visual pulse animation on live indicator
+
+**Filter System (Category Tags):**
+**Primary Categories:**
+- "All" (default/selected state)
+- "FPS" 
+- "Fighting"
+- "Adventure" 
+- "Battle Royale"
+- "RPG"
+- "Racing"
+
+**Secondary Categories (Pills):**
+- "Mini Games"
+- "Strategy" 
+- "Survival"
+
+**Filter Behavior:**
+- Single-select category filtering
+- "All" shows cross-category leaderboard
+- Category-specific filters show niche rankings
+- Smooth transitions between filter states
+- Real-time ranking updates when switching categories
+
+---
+
+### State 2: Creator Ranking List
+*Reference: Main leaderboard section showing 12 creators*
+
+**Layout:** Vertical list with ranking positions 1-12 visible (scrollable/paginated)
+
+### Ranking Card Structure:
+
+**Position Indicators:**
+- **Rank Numbers:** Circular badges (1, 2, 3, 4...) with distinct styling for top 3
+- **Position Changes:** Directional arrows with change values (+15, +8, -1, +3)
+- **Trending Indicators:** Up/down arrows showing recent movement
+
+**Creator Profile Elements:**
+- **Avatar:** Circular profile images (colorful, distinct per creator)
+- **Creator Name:** Display names (Alex Chen, Sam Huber, Maya Rodriguez, etc.)
+- **Verification Badges:** Platform verification indicators
+
+**Creator Tier Badges:**
+- **Veri+ Creator:** Premium tier badge (gold/orange styling)
+- **Top 1%:** Elite performer badge 
+- **Top 10%:** High performer badge
+- **Rising Star:** Trending creator badge (growth-focused)
+
+**Category Tags:**
+- **Content Categories:** FPS, Lifestyle, Battle Royale, RPG, Racing, Gaming
+- **Color-coded:** Different colors per category for easy identification
+- **Multi-category:** Some creators have multiple category tags
+
+**Score Display:**
+- **VeriScore Values:** Prominent point values (15,420, 12,500, 11,800, etc.)
+- **Recent Changes:** Change indicators (+15 ↗️, +8 ↗️, -1 ↘️, +3 ↗️)
+- **Score Range:** Scores from 15,420 (rank 1) to 7,350 (rank 12)
+
+---
+
+### State 3: Individual Creator Cards
+*Reference: Each row represents a creator card*
+
+### Top Performers (Ranks 1-3):
+
+**Rank 1: Alex Chen**
+- **Tier:** Veri+ Creator
+- **Badge:** Top 1%
+- **Category:** FPS
+- **Score:** 15,420 points
+- **Change:** +15 ↗️ (strong recent growth)
+- **Visual Treatment:** Gold/premium styling for #1 position
+
+**Rank 2: Sam Huber** [Current User - Highlighted]
+- **Tier:** Top 10%
+- **Category:** Lifestyle
+- **Score:** 12,500 points
+- **Change:** +8 ↗️ (positive momentum)
+- **Visual Treatment:** Highlighted row indicating current user position
+
+**Rank 3: Maya Rodriguez**
+- **Tier:** Top 1%
+- **Category:** Battle Royale
+- **Score:** 11,800 points
+- **Change:** -1 ↘️ (slight decline)
+- **Visual Treatment:** Bronze position styling
+
+### Rising Stars + High Performers (Ranks 4-12):
+
+**Notable Creators:**
+- **Jordan Kim (Rank 4):** Rising Star badge, RPG category, 10,950 points (+3)
+- **Taylor Swift (Rank 5):** Veri+ Creator, Lifestyle, 9,800 points (+2)
+- **Emma Davis (Rank 6):** Top 10%, Racing, 9,200 points (+12) [Highest growth]
+
+**Category Diversity Shown:**
+- Gaming specializations: FPS, Battle Royale, RPG, Racing
+- Lifestyle creators
+- Strategy and Mini Games representation
+- Cross-category creator presence
+
+---
+
+### State 4: Leaderboard Interactions
+
+### Creator Card Interactions:
+**Click/Tap Actions:**
+- **Profile View:** Navigate to creator's full profile page
+- **Follow Creator:** Quick follow action from leaderboard
+- **Category Filter:** Click category tag to filter by that category
+- **Score Details:** View detailed VeriScore breakdown
+
+**Hover States (Desktop):**
+- **Additional Metrics:** Preview of follower count, recent content
+- **Quick Actions:** Follow, message, collaborate buttons
+- **Performance Preview:** Last 7 days score change graph
+
+### Filter Interactions:
+**Category Selection:**
+- **Active State:** Selected category highlighted with distinct styling
+- **Count Indicators:** Number of creators per category
+- **Real-time Updates:** Live ranking updates when switching categories
+- **"All" Default:** Return to global view from category-specific view
+
+---
+
+### State 5: Leaderboard Footer + Pagination
+*Reference: Bottom section with "View Full Leaderboard" button*
+
+**Pagination Control:**
+- **"View Full Leaderboard"** primary CTA (green button)
+- **Load More:** Progressive loading of additional rankings
+- **Jump to Position:** Quick navigation to specific rank ranges
+- **User Position Indicator:** "You are currently ranked #2" context
+
+**Additional Actions:**
+- **Share Leaderboard:** Social sharing of current standings
+- **Export Rankings:** CSV export of current leaderboard view
+- **Subscribe to Updates:** Weekly ranking change notifications
+
+---
+
+## Competitive Ranking System
+
+### VeriScore-Based Rankings
+**Ranking Algorithm:**
+- **Primary:** VeriScore (0-100 scale) determines position
+- **Secondary:** Total VeriPoints as tiebreaker
+- **Tertiary:** Recent activity/engagement for final ranking
+- **Update Frequency:** Real-time score changes reflected immediately
+
+### Creator Tier System
+**Tier Definitions:**
+- **Veri+ Creator:** Premium verified creators (top 5% + premium features)
+- **Top 1%:** Elite performers (scores 90-100)
+- **Top 10%:** High performers (scores 75-89)
+- **Rising Star:** Fastest growing creators (regardless of current score)
+- **Community:** Standard creators (scores below 75)
+
+**Tier Benefits:**
+- **Visual Recognition:** Distinct badges and styling
+- **Discovery Boost:** Higher visibility in recommendations
+- **Community Access:** Tier-specific Discord channels/forums
+- **Collaboration Opportunities:** Premium partnership access
+
+### Category-Based Competition
+**Gaming Categories:**
+- **FPS:** First-person shooter content creators
+- **Battle Royale:** BR gaming specialists (Fortnite, Apex, etc.)
+- **RPG:** Role-playing game content
+- **Racing:** Racing game enthusiasts
+- **Strategy:** Strategy game creators
+- **Mini Games:** Casual/mobile gaming content
+
+**Cross-Category Rankings:**
+- **Global Leaderboard:** All creators regardless of category
+- **Category Leaders:** Top performers within each gaming vertical
+- **Multi-Category Creators:** Creators active across multiple categories
+
+---
+
+## Technical Requirements
+
+### Real-Time Ranking System
+**Live Updates:**
+```json
+{
+  "leaderboard": {
+    "lastUpdated": "2025-07-07T12:00:00Z",
+    "updateFrequency": "5_minutes",
+    "category": "all",
+    "rankings": [
+      {
+        "rank": 1,
+        "userId": "alex_chen_001",
+        "displayName": "Alex Chen",
+        "veriScore": 15420,
+        "scoreChange": 15,
+        "trend": "up",
+        "tier": "veri_plus",
+        "badges": ["top_1_percent"],
+        "categories": ["fps"],
+        "avatar": "https://...",
+        "verified": true
+      }
+    ],
+    "userPosition": {
+      "currentRank": 2,
+      "previousRank": 3,
+      "scoreChange": 8
+    }
+  }
+}
+```
+
+### Category Management
+**Dynamic Filtering:**
+- **Real-time Category Switching:** Instant leaderboard updates
+- **Category Definitions:** Configurable category taxonomy
+- **Multi-Category Support:** Creators can belong to multiple categories
+- **Trending Categories:** Dynamic category popularity tracking
+
+### Performance Optimization
+**Leaderboard Scaling:**
+- **Efficient Ranking Queries:** Optimized database queries for large creator base
+- **Cached Rankings:** Strategic caching with real-time invalidation
+- **Progressive Loading:** Load top 50, infinite scroll for deeper rankings
+- **Mobile Optimization:** Condensed mobile view with essential information
+
+### Event Tracking
+**Firebase Events:**
+- `leaderboardViewed` (category, timeSpent)
+- `creatorProfileClicked` (rank, creatorId)
+- `categoryFiltered` (fromCategory, toCategory)
+- `rankingShared` (currentRank, platform)
+- `fullLeaderboardViewed`
+
+**BrightMatter Events:**
+- `calculateRankings` (category-specific ranking updates)
+- `updateCreatorTier` (tier progression tracking)
+- `trackRankingChanges` (historical ranking data)
+
+---
+
+## Social + Discovery Features
+
+### Creator Profile Integration
+**Quick Profile Preview:**
+- **Profile Summary:** Bio, follower count, recent content
+- **Performance Metrics:** Recent VeriScore changes, content performance
+- **Social Links:** Connected platform accounts
+- **Collaboration Status:** Open to partnerships/collaborations
+
+### Creator Discovery Algorithms
+**Recommendation Engine:**
+- **Similar Categories:** Suggest creators in user's content categories
+- **Performance Tier:** Match creators at similar performance levels
+- **Rising Stars:** Highlight trending creators for early following
+- **Collaboration Matching:** Connect creators with complementary audiences
+
+### Social Interactions
+**Direct from Leaderboard:**
+- **Follow Creator:** One-click follow action
+- **Message Creator:** Direct messaging for collaboration
+- **Share Creator:** Social sharing of interesting creators
+- **Bookmark Creator:** Save creators for future reference
+
+---
+
+## Gamification + Motivation
+
+### Ranking Achievement System
+**Milestone Rewards:**
+- **Rank Improvements:** VeriPoints for climbing rankings
+- **Tier Promotions:** Bonus rewards for tier advancement
+- **Category Leadership:** Special recognition for category #1 positions
+- **Consistency Rewards:** Bonuses for maintaining ranking over time
+
+### Competition Mechanics
+**Weekly Challenges:**
+- **Rank Climb Challenge:** Bonus points for improving position
+- **Category Domination:** Extra rewards for maintaining category leadership
+- **Newcomer Boost:** Special support for new creators entering leaderboard
+- **Collaboration Bonus:** Rewards for cross-creator partnerships
+
+### Progress Tracking
+**Historical Performance:**
+- **Ranking History:** Track rank changes over time
+- **Personal Bests:** Highest rank achieved, best scoring weeks
+- **Trend Analysis:** Performance trajectory visualization
+- **Goal Setting:** Target rank setting with progress tracking
+
+---
+
+## Mobile Leaderboard Experience
+
+### Mobile-Optimized Layout
+**Responsive Design:**
+- **Condensed Cards:** Essential information only (name, rank, score, change)
+- **Swipeable Categories:** Horizontal scroll for category filters
+- **Quick Actions:** Tap to follow, hold for profile preview
+- **Infinite Scroll:** Seamless loading of additional rankings
+
+### Mobile-Specific Features
+**Touch Interactions:**
+- **Pull-to-Refresh:** Manual leaderboard refresh
+- **Haptic Feedback:** Tactile confirmation for ranking changes
+- **Gesture Navigation:** Swipe between categories
+- **Push Notifications:** Ranking change alerts, tier promotions
+
+---
+
+# PR-007: Campaign Creation
+
+## Overview
+**Module:** Campaign Setup + Task Builder for Brands/Studios  
+**Goal:** Enable brands and studios to create engaging campaigns with custom tasks that creators can discover and complete for rewards  
+**Success Metrics:** Campaign creation completion rate, task engagement rate, creator participation, campaign ROI
+
+---
+
+## User Stories
+
+### Primary Flow
+**As a brand/studio, I want to create targeted campaigns with custom tasks and verification requirements so I can engage with relevant creators, drive authentic content, and track campaign performance.**
+
+### Secondary Flows
+- **Campaign Setup:** Define campaign goals, budget, and targeting parameters
+- **Task Builder:** Create custom verification tasks for creator participation
+- **Creator Targeting:** Set criteria for creator eligibility and discovery
+- **Performance Tracking:** Monitor campaign metrics and creator engagement
+- **Budget Management:** Control campaign spend and reward distribution
+
+---
+
+## UI States + Wireframe Annotations
+
+### State 1: Campaign Creation Entry Point
+*Reference: `mvp_flow_mermaid.mermaid` - "Create Campaign Button" node*
+
+**Access Control:**
+- **User Type Requirement:** Studio/Brand account verification required
+- **Entry Points:** 
+  - Dashboard "Create Campaign" CTA
+  - Navigation menu "Campaigns" → "Create New"
+  - Quick action button from campaign management
+
+**Campaign Type Selection:**
+- **Content Campaign:** Creator content generation with specific requirements
+- **Engagement Campaign:** Social media amplification and community building
+- **Product Campaign:** Product placement and review campaigns
+- **Event Campaign:** Event promotion and attendance driving
+
+---
+
+### State 2: Campaign Setup Interface
+*Reference: `mvp_flow_mermaid.mermaid` - "Campaign Setup" node*
+
+**Campaign Basic Information:**
+```
+Campaign Name: [Text Input]
+Campaign Description: [Rich Text Editor]
+Campaign Category: [Dropdown - Gaming/Lifestyle/Tech/etc.]
+Campaign Duration: [Start Date] to [End Date]
+Campaign Budget: $[Budget Input] / [Creator Slots Input] creators
+```
+
+**Campaign Targeting:**
+```
+Creator Requirements:
+□ Minimum VeriScore: [Slider 0-100]
+□ Minimum Followers: [Input Field]
+□ Required Platforms: ☑ YouTube ☑ X ☐ Instagram ☐ TikTok
+□ Content Categories: [Multi-select tags]
+□ Geographic Location: [Location Selector]
+```
+
+**Campaign Objectives:**
+- **Awareness:** Reach and impressions focused
+- **Engagement:** Likes, comments, shares optimization
+- **Conversions:** Click-through and conversion tracking
+- **Community Building:** Follower growth and retention
+
+---
+
+### State 3: Task Builder Interface
+*Reference: `mvp_flow_mermaid.mermaid` - "Create Tasks" node*
+
+**Task Creation Wizard:**
+
+### Task Type Selection:
+**Content Creation Tasks:**
+- **Video Review:** Creator makes video reviewing product/service
+- **Social Post:** Creator posts about brand with specific requirements
+- **Tutorial Content:** Creator creates how-to content featuring brand
+- **Live Stream:** Creator features brand during live streaming session
+
+**Engagement Tasks:**
+- **Social Follow:** Creator follows brand's social accounts
+- **Content Share:** Creator shares brand's existing content
+- **Community Join:** Creator joins brand's Discord/community
+- **Hashtag Campaign:** Creator uses specific hashtags in content
+
+**Verification Tasks:**
+- **Photo Proof:** Creator submits photo evidence of task completion
+- **Link Submission:** Creator submits links to completed content
+- **Social Verification:** Automatic verification through platform APIs
+- **Manual Review:** Brand team manually reviews submissions
+
+### Task Configuration:
+```
+Task Title: [Text Input]
+Task Description: [Rich Text Editor with requirements]
+Reward Amount: [VeriPoints Input] points
+Verification Method: [Dropdown - Auto/Manual/Hybrid]
+Task Deadline: [Date/Time Picker]
+Max Participants: [Number Input] creators
+```
+
+**Task Requirements Builder:**
+```
+Content Requirements:
+□ Minimum Video Length: [Duration Picker]
+□ Required Mentions: [@brand_handle]
+□ Required Hashtags: [#hashtag1 #hashtag2]
+□ Content Rating: [Family Friendly/Mature]
+□ Language: [Language Selector]
+
+Deliverable Requirements:
+□ Content Link: [Platform Selector]
+□ Performance Screenshot: [Yes/No]
+□ Additional Files: [File Upload Specs]
+□ Completion Proof: [Description Field]
+```
+
+---
+
+### State 4: Campaign Review + Submit
+*Reference: `mvp_flow_mermaid.mermaid` - "Submit Campaign" node*
+
+**Campaign Summary Preview:**
+```
+Campaign Overview:
+Name: [Campaign Name]
+Duration: [Start] - [End Date]
+Budget: $[Amount] for [Number] creators
+Target Creators: [Criteria Summary]
+
+Tasks Created: [Number] tasks
+Total Reward Pool: [VeriPoints Total]
+Expected Reach: [Estimated Impressions]
+Estimated Participants: [Creator Count Range]
+```
+
+**Review Checklist:**
+- ✅ Campaign information complete
+- ✅ Creator targeting criteria set
+- ✅ Tasks created with clear requirements
+- ✅ Verification methods configured
+- ✅ Budget allocation confirmed
+- ✅ Legal compliance reviewed
+
+**Submission Options:**
+- **Save as Draft:** Save for later editing and submission
+- **Submit for Review:** Send to Veri team for approval
+- **Publish Campaign:** Go live immediately (for pre-approved studios)
+
+---
+
+### State 5: Campaign Management Dashboard
+*Reference: Post-submission campaign tracking*
+
+**Active Campaign Overview:**
+```
+Campaign Status: [Live/Pending/Completed]
+Days Remaining: [Countdown]
+Creators Participating: [Current/Max Participants]
+Tasks Completed: [Completed/Total Tasks]
+Budget Spent: $[Amount] / $[Total Budget]
+```
+
+**Real-Time Metrics:**
+- **Reach:** Total impressions across all creator content
+- **Engagement:** Aggregate likes, comments, shares
+- **Completion Rate:** Task completion percentage
+- **Creator Satisfaction:** Creator rating of campaign experience
+- **Content Quality:** Average content performance scores
+
+**Creator Management:**
+- **Participant List:** All creators who joined campaign
+- **Task Submissions:** Pending verification queue
+- **Performance Tracking:** Individual creator performance
+- **Communication Hub:** Direct messaging with participants
+
+---
+
+## Campaign Creation Technical Architecture
+
+### Campaign Data Model
+```json
+{
+  "campaign": {
+    "id": "camp_001",
+    "studioId": "studio_123",
+    "name": "Summer Gaming Challenge 2025",
+    "description": "Create content featuring our new gaming headset",
+    "category": "gaming",
+    "status": "live",
+    "startDate": "2025-07-15T00:00:00Z",
+    "endDate": "2025-08-15T23:59:59Z",
+    "budget": {
+      "total": 50000,
+      "spent": 12500,
+      "currency": "points"
+    },
+    "targeting": {
+      "minVeriScore": 75,
+      "minFollowers": 10000,
+      "platforms": ["youtube", "twitch"],
+      "categories": ["gaming", "fps"],
+      "locations": ["US", "CA", "UK"]
+    },
+    "tasks": [
+      {
+        "id": "task_001",
+        "type": "video_review",
+        "title": "Gaming Headset Review",
+        "description": "Create 5+ minute review video",
+        "reward": 1000,
+        "maxParticipants": 50,
+        "currentParticipants": 23,
+        "verificationMethod": "manual_review"
+      }
+    ]
+  }
+}
+```
+
+### Task Verification System
+**Automated Verification:**
+- **Social Media APIs:** Verify posts, follows, shares automatically
+- **Link Validation:** Check submitted URLs for content requirements
+- **Hashtag Tracking:** Monitor hashtag usage across platforms
+- **Performance Metrics:** Automatic engagement rate calculations
+
+**Manual Review Queue:**
+- **Content Quality Assessment:** Human review for brand guidelines
+- **Requirement Compliance:** Check against task specifications
+- **Creator Communication:** Feedback and revision requests
+- **Approval Workflow:** Multi-stage approval for high-value campaigns
+
+### Creator Matching Algorithm
+**Targeting Engine:**
+```json
+{
+  "matchingCriteria": {
+    "veriScore": {"min": 75, "weight": 0.3},
+    "followerCount": {"min": 10000, "weight": 0.2},
+    "engagementRate": {"min": 5.0, "weight": 0.2},
+    "contentRelevance": {"categories": ["gaming"], "weight": 0.2},
+    "pastPerformance": {"campaignSuccess": true, "weight": 0.1}
+  },
+  "discoverability": {
+    "featured": true,
+    "categoryBoost": "gaming",
+    "recommendationScore": 8.5
+  }
+}
+```
+
+---
+
+## Campaign Types + Templates
+
+### Pre-Built Campaign Templates
+
+**Gaming Product Launch:**
+- Video review task (5+ minutes)
+- Social amplification task (3 posts)
+- Community engagement task (Discord join)
+- Performance bonus (view threshold rewards)
+
+**Brand Awareness Campaign:**
+- Content creation (brand mention requirement)
+- Social following (brand accounts)
+- Hashtag challenge participation
+- User-generated content contest
+
+**Event Promotion Campaign:**
+- Event announcement content
+- Live coverage during event
+- Post-event follow-up content
+- Attendance verification task
+
+**Community Building Campaign:**
+- Discord/community platform join
+- Regular community engagement
+- Community-specific content creation
+- Referral bonuses for friend invites
+
+### Custom Campaign Builder
+**Advanced Configuration:**
+- **Multi-Phase Campaigns:** Sequential task unlocking
+- **Performance Bonuses:** Additional rewards for high-performing content
+- **Collaborative Tasks:** Multi-creator collaboration requirements
+- **Tiered Rewards:** Different reward levels based on creator tier
+
+---
+
+## Campaign Discovery + Participation
+
+### Creator Campaign Discovery
+**Campaign Feed Integration:**
+- **Personalized Recommendations:** AI-driven campaign matching
+- **Category Filtering:** Browse campaigns by content category
+- **Reward Sorting:** Filter by reward amount and type
+- **Difficulty Assessment:** Task complexity and time commitment indicators
+
+**Campaign Preview for Creators:**
+```
+Campaign Title: [Name]
+Brand: [Studio Name + Verification Badge]
+Reward: [VeriPoints Amount]
+Duration: [Time Remaining]
+Difficulty: [Easy/Medium/Hard]
+Requirements: [Brief Summary]
+Participants: [Current/Max Creators]
+```
+
+### Creator Application Process
+**Application Flow:**
+1. **Campaign Interest:** Creator clicks "Apply" on campaign
+2. **Eligibility Check:** Automatic verification against targeting criteria
+3. **Application Review:** Studio reviews creator profile and past performance
+4. **Acceptance Notification:** Creator receives campaign access
+5. **Task Assignment:** Creator can view and start campaign tasks
+
+**Creator Vetting:**
+- **Portfolio Review:** Past content quality and brand alignment
+- **Performance History:** Previous campaign completion rates
+- **Audience Analysis:** Creator's audience demographic match
+- **Brand Safety:** Content appropriateness and brand guideline compliance
+
+---
+
+## Campaign Performance + Analytics
+
+### Studio Analytics Dashboard
+**Campaign Performance Metrics:**
+- **Reach + Impressions:** Total content reach across all creators
+- **Engagement Metrics:** Likes, comments, shares, saves aggregated
+- **Conversion Tracking:** Click-through rates and conversion attribution
+- **Brand Mention Analysis:** Sentiment and reach of brand mentions
+- **Creator Performance:** Individual creator ROI and performance scoring
+
+### Real-Time Campaign Monitoring
+**Live Campaign Tracking:**
+- **Participation Rate:** Creator application and acceptance rates
+- **Task Completion:** Real-time task submission and verification status
+- **Content Publishing:** Monitor when creators publish campaign content
+- **Performance Alerts:** Notifications for high-performing or underperforming content
+
+### ROI + Attribution Reporting
+**Campaign ROI Calculation:**
+```json
+{
+  "campaignROI": {
+    "totalSpend": 50000,
+    "totalReach": 2500000,
+    "totalEngagement": 125000,
+    "conversions": 850,
+    "costPerReach": 0.02,
+    "costPerEngagement": 0.40,
+    "costPerConversion": 58.82,
+    "brandLiftMetrics": {
+      "awarenessIncrease": "23%",
+      "sentimentImprovement": "15%",
+      "followersGained": 5200
+    }
+  }
+}
+```
+
+---
+
+## Technical Requirements
+
+### Campaign Management System
+**Backend Infrastructure:**
+- **Campaign Lifecycle Management:** Creation, approval, execution, completion
+- **Task Verification Pipeline:** Automated and manual verification workflows
+- **Creator Matching Engine:** AI-driven creator-campaign matching
+- **Payment Processing:** VeriPoints distribution and reward management
+
+### Integration Requirements
+**Platform APIs:**
+- **Social Media Verification:** YouTube, X, Instagram, TikTok API integration
+- **Analytics Integration:** Cross-platform performance data aggregation
+- **Communication Tools:** In-app messaging and notification systems
+- **Content Moderation:** Automated content review and brand safety checks
+
+### Event Tracking
+**Firebase Events:**
+- `campaignCreated` (studioId, campaignType, budget)
+- `taskCreated` (campaignId, taskType, reward)
+- `campaignSubmitted` (campaignId, reviewRequired)
+- `creatorApplied` (campaignId, creatorId)
+- `taskCompleted` (campaignId, taskId, creatorId)
+
+**BrightMatter Events:**
+- `createCampaign` (campaign data submission)
+- `verifyTaskCompletion` (task verification processing)
+- `calculateCampaignROI` (performance analytics)
+
+---
+
+## Design Specifications
+
+### Campaign Creation UX
+**Step-by-Step Wizard:**
+- **Progress Indicator:** Clear steps with completion status
+- **Save + Continue:** Ability to save progress and return later
+- **Preview Mode:** See how campaign appears to creators
+- **Template Selection:** Quick start with proven campaign structures
+
+### Visual Hierarchy
+**Information Architecture:**
+- **Primary Actions:** Campaign creation, task building, submission
+- **Secondary Actions:** Preview, save draft, duplicate campaign
+- **Tertiary Actions:** Help documentation, template gallery
+
+### Responsive Design
+**Mobile Campaign Management:**
+- **Simplified Creation Flow:** Essential fields only on mobile
+- **Touch-Optimized Controls:** Creator selection and task building
+- **Mobile Analytics:** Key performance metrics optimized for mobile viewing
+- **Push Notifications:** Campaign status updates and performance alerts
+
+---
+
+**Campaign Creation Complete - All 7 PRs Delivered**
+
+This completes the comprehensive MVP flow documentation for Veri's creator-first platform. Each PR covers a specific module with detailed user stories, technical requirements, and design specifications ready for development handoff.
+
+**Summary of Delivered PRs:**
+1. **PR-001:** Creator Onboarding Flow
+2. **PR-002:** Creator Profile Builder  
+3. **PR-003:** Creator Dashboard + Tools
+4. **PR-004:** Creator Engagement Tasks
+5. **PR-005:** Creator Analytics
+6. **PR-006:** Global Leaderboard
+7. **PR-007:** Campaign Creation
+
+

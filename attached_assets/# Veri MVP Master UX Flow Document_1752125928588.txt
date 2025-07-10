@@ -1,0 +1,635 @@
+# Veri MVP Master UX Flow Document
+**Version:** 2025-07-07 v01  
+**Source of Truth:** Figma exports, Flow spec PDF, Mermaid flowchart  
+**Scope:** UX & Design Flow (Creator-first MVP)
+
+---
+
+## Table of Contents
+
+1. [Executive Summary](#executive-summary)
+2. [Design System Implementation](#design-system-implementation)
+3. [User Flow Architecture](#user-flow-architecture)
+4. [Component Requirements](#component-requirements)
+5. [Onboarding Flow (PR-001)](#onboarding-flow-pr-001)
+6. [Profile Builder (PR-002)](#profile-builder-pr-002)
+7. [Dashboard + Creator Tools (PR-003)](#dashboard--creator-tools-pr-003)
+8. [Engagement Tasks (PR-004)](#engagement-tasks-pr-004)
+9. [Creator Analytics (PR-005)](#creator-analytics-pr-005)
+10. [Global Leaderboard (PR-006)](#global-leaderboard-pr-006)
+11. [Campaign Creation (PR-007)](#campaign-creation-pr-007)
+12. [Technical Integration Points](#technical-integration-points)
+13. [Success Metrics & KPIs](#success-metrics--kpis)
+
+---
+
+## Executive Summary
+
+### Vision Statement
+Build a creator-first platform that seamlessly connects social media presence with tokenized reputation and earnings through gamified engagement tasks and authentic community building.
+
+### Core Value Propositions
+- **For Creators:** Automated profile optimization, real-time analytics, tokenized reputation building
+- **For Studios:** Streamlined campaign creation, authentic creator matching, ROI tracking
+- **For Communities:** Gamified engagement, peer-to-peer rewards, transparent leaderboards
+
+### Key Success Metrics
+- **User Acquisition:** 15% homepage → signup conversion
+- **Engagement:** 60% daily active users, 8+ minute sessions
+- **Retention:** 70% week-1 retention, 40% maintain 7+ day streaks
+- **Revenue:** $100K monthly campaign volume, $5K average campaign size
+
+---
+
+## Design System Implementation
+
+### Color System (Following Style Guide)
+```css
+:root {
+  --veri-primary-500: #00d6a2;
+  --veri-accent-violet-500: #8456ff;
+  --veri-neutral-800: #1a1b25;
+  --veri-surface-100: #f6f7f8;
+  --veri-surface-900: #131417;
+}
+```
+
+### Typography Scale
+- **Primary:** Inter, fallback system-ui
+- **Scale:** 12px / 14px / 16px / 20px / 24px / 32px / 40px
+- **Line Height:** 1.4 standard
+- **Letter Spacing:** -0.2% for sizes >20px
+
+### Component Standards
+- **Buttons:** 120ms ease-out hover, scale transform
+- **Cards:** 4pt base grid, 8pt spacing tokens
+- **Elevation:** rgba(0,0,0,0.05) for z-1, rgba(0,0,0,0.1) for z-2
+- **Border Radius:** 8px/12px/16px/20px/24px scale
+
+### Motion Principles
+- **Interactions:** 120ms ease-out for feedback
+- **Page Transitions:** 240ms ease-in-out
+- **Loading States:** Skeleton UI > spinners when wait >400ms
+- **Mobile Haptics:** Light impact on primary actions
+
+---
+
+## User Flow Architecture
+
+### Core User Paths
+```mermaid
+graph LR
+    A[Website Home] --> B[Sign Up/In]
+    B --> C[Social Connection]
+    C --> D[Profile Selection]
+    D --> E[Dashboard]
+    E --> F[Creator Tools]
+    E --> G[Engagement Tasks]
+    E --> H[Analytics]
+```
+
+### User Persona Mapping
+1. **Community Users:** Basic engagement, task completion focus
+2. **Creators:** Content optimization, analytics deep-dive, monetization
+3. **Studios:** Campaign creation, creator discovery, ROI measurement
+
+---
+
+## Component Requirements
+
+### Essential Components
+- **VeriButton:** Primary, Secondary, Tertiary, Ghost variants
+- **VeriCard:** Standard, Hover, Stat, Media types
+- **Navigation:** Inverted-L pattern (sidebar + top tabs)
+- **VeriScore Card:** Gradient background, animated score display
+- **Social Connection Badges:** Platform-specific styling
+- **Leaderboard Entry:** Rank visualization, tier badges
+- **Task Cards:** Progress tracking, point rewards display
+
+### Advanced Components
+- **AI Profile Generator:** Multi-step wizard interface
+- **Analytics Charts:** Sparklines, progress rings, trend indicators
+- **Campaign Builder:** Drag-drop task creation interface
+- **P2P Transfer Modal:** Matera-compatible point sending
+
+---
+
+## Onboarding Flow (PR-001)
+
+**File References:**
+- `2025-07-07_veri-design-mvp-dashboard_v01.jpeg`
+- `LiquidGlassButton.tsx`
+- `VeriLogo.tsx`
+
+### 1.1 Website Home
+**Objective:** Convert visitors to registered users (15% conversion target)
+
+**Components:**
+- Hero section with value proposition
+- "Create to Resonate. Impact to Earn." messaging
+- Primary CTA: "Get Started" → Sign Up flow
+- Secondary CTA: "Go to Dashboard" → Sign In flow
+- Getting Started steps preview
+- Who Veri is for (Creators/Communities/Brands)
+- Partnership logos (Treasure, Avalanche, Polygon, FIFA, etc.)
+
+**Design Elements:**
+- Background: Radial gradient teal-500 → blue-600
+- Typography: Inter Semi-Bold for headings
+- Glass morphism effects on cards
+- 5-step getting started visual roadmap
+
+### 1.2 Sign Up Flow
+**Firebase Events:** `accountCreation`, `userSignIn`
+
+**Steps:**
+1. **Email/Password Input**
+   - Real-time validation
+   - Password strength indicator
+   - Terms & conditions acceptance
+
+2. **Social OAuth Options**
+   - Google OAuth integration
+   - X (Twitter) OAuth integration  
+   - One-click account creation
+
+3. **Account Verification**
+   - Email verification required
+   - SMS verification for enhanced accounts
+   - Account security setup
+
+**Success Criteria:**
+- 85% signup completion rate
+- <30 second average completion time
+- <5% verification abandonment
+
+### 1.3 Social Connection Flow
+**Firebase Events:** `socialConnect`, `connectedBoot`
+
+**Platforms Supported:**
+- X (Twitter) - Profile data, follower count, engagement metrics
+- YouTube - Channel info, subscriber count, video performance
+- Instagram - Profile data, media count (pending Business API)
+- LinkedIn - Professional profile data
+- Twitch - Stream metrics, follower engagement
+
+**Connection Incentives:**
+- +500 points per platform connected
+- Profile completeness scoring
+- Enhanced analytics unlock
+- Creator tier eligibility
+
+**Success Criteria:**
+- 70% connect at least 1 platform
+- 45% connect 2+ platforms
+- <2 minute average connection time
+
+---
+
+## Profile Builder (PR-002)
+
+**File References:**
+- `2025-07-07_veri-design-mvp-profile-builder_v01.jpeg`
+- `BasicProfileBuilderAudienceOrCreator.tsx`
+
+### 2.1 Profile Showcase
+**Objective:** Display professional creator profile across platforms
+
+**Features:**
+- Cross-platform content aggregation
+- Professional bio display
+- Achievement badges
+- Social proof metrics
+- Shareable profile links
+- Custom profile themes
+
+**Components:**
+- Hero image/banner customization
+- Bio editor with rich text support
+- Platform connection status indicators
+- Achievement gallery
+- Contact/collaboration CTAs
+
+### 2.2 Profile Selection
+**User Types:**
+1. **Studio Profile Builder**
+   - Campaign creation access
+   - Creator discovery tools
+   - Analytics dashboard
+   - Team management features
+
+2. **Creator Profile Builder**
+   - Content optimization tools
+   - Performance analytics
+   - Earnings tracking
+   - Community engagement
+
+**Selection Criteria:**
+- Account verification level
+- Connected platform types
+- Follower thresholds
+- Content creation history
+
+### 2.3 AI Profile Generation
+**Features:**
+- Automated bio generation from social data
+- Content categorization and tagging
+- Audience demographic analysis
+- Engagement pattern recognition
+- Performance benchmark comparison
+
+**AI Capabilities:**
+- Natural language bio optimization
+- Content recommendation engine
+- Trending topic identification
+- Optimal posting schedule suggestions
+- Cross-platform content repurposing
+
+**Success Criteria:**
+- 80% adoption of AI-generated suggestions
+- 35% improvement in profile completion rates
+- 50% reduction in profile setup time
+
+---
+
+## Dashboard + Creator Tools (PR-003)
+
+**File References:**
+- `2025-07-07_veri-design-mvp-dashboard_v01.jpeg`
+- `Leaderboard.tsx`
+- `VeriScore.tsx`
+
+### 3.1 VeriScore System
+**Calculation Methodology:**
+- **Content Quality (30%):** Engagement rate, authenticity score, content originality
+- **Community Impact (25%):** Comments, shares, saves, meaningful interactions
+- **Platform Performance (20%):** Growth rate, reach expansion, algorithmic favor
+- **Consistency (15%):** Posting frequency, engagement maintenance, streak tracking
+- **Collaboration (10%):** Cross-creator partnerships, brand relationships, community support
+
+**Display Components:**
+- Large score badge (gradient background)
+- Weekly recalculation indicator
+- Score history trend line
+- Breakdown by category
+- Improvement recommendations
+
+### 3.2 Streak System
+**Tracking Metrics:**
+- Daily login streaks
+- Content creation streaks
+- Engagement streaks
+- Task completion streaks
+
+**Rewards Structure:**
+- **7-day streak:** 200 bonus points
+- **14-day streak:** 500 bonus points + badge
+- **30-day streak:** 1,000 points + exclusive features
+- **90-day streak:** VIP creator status
+
+**Visual Elements:**
+- Fire emoji indicators
+- Progress ring animation
+- Streak protection options
+- Social sharing capabilities
+
+### 3.3 Analytics Dashboard
+**Key Metrics:**
+- Real-time follower growth
+- Engagement rate trends
+- Content performance analysis
+- Revenue tracking (for monetized creators)
+- Cross-platform comparison
+
+**Visualization:**
+- Recharts library integration
+- Interactive time range selection
+- Export functionality (PDF/CSV)
+- Mobile-optimized charts
+- Real-time data updates (WebSocket)
+
+---
+
+## Engagement Tasks (PR-004)
+
+**File References:**
+- `2025-07-07_veri-design-mvp-engagement-tasks_v01.jpeg`
+
+### 4.1 Task Categories
+**Social Tasks (50-200 points):**
+- Follow new creators in your niche
+- Like and comment meaningfully
+- Share community content
+- Tag friends in relevant posts
+
+**Content Tasks (200-500 points):**
+- Upload original content
+- Use trending hashtags effectively
+- Collaborate with other creators
+- Respond to community questions
+
+**Referral Tasks (500-1000 points):**
+- Invite friends to platform
+- P2P point transfers
+- Community building activities
+- Brand partnership facilitation
+
+**Challenge Tasks (1000+ points):**
+- Weekly creative challenges
+- Platform-specific competitions
+- Community voting participation
+- Long-form content creation
+
+### 4.2 P2P Referral System (Matera Integration)
+**Features:**
+- Email-based recipient targeting
+- Point transfer mechanics (daily: 5,000, weekly: 20,000 limits)
+- Blockchain transaction logging
+- Reputation staking mechanics
+- Transfer history tracking
+
+**Matera Compatibility:**
+- Smart contract integration
+- Token wrapping/unwrapping
+- Staking mechanism support
+- Cross-chain compatibility
+- DeFi yield farming options
+
+### 4.3 Gamification Mechanics
+**Achievement System:**
+- Progress badges for task completion
+- Tier advancement rewards
+- Special recognition for consistency
+- Community voting for standout creators
+
+**Competition Elements:**
+- Weekly leaderboard competitions
+- Category-specific challenges
+- Seasonal events and themes
+- Creator vs creator challenges
+
+---
+
+## Creator Analytics (PR-005)
+
+**File References:**
+- `2025-07-07_veri-design-mvp-creator-analytics_v01.jpeg`
+
+### 5.1 Performance Metrics
+**Engagement Analytics:**
+- Like-to-view ratios
+- Comment quality scoring
+- Save/share percentages
+- Follower growth velocity
+- Peak engagement times
+
+**Content Analytics:**
+- Top performing content types
+- Hashtag effectiveness
+- Content lifecycle analysis
+- Cross-platform performance comparison
+- Trending topic alignment
+
+**Audience Analytics:**
+- Demographic breakdowns
+- Geographic distribution
+- Interest categorization
+- Engagement behavior patterns
+- Churn rate analysis
+
+### 5.2 Revenue Tracking
+**Monetization Metrics:**
+- Brand partnership earnings
+- Platform creator fund payments
+- Merchandise sales tracking
+- Subscription revenue (where applicable)
+- P2P points conversion value
+
+**ROI Analysis:**
+- Content creation cost vs. revenue
+- Time investment tracking
+- Growth efficiency metrics
+- Campaign performance analysis
+- Long-term value projections
+
+### 5.3 Optimization Recommendations
+**AI-Powered Insights:**
+- Optimal posting schedules
+- Content format recommendations
+- Audience targeting suggestions
+- Collaboration opportunities
+- Growth strategy planning
+
+---
+
+## Global Leaderboard (PR-006)
+
+**File References:**
+- `2025-07-07_veri-design-mvp-global-leaderboard_v01.jpeg`
+
+### 6.1 Ranking Algorithm
+**Scoring Components:**
+- VeriScore (40% weight)
+- Recent activity (25% weight)
+- Community impact (20% weight)
+- Consistency metrics (15% weight)
+
+**Category Filters:**
+- Gaming genres (FPS, Fighting, Adventure, Battle Royale, RPG, Racing)
+- Content types (Streaming, Educational, Entertainment, Reviews)
+- Geographic regions
+- Creator tier levels
+- Platform specializations
+
+### 6.2 Leaderboard Features
+**Real-Time Updates:**
+- Live ranking adjustments
+- Position change indicators (+/- arrows)
+- Trending creator highlights
+- Recently active status indicators
+
+**Social Features:**
+- Follow top creators
+- Challenge creator to competition
+- View detailed profiles
+- Share leaderboard positions
+
+**Recognition System:**
+- Top 1% badges
+- Category leaders
+- Rising star identification
+- Consistency awards
+
+---
+
+## Campaign Creation (PR-007)
+
+### 7.1 Campaign Builder (Studio Access Required)
+**Setup Process:**
+1. Campaign objective definition
+2. Target audience specification
+3. Content requirements outline
+4. Budget allocation
+5. Timeline establishment
+6. Creator matching parameters
+
+**Creator Matching Algorithm:**
+- Audience alignment (30% weight)
+- Content fit (25% weight)
+- Performance history (20% weight)
+- Availability (15% weight)
+- Budget compatibility (10% weight)
+
+### 7.2 White Label Support
+**Customization Options:**
+- Brand color theming
+- Logo placement and sizing
+- Custom domain mapping
+- Template library access
+- Analytics dashboard skinning
+
+**Enterprise Features:**
+- Multi-user team management
+- Advanced reporting suite
+- Custom integration support
+- Dedicated account management
+- SLA guarantees
+
+---
+
+## Technical Integration Points
+
+### Firebase Integration
+**Authentication Events:**
+- `accountCreation` - New user registration
+- `userSignIn` - Login completion
+- `socialConnect` - Platform connection
+- `connectedBoot` - Profile activation
+
+**User Management:**
+- `updateUser` - Profile modifications
+- `setUserType` - Creator/Studio designation
+- `verifyTaskCompletion` - Task validation
+
+### Matera Blockchain Integration
+**Point System:**
+- P2P transfers with daily/weekly limits
+- Reputation staking mechanics
+- Cross-chain compatibility
+- DeFi integration support
+
+**Smart Contracts:**
+- Point transfer validation
+- Staking reward distribution
+- Campaign payment automation
+- Creator royalty payments
+
+### Social Platform APIs
+**X (Twitter) API v2:**
+- User authentication
+- Profile data retrieval
+- Follower/following metrics
+- Tweet performance analytics
+
+**YouTube Data API:**
+- Channel information
+- Subscriber counts
+- Video performance metrics
+- Community engagement data
+
+**Instagram Basic Display API:**
+- Profile information
+- Media count and engagement
+- Story performance (business accounts)
+
+---
+
+## Success Metrics & KPIs
+
+### User Acquisition
+- **Homepage Conversion:** 15% target (visitors → signups)
+- **Signup Completion:** 85% target (start → finish)
+- **Social Connection:** 70% connect 1+ platform
+- **Profile Completion:** 60% full profile setup
+
+### Engagement Metrics
+- **Daily Active Users:** 60% of registered users
+- **Session Duration:** 8+ minutes average
+- **Feature Adoption:** 80% VeriScore understanding
+- **Streak Maintenance:** 40% maintain 7+ day streaks
+
+### Revenue Targets
+- **Monthly Campaign Volume:** $100K+ target
+- **Average Campaign Size:** $5K+ target
+- **Studio Retention:** 75% month-over-month
+- **Creator Monetization:** 30% earning within 90 days
+
+### Performance Benchmarks
+- **Page Load Time:** <2 seconds initial load
+- **Mobile Performance:** 90+ Lighthouse score
+- **API Response Time:** <500ms average
+- **Uptime Requirement:** 99.9% availability
+
+---
+
+## Implementation Timeline
+
+### Phase 1: Foundation (Weeks 1-4)
+- [ ] Design system implementation
+- [ ] Core component library
+- [ ] Authentication flow
+- [ ] Basic dashboard
+- [ ] Social platform connections
+
+### Phase 2: Engagement (Weeks 5-8)
+- [ ] VeriScore calculation engine
+- [ ] Task system implementation
+- [ ] Leaderboard functionality
+- [ ] Profile builder completion
+- [ ] Analytics dashboard
+
+### Phase 3: Advanced Features (Weeks 9-12)
+- [ ] AI profile generation
+- [ ] Campaign creation tools
+- [ ] P2P transfer system
+- [ ] Advanced analytics
+- [ ] White label support
+
+### Phase 4: Optimization (Weeks 13-16)
+- [ ] Performance optimization
+- [ ] Mobile app development
+- [ ] Advanced gamification
+- [ ] Creator monetization tools
+- [ ] Enterprise features
+
+---
+
+## File Asset Mapping
+
+### Design Assets
+- `2025-07-07_veri-design-mvp-dashboard_v01.jpeg` → Dashboard layout reference
+- `2025-07-07_veri-design-mvp-profile-builder_v01.jpeg` → Profile builder UI
+- `2025-07-07_veri-design-mvp-engagement-tasks_v01.jpeg` → Task system design
+- `2025-07-07_veri-design-mvp-creator-analytics_v01.jpeg` → Analytics interface
+- `2025-07-07_veri-design-mvp-global-leaderboard_v01.jpeg` → Leaderboard design
+
+### Component Files
+- `LiquidGlassButton.tsx` → Primary CTA component
+- `VeriLogo.tsx` → Brand identity element
+- `Leaderboard.tsx` → Global leaderboard component
+- `VeriScore.tsx` → Score display component
+- `BasicProfileBuilderAudienceOrCreator.tsx` → Profile builder interface
+
+### Flow Documentation
+- `Veri MVP Flow for Claude.pdf` → Detailed flow specifications
+- `mvp_flow_mermaid.mermaid` → Flow architecture diagram
+- `2025-07-07_veri-design-mvp-flow-mermaid_v01` → Updated flow chart
+
+---
+
+**Next Steps:**
+1. Technical architecture definition
+2. API integration specifications  
+3. Database schema design
+4. Security implementation plan
+5. Testing strategy and QA protocols
