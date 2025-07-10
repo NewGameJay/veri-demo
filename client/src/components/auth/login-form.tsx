@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { VeriLogo } from "@/components/ui/veri-logo";
 import { useAuth } from "@/contexts/auth-context";
 import { useToast } from "@/hooks/use-toast";
 import { Twitter, Mail } from "lucide-react";
@@ -59,9 +60,12 @@ export function LoginForm({ onSwitchToSignup, onSuccess }: LoginFormProps) {
 
   return (
     <Card className="w-full max-w-md glass-effect border-white/20">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold text-white">Welcome Back</CardTitle>
-        <CardDescription className="text-white/60">
+      <CardHeader className="text-center space-y-4">
+        <div className="flex justify-center">
+          <VeriLogo size="lg" showText={false} />
+        </div>
+        <CardTitle className="text-2xl font-bold text-white font-termina">Welcome Back</CardTitle>
+        <CardDescription className="text-white/60 font-inter">
           Sign in to your Veri account
         </CardDescription>
       </CardHeader>
