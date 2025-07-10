@@ -95,39 +95,68 @@
 }
 
 @layer components {
-  /* Apple-like Glass Morphism */
+  /* Luxury Glass Morphism */
   .glass-effect {
-    backdrop-filter: blur(20px) saturate(180%);
-    @apply bg-white/5 dark:bg-white/10 border border-black/10 dark:border-white/20;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(24px) saturate(200%);
+    @apply bg-white/[0.08] dark:bg-white/[0.12] border border-black/[0.08] dark:border-white/[0.15];
+    box-shadow: 
+      0 8px 32px 0 rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   }
   
   .dark .glass-effect {
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    box-shadow: 
+      0 8px 32px 0 rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2);
   }
   
   .glass-effect:hover {
-    @apply bg-white/10 dark:bg-white/20 border-black/20 dark:border-white/30;
-    box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
+    backdrop-filter: blur(28px) saturate(220%);
+    @apply bg-white/[0.15] dark:bg-white/[0.18] border-black/[0.15] dark:border-white/[0.25];
+    box-shadow: 
+      0 16px 64px 0 rgba(0, 0, 0, 0.15),
+      0 4px 16px 0 rgba(0, 211, 162, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px) scale(1.01);
   }
   
   .dark .glass-effect:hover {
-    box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.45);
+    box-shadow: 
+      0 16px 64px 0 rgba(0, 0, 0, 0.5),
+      0 4px 16px 0 rgba(0, 211, 162, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.3);
   }
   
   /* Enhanced Veri Brand Gradients */
   .veri-gradient {
     background: linear-gradient(135deg, hsl(var(--veri-primary-500)) 0%, hsl(var(--veri-accent-violet-500)) 100%);
-    box-shadow: 0 8px 32px 0 rgba(0, 211, 162, 0.3);
+    box-shadow: 
+      0 8px 32px 0 rgba(0, 211, 162, 0.25),
+      0 2px 8px 0 rgba(0, 211, 162, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  
+  .veri-gradient:hover {
+    box-shadow: 
+      0 12px 48px 0 rgba(0, 211, 162, 0.35),
+      0 4px 16px 0 rgba(0, 211, 162, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px) scale(1.02);
   }
   
   .veri-gradient-card {
-    background: linear-gradient(135deg, rgba(0, 211, 162, 0.1) 0%, rgba(132, 86, 255, 0.1) 100%);
-    backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(0, 211, 162, 0.2);
-    box-shadow: 0 8px 32px 0 rgba(0, 211, 162, 0.15);
+    background: linear-gradient(135deg, rgba(0, 211, 162, 0.12) 0%, rgba(132, 86, 255, 0.12) 100%);
+    backdrop-filter: blur(24px) saturate(200%);
+    border: 1px solid rgba(0, 211, 162, 0.25);
+    box-shadow: 
+      0 8px 32px 0 rgba(0, 211, 162, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
   
   .hero-gradient {

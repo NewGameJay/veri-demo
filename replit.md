@@ -21,6 +21,7 @@ The MVP is now fully functional with:
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+UI/UX preferences: Prefers sophisticated glass morphism with translucent effects for a luxury, high-end feel. Hover effects should maintain good contrast and readability while being visually striking.
 
 ## System Architecture
 

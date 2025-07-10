@@ -310,8 +310,8 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
                         <task.icon className={`h-5 w-5 ${task.color} group-hover:scale-110 transition-transform duration-300`} />
                       </div>
                       <div className="group-hover:translate-x-1 transition-transform duration-300">
-                        <h3 className="font-semibold text-white group-hover:text-green-400 transition-colors duration-300">{task.title}</h3>
-                        <p className="text-sm text-white/60 group-hover:text-white/80 transition-colors duration-300">{task.description}</p>
+                        <h3 className="font-semibold text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
+                        <p className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">{task.description}</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2 group-hover:scale-105 transition-transform duration-300">
@@ -325,13 +325,13 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
                   </div>
                   
                   <div className="flex items-center justify-between group-hover:translate-x-1 transition-transform duration-300">
-                    <div className="flex items-center space-x-4 text-sm text-white/60 group-hover:text-white/80 transition-colors duration-300">
+                    <div className="flex items-center space-x-4 text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">
                       <div className="flex items-center space-x-1 group-hover:scale-105 transition-transform duration-300">
-                        <Clock className="h-4 w-4 group-hover:text-green-400 transition-colors duration-300" />
+                        <Clock className="h-4 w-4 group-hover:text-green-300 transition-colors duration-300" />
                         <span>{task.estimatedTime}</span>
                       </div>
                       <div className="flex items-center space-x-1 group-hover:scale-105 transition-transform duration-300">
-                        <Hash className="h-4 w-4 group-hover:text-purple-400 transition-colors duration-300" />
+                        <Hash className="h-4 w-4 group-hover:text-purple-300 transition-colors duration-300" />
                         <span>{task.category.replace('_', ' ')}</span>
                       </div>
                     </div>
@@ -357,18 +357,18 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
                   </div>
                   
                   {/* Requirements with enhanced hover animations */}
-                  <div className="mt-3 pt-3 border-t border-white/10 group-hover:border-white/20 transition-colors duration-300">
-                    <h4 className="text-sm font-medium text-white mb-2 group-hover:text-green-400 transition-colors duration-300">Requirements:</h4>
+                  <div className="mt-3 pt-3 border-t border-white/15 group-hover:border-white/25 transition-colors duration-300">
+                    <h4 className="text-sm font-medium text-white mb-2 group-hover:text-green-300 transition-colors duration-300">Requirements:</h4>
                     <ul className="space-y-1">
                       {task.requirements.map((req, index) => (
                         <li 
                           key={index} 
-                          className="text-sm text-white/60 flex items-center space-x-2 group-hover:text-white/80 transition-all duration-300 group-hover:translate-x-1"
+                          className="text-sm text-white/70 flex items-center space-x-2 group-hover:text-white/90 transition-all duration-300 group-hover:translate-x-1"
                           style={{
                             animationDelay: `${(task.id * 100) + (index * 50)}ms`
                           }}
                         >
-                          <div className="w-1 h-1 rounded-full bg-white/40 group-hover:bg-green-400 group-hover:scale-150 transition-all duration-300"></div>
+                          <div className="w-1 h-1 rounded-full bg-white/50 group-hover:bg-green-300 group-hover:scale-150 transition-all duration-300"></div>
                           <span className="group-hover:font-medium transition-all duration-300">{req}</span>
                         </li>
                       ))}
@@ -506,8 +506,8 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
                           <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
                         </div>
                         <div className="group-hover:translate-x-1 transition-transform duration-300">
-                          <h3 className="font-medium text-white group-hover:text-green-400 transition-colors duration-300">{task.title}</h3>
-                          <p className="text-sm text-white/60 group-hover:text-white/80 transition-colors duration-300">
+                          <h3 className="font-medium text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
+                          <p className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">
                             Completed {new Date(task.completedAt).toLocaleDateString()}
                           </p>
                         </div>
@@ -524,8 +524,8 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
                     </div>
                     
                     <div className="flex items-center justify-between group-hover:translate-x-1 transition-transform duration-300">
-                      <div className="text-sm text-white/60 group-hover:text-white/80 transition-colors duration-300">
-                        Status: <span className="text-green-400 group-hover:font-medium transition-all duration-300">{task.status}</span>
+                      <div className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">
+                        Status: <span className="text-green-300 group-hover:font-medium transition-all duration-300">{task.status}</span>
                       </div>
                       <Button
                         size="sm"
