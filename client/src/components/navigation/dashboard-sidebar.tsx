@@ -1,15 +1,27 @@
 import { useState } from "react";
-import { X, Home, User, Trophy, CheckSquare, Bot } from "lucide-react";
+import { X, Home, User, Trophy, Bot, Pin, PinOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { VeriScoreCard } from "@/components/dashboard/veri-score-card";
 import { cn } from "@/lib/utils";
 
 interface DashboardSidebarProps {
   isOpen: boolean;
+  isPinned: boolean;
   onClose: () => void;
+  onPin: () => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  className?: string;
 }
 
-export function DashboardSidebar({ isOpen, onClose }: DashboardSidebarProps) {
+export function DashboardSidebar({ 
+  isOpen, 
+  isPinned, 
+  onClose, 
+  onPin, 
+  onMouseEnter, 
+  onMouseLeave,
+  className 
+}: DashboardSidebarProps) {
   const [activeItem, setActiveItem] = useState("dashboard");
 
   const menuItems = [
@@ -22,20 +34,52 @@ export function DashboardSidebar({ isOpen, onClose }: DashboardSidebarProps) {
   return (
     <div
       className={cn(
-        "dashboard-sidebar fixed top-0 left-0 h-full w-80 bg-gray-900/95 glass-effect z-30 p-6",
-        isOpen && "open"
+        "dashboard-sidebar fixed top-0 left-0 h-full w-80 bg-gray-900/95 glass-effect z-30 p-6 transition-all duration-300",
+        isOpen && "open",
+        isPinned && "pinned",
+        className
       )}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       <div className="flex items-center justify-between mb-8">
-        <h2 className="text-xl font-bold text-white">Dashboard</h2>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onClose}
-          className="p-2 hover:bg-white/10 rounded-xl transition-colors"
-        >
-          <X className="w-5 h-5" />
-        </Button>
+        <h2 className="text-xl font-termina text-white">Dashboard</h2>
+        <div className="flex items-center gap-2">
+          {/* Pin/Unpin Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onPin}
+            className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 hover-scale"
+            title={isPinned ? "Unpin sidebar" : "Pin sidebar"}
+          >
+            {isPinned ? (
+              <PinOff className="w-4 h-4 text-green-400" />
+            ) : (
+              <Pin className="w-4 h-4 text-white/60" />
+            )}
+          </Button>
+          
+          {/* Close Button (hidden when pinned) */}
+          {!isPinned && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 hover-scale"
+            >
+              <X className="w-5 h-5" />
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* Status indicator */}
+      <div className="mb-4">
+        <div className="flex items-center gap-2 text-xs text-white/60 font-inter">
+          <div className={`w-2 h-2 rounded-full ${isPinned ? 'bg-green-400 pulse-glow' : 'bg-yellow-400'}`}></div>
+          {isPinned ? 'Always Open' : 'Hover Mode'}
+        </div>
       </div>
 
       <div className="space-y-6">

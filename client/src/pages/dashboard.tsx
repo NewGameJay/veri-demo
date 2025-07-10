@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Header } from "@/components/navigation/header";
 import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
@@ -13,6 +13,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Dashboard() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
+  const [isPinned, setIsPinned] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
 
   const { data: connections } = useQuery({
@@ -33,17 +36,84 @@ export default function Dashboard() {
   const userXP = user.xpPoints || 0;
   const isMemorizzUnlocked = userStreak >= 10;
 
+  // Enhanced menu behavior with scroll and hover
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!isPinned && isDashboardOpen && !isHovering) {
+        setIsDashboardOpen(false);
+      }
+    };
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        !isPinned &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node) &&
+        isDashboardOpen
+      ) {
+        setIsDashboardOpen(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDashboardOpen, isPinned, isHovering]);
+
+  // Toggle menu (proper open/close behavior)
+  const handleMenuToggle = () => {
+    setIsDashboardOpen(!isDashboardOpen);
+  };
+
+  // Handle hover behavior when not pinned
+  const handleSidebarHover = () => {
+    if (!isPinned) {
+      setIsHovering(true);
+      setIsDashboardOpen(true);
+    }
+  };
+
+  const handleSidebarLeave = () => {
+    if (!isPinned) {
+      setIsHovering(false);
+      // Small delay to prevent flickering
+      setTimeout(() => {
+        if (!isPinned && !isHovering) {
+          setIsDashboardOpen(false);
+        }
+      }, 200);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-800 hero-gradient">
       <Header
-        onDashboardToggle={() => setIsDashboardOpen(true)}
-        onMobileMenuToggle={() => setIsDashboardOpen(true)}
+        onDashboardToggle={handleMenuToggle}
+        onMobileMenuToggle={handleMenuToggle}
       />
       
-      <DashboardSidebar
-        isOpen={isDashboardOpen}
-        onClose={() => setIsDashboardOpen(false)}
-      />
+      {/* Hover trigger area when sidebar is closed */}
+      {!isDashboardOpen && !isPinned && (
+        <div
+          className="fixed top-0 left-0 w-8 h-full z-20"
+          onMouseEnter={handleSidebarHover}
+        />
+      )}
+      
+      <div ref={sidebarRef}>
+        <DashboardSidebar
+          isOpen={isDashboardOpen || isPinned}
+          isPinned={isPinned}
+          onClose={() => setIsDashboardOpen(false)}
+          onPin={() => setIsPinned(!isPinned)}
+          onMouseEnter={handleSidebarHover}
+          onMouseLeave={handleSidebarLeave}
+        />
+      </div>
 
       <main className="pt-20 px-4 lg:px-6">
         <div className="max-w-7xl mx-auto">
