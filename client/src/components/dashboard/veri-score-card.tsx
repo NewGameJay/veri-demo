@@ -53,67 +53,63 @@ export function VeriScoreCard() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* VeriScore Summary Card */}
-      <Card className="glass-effect border-white/20">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Star className="h-5 w-5 text-yellow-400" />
-              <CardTitle className="text-white">VeriScore Dashboard</CardTitle>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-400">
-                Level {Math.floor(veriScore / 25) + 1}
-              </Badge>
-              {isAIUnlocked && (
-                <Badge variant="secondary" className="bg-purple-500/20 text-purple-400">
-                  <Brain className="mr-1 h-3 w-3" />
-                  AI Unlocked
-                </Badge>
-              )}
-            </div>
-          </div>
-          <CardDescription className="text-white/60">
-            Your creator reputation and authenticity score
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* VeriScore */}
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">
-                {Math.round(veriScore)}
-              </div>
-              <div className="text-sm text-white/60">VeriScore</div>
-            </div>
-
-            {/* XP Points */}
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">
-                {activeUser.xpPoints || 0}
-              </div>
-              <div className="text-sm text-white/60">XP Points</div>
-            </div>
-
-            {/* Streak */}
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">
-                {activeUser.streak || 0}
-              </div>
-              <div className="text-sm text-white/60">Day Streak</div>
+    <div className="space-y-6 animate-fade-in">
+      {/* Enhanced VeriScore Card matching brand assets */}
+      <Card className="veri-gradient-card border-white/20 hover-scale">
+        <CardContent className="p-8">
+          {/* Header with Veri Icon */}
+          <div className="flex items-center justify-center mb-8">
+            <div className="w-16 h-16 veri-gradient rounded-2xl flex items-center justify-center shadow-lg pulse-glow">
+              <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" opacity="0.3"/>
+                <path d="M7 10.5c0-1.38 1.12-2.5 2.5-2.5S12 9.12 12 10.5 10.88 13 9.5 13 7 11.88 7 10.5zm7 0c0-1.38 1.12-2.5 2.5-2.5S19 9.12 19 10.5 17.88 13 16.5 13 14 11.88 14 10.5z"/>
+                <path d="M8.5 16.5c.83 1.24 2.24 2 3.5 2s2.67-.76 3.5-2"/>
+              </svg>
             </div>
           </div>
 
-          {/* Progress to Next Level */}
-          <div className="mt-6 space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-white/60">Progress to Level {Math.floor(veriScore / 25) + 2}</span>
-              <span className="text-white font-medium">
-                {Math.round(veriScore % 25)}/25
-              </span>
+          {/* VeriScore Title */}
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-termina text-white mb-2">VeriScore</h3>
+            <p className="text-white/60 font-inter">Calculated Weekly Based on</p>
+            <p className="text-green-400 font-inter text-sm underline cursor-pointer hover:text-green-300 transition-colors">VeriScore Analytics™</p>
+          </div>
+
+          {/* Main Score */}
+          <div className="text-center mb-8">
+            <div className="text-6xl font-termina text-green-400 mb-2 animate-bounce-in">
+              {Math.round(veriScore)}
             </div>
-            <Progress value={(veriScore % 25) * 4} className="h-2" />
+          </div>
+
+          {/* VeriPoints Section */}
+          <div className="text-center mb-8">
+            <h4 className="text-xl font-termina text-white mb-4">VeriPoints</h4>
+            <div className="text-4xl font-termina text-green-400 mb-6">
+              {(activeUser.xpPoints || 0).toLocaleString()}XP
+            </div>
+          </div>
+
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="glass-effect p-4 rounded-xl text-center hover-scale">
+              <div className="text-2xl font-bold text-white mb-1">8.7K</div>
+              <div className="text-sm text-white/60 font-inter">Total Followers</div>
+            </div>
+            <div className="glass-effect p-4 rounded-xl text-center hover-scale">
+              <div className="text-2xl font-bold text-white mb-1">12.5K</div>
+              <div className="text-sm text-white/60 font-inter">Engagement</div>
+            </div>
+          </div>
+
+          {/* User Info */}
+          <div className="text-center">
+            <h5 className="text-xl font-termina text-white mb-1">
+              {activeUser.firstName && activeUser.lastName 
+                ? `${activeUser.firstName} ${activeUser.lastName}`
+                : activeUser.username}
+            </h5>
+            <p className="text-green-400 font-inter">Creator & Influencer</p>
           </div>
         </CardContent>
       </Card>

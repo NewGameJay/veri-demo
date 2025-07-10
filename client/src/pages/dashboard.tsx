@@ -34,7 +34,7 @@ export default function Dashboard() {
   const isMemorizzUnlocked = userStreak >= 10;
 
   return (
-    <div className="min-h-screen bg-gray-800">
+    <div className="min-h-screen bg-gray-800 hero-gradient">
       <Header
         onDashboardToggle={() => setIsDashboardOpen(true)}
         onMobileMenuToggle={() => setIsDashboardOpen(true)}
@@ -47,12 +47,12 @@ export default function Dashboard() {
 
       <main className="pt-20 px-4 lg:px-6">
         <div className="max-w-7xl mx-auto">
-          {/* Welcome Section */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">
+          {/* Enhanced Welcome Section with Animation */}
+          <div className="mb-8 animate-fade-in">
+            <h1 className="text-3xl font-termina text-white mb-2 tracking-tight">
               Welcome back, {user.firstName || user.username}!
             </h1>
-            <p className="text-white/60">
+            <p className="text-white/60 font-inter">
               Here's your creator dashboard with all your progress and opportunities.
             </p>
           </div>
@@ -64,23 +64,23 @@ export default function Dashboard() {
               {/* VeriScore Card */}
               <VeriScoreCard />
 
-              {/* Main Dashboard Tabs */}
-              <Tabs defaultValue="tasks" className="w-full">
-                <TabsList className="grid w-full grid-cols-4 glass-effect border-white/20">
-                  <TabsTrigger value="tasks" className="text-white data-[state=active]:bg-white/20">
+              {/* Enhanced Dashboard Tabs with Glass Effect */}
+              <Tabs defaultValue="tasks" className="w-full animate-slide-in">
+                <TabsList className="grid w-full grid-cols-4 glass-effect border-white/20 hover-scale">
+                  <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
                     Tasks
                   </TabsTrigger>
-                  <TabsTrigger value="profile" className="text-white data-[state=active]:bg-white/20">
+                  <TabsTrigger value="profile" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
                     Profile
                   </TabsTrigger>
                   <TabsTrigger 
                     value="ai-agent" 
-                    className="text-white data-[state=active]:bg-white/20"
+                    className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300"
                     disabled={!isMemorizzUnlocked}
                   >
-                    AI Agent
+                    AI Agent {!isMemorizzUnlocked && "🔒"}
                   </TabsTrigger>
-                  <TabsTrigger value="analytics" className="text-white data-[state=active]:bg-white/20">
+                  <TabsTrigger value="analytics" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
                     Analytics
                   </TabsTrigger>
                 </TabsList>
