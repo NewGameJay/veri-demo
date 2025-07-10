@@ -16,13 +16,13 @@ export function HeroSection({ onGetStarted }: HeroSectionProps) {
       ></div>
       
       <div className="relative z-10 text-center max-w-4xl mx-auto px-4">
-        <h1 className="text-5xl lg:text-7xl font-bold mb-6 text-white">
+        <h1 className="text-5xl lg:text-7xl font-termina font-bold mb-6 text-white">
           Create to Resonate.<br />
-          <span className="bg-gradient-to-r from-green-500 to-purple-500 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-green-500 to-purple-500 bg-clip-text text-transparent font-termina">
             Impact to Earn.
           </span>
         </h1>
-        <p className="text-xl lg:text-2xl text-white/80 mb-8 max-w-2xl mx-auto">
+        <p className="text-xl lg:text-2xl text-white/80 mb-8 max-w-2xl mx-auto font-inter">
           Build your audience, drive genuine engagement, and turn your influence into meaningful earnings. Join creators, brands, and communities.
         </p>
         <Button

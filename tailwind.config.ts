@@ -84,6 +84,12 @@ export default {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      fontFamily: {
+        "termina": ['var(--font-termina)', 'system-ui', 'sans-serif'],
+        "machina": ['var(--font-machina)', 'system-ui', 'sans-serif'], 
+        "inter": ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        "sans": ['var(--font-inter)', 'system-ui', 'sans-serif'],
+      },
     },
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],

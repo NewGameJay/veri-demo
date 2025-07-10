@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Typography - Veri Brand Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root {
+  --font-termina: 'Termina', 'Helvetica Neue', Arial, sans-serif;
+  --font-machina: 'PP Neue Machina', 'Helvetica Neue', Arial, sans-serif;
+  --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
 :root {
   --background: hsl(0, 0%, 100%);
   --foreground: hsl(20, 14.3%, 4.1%);
@@ -68,10 +77,22 @@
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    @apply font-inter antialiased bg-background text-foreground;
     background: hsl(var(--veri-neutral-800));
     color: hsl(0, 0%, 98%);
+  }
+  
+  /* Typography Hierarchy */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-termina;
+  }
+  
+  .accent-text {
+    @apply font-machina;
+  }
+  
+  p, span, div, input, button {
+    @apply font-inter;
   }
 }
 

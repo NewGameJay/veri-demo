@@ -52,7 +52,7 @@ The application uses a PostgreSQL database with these main entities:
 ### Design System
 - **Primary Color**: #00d6a2 (teal/green) 
 - **Accent Color**: #8456ff (purple)
-- **Typography**: Termina Bold (headings), PP Neue Machina (accent), Inter (body)
+- **Typography**: Termina Bold (headings), PP Neue Machina (accent text), Inter (body text)
 - **Glass Morphism**: Enhanced Apple-like frosted glass with 20px blur and saturation effects
 - **Animations**: Smooth cubic-bezier transitions, pulse effects, hover scaling
 - **Brand Assets**: Veri logo implementation, brand-aligned social platform icons

@@ -85,7 +85,7 @@ export function Header({ onDashboardToggle, onMobileMenuToggle, onSignIn }: Head
             <div className="flex items-center gap-3 animate-slide-in">
               <div className="text-right hidden sm:block">
                 <div className="text-sm font-medium text-white font-inter">{displayName}</div>
-                <div className="text-xs text-green-400 font-medium">{userXP.toLocaleString()} XP</div>
+                <div className="text-xs text-green-400 font-medium font-machina accent-text">{userXP.toLocaleString()} XP</div>
               </div>
               <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center font-bold text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                 {userInitials}
