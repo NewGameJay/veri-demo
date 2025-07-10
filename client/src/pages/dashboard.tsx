@@ -36,14 +36,8 @@ export default function Dashboard() {
   const userXP = user.xpPoints || 0;
   const isMemorizzUnlocked = userStreak >= 10;
 
-  // Enhanced menu behavior with scroll and hover
+  // Simplified menu behavior - auto-collapse when not hovering
   useEffect(() => {
-    const handleScroll = () => {
-      if (!isPinned && isDashboardOpen && !isHovering) {
-        setIsDashboardOpen(false);
-      }
-    };
-
     const handleClickOutside = (event: MouseEvent) => {
       if (
         !isPinned &&
@@ -55,21 +49,13 @@ export default function Dashboard() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
     document.addEventListener('mousedown', handleClickOutside);
-
     return () => {
-      window.removeEventListener('scroll', handleScroll);
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isDashboardOpen, isPinned, isHovering]);
+  }, [isDashboardOpen, isPinned]);
 
-  // Toggle menu (proper open/close behavior)
-  const handleMenuToggle = () => {
-    setIsDashboardOpen(!isDashboardOpen);
-  };
-
-  // Handle hover behavior when not pinned
+  // Handle menu behavior
   const handleSidebarHover = () => {
     if (!isPinned) {
       setIsHovering(true);
@@ -80,20 +66,16 @@ export default function Dashboard() {
   const handleSidebarLeave = () => {
     if (!isPinned) {
       setIsHovering(false);
-      // Small delay to prevent flickering
-      setTimeout(() => {
-        if (!isPinned && !isHovering) {
-          setIsDashboardOpen(false);
-        }
-      }, 200);
+      // Close immediately when not hovering
+      setIsDashboardOpen(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-800 hero-gradient">
       <Header
-        onDashboardToggle={handleMenuToggle}
-        onMobileMenuToggle={handleMenuToggle}
+        onDashboardToggle={() => setIsDashboardOpen(!isDashboardOpen)}
+        onMobileMenuToggle={() => setIsDashboardOpen(!isDashboardOpen)}
       />
       
       {/* Hover trigger area when sidebar is closed */}
