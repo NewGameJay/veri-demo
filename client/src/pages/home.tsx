@@ -4,6 +4,7 @@ import { Header } from "@/components/navigation/header";
 import { MobileNav } from "@/components/navigation/mobile-nav";
 import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
 import { OnboardingModal } from "@/components/modals/onboarding-modal";
+import { AuthModal } from "@/components/auth/auth-modal";
 import { HeroSection } from "@/components/sections/hero-section";
 import { GettingStarted } from "@/components/sections/getting-started";
 import { DashboardPreview } from "@/components/sections/dashboard-preview";
@@ -13,16 +14,35 @@ import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { VeriLogo } from "@/components/ui/veri-logo";
 import { Twitter, Instagram, Youtube } from "lucide-react";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function Home() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "signup">("signup");
+  const { user } = useAuth();
 
   const handleGetStarted = () => {
-    setIsOnboardingOpen(true);
+    if (user) {
+      setIsOnboardingOpen(true);
+    } else {
+      setAuthMode("signup");
+      setIsAuthModalOpen(true);
+    }
   };
 
   const handleSignUp = () => {
+    if (user) {
+      setIsOnboardingOpen(true);
+    } else {
+      setAuthMode("signup");
+      setIsAuthModalOpen(true);
+    }
+  };
+
+  const handleAuthSuccess = () => {
+    setIsAuthModalOpen(false);
     setIsOnboardingOpen(true);
   };
 
@@ -199,6 +219,13 @@ export default function Home() {
       <OnboardingModal
         isOpen={isOnboardingOpen}
         onClose={() => setIsOnboardingOpen(false)}
+      />
+      
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        initialMode={authMode}
+        onSuccess={handleAuthSuccess}
       />
     </div>
   );

@@ -1,0 +1,121 @@
+flowchart LR
+    %% Website Entry Point
+    A[Website Home] --> B[Sign Up / Sign In]
+    B --> C[userSignIn]
+    
+    %% Sign Up Flow
+    C --> D[Sign up]
+    D --> E[Sign up Inputs]
+    E --> F[Sign In Toggle]
+    F --> G[Google / X Signup]
+    G --> H[Create Account]
+    H --> I[accountCreation]
+    
+    %% Sign In Flow  
+    C --> J[Sign In]
+    J --> K[Sign In Inputs]
+    K --> L[Sign In Toggle]
+    L --> M[Google / X Login]
+    M --> N[Sign In]
+    N --> O[userSignIn]
+    
+    %% Social Connection Flow
+    I --> P[Social Connection]
+    P --> Q[Social Connect Buttons]
+    Q --> R[Link Socials]
+    R --> S[social/X/YT/Connect]
+    S --> T[setUserType = 'community']
+    T --> U[connected/X/Y boot]
+    
+    %% Dashboard Access
+    O --> V[Dashboard]
+    P --> V
+    
+    %% Profile Showcase Flow
+    V --> W[Profile Showcase]
+    W --> X[Existing Setup Reskin]
+    X --> Y[Share Profile]
+    Y --> Z[Edit Profile]
+    Z --> AA[Save Profile]
+    AA --> BB[updateUser]
+    
+    %% Profile Selection
+    W --> CC[Profile Select]
+    CC --> DD[Studio Profile Builder]
+    
+    %% Studio Profile Builder
+    DD --> EE[Existing Setup Reskin]
+    EE --> FF[Final - Follow us, etc.]
+    FF --> GG[Build Studio Profile]
+    GG --> HH[updateUser]
+    
+    %% Creator Profile Builder  
+    CC --> II[Creator Profile Builder]
+    II --> JJ[Existing Setup Reskin]
+    JJ --> KK[Final - Follow us, etc.]
+    KK --> LL[Build Studio Profile]
+    LL --> MM[updateUser]
+    
+    %% AI Agent Features
+    V --> NN[My Agent<br/>Gated by Streak]
+    NN --> OO[Content Gen Tool]
+    OO --> PP[AI Clipping Tool]
+    PP --> QQ[AI Connector Engine]
+    QQ --> RR[getAnalytics]
+    RR --> SS[generateClip]
+    SS --> TT[generateContent]
+    
+    %% Linked Actions from Dashboard
+    V --> UU[Linked Accts]
+    UU --> VV[VenScore and card]
+    VV --> WW[Build your profile /<br/>Share profile banner]
+    WW --> XX[Leaderboards]
+    XX --> YY[Link Socials]
+    YY --> ZZ[Go to Profile]
+    ZZ --> AAA[social/X/YT/Connect]
+    AAA --> BBB[connected/X/Y boot]
+    BBB --> CCC[Streak /<br/>My Agent]
+    CCC --> DDD[Analytics Dashboard]
+    
+    %% Engagement Flow
+    V --> EEE[Engage]
+    EEE --> FFF[Task (Expanded)]
+    FFF --> GGG[Engage Campaign]
+    
+    %% Task Details
+    FFF --> HHH[Invite a Friend]
+    HHH --> III[Prominent P2P Refer]
+    III --> JJJ[Mistera Tasks Reskin]
+    JJJ --> KKK[Game Partner Tab or<br/>separation for ea game]
+    KKK --> LLL[Engage FAQ]
+    LLL --> MMM[Refer a friend / Email pts]
+    MMM --> NNN[Complete tasks]
+    
+    %% Task Verification
+    FFF --> OOO[Task Details]
+    OOO --> PPP[Verification Reqs]
+    PPP --> QQQ[Verify Button]
+    QQQ --> RRR[Complete tasks]
+    RRR --> SSS[verify/X/YT/TaskCompletion]
+    
+    %% Campaign Creation
+    GGG --> TTT[Create Campaign bttn]
+    TTT --> UUU[Existing Setup Reskin]
+    UUU --> VVV[Create Tasks]
+    VVV --> WWW[Submit a Campaign]
+    WWW --> XXX[createCampaign]
+    
+    %% Most Followed
+    MM --> YYY[Most Followed]
+    
+    %% Styling
+    classDef userAction fill:#ffb3ba
+    classDef firebaseEvent fill:#baffc9
+    classDef brightmatterEvent fill:#bae1ff
+    classDef component fill:#ffffba
+    classDef process fill:#e6ccff
+    
+    class B,H,N,Y,Z,GG,LL,TTT,WWW userAction
+    class I,O,BB,HH,MM,RR,SS,TT,XXX firebaseEvent
+    class C,AA,QQQ,SSS brightmatterEvent
+    class E,F,G,K,L,M,Q,R,X,EE,JJ,UUU,VVV component

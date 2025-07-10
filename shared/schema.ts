@@ -14,6 +14,10 @@ export const users = pgTable("users", {
   profilePicture: text("profile_picture"),
   bio: text("bio"),
   isVerified: boolean("is_verified").default(false),
+  userType: text("user_type").default("creator"), // creator, studio, community
+  profileType: text("profile_type").default("creator"), // creator, studio
+  streak: integer("streak").default(0),
+  hasCompletedOnboarding: boolean("has_completed_onboarding").default(false),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -46,8 +50,36 @@ export const tasks = pgTable("tasks", {
   points: integer("points").notNull(),
   isCompleted: boolean("is_completed").default(false),
   category: text("category"), // social, content, referral, challenge
+  requiresVerification: boolean("requires_verification").default(false),
+  verificationData: text("verification_data"), // JSON string for verification details
   createdAt: timestamp("created_at").defaultNow(),
   completedAt: timestamp("completed_at"),
+});
+
+export const campaigns = pgTable("campaigns", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  title: text("title").notNull(),
+  description: text("description"),
+  budget: integer("budget").notNull(),
+  status: text("status").default("active"), // active, paused, completed
+  targetAudience: text("target_audience"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const profiles = pgTable("profiles", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  displayName: text("display_name").notNull(),
+  profileType: text("profile_type").notNull(), // creator, studio
+  description: text("description"),
+  website: text("website"),
+  location: text("location"),
+  isPublic: boolean("is_public").default(true),
+  customizations: text("customizations"), // JSON string for profile customizations
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -56,6 +88,8 @@ export const insertUserSchema = createInsertSchema(users).pick({
   password: true,
   firstName: true,
   lastName: true,
+  userType: true,
+  profileType: true,
 });
 
 export const insertSocialConnectionSchema = createInsertSchema(socialConnections).pick({
@@ -79,6 +113,27 @@ export const insertTaskSchema = createInsertSchema(tasks).pick({
   description: true,
   points: true,
   category: true,
+  requiresVerification: true,
+  verificationData: true,
+});
+
+export const insertCampaignSchema = createInsertSchema(campaigns).pick({
+  userId: true,
+  title: true,
+  description: true,
+  budget: true,
+  targetAudience: true,
+});
+
+export const insertProfileSchema = createInsertSchema(profiles).pick({
+  userId: true,
+  displayName: true,
+  profileType: true,
+  description: true,
+  website: true,
+  location: true,
+  isPublic: true,
+  customizations: true,
 });
 
 export type User = typeof users.$inferSelect;
@@ -89,3 +144,7 @@ export type LeaderboardEntry = typeof leaderboard.$inferSelect;
 export type InsertLeaderboardEntry = z.infer<typeof insertLeaderboardSchema>;
 export type Task = typeof tasks.$inferSelect;
 export type InsertTask = z.infer<typeof insertTaskSchema>;
+export type Campaign = typeof campaigns.$inferSelect;
+export type InsertCampaign = z.infer<typeof insertCampaignSchema>;
+export type Profile = typeof profiles.$inferSelect;
+export type InsertProfile = z.infer<typeof insertProfileSchema>;

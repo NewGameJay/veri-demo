@@ -1,4 +1,4 @@
-import { users, socialConnections, leaderboard, tasks, type User, type InsertUser, type SocialConnection, type InsertSocialConnection, type LeaderboardEntry, type InsertLeaderboardEntry, type Task, type InsertTask } from "@shared/schema";
+import { users, socialConnections, leaderboard, tasks, campaigns, profiles, type User, type InsertUser, type SocialConnection, type InsertSocialConnection, type LeaderboardEntry, type InsertLeaderboardEntry, type Task, type InsertTask, type Campaign, type InsertCampaign, type Profile, type InsertProfile } from "@shared/schema";
 
 export interface IStorage {
   // User operations
@@ -21,6 +21,16 @@ export interface IStorage {
   getTasks(userId: number): Promise<Task[]>;
   createTask(task: InsertTask): Promise<Task>;
   updateTask(id: number, updates: Partial<Task>): Promise<Task>;
+  
+  // Campaign operations
+  getCampaigns(userId?: number): Promise<Campaign[]>;
+  createCampaign(campaign: InsertCampaign): Promise<Campaign>;
+  updateCampaign(id: number, updates: Partial<Campaign>): Promise<Campaign>;
+  
+  // Profile operations
+  getProfile(userId: number): Promise<Profile | undefined>;
+  createProfile(profile: InsertProfile): Promise<Profile>;
+  updateProfile(id: number, updates: Partial<Profile>): Promise<Profile>;
 }
 
 export class MemStorage implements IStorage {
@@ -28,20 +38,28 @@ export class MemStorage implements IStorage {
   private socialConnections: Map<number, SocialConnection>;
   private leaderboard: Map<number, LeaderboardEntry>;
   private tasks: Map<number, Task>;
+  private campaigns: Map<number, Campaign>;
+  private profiles: Map<number, Profile>;
   private currentUserId: number;
   private currentSocialId: number;
   private currentLeaderboardId: number;
   private currentTaskId: number;
+  private currentCampaignId: number;
+  private currentProfileId: number;
 
   constructor() {
     this.users = new Map();
     this.socialConnections = new Map();
     this.leaderboard = new Map();
     this.tasks = new Map();
+    this.campaigns = new Map();
+    this.profiles = new Map();
     this.currentUserId = 1;
     this.currentSocialId = 1;
     this.currentLeaderboardId = 1;
     this.currentTaskId = 1;
+    this.currentCampaignId = 1;
+    this.currentProfileId = 1;
     
     // Initialize with sample data
     this.initializeSampleData();
@@ -61,6 +79,10 @@ export class MemStorage implements IStorage {
       profilePicture: "SH",
       bio: "Tech creator and content strategist",
       isVerified: true,
+      userType: "creator",
+      profileType: "creator",
+      streak: 7,
+      hasCompletedOnboarding: true,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -145,6 +167,8 @@ export class MemStorage implements IStorage {
         points: 200,
         isCompleted: true,
         category: "social",
+        requiresVerification: true,
+        verificationData: JSON.stringify({ type: "social_post", platform: "twitter" }),
         createdAt: new Date(),
         completedAt: new Date(),
       },
@@ -156,6 +180,8 @@ export class MemStorage implements IStorage {
         points: 150,
         isCompleted: true,
         category: "content",
+        requiresVerification: false,
+        verificationData: null,
         createdAt: new Date(),
         completedAt: new Date(),
       },
@@ -167,6 +193,8 @@ export class MemStorage implements IStorage {
         points: 100,
         isCompleted: false,
         category: "social",
+        requiresVerification: true,
+        verificationData: JSON.stringify({ type: "engagement_metrics", target: "10%" }),
         createdAt: new Date(),
         completedAt: null,
       },
@@ -202,6 +230,10 @@ export class MemStorage implements IStorage {
       profilePicture: null,
       bio: null,
       isVerified: false,
+      userType: insertUser.userType ?? "creator",
+      profileType: insertUser.profileType ?? "creator",
+      streak: 0,
+      hasCompletedOnboarding: false,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -293,6 +325,8 @@ export class MemStorage implements IStorage {
       points: task.points,
       category: task.category ?? null,
       isCompleted: false,
+      requiresVerification: task.requiresVerification ?? false,
+      verificationData: task.verificationData ?? null,
       createdAt: new Date(),
       completedAt: null,
     };
@@ -311,6 +345,71 @@ export class MemStorage implements IStorage {
     }
     this.tasks.set(id, updatedTask);
     return updatedTask;
+  }
+
+  async getCampaigns(userId?: number): Promise<Campaign[]> {
+    const campaigns = Array.from(this.campaigns.values());
+    return userId ? campaigns.filter(c => c.userId === userId) : campaigns;
+  }
+
+  async createCampaign(campaign: InsertCampaign): Promise<Campaign> {
+    const id = this.currentCampaignId++;
+    const newCampaign: Campaign = {
+      id,
+      userId: campaign.userId ?? null,
+      title: campaign.title,
+      description: campaign.description ?? null,
+      budget: campaign.budget,
+      status: "active",
+      targetAudience: campaign.targetAudience ?? null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.campaigns.set(id, newCampaign);
+    return newCampaign;
+  }
+
+  async updateCampaign(id: number, updates: Partial<Campaign>): Promise<Campaign> {
+    const campaign = this.campaigns.get(id);
+    if (!campaign) {
+      throw new Error("Campaign not found");
+    }
+    const updatedCampaign = { ...campaign, ...updates, updatedAt: new Date() };
+    this.campaigns.set(id, updatedCampaign);
+    return updatedCampaign;
+  }
+
+  async getProfile(userId: number): Promise<Profile | undefined> {
+    return Array.from(this.profiles.values()).find(p => p.userId === userId);
+  }
+
+  async createProfile(profile: InsertProfile): Promise<Profile> {
+    const id = this.currentProfileId++;
+    const newProfile: Profile = {
+      id,
+      userId: profile.userId ?? null,
+      displayName: profile.displayName,
+      profileType: profile.profileType,
+      description: profile.description ?? null,
+      website: profile.website ?? null,
+      location: profile.location ?? null,
+      isPublic: profile.isPublic ?? true,
+      customizations: profile.customizations ?? null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.profiles.set(id, newProfile);
+    return newProfile;
+  }
+
+  async updateProfile(id: number, updates: Partial<Profile>): Promise<Profile> {
+    const profile = this.profiles.get(id);
+    if (!profile) {
+      throw new Error("Profile not found");
+    }
+    const updatedProfile = { ...profile, ...updates, updatedAt: new Date() };
+    this.profiles.set(id, updatedProfile);
+    return updatedProfile;
   }
 }
 
