@@ -18,7 +18,6 @@ import { useAuth } from "@/contexts/auth-context";
 
 export default function Home() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
-  const [isPinned, setIsPinned] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -56,17 +55,17 @@ export default function Home() {
   return (
     <div className="min-h-screen relative overflow-hidden bg-background">
       <Header
-        onDashboardToggle={() => setIsDashboardOpen(true)}
-        onMobileMenuToggle={() => setIsDashboardOpen(true)}
+        onDashboardToggle={() => setIsDashboardOpen(!isDashboardOpen)}
+        onMobileMenuToggle={() => setIsDashboardOpen(!isDashboardOpen)}
         onSignIn={handleSignIn}
       />
       
       <DashboardSidebar
         isOpen={isDashboardOpen}
-        isPinned={isPinned}
+        isPinned={false}
         isCollapsed={isCollapsed}
         onClose={() => setIsDashboardOpen(false)}
-        onPin={() => setIsPinned(!isPinned)}
+        onPin={() => {}} // Removed pin functionality
         onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
       />
       

@@ -13,10 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Dashboard() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
-  const [isPinned, setIsPinned] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
-  const sidebarRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
 
   const { data: connections } = useQuery({
@@ -37,68 +34,26 @@ export default function Dashboard() {
   const userXP = user.xpPoints || 0;
   const isMemorizzUnlocked = userStreak >= 10;
 
-  // Simplified menu behavior - auto-collapse when not hovering
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        !isPinned &&
-        sidebarRef.current &&
-        !sidebarRef.current.contains(event.target as Node) &&
-        isDashboardOpen
-      ) {
-        setIsDashboardOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isDashboardOpen, isPinned]);
-
-  // Handle menu behavior
-  const handleSidebarHover = () => {
-    if (!isPinned) {
-      setIsHovering(true);
-      setIsDashboardOpen(true);
-    }
-  };
-
-  const handleSidebarLeave = () => {
-    if (!isPinned) {
-      setIsHovering(false);
-      // Close immediately when not hovering
-      setIsDashboardOpen(false);
-    }
+  // Handle hamburger menu toggle
+  const handleDashboardToggle = () => {
+    setIsDashboardOpen(!isDashboardOpen);
   };
 
   return (
     <div className="min-h-screen bg-gray-800 hero-gradient">
       <Header
-        onDashboardToggle={() => setIsDashboardOpen(!isDashboardOpen)}
-        onMobileMenuToggle={() => setIsDashboardOpen(!isDashboardOpen)}
+        onDashboardToggle={handleDashboardToggle}
+        onMobileMenuToggle={handleDashboardToggle}
       />
       
-      {/* Hover trigger area when sidebar is closed */}
-      {!isDashboardOpen && !isPinned && (
-        <div
-          className="fixed top-0 left-0 w-8 h-full z-20"
-          onMouseEnter={handleSidebarHover}
-        />
-      )}
-      
-      <div ref={sidebarRef}>
-        <DashboardSidebar
-          isOpen={isDashboardOpen || isPinned}
-          isPinned={isPinned}
-          isCollapsed={isCollapsed}
-          onClose={() => setIsDashboardOpen(false)}
-          onPin={() => setIsPinned(!isPinned)}
-          onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
-          onMouseEnter={handleSidebarHover}
-          onMouseLeave={handleSidebarLeave}
-        />
-      </div>
+      <DashboardSidebar
+        isOpen={isDashboardOpen}
+        isPinned={false}
+        isCollapsed={isCollapsed}
+        onClose={() => setIsDashboardOpen(false)}
+        onPin={() => {}} // Removed pin functionality
+        onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
+      />
 
       <main className="pt-20 px-4 lg:px-6">
         <div className="max-w-7xl mx-auto">

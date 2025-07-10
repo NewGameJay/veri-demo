@@ -10,8 +10,6 @@ interface DashboardSidebarProps {
   onClose: () => void;
   onPin: () => void;
   onToggleCollapse: () => void;
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
   className?: string;
 }
 
@@ -22,8 +20,6 @@ export function DashboardSidebar({
   onClose, 
   onPin, 
   onToggleCollapse,
-  onMouseEnter, 
-  onMouseLeave,
   className 
 }: DashboardSidebarProps) {
   const [activeItem, setActiveItem] = useState("dashboard");
@@ -40,12 +36,9 @@ export function DashboardSidebar({
       className={cn(
         "dashboard-sidebar fixed top-0 left-0 h-full bg-gray-900/95 glass-effect z-30 p-6 transition-all duration-300",
         isCollapsed ? "w-20" : "w-80",
-        isOpen && "open",
-        isPinned && "pinned",
+        isOpen ? "translate-x-0" : "-translate-x-full",
         className
       )}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
     >
       <div className="flex items-center justify-between mb-8">
         {!isCollapsed && <h2 className="text-xl font-termina text-white">Dashboard</h2>}
@@ -66,47 +59,20 @@ export function DashboardSidebar({
           </Button>
           
           {!isCollapsed && (
-            <>
-              {/* Pin/Unpin Button */}
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onPin}
-                className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 hover-scale"
-                title={isPinned ? "Unpin sidebar" : "Pin sidebar"}
-              >
-                {isPinned ? (
-                  <PinOff className="w-4 h-4 text-green-400" />
-                ) : (
-                  <Pin className="w-4 h-4 text-white/60" />
-                )}
-              </Button>
-              
-              {/* Close Button (hidden when pinned) */}
-              {!isPinned && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={onClose}
-                  className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 hover-scale"
-                >
-                  <X className="w-5 h-5" />
-                </Button>
-              )}
-            </>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 hover-scale"
+              title="Close sidebar"
+            >
+              <X className="w-5 h-5" />
+            </Button>
           )}
         </div>
       </div>
 
-      {/* Status indicator */}
-      {!isCollapsed && (
-        <div className="mb-4">
-          <div className="flex items-center gap-2 text-xs text-white/60 font-inter">
-            <div className={`w-2 h-2 rounded-full ${isPinned ? 'bg-green-400 pulse-glow' : 'bg-yellow-400'}`}></div>
-            {isPinned ? 'Always Open' : 'Hover Mode'}
-          </div>
-        </div>
-      )}
+
 
       <div className="space-y-6">
         {/* Enhanced Navigation with Animations */}
