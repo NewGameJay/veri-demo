@@ -44,6 +44,14 @@ export function VeriScoreCard() {
   
   // Use useEffect to handle score changes properly
   useEffect(() => {
+    console.log('Score effect triggered:', {
+      isFirstMount: isFirstMount.current,
+      veriScore,
+      previousScore,
+      currentXP: activeUser?.xpPoints,
+      previousXP
+    });
+    
     if (isFirstMount.current && veriScore > 0) {
       setPreviousScore(veriScore);
       setPreviousXP(activeUser?.xpPoints || 0);
@@ -51,8 +59,14 @@ export function VeriScoreCard() {
     } else if (!isFirstMount.current && veriScore !== previousScore && veriScore > 0) {
       // Don't update previousScore immediately - let the animation complete first
       // setPreviousScore will be called in onComplete
+      console.log('Score increased! Waiting for animation...');
     }
-  }, [veriScore, previousScore, activeUser?.xpPoints]);
+    
+    // Handle XP changes separately
+    if (!isFirstMount.current && activeUser?.xpPoints !== previousXP && activeUser?.xpPoints > 0) {
+      console.log('XP increased! Waiting for animation...');
+    }
+  }, [veriScore, previousScore, activeUser?.xpPoints, previousXP]);
   
   // Use the proper start value for animation
   const animationStart = previousScore === null ? veriScore : previousScore;
@@ -62,6 +76,12 @@ export function VeriScoreCard() {
     start: animationStart,
     duration: previousScore === null ? 0 : 1500, // No animation on first mount
     onComplete: () => {
+      console.log('VeriScore animation complete:', {
+        previousScore,
+        veriScore,
+        didIncrease: previousScore !== null && veriScore > previousScore,
+        activeUser
+      });
       if (previousScore !== null && veriScore > previousScore) {
         // Show particles first
         setShowParticles(true);
@@ -83,6 +103,12 @@ export function VeriScoreCard() {
     start: xpAnimationStart,
     duration: previousXP === null ? 0 : 1500, // No animation on first mount
     onComplete: () => {
+      console.log('XP animation complete:', {
+        previousXP,
+        currentXP,
+        didIncrease: previousXP !== null && currentXP > previousXP,
+        activeUser
+      });
       if (previousXP !== null && currentXP > previousXP) {
         // Show XP particles first
         setShowXPParticles(true);
@@ -205,6 +231,24 @@ export function VeriScoreCard() {
                 : activeUser.username}
             </h5>
             <p className="text-green-400 font-inter">Creator & Influencer</p>
+          </div>
+
+          {/* Test Button - Remove after debugging */}
+          <div className="mt-4 text-center">
+            <button
+              onClick={() => {
+                console.log('Test button clicked - triggering particles');
+                setShowParticles(true);
+                setShowXPParticles(true);
+                setTimeout(() => {
+                  setShowParticles(false);
+                  setShowXPParticles(false);
+                }, 1000);
+              }}
+              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+            >
+              Test Particles
+            </button>
           </div>
         </CardContent>
       </Card>
