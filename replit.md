@@ -35,11 +35,15 @@ UI/UX preferences: Prefers sophisticated glass morphism with translucent effects
 
 ### Backend Architecture
 - **Runtime**: Node.js with Express server
-- **Database**: PostgreSQL with Drizzle ORM
+- **Database**: PostgreSQL with Drizzle ORM (primary storage)
 - **Database Provider**: Neon Database (serverless PostgreSQL)
+- **Caching**: Redis for session management and high-performance caching
+- **Event Streaming**: Apache Kafka for real-time event processing
+- **Message Queue**: Kafka topics for async communication
 - **API Design**: RESTful API with JSON responses
-- **Storage**: DatabaseStorage class with full CRUD operations
+- **Storage**: Hybrid storage with PostgreSQL, Redis, and optional MongoDB
 - **Authentication**: Session-based authentication with secure user management
+- **Monitoring**: Prometheus-compatible metrics and health endpoints
 
 ### Database Schema
 The application uses a PostgreSQL database with these main entities:
@@ -47,6 +51,17 @@ The application uses a PostgreSQL database with these main entities:
 - **Social Connections**: Platform integrations (Twitter, YouTube, Instagram)
 - **Tasks**: Engagement activities that earn points
 - **Leaderboard**: Global and category-based rankings
+- **Sessions**: Express session storage for authentication
+- **Raw Social Data**: Event data from social platforms
+- **Chat Memory**: AI agent conversation history
+
+### Microservices Architecture
+- **API Gateway**: Express server handling all client requests
+- **Event Consumer**: Python service for event enrichment and processing
+- **Signal Engine**: Extracts actionable insights from social data
+- **Cache Manager**: Handles Redis operations with fallback to memory
+- **Connection Factory**: Manages database connections and pooling
+- **Metrics Collector**: Prometheus-compatible monitoring
 
 ## Key Components
 
@@ -144,3 +159,23 @@ The application is designed to scale from MVP to full marketplace functionality,
   - Settings page with notification, privacy, and subscription management
 - ✅ Added logout functionality to dashboard sidebar
 - ✅ Fixed routing to ensure all pages are accessible via sidebar navigation
+- ✅ Implemented enterprise-grade hybrid stack infrastructure:
+  - PostgreSQL for primary data storage with connection pooling
+  - Redis for high-performance caching and session management
+  - Kafka for event streaming and real-time data processing
+  - Python consumer service for event enrichment and signal extraction
+  - Docker containerization for all services
+  - Health monitoring endpoints and metrics collection
+  - Production deployment scripts with automated setup
+- ✅ Created comprehensive monitoring and observability framework:
+  - Request timing middleware for API performance tracking
+  - Prometheus-compatible metrics endpoint
+  - Error tracking and logging infrastructure
+  - Database query monitoring
+  - Cache hit/miss tracking
+- ✅ Built event-driven architecture for real-time processing:
+  - Social media event ingestion and enrichment
+  - Content analysis with sentiment and engagement scoring
+  - Signal extraction for viral potential and brand safety
+  - Memory formation pipeline for AI agents
+  - Kafka topics for async communication between services

@@ -1,0 +1,99 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database (Already using Neon in production)
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: veri
+      POSTGRES_PASSWORD: veri_dev_password
+      POSTGRES_DB: veri_mvp
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U veri"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for caching and session storage
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redpanda (Kafka-compatible streaming)
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v23.2.12
+    command:
+      - redpanda
+      - start
+      - --kafka-addr internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr internal://redpanda:9092,external://localhost:19092
+      - --pandaproxy-addr internal://0.0.0.0:8082,external://0.0.0.0:18082
+      - --advertise-pandaproxy-addr internal://redpanda:8082,external://localhost:18082
+      - --schema-registry-addr internal://0.0.0.0:8081,external://0.0.0.0:18081
+      - --rpc-addr redpanda:33145
+      - --advertise-rpc-addr redpanda:33145
+      - --mode dev-container
+      - --smp 1
+      - --default-log-level=info
+    ports:
+      - "18081:18081"
+      - "18082:18082"
+      - "19092:19092"
+      - "19644:9644"
+    volumes:
+      - redpanda_data:/var/lib/redpanda/data
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health | grep -E 'Healthy|'"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+
+  # MongoDB (for future Signal Engine)
+  mongo:
+    image: mongo:7
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: veri_admin
+      MONGO_INITDB_ROOT_PASSWORD: veri_mongo_password
+      MONGO_INITDB_DATABASE: veri_signal
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    profiles:
+      - signal-engine
+
+  # Python Consumer for enrichment
+  consumer:
+    build:
+      context: ./services/consumer
+      dockerfile: Dockerfile
+    environment:
+      KAFKA_BROKERS: redpanda:9092
+      POSTGRES_URL: postgresql://veri:veri_dev_password@postgres:5432/veri_mvp
+      REDIS_URL: redis://redis:6379
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+    depends_on:
+      - redpanda
+      - postgres
+      - redis
+    profiles:
+      - enrichment
+
+volumes:
+  postgres_data:
+  redis_data:
+  redpanda_data:
+  mongo_data:

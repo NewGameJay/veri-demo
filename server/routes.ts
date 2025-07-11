@@ -3,8 +3,15 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertUserSchema, insertSocialConnectionSchema, insertTaskSchema, insertCampaignSchema, insertProfileSchema } from "@shared/schema";
 import "./types";
+import healthRoutes from "./routes/health";
+import { requestTiming, errorTracking } from "./middleware/monitoring";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Apply monitoring middleware
+  app.use(requestTiming);
+  
+  // Health check routes
+  app.use('/api', healthRoutes);
   
   // Authentication routes
   app.post("/api/auth/signup", async (req, res) => {

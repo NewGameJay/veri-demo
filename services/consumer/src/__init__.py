@@ -1,0 +1,1 @@
+# Consumer service for event enrichment
