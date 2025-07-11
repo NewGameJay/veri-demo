@@ -1,7 +1,15 @@
 import { useState } from "react";
-import { Menu, Moon, Sun, Bell } from "lucide-react";
+import { Menu, Moon, Sun, Bell, LogOut, User, Settings } from "lucide-react";
 import { VeriLogo } from "@/components/ui/veri-logo";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/contexts/theme-context";
 import { useAuth } from "@/contexts/auth-context";
 
@@ -13,7 +21,7 @@ interface HeaderProps {
 
 export function Header({ onDashboardToggle, onMobileMenuToggle, onSignIn }: HeaderProps) {
   const { theme, setTheme } = useTheme();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -81,16 +89,40 @@ export function Header({ onDashboardToggle, onMobileMenuToggle, onSignIn }: Head
               </div>
             </Button>
 
-            {/* Profile */}
-            <div className="flex items-center gap-3 animate-slide-in">
-              <div className="text-right hidden sm:block">
-                <div className="text-sm font-medium text-white font-inter">{displayName}</div>
-                <div className="text-xs text-green-400 font-medium font-machina accent-text">{userXP.toLocaleString()} XP</div>
-              </div>
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center font-bold text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                {userInitials}
-              </div>
-            </div>
+            {/* Profile with Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="flex items-center gap-3 animate-slide-in cursor-pointer">
+                  <div className="text-right hidden sm:block">
+                    <div className="text-sm font-medium text-white font-inter">{displayName}</div>
+                    <div className="text-xs text-green-400 font-medium font-machina accent-text">{userXP.toLocaleString()} XP</div>
+                  </div>
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center font-bold text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                    {userInitials}
+                  </div>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 glass-effect border-white/20">
+                <DropdownMenuLabel className="text-white">My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-white/10" />
+                <DropdownMenuItem className="text-white/80 hover:text-white focus:text-white cursor-pointer">
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="text-white/80 hover:text-white focus:text-white cursor-pointer">
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-white/10" />
+                <DropdownMenuItem 
+                  onClick={logout}
+                  className="text-red-400 hover:text-red-300 focus:text-red-300 cursor-pointer"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </>
         ) : (
           /* Sign In button for non-authenticated users */
