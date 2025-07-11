@@ -11,6 +11,7 @@ export const users = pgTable("users", {
   lastName: text("last_name"),
   veriScore: integer("veri_score").default(0),
   xpPoints: integer("xp_points").default(0),
+  points: integer("points").default(25), // P2P points for using AI agents
   profilePicture: text("profile_picture"),
   bio: text("bio"),
   isVerified: boolean("is_verified").default(false),

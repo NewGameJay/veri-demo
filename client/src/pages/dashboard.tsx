@@ -8,6 +8,7 @@ import { ProfileBuilder } from "@/components/dashboard/profile-builder";
 import { SocialConnections } from "@/components/dashboard/social-connections";
 import { Leaderboard } from "@/components/dashboard/leaderboard";
 import { MemorizzIntegration } from "@/components/integrations/memorizz-integration";
+import { AIAgents } from "@/components/dashboard/ai-agents";
 import { useAuth } from "@/contexts/auth-context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -111,9 +112,13 @@ export default function Dashboard() {
                 </TabsContent>
 
                 <TabsContent value="ai-agent" className="mt-6">
-                  <MemorizzIntegration 
+                  <AIAgents 
+                    userPoints={user.points || 0}
                     userStreak={userStreak}
-                    isUnlocked={isMemorizzUnlocked}
+                    onUseAgent={(agentId, pointsCost) => {
+                      // Handle point deduction
+                      console.log(`Used agent ${agentId} for ${pointsCost} points`);
+                    }}
                   />
                 </TabsContent>
 
