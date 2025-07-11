@@ -45,7 +45,8 @@ export function VeriScoreCard() {
       setPreviousScore(veriScore);
       isFirstMount.current = false;
     } else if (!isFirstMount.current && veriScore !== previousScore && veriScore > 0) {
-      setPreviousScore(veriScore);
+      // Don't update previousScore immediately - let the animation complete first
+      // setPreviousScore will be called in onComplete
     }
   }, [veriScore, previousScore]);
   
@@ -57,9 +58,17 @@ export function VeriScoreCard() {
     start: animationStart,
     duration: previousScore === null ? 0 : 1500, // No animation on first mount
     onComplete: () => {
+      console.log('Animation complete:', { previousScore, veriScore, willShowParticles: previousScore !== null && veriScore > previousScore });
       if (previousScore !== null && veriScore > previousScore) {
+        // Show particles first
+        console.log('🎉 Showing particles!');
         setShowParticles(true);
         setTimeout(() => setShowParticles(false), 1000);
+        // Then update previousScore after particle animation
+        setTimeout(() => setPreviousScore(veriScore), 100);
+      } else if (previousScore === null || veriScore <= previousScore) {
+        // Update previousScore for non-particle cases
+        setPreviousScore(veriScore);
       }
     }
   });
@@ -122,6 +131,13 @@ export function VeriScoreCard() {
                     />
                   ))}
                 </div>
+              )}
+              {/* Debug indicator */}
+              {showParticles && (
+                <div 
+                  className="absolute -top-2 -right-2 w-4 h-4 bg-green-400 rounded-full animate-pulse"
+                  style={{ zIndex: 1000 }}
+                />
               )}
             </div>
           </div>
