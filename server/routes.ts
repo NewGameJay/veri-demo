@@ -234,6 +234,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Task verification endpoint for frontend task completion
+  app.post("/api/tasks/verify", requireAuth, async (req, res) => {
+    try {
+      const { taskId, verificationUrl, points } = req.body;
+      
+      if (!req.userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      // Award XP points to user
+      const user = await storage.getUser(req.userId);
+      if (user) {
+        await storage.updateUser(req.userId, {
+          xpPoints: (user.xpPoints || 0) + points,
+          streak: (user.streak || 0) + 1,
+        });
+      }
+
+      // Create a completed task record
+      const completedTask = await storage.createTask({
+        userId: req.userId,
+        title: req.body.title || "Completed Task",
+        description: req.body.description || "Task completed via verification",
+        points: points,
+        category: req.body.category || "general",
+        isCompleted: true,
+        requiresVerification: true,
+        verificationData: JSON.stringify({ 
+          url: verificationUrl,
+          verifiedAt: new Date().toISOString(),
+          taskId: taskId
+        })
+      });
+
+      res.json({ 
+        success: true, 
+        task: completedTask,
+        user: await storage.getUser(req.userId)
+      });
+    } catch (error) {
+      console.error("Task verification error:", error);
+      res.status(500).json({ message: "Failed to verify task" });
+    }
+  });
+
   // Campaign routes
   app.get("/api/campaigns", requireAuth, async (req, res) => {
     try {

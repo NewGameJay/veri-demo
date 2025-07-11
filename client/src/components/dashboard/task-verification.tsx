@@ -42,6 +42,19 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
 
   const availableTasks = [
     {
+      id: 0,
+      title: "MVP Demo Test Task",
+      description: "Complete this test task to demo the VeriScore system - Perfect for demos and testing!",
+      platform: "demo",
+      icon: Trophy,
+      color: "text-green-400",
+      points: 100,
+      difficulty: "Easy",
+      estimatedTime: "30 seconds",
+      requirements: ["Enter any URL containing 'test' or use 'demo.veri.app'", "Perfect for demos!", "Always verifies successfully"],
+      category: "mvp_demo"
+    },
+    {
       id: 1,
       title: "Share on Twitter",
       description: "Share your latest content on Twitter with #VeriCreator hashtag",
@@ -167,37 +180,78 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
     setIsVerifying(true);
     try {
       // Simulate task verification process
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Mock verification success
-      const isValid = Math.random() > 0.2; // 80% success rate
+      // Check if this is the MVP Demo Test Task
+      let isValid = false;
+      if (selectedTask?.id === 0) {
+        // MVP Demo Test Task - always verify successfully if URL contains "test", "demo", or "veri"
+        isValid = verificationUrl.toLowerCase().includes('test') || 
+                  verificationUrl.toLowerCase().includes('demo') || 
+                  verificationUrl.toLowerCase().includes('veri') ||
+                  verificationUrl === 'demo.veri.app';
+      } else {
+        // Regular tasks - mock verification with 80% success rate
+        isValid = Math.random() > 0.2;
+      }
       
       if (isValid) {
-        toast({
-          title: "Task verified!",
-          description: `Great work! You've earned ${selectedTask.points} XP points.`,
-        });
-        
-        // Add to completed tasks
-        completedTasks.unshift({
-          id: Date.now(),
-          title: selectedTask.title,
-          platform: selectedTask.platform,
-          icon: selectedTask.icon,
-          color: selectedTask.color,
-          points: selectedTask.points,
-          completedAt: new Date().toISOString(),
-          verificationUrl: verificationUrl,
-          status: "verified"
-        });
-        
-        setSelectedTask(null);
-        setVerificationUrl("");
-        setActiveTab("completed");
+        // Call backend to verify task and award XP
+        try {
+          const response = await apiRequest("/api/tasks/verify", {
+            method: "POST",
+            body: {
+              taskId: selectedTask.id,
+              verificationUrl: verificationUrl,
+              points: selectedTask.points,
+              title: selectedTask.title,
+              description: selectedTask.description,
+              category: selectedTask.category
+            }
+          });
+          
+          if (response.success) {
+            toast({
+              title: "Task verified!",
+              description: `Great work! You've earned ${selectedTask.points} XP points.`,
+            });
+            
+            // Add to completed tasks
+            completedTasks.unshift({
+              id: Date.now(),
+              title: selectedTask.title,
+              platform: selectedTask.platform,
+              icon: selectedTask.icon,
+              color: selectedTask.color,
+              points: selectedTask.points,
+              completedAt: new Date().toISOString(),
+              verificationUrl: verificationUrl,
+              status: "verified"
+            });
+            
+            setSelectedTask(null);
+            setVerificationUrl("");
+            setActiveTab("completed");
+            
+            // Refresh user data to update XP and VeriScore
+            window.location.reload();
+          } else {
+            throw new Error("Backend verification failed");
+          }
+        } catch (backendError) {
+          console.error("Backend verification error:", backendError);
+          toast({
+            title: "Verification error",
+            description: "Task verified but failed to update backend. Please refresh the page.",
+            variant: "destructive",
+          });
+        }
       } else {
         toast({
           title: "Verification failed",
-          description: "We couldn't verify your task. Please check the URL and requirements.",
+          description: selectedTask?.id === 0 ? 
+            "URL must contain 'test', 'demo', or 'veri' for the MVP Test Task" : 
+            "We couldn't verify your task. Please check the URL and requirements.",
           variant: "destructive",
         });
       }
