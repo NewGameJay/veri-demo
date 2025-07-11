@@ -1,9 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { GlassCard } from "@/components/ui/glass-card";
-import { CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { useState, useEffect } from "react";
+import { LeaderboardSkeleton } from "@/components/ui/veri-skeleton";
 
 export function Leaderboard() {
   const { data: leaderboard, isLoading } = useQuery({
@@ -12,20 +11,7 @@ export function Leaderboard() {
   const [previousRanks, setPreviousRanks] = useState<Record<number, number>>({});
 
   if (isLoading) {
-    return (
-      <GlassCard className="p-6">
-        <CardContent className="p-0">
-          <div className="animate-pulse">
-            <div className="h-4 bg-white/10 rounded mb-4"></div>
-            <div className="space-y-3">
-              <div className="h-12 bg-white/10 rounded"></div>
-              <div className="h-12 bg-white/10 rounded"></div>
-              <div className="h-12 bg-white/10 rounded"></div>
-            </div>
-          </div>
-        </CardContent>
-      </GlassCard>
-    );
+    return <LeaderboardSkeleton />;
   }
 
   const getRankColor = (rank: number) => {
@@ -56,8 +42,7 @@ export function Leaderboard() {
   };
 
   return (
-    <GlassCard hover className="p-6 lg:col-span-2">
-      <CardContent className="p-0">
+    <div className="glass-medium glass-effect-hover rounded-xl p-6 lg:col-span-2">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">Live Leaderboard</h3>
           <div className="pulse-ring w-3 h-3 bg-green-500 rounded-full"></div>
@@ -110,7 +95,6 @@ export function Leaderboard() {
             );
           })}
         </div>
-      </CardContent>
-    </GlassCard>
+    </div>
   );
 }

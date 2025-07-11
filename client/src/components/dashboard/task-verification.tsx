@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { TaskSkeleton } from "@/components/ui/veri-skeleton";
 import { 
   CheckCircle2, 
   Clock, 
@@ -299,7 +300,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
               {availableTasks.map((task) => (
                 <div 
                   key={task.id} 
-                  className="group glass-effect p-4 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300 hover:transform hover:scale-[1.01] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/10 cursor-pointer animate-fade-in hover:backdrop-blur-xl hover:bg-white/[0.03]"
+                  className="group glass-subtle glass-effect-hover p-4 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300 hover:transform hover:scale-[1.01] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/10 cursor-pointer animate-fade-in"
                   style={{
                     animationDelay: `${task.id * 100}ms`
                   }}

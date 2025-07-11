@@ -4,6 +4,7 @@ import { GlassCard } from "@/components/ui/glass-card";
 import { CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/auth-context";
+import { VeriSkeleton } from "@/components/ui/veri-skeleton";
 
 export function SocialConnections() {
   const { user } = useAuth();
@@ -14,18 +15,34 @@ export function SocialConnections() {
 
   if (isLoading) {
     return (
-      <GlassCard className="p-6">
-        <CardContent className="p-0">
-          <div className="animate-pulse">
-            <div className="h-4 bg-white/10 rounded mb-4"></div>
-            <div className="space-y-3">
-              <div className="h-8 bg-white/10 rounded"></div>
-              <div className="h-8 bg-white/10 rounded"></div>
-              <div className="h-8 bg-white/10 rounded"></div>
+      <div className="glass-medium rounded-xl p-6 space-y-4">
+        {/* Header */}
+        <div className="flex items-center gap-3">
+          <VeriSkeleton className="w-8 h-8 rounded-lg" variant="veri" />
+          <VeriSkeleton className="h-6 w-32" />
+        </div>
+        
+        {/* Connection items */}
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="glass-subtle p-4 rounded-xl">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <VeriSkeleton className="w-10 h-10 rounded-2xl" variant={i === 1 ? "emerald" : "default"} />
+                  <div className="space-y-2">
+                    <VeriSkeleton className="h-4 w-24" />
+                    <VeriSkeleton className="h-3 w-32" />
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <VeriSkeleton className="h-6 w-20 rounded-full" />
+                  <VeriSkeleton className="w-3 h-3 rounded-full" variant="emerald" />
+                </div>
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </GlassCard>
+          ))}
+        </div>
+      </div>
     );
   }
 
@@ -61,7 +78,7 @@ export function SocialConnections() {
           return (
             <div 
               key={connection.id} 
-              className="glass-effect p-4 rounded-xl hover-scale animate-slide-in"
+              className="glass-subtle glass-effect-hover p-4 rounded-xl hover-scale animate-slide-in"
               style={{ animationDelay: `${index * 150}ms` }}
             >
               <div className="flex items-center justify-between">

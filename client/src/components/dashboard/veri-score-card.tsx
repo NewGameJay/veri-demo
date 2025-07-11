@@ -12,6 +12,7 @@ import { useAuth } from "@/contexts/auth-context";
 import { useCounter } from "@/hooks/use-counter";
 import { useState, useEffect, useRef } from "react";
 import { Star, TrendingUp, Users, Trophy, Zap, Target, Award, Crown, Brain, User, CheckCircle2 } from "lucide-react";
+import { VeriScoreCardSkeleton } from "@/components/ui/veri-skeleton";
 
 export function VeriScoreCard() {
   const { user } = useAuth();
@@ -19,7 +20,7 @@ export function VeriScoreCard() {
   const [showParticles, setShowParticles] = useState(false);
   const scoreRef = useRef<HTMLDivElement>(null);
   
-  const { data: currentUser } = useQuery({
+  const { data: currentUser, isLoading } = useQuery({
     queryKey: ['/api/auth/me'],
     queryFn: async () => {
       const response = await fetch('/api/auth/me');
@@ -65,9 +66,13 @@ export function VeriScoreCard() {
   const nextLevelThreshold = Math.ceil(veriScore / 25) * 25;
   const isAIUnlocked = (activeUser?.streak || 0) >= 10;
 
+  if (isLoading) {
+    return <VeriScoreCardSkeleton />;
+  }
+
   if (!activeUser) {
     return (
-      <Card className="glass-effect border-white/20">
+      <Card className="glass-medium border-white/20">
         <CardContent className="p-6">
           <div className="text-center text-white/60">
             Please sign in to view your VeriScore and dashboard
