@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { X, Home, User, Trophy, Bot, Pin, PinOff, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, Home, User, Trophy, Bot, Pin, PinOff, ChevronLeft, ChevronRight, BarChart, Settings, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useLocation, useRoute } from "wouter";
+import { useAuth } from "@/contexts/auth-context";
 
 interface DashboardSidebarProps {
   isOpen: boolean;
@@ -22,14 +24,31 @@ export function DashboardSidebar({
   onToggleCollapse,
   className 
 }: DashboardSidebarProps) {
+  const [location, setLocation] = useLocation();
+  const { user, logout } = useAuth();
   const [activeItem, setActiveItem] = useState("dashboard");
 
   const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: Home },
-    { id: "profile", label: "Profile", icon: User },
-    { id: "leaderboard", label: "Leaderboard", icon: Trophy },
-    { id: "ai-agent", label: "AI Agent", icon: Bot },
+    { id: "dashboard", label: "Dashboard", icon: Home, path: "/dashboard" },
+    { id: "profile", label: "Profile", icon: User, path: "/profile" },
+    { id: "analytics", label: "Analytics", icon: BarChart, path: "/analytics" },
+    { id: "leaderboard", label: "Leaderboard", icon: Trophy, path: "/leaderboard" },
+    { id: "ai-agent", label: "AI Agent", icon: Bot, path: "/ai-agent" },
+    { id: "settings", label: "Settings", icon: Settings, path: "/settings" },
   ];
+
+  const handleNavigation = (item: typeof menuItems[0]) => {
+    setActiveItem(item.id);
+    setLocation(item.path);
+    if (!isPinned) {
+      onClose();
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
+    setLocation("/");
+  };
 
   return (
     <div
@@ -83,11 +102,11 @@ export function DashboardSidebar({
               <Button
                 key={item.id}
                 variant="ghost"
-                onClick={() => setActiveItem(item.id)}
+                onClick={() => handleNavigation(item)}
                 className={cn(
-                  "w-full p-3 glass-effect rounded-xl transition-all duration-300 hover-scale font-inter",
+                  "w-full p-3 glass-subtle rounded-xl transition-all duration-300 hover-scale font-inter",
                   isCollapsed ? "justify-center" : "justify-start gap-3",
-                  activeItem === item.id && "veri-gradient text-white shadow-lg",
+                  location === item.path && "veri-gradient text-white shadow-lg",
                   "animate-slide-in"
                 )}
                 style={{ animationDelay: `${index * 100}ms` }}
@@ -99,6 +118,22 @@ export function DashboardSidebar({
             );
           })}
         </nav>
+
+        {/* Logout Button */}
+        <div className="pt-4 border-t border-white/10">
+          <Button
+            variant="ghost"
+            onClick={handleLogout}
+            className={cn(
+              "w-full p-3 glass-subtle rounded-xl transition-all duration-300 hover-scale font-inter text-red-400 hover:text-red-300",
+              isCollapsed ? "justify-center" : "justify-start gap-3"
+            )}
+            title={isCollapsed ? "Log out" : undefined}
+          >
+            <LogOut className="w-5 h-5" />
+            {!isCollapsed && <span className="font-medium">Log out</span>}
+          </Button>
+        </div>
 
         {/* Enhanced Leaderboard Preview - hidden when collapsed */}
         {!isCollapsed && (

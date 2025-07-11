@@ -8,6 +8,11 @@ import { AuthProvider, useAuth } from "@/contexts/auth-context";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Dashboard from "@/pages/dashboard";
+import Profile from "@/pages/profile";
+import Analytics from "@/pages/analytics";
+import Leaderboard from "@/pages/leaderboard";
+import AIAgent from "@/pages/ai-agent";
+import Settings from "@/pages/settings";
 
 function Router() {
   const { user, isLoading } = useAuth();
@@ -25,6 +30,12 @@ function Router() {
       <Route path="/">
         {user ? <Dashboard /> : <Home />}
       </Route>
+      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/profile" component={Profile} />
+      <Route path="/analytics" component={Analytics} />
+      <Route path="/leaderboard" component={Leaderboard} />
+      <Route path="/ai-agent" component={AIAgent} />
+      <Route path="/settings" component={Settings} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -1,0 +1,566 @@
+import React, { useState } from 'react';
+import { LiquidGlassButton } from './LiquidGlassButton';
+import svgPaths from "../imports/svg-q33vnzc5nd";
+import imgFrame682 from "figma:asset/e2a995598c29b6b59da01f1e3defb6f7baef11d3.png";
+import imgFrame683 from "figma:asset/6f5bcf590d9d819933edc117cd288189c31827f3.png";
+import imgGroup1171275196 from "figma:asset/34e2502e81281ca5f3a7b39b08c8cae30306d764.png";
+import veriCardImage from 'figma:asset/9fe964dfa3a1a20be097d88283dee63157f25222.png';
+import Asset11 from "../imports/Asset11";
+
+interface HomepageProps {
+  onGetStarted: () => void;
+}
+
+function PersonStepIcon() {
+  return (
+    <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+    </div>
+  );
+}
+
+function StepItem({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
+  return (
+    <div className="flex items-start gap-4">
+      {icon}
+      <div>
+        <h3 className="font-montserrat text-lg font-bold text-white mb-2">{title}</h3>
+        <p className="text-white/70">{description}</p>
+      </div>
+    </div>
+  );
+}
+
+export function Homepage({ onGetStarted }: HomepageProps) {
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [signupData, setSignupData] = useState({
+    email: '',
+    password: ''
+  });
+  const [signupError, setSignupError] = useState('');
+
+  const handleGetStarted = () => {
+    setIsSignupOpen(true);
+  };
+
+  const handleSignupSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSignupError('');
+
+    // Basic validation
+    if (!signupData.email || !signupData.password) {
+      setSignupError('Please fill in all fields');
+      return;
+    }
+
+    if (!signupData.email.includes('@')) {
+      setSignupError('Please enter a valid email address');
+      return;
+    }
+
+    if (signupData.password.length < 6) {
+      setSignupError('Password must be at least 6 characters');
+      return;
+    }
+
+    // Simulate successful signup
+    setIsSignupOpen(false);
+    
+    // Show success toast (you can add a toast library here)
+    setTimeout(() => {
+      alert('Welcome to Veri! Account created successfully.');
+      onGetStarted();
+    }, 500);
+  };
+
+  const handleSocialSignup = (provider: string) => {
+    // Simulate social signup
+    setIsSignupOpen(false);
+    setTimeout(() => {
+      alert(`Welcome to Veri! Signed up with ${provider}.`);
+      onGetStarted();
+    }, 500);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-emerald-950">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-blue-500/20"></div>
+          <div 
+            className="absolute inset-0" 
+            style={{
+              backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 80%, rgba(120, 255, 198, 0.3) 0%, transparent 50%)'
+            }}
+          ></div>
+        </div>
+
+        {/* Header */}
+        <header className="relative z-10 px-8 py-6">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="h-8 w-26 text-white">
+              <Asset11 />
+            </div>
+            
+            <nav className="hidden md:flex items-center gap-8">
+              <a href="#features" className="text-white/70 hover:text-white transition-colors">Features</a>
+              <a href="#creators" className="text-white/70 hover:text-white transition-colors">For Creators</a>
+              <a href="#brands" className="text-white/70 hover:text-white transition-colors">For Brands</a>
+              <a href="#about" className="text-white/70 hover:text-white transition-colors">About</a>
+            </nav>
+
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={handleGetStarted}
+                className="text-white/70 hover:text-white transition-colors"
+              >
+                Sign In
+              </button>
+              <LiquidGlassButton
+                variant="emerald"
+                onClick={handleGetStarted}
+                className="h-10 px-6"
+              >
+                Get Started
+              </LiquidGlassButton>
+            </div>
+          </div>
+        </header>
+
+        {/* Hero Content */}
+        <div className="relative z-10 px-8 py-24">
+          <div className="max-w-7xl mx-auto text-center">
+            <h1 className="font-montserrat text-6xl md:text-7xl font-bold text-white mb-6 leading-tight">
+              Create to Resonate. <br />
+              <span className="bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
+                Impact to Earn.
+              </span>
+            </h1>
+            
+            <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed">
+              Reach new audiences, drive genuine engagement and build your reputation. 
+              Veri turns every post, clip and community moment into measurable traction.
+            </p>
+            <p className="text-lg text-white/60 mb-12 max-w-lg mx-auto">
+              For Creators, Brands, and Communities.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+              <LiquidGlassButton
+                variant="emerald"
+                onClick={handleGetStarted}
+                className="h-14 px-8 text-lg"
+              >
+                Sign Up Now
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="ml-2">
+                  <polyline points="9,18 15,12 9,6"/>
+                </svg>
+              </LiquidGlassButton>
+              
+              <LiquidGlassButton
+                variant="glass"
+                className="h-14 px-8 text-lg"
+              >
+                Learn More
+              </LiquidGlassButton>
+            </div>
+
+            {/* Hero Stats */}
+            <div className="flex flex-col md:flex-row items-center justify-center gap-8 text-white/70">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white mb-1">50K+</div>
+                <div className="text-sm">Active Creators</div>
+              </div>
+              <div className="hidden md:block w-px h-8 bg-white/20"></div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white mb-1">$2M+</div>
+                <div className="text-sm">Creator Earnings</div>
+              </div>
+              <div className="hidden md:block w-px h-8 bg-white/20"></div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white mb-1">500+</div>
+                <div className="text-sm">Brand Partners</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-24 px-8 bg-gradient-to-b from-transparent to-black/50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="font-montserrat text-4xl font-bold text-white mb-4">
+              Why Creators Choose Veri
+            </h2>
+            <p className="text-lg text-white/70 max-w-2xl mx-auto">
+              We've built the most comprehensive platform for creator success, 
+              combining authenticity verification with real earning opportunities.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Feature 1 */}
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300">
+              <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center mb-6">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-emerald-400">
+                  <path d="M9 12l2 2 4-4"/>
+                  <path d="M21 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z"/>
+                  <path d="M3 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z"/>
+                  <path d="M12 21c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z"/>
+                  <path d="M12 3c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z"/>
+                </svg>
+              </div>
+              <h3 className="font-montserrat text-xl font-bold text-white mb-4">
+                Verified Authenticity
+              </h3>
+              <p className="text-white/70 leading-relaxed">
+                Build trust with your audience through our comprehensive verification system. 
+                Your VeriScore proves your authenticity to brands and followers alike.
+              </p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300">
+              <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-6">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-purple-400">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
+                </svg>
+              </div>
+              <h3 className="font-montserrat text-xl font-bold text-white mb-4">
+                AI-Powered Growth
+              </h3>
+              <p className="text-white/70 leading-relaxed">
+                Let our intelligent agents analyze your content, suggest improvements, 
+                and help you create viral content that resonates with your audience.
+              </p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300">
+              <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-6">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-blue-400">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              </div>
+              <h3 className="font-montserrat text-xl font-bold text-white mb-4">
+                Real Rewards
+              </h3>
+              <p className="text-white/70 leading-relaxed">
+                Earn VeriPoints and real rewards for your content, engagement, and participation. 
+                Turn your creativity into consistent income streams.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Getting Started Section */}
+      <section className="py-24 px-8 bg-gradient-to-b from-black/50 to-emerald-950/20">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="font-montserrat text-4xl font-bold text-white mb-4">Getting started</h2>
+            <p className="text-lg text-white/70 max-w-lg mx-auto">
+              The simple path from connection to compelling content
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Left Column - Steps */}
+            <div className="space-y-8">
+              <StepItem
+                icon={<PersonStepIcon />}
+                title="Connect your social profiles"
+                description="Veri pulls data automatically so you can start earning."
+              />
+              <StepItem
+                icon={<PersonStepIcon />}
+                title="Complete content tasks"
+                description="Veri partners with leading projects to offer reward-driven campaigns."
+              />
+              <StepItem
+                icon={<PersonStepIcon />}
+                title="Get insights and analytics"
+                description="Veri analyzes in-depth metrics to track impact and share insights."
+              />
+              <StepItem
+                icon={<PersonStepIcon />}
+                title="Use your tailored AI agent"
+                description="Veri trains AI agents to generate and optimize your content."
+              />
+              <StepItem
+                icon={<PersonStepIcon />}
+                title="Earn XP and rewards"
+                description="Veri calculates resonance to update scores and distribute rewards."
+              />
+            </div>
+
+            {/* Right Column - Veri Card */}
+            <div className="flex justify-center lg:justify-end">
+              <div className="relative">
+                <img 
+                  src={veriCardImage} 
+                  alt="Veri Creator Card showing VeriScore of 99, 2500XP VeriPoints, and creator stats for Sam Huber"
+                  className="w-full max-w-[300px] h-auto rounded-3xl shadow-2xl"
+                />
+                {/* Optional glow effect */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-3xl blur opacity-20 -z-10"></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mt-12">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <input
+                type="email"
+                placeholder="Email..."
+                className="h-12 w-full sm:w-64 px-4 bg-black/70 backdrop-blur-sm border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+              />
+              <LiquidGlassButton
+                variant="emerald"
+                onClick={handleGetStarted}
+                className="h-12 px-8"
+              >
+                Sign Up Now
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="ml-2">
+                  <polyline points="9,18 15,12 9,6"/>
+                </svg>
+              </LiquidGlassButton>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Combined Social Proof Section */}
+      <section className="py-24 px-8 bg-gradient-to-b from-emerald-950/20 to-emerald-950/30">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="font-montserrat text-4xl font-bold text-white mb-4">
+              Trusted by leading creators and top brands
+            </h2>
+            <p className="text-lg text-white/70">
+              Join thousands of creators who've already transformed their content strategy
+            </p>
+          </div>
+
+          {/* Brand Partners Logos */}
+          <div className="flex justify-center mb-16">
+            <div className="relative max-w-4xl w-full">
+              <img 
+                src={imgGroup1171275196} 
+                alt="Brand partners including Treasure, Avalanche, Polygon, EA FIFA, Arbitrum, Activision, Near, and other leading technology and gaming companies"
+                className="w-full h-auto opacity-70 hover:opacity-90 transition-opacity duration-300"
+                style={{ maxHeight: '200px', objectFit: 'contain' }}
+              />
+            </div>
+          </div>
+
+          {/* Creator Testimonials */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Creator Card 1 */}
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+              <div className="flex items-center gap-4 mb-4">
+                <img 
+                  src={imgFrame682} 
+                  alt="Creator profile"
+                  className="w-12 h-12 rounded-full"
+                />
+                <div>
+                  <div className="font-semibold text-white">Sarah Chen</div>
+                  <div className="text-white/60 text-sm">@sarahcreates</div>
+                </div>
+              </div>
+              <p className="text-white/80 mb-4">
+                "Veri helped me increase my engagement by 300% and connected me with amazing brand partnerships. 
+                The AI suggestions are spot-on!"
+              </p>
+              <div className="flex items-center gap-1 text-yellow-400">
+                <span>⭐⭐⭐⭐⭐</span>
+                <span className="ml-2 text-white/60 text-sm">VeriScore: 94</span>
+              </div>
+            </div>
+
+            {/* Creator Card 2 */}
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+              <div className="flex items-center gap-4 mb-4">
+                <img 
+                  src={imgFrame683} 
+                  alt="Creator profile"
+                  className="w-12 h-12 rounded-full"
+                />
+                <div>
+                  <div className="font-semibold text-white">Marcus Rodriguez</div>
+                  <div className="text-white/60 text-sm">@techtalkmarcus</div>
+                </div>
+              </div>
+              <p className="text-white/80 mb-4">
+                "The verification system gave me instant credibility. Brands now reach out to me directly, 
+                and my earning potential has skyrocketed."
+              </p>
+              <div className="flex items-center gap-1 text-yellow-400">
+                <span>⭐⭐⭐⭐⭐</span>
+                <span className="ml-2 text-white/60 text-sm">VeriScore: 91</span>
+              </div>
+            </div>
+
+            {/* Creator Card 3 */}
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-semibold">
+                  JD
+                </div>
+                <div>
+                  <div className="font-semibold text-white">Jessica Davis</div>
+                  <div className="text-white/60 text-sm">@jessicadstyle</div>
+                </div>
+              </div>
+              <p className="text-white/80 mb-4">
+                "From struggling to get noticed to landing 6-figure brand deals. Veri didn't just change my content - 
+                it changed my life."
+              </p>
+              <div className="flex items-center gap-1 text-yellow-400">
+                <span>⭐⭐⭐⭐⭐</span>
+                <span className="ml-2 text-white/60 text-sm">VeriScore: 96</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-24 px-8 bg-gradient-to-t from-black to-emerald-950/30">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="font-montserrat text-5xl font-bold text-white mb-6">
+            Ready to Transform Your Creator Journey?
+          </h2>
+          <p className="text-xl text-white/80 mb-12 leading-relaxed">
+            Join the platform that's redefining creator success. Build your authentic brand, 
+            connect with premium opportunities, and earn what you're truly worth.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8">
+            <LiquidGlassButton
+              variant="emerald"
+              onClick={handleGetStarted}
+              className="h-16 px-12 text-lg"
+            >
+              Start Your Journey
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="ml-2">
+                <polyline points="9,18 15,12 9,6"/>
+              </svg>
+            </LiquidGlassButton>
+            
+            <LiquidGlassButton
+              variant="glass"
+              className="h-16 px-12 text-lg"
+            >
+              Watch Demo
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="ml-2">
+                <polygon points="5,3 19,12 5,21"/>
+              </svg>
+            </LiquidGlassButton>
+          </div>
+
+          <p className="text-white/60 text-sm">
+            No setup fees • Cancel anytime • 30-day money-back guarantee
+          </p>
+        </div>
+      </section>
+
+      {/* Signup Modal */}
+      {isSignupOpen && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-8 w-full max-w-md">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-gray-800">Join Veri</h3>
+              <button
+                onClick={() => setIsSignupOpen(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <form onSubmit={handleSignupSubmit} className="space-y-4">
+              <div>
+                <input
+                  type="email"
+                  placeholder="Email address"
+                  value={signupData.email}
+                  onChange={(e) => setSignupData(prev => ({ ...prev, email: e.target.value }))}
+                  className="w-full h-12 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                />
+              </div>
+              
+              <div>
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={signupData.password}
+                  onChange={(e) => setSignupData(prev => ({ ...prev, password: e.target.value }))}
+                  className="w-full h-12 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                />
+              </div>
+
+              {signupError && (
+                <div className="text-red-600 text-sm">{signupError}</div>
+              )}
+
+              <button
+                type="submit"
+                className="w-full h-12 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-lg transition-colors"
+              >
+                Create Account
+              </button>
+            </form>
+
+            <div className="mt-6">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                </div>
+              </div>
+
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => handleSocialSignup('Google')}
+                  className="flex items-center justify-center h-12 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                  </svg>
+                  <span className="ml-2 text-gray-700">Google</span>
+                </button>
+                
+                <button
+                  onClick={() => handleSocialSignup('GitHub')}
+                  className="flex items-center justify-center h-12 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="#333">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                  </svg>
+                  <span className="ml-2 text-gray-700">GitHub</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
