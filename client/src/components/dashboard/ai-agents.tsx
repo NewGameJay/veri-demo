@@ -200,7 +200,7 @@ export function AIAgents({ userPoints, userStreak, onUseAgent }: AIAgentsProps) 
   const isAgentLocked = userStreak < 10;
 
   return (
-    <Card className="glass-effect border-white/20">
+    <Card className="glass-medium border-white/20">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
