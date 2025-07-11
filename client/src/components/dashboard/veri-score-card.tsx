@@ -11,8 +11,11 @@ import { VeriScoreCardSkeleton } from "@/components/ui/veri-skeleton";
 export function VeriScoreCard() {
   const { user } = useAuth();
   const [previousScore, setPreviousScore] = useState<number | null>(null);
+  const [previousXP, setPreviousXP] = useState<number | null>(null);
   const [showParticles, setShowParticles] = useState(false);
+  const [showXPParticles, setShowXPParticles] = useState(false);
   const scoreRef = useRef<HTMLDivElement>(null);
+  const xpRef = useRef<HTMLDivElement>(null);
   const isFirstMount = useRef(true);
   
   const { data: currentUser, isLoading } = useQuery({
@@ -43,12 +46,13 @@ export function VeriScoreCard() {
   useEffect(() => {
     if (isFirstMount.current && veriScore > 0) {
       setPreviousScore(veriScore);
+      setPreviousXP(activeUser?.xpPoints || 0);
       isFirstMount.current = false;
     } else if (!isFirstMount.current && veriScore !== previousScore && veriScore > 0) {
       // Don't update previousScore immediately - let the animation complete first
       // setPreviousScore will be called in onComplete
     }
-  }, [veriScore, previousScore]);
+  }, [veriScore, previousScore, activeUser?.xpPoints]);
   
   // Use the proper start value for animation
   const animationStart = previousScore === null ? veriScore : previousScore;
@@ -58,10 +62,8 @@ export function VeriScoreCard() {
     start: animationStart,
     duration: previousScore === null ? 0 : 1500, // No animation on first mount
     onComplete: () => {
-      console.log('Animation complete:', { previousScore, veriScore, willShowParticles: previousScore !== null && veriScore > previousScore });
       if (previousScore !== null && veriScore > previousScore) {
         // Show particles first
-        console.log('🎉 Showing particles!');
         setShowParticles(true);
         setTimeout(() => setShowParticles(false), 1000);
         // Then update previousScore after particle animation
@@ -69,6 +71,27 @@ export function VeriScoreCard() {
       } else if (previousScore === null || veriScore <= previousScore) {
         // Update previousScore for non-particle cases
         setPreviousScore(veriScore);
+      }
+    }
+  });
+
+  const currentXP = activeUser?.xpPoints || 0;
+  const xpAnimationStart = previousXP === null ? currentXP : previousXP;
+  
+  const animatedXP = useCounter({ 
+    end: currentXP, 
+    start: xpAnimationStart,
+    duration: previousXP === null ? 0 : 1500, // No animation on first mount
+    onComplete: () => {
+      if (previousXP !== null && currentXP > previousXP) {
+        // Show XP particles first
+        setShowXPParticles(true);
+        setTimeout(() => setShowXPParticles(false), 1000);
+        // Then update previousXP after particle animation
+        setTimeout(() => setPreviousXP(currentXP), 100);
+      } else if (previousXP === null || currentXP <= previousXP) {
+        // Update previousXP for non-particle cases
+        setPreviousXP(currentXP);
       }
     }
   });
@@ -132,21 +155,33 @@ export function VeriScoreCard() {
                   ))}
                 </div>
               )}
-              {/* Debug indicator */}
-              {showParticles && (
-                <div 
-                  className="absolute -top-2 -right-2 w-4 h-4 bg-green-400 rounded-full animate-pulse"
-                  style={{ zIndex: 1000 }}
-                />
-              )}
+
             </div>
           </div>
 
           {/* VeriPoints Section */}
           <div className="text-center mb-8">
             <h4 className="text-xl font-termina text-white mb-4">VeriPoints</h4>
-            <div className="text-4xl font-termina text-green-400 mb-6">
-              {(activeUser.xpPoints || 0).toLocaleString()}XP
+            <div 
+              ref={xpRef}
+              className="text-4xl font-termina text-green-400 mb-6 relative"
+            >
+              {Math.round(animatedXP).toLocaleString()}XP
+              {showXPParticles && (
+                <div className="particle-burst">
+                  {[...Array(12)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="particle"
+                      style={{
+                        '--angle': `${i * 30}deg`,
+                        animationDelay: `${i * 0.05}s`
+                      } as React.CSSProperties}
+                    />
+                  ))}
+                </div>
+              )}
+
             </div>
           </div>
 
