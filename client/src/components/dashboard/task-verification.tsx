@@ -9,6 +9,8 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { TaskSkeleton } from "@/components/ui/veri-skeleton";
+import { useQuery } from "@tanstack/react-query";
+import type { Task } from "@shared/schema";
 import { 
   CheckCircle2, 
   Clock, 
@@ -39,6 +41,12 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
   const [verificationUrl, setVerificationUrl] = useState("");
   const [selectedTask, setSelectedTask] = useState<any>(null);
   const { toast } = useToast();
+
+  // Fetch completed tasks from backend
+  const { data: completedTasksData = [], isLoading: tasksLoading } = useQuery<Task[]>({
+    queryKey: [`/api/tasks/${userId}`],
+    enabled: !!userId,
+  });
 
   const availableTasks = [
     {
@@ -134,30 +142,47 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
     }
   ];
 
-  const completedTasks = [
-    {
-      id: 7,
-      title: "Twitter Engagement Post",
-      platform: "twitter",
-      icon: Twitter,
-      color: "text-blue-400",
-      points: 50,
-      completedAt: new Date(Date.now() - 86400000).toISOString(),
-      verificationUrl: "https://twitter.com/user/status/123456789",
-      status: "verified"
-    },
-    {
-      id: 8,
-      title: "Instagram Story",
-      platform: "instagram",
-      icon: Instagram,
-      color: "text-pink-400",
-      points: 75,
-      completedAt: new Date(Date.now() - 172800000).toISOString(),
-      verificationUrl: "https://instagram.com/stories/highlights/123456789",
-      status: "verified"
-    }
-  ];
+  // Filter completed tasks from backend data
+  const completedTasks = completedTasksData
+    .filter(task => task.isCompleted)
+    .map(task => {
+      // Parse verification data if available
+      let verificationData: any = {};
+      try {
+        if (task.verificationData) {
+          verificationData = JSON.parse(task.verificationData);
+        }
+      } catch (e) {
+        console.error("Error parsing verification data:", e);
+      }
+
+      // Map platform to icon and color
+      const platformConfig: Record<string, { icon: any, color: string }> = {
+        demo: { icon: Trophy, color: "text-green-400" },
+        twitter: { icon: Twitter, color: "text-blue-400" },
+        youtube: { icon: Youtube, color: "text-red-400" },
+        instagram: { icon: Instagram, color: "text-pink-400" },
+        tiktok: { icon: Music, color: "text-purple-400" },
+        linkedin: { icon: Linkedin, color: "text-blue-600" },
+        community: { icon: Users, color: "text-green-400" }
+      };
+
+      const platform = task.category?.toLowerCase() || 'general';
+      const config = platformConfig[platform] || { icon: Target, color: "text-gray-400" };
+
+      return {
+        id: task.id,
+        title: task.title,
+        platform: platform,
+        icon: config.icon,
+        color: config.color,
+        points: task.points,
+        completedAt: task.updatedAt,
+        verificationUrl: verificationData.url || "",
+        status: "verified"
+      };
+    })
+    .sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
 
   const handleStartTask = (task: any) => {
     setSelectedTask(task);
@@ -218,26 +243,13 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
               description: `Great work! You've earned ${selectedTask.points} XP points.`,
             });
             
-            // Add to completed tasks
-            completedTasks.unshift({
-              id: Date.now(),
-              title: selectedTask.title,
-              platform: selectedTask.platform,
-              icon: selectedTask.icon,
-              color: selectedTask.color,
-              points: selectedTask.points,
-              completedAt: new Date().toISOString(),
-              verificationUrl: verificationUrl,
-              status: "verified"
-            });
-            
             setSelectedTask(null);
             setVerificationUrl("");
             setActiveTab("completed");
             
             // Invalidate and refetch user data to trigger VeriScore animation
             queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
-            queryClient.invalidateQueries({ queryKey: ['/api/tasks', userId] });
+            queryClient.invalidateQueries({ queryKey: [`/api/tasks/${userId}`] });
           } else {
             throw new Error("Backend verification failed");
           }
