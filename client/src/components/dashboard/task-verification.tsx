@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import { TaskSkeleton } from "@/components/ui/veri-skeleton";
 import { 
   CheckCircle2, 
@@ -235,8 +235,9 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
             setVerificationUrl("");
             setActiveTab("completed");
             
-            // Refresh user data to update XP and VeriScore
-            window.location.reload();
+            // Invalidate and refetch user data to trigger VeriScore animation
+            queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+            queryClient.invalidateQueries({ queryKey: ['/api/tasks', userId] });
           } else {
             throw new Error("Backend verification failed");
           }
