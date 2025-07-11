@@ -1,13 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
 import { VeriLogo } from "@/components/ui/veri-logo";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/auth-context";
 import { useCounter } from "@/hooks/use-counter";
 import { useState, useEffect, useRef } from "react";
-import { Star, TrendingUp, Users, Trophy, Zap, Award, Crown } from "lucide-react";
+import { Star, Trophy, Zap, Award, Crown } from "lucide-react";
 import { VeriScoreCardSkeleton } from "@/components/ui/veri-skeleton";
 
 export function VeriScoreCard() {
