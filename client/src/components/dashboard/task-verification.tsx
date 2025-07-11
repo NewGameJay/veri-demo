@@ -23,7 +23,8 @@ import {
   Users,
   Trophy,
   RefreshCw,
-  Hash
+  Hash,
+  ArrowRight
 } from "lucide-react";
 
 interface TaskVerificationProps {
