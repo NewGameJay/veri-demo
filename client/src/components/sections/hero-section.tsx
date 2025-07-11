@@ -27,7 +27,9 @@ export function HeroSection({ onGetStarted }: HeroSectionProps) {
         </p>
         <Button
           onClick={onGetStarted}
-          className="px-8 py-4 veri-gradient rounded-xl font-semibold text-white hover-scale transition-all duration-200"
+          variant="veri"
+          size="lg"
+          className="px-8 py-4 rounded-xl font-semibold"
         >
           Get Started
         </Button>

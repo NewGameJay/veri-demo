@@ -9,10 +9,16 @@ import { ProfileBuilder } from "./profile-builder";
 import { MemorizzIntegration } from "@/components/integrations/memorizz-integration";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/auth-context";
+import { useCounter } from "@/hooks/use-counter";
+import { useState, useEffect, useRef } from "react";
 import { Star, TrendingUp, Users, Trophy, Zap, Target, Award, Crown, Brain, User, CheckCircle2 } from "lucide-react";
 
 export function VeriScoreCard() {
   const { user } = useAuth();
+  const [previousScore, setPreviousScore] = useState(0);
+  const [showParticles, setShowParticles] = useState(false);
+  const scoreRef = useRef<HTMLDivElement>(null);
+  
   const { data: currentUser } = useQuery({
     queryKey: ['/api/auth/me'],
     queryFn: async () => {
@@ -38,6 +44,24 @@ export function VeriScoreCard() {
   };
 
   const veriScore = calculateVeriScore();
+  const animatedScore = useCounter({ 
+    end: veriScore, 
+    start: previousScore,
+    duration: 1500,
+    onComplete: () => {
+      if (veriScore > previousScore) {
+        setShowParticles(true);
+        setTimeout(() => setShowParticles(false), 1000);
+      }
+    }
+  });
+  
+  useEffect(() => {
+    if (veriScore !== previousScore) {
+      setPreviousScore(veriScore);
+    }
+  }, [veriScore, previousScore]);
+
   const nextLevelThreshold = Math.ceil(veriScore / 25) * 25;
   const isAIUnlocked = (activeUser?.streak || 0) >= 10;
 
@@ -73,9 +97,26 @@ export function VeriScoreCard() {
           </div>
 
           {/* Main Score */}
-          <div className="text-center mb-8">
-            <div className="text-6xl font-termina text-green-400 mb-2 animate-bounce-in">
-              {Math.round(veriScore)}
+          <div className="text-center mb-8 relative">
+            <div 
+              ref={scoreRef}
+              className="text-6xl font-termina text-green-400 mb-2 animate-bounce-in hover-scale transition-all duration-300 cursor-pointer relative"
+            >
+              {Math.round(animatedScore)}
+              {showParticles && (
+                <div className="particle-burst">
+                  {[...Array(12)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="particle"
+                      style={{
+                        '--angle': `${i * 30}deg`,
+                        animationDelay: `${i * 0.05}s`
+                      } as React.CSSProperties}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
