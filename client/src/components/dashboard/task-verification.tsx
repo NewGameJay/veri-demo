@@ -267,7 +267,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
   };
 
   return (
-    <Card className="glass-effect border-white/20">
+    <Card className="glass-medium border-white/20">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
@@ -300,7 +300,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
               {availableTasks.map((task) => (
                 <div 
                   key={task.id} 
-                  className="group glass-subtle glass-effect-hover p-4 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300 hover:transform hover:scale-[1.01] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/10 cursor-pointer animate-fade-in"
+                  className="group glass-subtle p-4 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer animate-fade-in hover:bg-white/[0.08]"
                   style={{
                     animationDelay: `${task.id * 100}ms`
                   }}
@@ -388,7 +388,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
           <TabsContent value="active" className="space-y-4">
             {selectedTask ? (
               <div className="space-y-4">
-                <div className="glass-effect p-4 rounded-lg border border-white/10">
+                <div className="glass-subtle p-4 rounded-lg border border-white/10">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 rounded-lg bg-gray-500/20 flex items-center justify-center">
@@ -417,7 +417,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
                   </div>
                 </div>
                 
-                <div className="glass-effect p-4 rounded-lg border border-white/10">
+                <div className="glass-subtle p-4 rounded-lg border border-white/10">
                   <h4 className="font-medium text-white mb-3">Submit for Verification</h4>
                   <div className="space-y-3">
                     <div>
@@ -495,7 +495,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
                 {completedTasks.map((task, index) => (
                   <div 
                     key={task.id} 
-                    className="group glass-effect p-4 rounded-lg border border-green-500/20 hover:border-green-400/40 transition-all duration-300 hover:transform hover:scale-[1.02] hover:-translate-y-1 hover:shadow-2xl hover:shadow-green-500/10 animate-fade-in relative"
+                    className="group glass-subtle p-4 rounded-lg border border-green-500/20 hover:border-green-400/40 transition-all duration-300 animate-fade-in relative hover:bg-white/[0.08]"
                     style={{
                       animationDelay: `${index * 100}ms`
                     }}
