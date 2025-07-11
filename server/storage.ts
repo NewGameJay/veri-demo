@@ -84,7 +84,7 @@ export class MemStorage implements IStorage {
       isVerified: true,
       userType: "creator",
       profileType: "creator",
-      streak: 7,
+      streak: 12,
       hasCompletedOnboarding: true,
       createdAt: new Date(),
       updatedAt: new Date(),
