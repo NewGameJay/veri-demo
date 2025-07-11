@@ -83,7 +83,7 @@ export function VeriScoreCard() {
         <CardContent className="p-8">
           {/* Header with Veri Icon */}
           <div className="flex items-center justify-center mb-8">
-            <div className="w-16 h-16 veri-gradient rounded-2xl flex items-center justify-center shadow-lg pulse-glow">
+            <div className="w-16 h-16 veri-gradient rounded-2xl flex items-center justify-center shadow-lg">
               <VeriLogo size="lg" showText={false} />
             </div>
           </div>
@@ -99,7 +99,7 @@ export function VeriScoreCard() {
           <div className="text-center mb-8 relative">
             <div 
               ref={scoreRef}
-              className="text-6xl font-termina text-green-400 mb-2 animate-bounce-in hover-scale transition-all duration-300 cursor-pointer relative"
+              className="text-6xl font-termina text-green-400 mb-2 transition-all duration-300 cursor-pointer relative"
             >
               {Math.round(animatedScore)}
               {showParticles && (
@@ -129,11 +129,11 @@ export function VeriScoreCard() {
 
           {/* Stats Grid */}
           <div className="grid grid-cols-2 gap-4 mb-8">
-            <div className="glass-effect p-4 rounded-xl text-center hover-scale">
+            <div className="glass-subtle p-4 rounded-xl text-center hover-scale">
               <div className="text-2xl font-bold text-white mb-1">8.7K</div>
               <div className="text-sm text-white/60 font-inter">Total Followers</div>
             </div>
-            <div className="glass-effect p-4 rounded-xl text-center hover-scale">
+            <div className="glass-subtle p-4 rounded-xl text-center hover-scale">
               <div className="text-2xl font-bold text-white mb-1">12.5K</div>
               <div className="text-sm text-white/60 font-inter">Engagement</div>
             </div>

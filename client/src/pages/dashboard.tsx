@@ -77,7 +77,7 @@ export default function Dashboard() {
 
               {/* Enhanced Dashboard Tabs with Glass Effect */}
               <Tabs defaultValue="tasks" className="w-full animate-slide-in">
-                <TabsList className="grid w-full grid-cols-4 glass-effect border-white/20 hover-scale">
+                <TabsList className="grid w-full grid-cols-4 bg-gray-900/50 border border-white/20">
                   <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
                     Tasks
                   </TabsTrigger>
