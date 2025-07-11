@@ -186,3 +186,8 @@ The application is designed to scale from MVP to full marketplace functionality,
   - Task verification now actually awards XP points and increases VeriScore
   - Backend task verification endpoint properly integrates with user progression system
   - MVP Test Task accepts URLs containing "test", "demo", or "veri" for guaranteed success during demos
+- ✅ Fixed real-time XP and particle animation updates:
+  - VeriScoreCard now properly subscribes to auth context updates instead of using separate query
+  - Particle burst animations (blue dots) now trigger immediately when XP points increase
+  - Fixed query invalidation to ensure VeriScore and XP update in real-time after task completion
+  - User's VeriScore is now at 100/100 (maximum) and XP at 775 points
