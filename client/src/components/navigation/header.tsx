@@ -102,21 +102,21 @@ export function Header({ onDashboardToggle, onMobileMenuToggle, onSignIn }: Head
                   </div>
                 </div>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 glass-effect border-white/20">
+              <DropdownMenuContent align="end" className="w-56 bg-gray-900 border-white/20">
                 <DropdownMenuLabel className="text-white">My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-white/10" />
-                <DropdownMenuItem className="text-white/80 hover:text-white focus:text-white cursor-pointer">
+                <DropdownMenuItem className="text-white/80 hover:text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer">
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="text-white/80 hover:text-white focus:text-white cursor-pointer">
+                <DropdownMenuItem className="text-white/80 hover:text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer">
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-white/10" />
                 <DropdownMenuItem 
                   onClick={logout}
-                  className="text-red-400 hover:text-red-300 focus:text-red-300 cursor-pointer"
+                  className="text-red-400 hover:text-red-300 hover:bg-red-500/10 focus:bg-red-500/10 cursor-pointer"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
