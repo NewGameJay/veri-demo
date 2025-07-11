@@ -198,9 +198,10 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
       if (isValid) {
         // Call backend to verify task and award XP
         try {
-          const response = await apiRequest("/api/tasks/verify", {
-            method: "POST",
-            body: {
+          const response = await apiRequest(
+            "POST",
+            "/api/tasks/verify",
+            {
               taskId: selectedTask.id,
               verificationUrl: verificationUrl,
               points: selectedTask.points,
@@ -208,9 +209,10 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
               description: selectedTask.description,
               category: selectedTask.category
             }
-          });
+          );
           
-          if (response.success) {
+          const result = await response.json();
+          if (result.success) {
             toast({
               title: "Task verified!",
               description: `Great work! You've earned ${selectedTask.points} XP points.`,
