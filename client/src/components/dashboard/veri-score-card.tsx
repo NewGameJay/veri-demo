@@ -4,15 +4,16 @@ import { VeriLogo } from "@/components/ui/veri-logo";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/auth-context";
 import { useCounter } from "@/hooks/use-counter";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Star, Trophy, Zap, Award, Crown } from "lucide-react";
 import { VeriScoreCardSkeleton } from "@/components/ui/veri-skeleton";
 
 export function VeriScoreCard() {
   const { user } = useAuth();
-  const [previousScore, setPreviousScore] = useState(0);
+  const [previousScore, setPreviousScore] = useState<number | null>(null);
   const [showParticles, setShowParticles] = useState(false);
   const scoreRef = useRef<HTMLDivElement>(null);
+  const isFirstMount = useRef(true);
   
   const { data: currentUser, isLoading } = useQuery({
     queryKey: ['/api/auth/me'],
@@ -27,8 +28,8 @@ export function VeriScoreCard() {
 
   const activeUser = user || currentUser;
 
-  // Calculate VeriScore based on user activity
-  const calculateVeriScore = () => {
+  // Calculate VeriScore based on user activity with memoization
+  const veriScore = useMemo(() => {
     if (!activeUser) return 0;
     
     const baseScore = Math.min((activeUser.xpPoints || 0) / 10, 100);
@@ -36,26 +37,32 @@ export function VeriScoreCard() {
     const socialBonus = 10; // Base social connection bonus
     
     return Math.min(baseScore + streakBonus + socialBonus, 100);
-  };
-
-  const veriScore = calculateVeriScore();
+  }, [activeUser?.xpPoints, activeUser?.streak]);
+  
+  // Use useEffect to handle score changes properly
+  useEffect(() => {
+    if (isFirstMount.current && veriScore > 0) {
+      setPreviousScore(veriScore);
+      isFirstMount.current = false;
+    } else if (!isFirstMount.current && veriScore !== previousScore && veriScore > 0) {
+      setPreviousScore(veriScore);
+    }
+  }, [veriScore, previousScore]);
+  
+  // Use the proper start value for animation
+  const animationStart = previousScore === null ? veriScore : previousScore;
+  
   const animatedScore = useCounter({ 
     end: veriScore, 
-    start: previousScore,
-    duration: 1500,
+    start: animationStart,
+    duration: previousScore === null ? 0 : 1500, // No animation on first mount
     onComplete: () => {
-      if (veriScore > previousScore) {
+      if (previousScore !== null && veriScore > previousScore) {
         setShowParticles(true);
         setTimeout(() => setShowParticles(false), 1000);
       }
     }
   });
-  
-  useEffect(() => {
-    if (veriScore !== previousScore) {
-      setPreviousScore(veriScore);
-    }
-  }, [veriScore, previousScore]);
 
   const nextLevelThreshold = Math.ceil(veriScore / 25) * 25;
   const isAIUnlocked = (activeUser?.streak || 0) >= 10;
