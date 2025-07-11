@@ -408,19 +408,81 @@
     height: 8px;
     background: linear-gradient(135deg, hsl(158, 100%, 42%), hsl(256, 100%, 67%));
     border-radius: 50%;
-    animation: particle-float 1s ease-out forwards;
     box-shadow: 0 0 6px rgba(0, 211, 162, 0.8);
   }
   
-  @keyframes particle-float {
-    0% {
-      transform: translate(0, 0) scale(0);
-      opacity: 1;
-    }
-    100% {
-      transform: translate(calc(cos(var(--angle)) * 60px), calc(sin(var(--angle)) * 60px)) scale(1);
-      opacity: 0;
-    }
+  /* Individual particle animations for each angle */
+  .particle:nth-child(1) { animation: particle-0 1s ease-out forwards; }
+  .particle:nth-child(2) { animation: particle-30 1s ease-out forwards; }
+  .particle:nth-child(3) { animation: particle-60 1s ease-out forwards; }
+  .particle:nth-child(4) { animation: particle-90 1s ease-out forwards; }
+  .particle:nth-child(5) { animation: particle-120 1s ease-out forwards; }
+  .particle:nth-child(6) { animation: particle-150 1s ease-out forwards; }
+  .particle:nth-child(7) { animation: particle-180 1s ease-out forwards; }
+  .particle:nth-child(8) { animation: particle-210 1s ease-out forwards; }
+  .particle:nth-child(9) { animation: particle-240 1s ease-out forwards; }
+  .particle:nth-child(10) { animation: particle-270 1s ease-out forwards; }
+  .particle:nth-child(11) { animation: particle-300 1s ease-out forwards; }
+  .particle:nth-child(12) { animation: particle-330 1s ease-out forwards; }
+  
+  @keyframes particle-0 {
+    0% { transform: translate(0, 0) scale(0); opacity: 1; }
+    100% { transform: translate(60px, 0) scale(1); opacity: 0; }
+  }
+  
+  @keyframes particle-30 {
+    0% { transform: translate(0, 0) scale(0); opacity: 1; }
+    100% { transform: translate(52px, 30px) scale(1); opacity: 0; }
+  }
+  
+  @keyframes particle-60 {
+    0% { transform: translate(0, 0) scale(0); opacity: 1; }
+    100% { transform: translate(30px, 52px) scale(1); opacity: 0; }
+  }
+  
+  @keyframes particle-90 {
+    0% { transform: translate(0, 0) scale(0); opacity: 1; }
+    100% { transform: translate(0, 60px) scale(1); opacity: 0; }
+  }
+  
+  @keyframes particle-120 {
+    0% { transform: translate(0, 0) scale(0); opacity: 1; }
+    100% { transform: translate(-30px, 52px) scale(1); opacity: 0; }
+  }
+  
+  @keyframes particle-150 {
+    0% { transform: translate(0, 0) scale(0); opacity: 1; }
+    100% { transform: translate(-52px, 30px) scale(1); opacity: 0; }
+  }
+  
+  @keyframes particle-180 {
+    0% { transform: translate(0, 0) scale(0); opacity: 1; }
+    100% { transform: translate(-60px, 0) scale(1); opacity: 0; }
+  }
+  
+  @keyframes particle-210 {
+    0% { transform: translate(0, 0) scale(0); opacity: 1; }
+    100% { transform: translate(-52px, -30px) scale(1); opacity: 0; }
+  }
+  
+  @keyframes particle-240 {
+    0% { transform: translate(0, 0) scale(0); opacity: 1; }
+    100% { transform: translate(-30px, -52px) scale(1); opacity: 0; }
+  }
+  
+  @keyframes particle-270 {
+    0% { transform: translate(0, 0) scale(0); opacity: 1; }
+    100% { transform: translate(0, -60px) scale(1); opacity: 0; }
+  }
+  
+  @keyframes particle-300 {
+    0% { transform: translate(0, 0) scale(0); opacity: 1; }
+    100% { transform: translate(30px, -52px) scale(1); opacity: 0; }
+  }
+  
+  @keyframes particle-330 {
+    0% { transform: translate(0, 0) scale(0); opacity: 1; }
+    100% { transform: translate(52px, -30px) scale(1); opacity: 0; }
   }
   
   /* Skeleton Animation */
