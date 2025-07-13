@@ -11,11 +11,13 @@ import { MemorizzIntegration } from "@/components/integrations/memorizz-integrat
 import { AIAgents } from "@/components/dashboard/ai-agents";
 import { useAuth } from "@/contexts/auth-context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ProfileBuilderOnboarding } from "@/components/onboarding/profile-builder-onboarding";
 
 export default function Dashboard() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { user } = useAuth();
+  const [showProfileBuilder, setShowProfileBuilder] = useState(false);
+  const { user, needsOnboarding, completeOnboarding } = useAuth();
 
   const { data: connections } = useQuery({
     queryKey: ["/api/social-connections", user?.id],
@@ -29,6 +31,16 @@ export default function Dashboard() {
 
   if (!user) {
     return null;
+  }
+
+  // Show onboarding for new users
+  if (needsOnboarding && !showProfileBuilder) {
+    return (
+      <ProfileBuilderOnboarding
+        onComplete={completeOnboarding}
+        onStartProfileBuilder={() => setShowProfileBuilder(true)}
+      />
+    );
   }
 
   const userStreak = user.streak || 0;

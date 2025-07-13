@@ -8,7 +8,10 @@ interface AuthContextType {
   signup: (data: SignupData) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
+  completeOnboarding: () => Promise<void>;
+  completeProfile: () => Promise<void>;
   isLoading: boolean;
+  needsOnboarding: boolean;
 }
 
 interface SignupData {
@@ -26,6 +29,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
+  const needsOnboarding = user && !user.hasCompletedOnboarding;
 
   useEffect(() => {
     // Check if user is already logged in
@@ -100,8 +105,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const completeOnboarding = async () => {
+    try {
+      const response = await apiRequest("POST", "/api/auth/complete-onboarding");
+      const userData = await response.json();
+      setUser(userData);
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
+    } catch (error) {
+      console.error("Failed to complete onboarding:", error);
+      throw error;
+    }
+  };
+
+  const completeProfile = async () => {
+    try {
+      const response = await apiRequest("POST", "/api/auth/complete-profile");
+      const userData = await response.json();
+      setUser(userData);
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
+    } catch (error) {
+      console.error("Failed to complete profile:", error);
+      throw error;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout, refreshUser, isLoading }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      login, 
+      signup, 
+      logout, 
+      refreshUser, 
+      completeOnboarding, 
+      completeProfile, 
+      isLoading, 
+      needsOnboarding: !!needsOnboarding 
+    }}>
       {children}
     </AuthContext.Provider>
   );

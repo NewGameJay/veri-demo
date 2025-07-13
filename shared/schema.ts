@@ -19,6 +19,7 @@ export const users = pgTable("users", {
   profileType: text("profile_type").default("creator"), // creator, studio
   streak: integer("streak").default(0),
   hasCompletedOnboarding: boolean("has_completed_onboarding").default(false),
+  profileCompleted: boolean("profile_completed").default(false),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

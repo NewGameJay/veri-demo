@@ -82,6 +82,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/auth/complete-onboarding", async (req, res) => {
+    try {
+      const userId = req.session.userId;
+      if (!userId) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const user = await storage.updateUser(userId, { hasCompletedOnboarding: true });
+      res.json(user);
+    } catch (error) {
+      console.error("Failed to complete onboarding:", error);
+      res.status(500).json({ message: "Failed to complete onboarding" });
+    }
+  });
+
+  app.post("/api/auth/complete-profile", async (req, res) => {
+    try {
+      const userId = req.session.userId;
+      if (!userId) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const user = await storage.updateUser(userId, { 
+        profileCompleted: true,
+        hasCompletedOnboarding: true 
+      });
+      res.json(user);
+    } catch (error) {
+      console.error("Failed to complete profile:", error);
+      res.status(500).json({ message: "Failed to complete profile" });
+    }
+  });
+
   // Auth middleware for protected routes
   const requireAuth = async (req: any, res: any, next: any) => {
     const userId = req.session.userId;
