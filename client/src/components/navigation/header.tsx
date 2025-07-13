@@ -105,11 +105,17 @@ export function Header({ onDashboardToggle, onMobileMenuToggle, onSignIn }: Head
               <DropdownMenuContent align="end" className="w-56 bg-gray-900 border-white/20">
                 <DropdownMenuLabel className="text-white">My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-white/10" />
-                <DropdownMenuItem className="text-white/80 hover:text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer">
+                <DropdownMenuItem 
+                  onClick={() => window.location.href = '/profile'}
+                  className="text-white/80 hover:text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                >
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="text-white/80 hover:text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer">
+                <DropdownMenuItem 
+                  onClick={() => window.location.href = '/settings'}
+                  className="text-white/80 hover:text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                >
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Settings</span>
                 </DropdownMenuItem>

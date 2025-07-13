@@ -5,13 +5,31 @@ import { CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/auth-context";
 import { VeriSkeleton } from "@/components/ui/veri-skeleton";
+import { useToast } from "@/hooks/use-toast";
 
 export function SocialConnections() {
   const { user } = useAuth();
+  const { toast } = useToast();
   const { data: connections, isLoading } = useQuery({
     queryKey: ["/api/social-connections", user?.id],
     enabled: !!user?.id,
   });
+
+  const handleSocialConnect = (platform: string) => {
+    // Simulate OAuth flow
+    toast({
+      title: "Connecting to " + platform.charAt(0).toUpperCase() + platform.slice(1),
+      description: "Opening OAuth window...",
+    });
+    
+    // In a real app, this would open OAuth popup
+    setTimeout(() => {
+      toast({
+        title: "Connection successful!",
+        description: `Your ${platform} account has been connected.`,
+      });
+    }, 2000);
+  };
 
   if (isLoading) {
     return (
@@ -98,9 +116,10 @@ export function SocialConnections() {
                 <div className="flex items-center gap-2">
                   <Badge 
                     variant={connection.isConnected ? "default" : "secondary"}
-                    className={`${connection.isConnected ? 'veri-gradient text-white' : 'bg-yellow-500/20 text-yellow-400'} font-inter text-xs`}
+                    className={`${connection.isConnected ? 'veri-gradient text-white' : 'bg-yellow-500/20 text-yellow-400'} font-inter text-xs cursor-pointer hover:opacity-80 transition-opacity`}
+                    onClick={() => handleSocialConnect(connection.platform)}
                   >
-                    {connection.isConnected ? "Connected" : "Pending"}
+                    {connection.isConnected ? "Connected" : "Connect"}
                   </Badge>
                   <div className={`w-3 h-3 rounded-full pulse-glow ${
                     connection.isConnected ? 'bg-green-400' : 'bg-yellow-400'

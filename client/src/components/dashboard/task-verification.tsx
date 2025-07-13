@@ -182,17 +182,19 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
       brand: "Hyve.gg"
     },
     {
-      id: 6,
-      title: "LinkedIn Professional Post",
-      description: "Write a professional post about creator economy insights",
-      platform: "linkedin",
-      icon: Linkedin,
-      color: "text-blue-600",
-      points: 75,
+      id: 9,
+      title: "Creator Economy Reaction Video",
+      description: "Create reaction video responding to popular gaming content and trends",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 300,
       difficulty: "Medium",
-      estimatedTime: "8 minutes",
-      requirements: ["Professional tone", "Industry insights", "Mention Veri platform"],
-      category: "professional_content"
+      estimatedTime: "1-2 hours",
+      requirements: ["React to trending gaming content", "Add insightful commentary", "Include your gameplay clips", "Upload to YouTube/TikTok"],
+      category: "reaction_content",
+      brand: "Hyve.gg",
+      streakBonus: 2
     }
   ];
 

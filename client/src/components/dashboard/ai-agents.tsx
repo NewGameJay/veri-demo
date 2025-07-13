@@ -324,20 +324,23 @@ export function AIAgents({ userPoints, userStreak, onUseAgent }: AIAgentsProps) 
                               </div>
                             </div>
 
-                            <div className="space-y-2 mb-4">
+                            <div className="grid grid-cols-2 gap-2 mb-4">
                               {agent.features.map((feature, index) => (
                                 <div key={index} className="flex items-center space-x-2">
-                                  <CheckCircle2 className="h-3 w-3 text-green-400" />
+                                  <CheckCircle2 className="h-4 w-4 text-green-400" />
                                   <span className="text-xs text-white/60">{feature}</span>
                                 </div>
                               ))}
                             </div>
 
                             <Button
-                              variant="veri"
-                              className="w-full"
                               onClick={() => handleUseAgent(agent.id, agent.pointsCost)}
-                              disabled={isProcessing || userPoints < agent.pointsCost}
+                              disabled={isProcessing || isCompleted || userPoints < agent.pointsCost}
+                              className={`w-full ${
+                                isCompleted 
+                                  ? "bg-green-500/20 text-green-400 cursor-default" 
+                                  : "veri-gradient hover:opacity-90"
+                              }`}
                             >
                               {isProcessing ? (
                                 <>
@@ -347,7 +350,7 @@ export function AIAgents({ userPoints, userStreak, onUseAgent }: AIAgentsProps) 
                               ) : isCompleted ? (
                                 <>
                                   <CheckCircle2 className="mr-2 h-4 w-4" />
-                                  View Results
+                                  Completed
                                 </>
                               ) : (
                                 <>

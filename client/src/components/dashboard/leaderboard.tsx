@@ -1,16 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, TrendingDown, Minus, Globe, Gamepad2, Heart, Laptop, Crown, Award, Medal } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, Globe, Gamepad2, Heart, Laptop, Crown, Award, Medal, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { LeaderboardSkeleton } from "@/components/ui/veri-skeleton";
+import { useToast } from "@/hooks/use-toast";
 
 export function Leaderboard() {
   const { data: leaderboard, isLoading } = useQuery({
     queryKey: ["/api/leaderboard"],
   });
+  const { toast } = useToast();
   const [previousRanks, setPreviousRanks] = useState<Record<number, number>>({});
   const [selectedCategory, setSelectedCategory] = useState<string>("global");
+  const [showFullLeaderboard, setShowFullLeaderboard] = useState(false);
+
+  const handleViewFullLeaderboard = () => {
+    setShowFullLeaderboard(!showFullLeaderboard);
+    toast({
+      title: showFullLeaderboard ? "Collapsed" : "Expanded",
+      description: showFullLeaderboard ? "Showing top entries only" : "Showing full leaderboard",
+    });
+  };
 
   const categories = [
     { id: "global", name: "Global", icon: Globe },
@@ -63,6 +74,8 @@ export function Leaderboard() {
     return user?.primaryCategory === selectedCategory;
   });
 
+  const displayedLeaderboard = showFullLeaderboard ? filteredLeaderboard : filteredLeaderboard?.slice(0, 5);
+
   return (
     <div className="glass-medium glass-effect-hover rounded-xl p-6 lg:col-span-2">
         <div className="flex items-center justify-between mb-4">
@@ -93,7 +106,7 @@ export function Leaderboard() {
           })}
         </div>
         <div className="space-y-3" role="list" aria-label="VeriScore leaderboard rankings">
-          {filteredLeaderboard?.map((entry: any, index: number) => {
+          {displayedLeaderboard?.map((entry: any, index: number) => {
             const user = sampleUsers.find(u => u.id === entry.userId);
             const isCurrentUser = entry.userId === 1;
             const badgeInfo = getBadgeInfo(entry.rank, entry.score);
@@ -156,6 +169,21 @@ export function Leaderboard() {
             );
           })}
         </div>
+        
+        {/* View Full Leaderboard Button */}
+        {filteredLeaderboard && filteredLeaderboard.length > 5 && (
+          <div className="mt-4 flex justify-center">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleViewFullLeaderboard}
+              className="border-white/20 text-white/70 hover:text-white hover:bg-white/5 flex items-center gap-2"
+            >
+              {showFullLeaderboard ? "Show Less" : "View Full Leaderboard"}
+              <ChevronRight className={`w-4 h-4 transition-transform ${showFullLeaderboard ? 'rotate-90' : ''}`} />
+            </Button>
+          </div>
+        )}
     </div>
   );
 }
