@@ -36,10 +36,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Check if user is already logged in
     const checkAuth = async () => {
       try {
-        const response = await fetch("/api/auth/me");
+        const response = await fetch("/api/auth/me", {
+          credentials: 'include' // Include cookies for JWT authentication
+        });
         if (response.ok) {
           const userData = await response.json();
           setUser(userData);
+        } else if (response.status === 401) {
+          // Try refresh token
+          const refreshResponse = await fetch("/api/auth/refresh", {
+            credentials: 'include'
+          });
+          if (refreshResponse.ok) {
+            // Try getting user again after refresh
+            const retryResponse = await fetch("/api/auth/me", {
+              credentials: 'include'
+            });
+            if (retryResponse.ok) {
+              const userData = await retryResponse.json();
+              setUser(userData);
+            }
+          }
         }
       } catch (error) {
         console.error("Auth check failed:", error);
@@ -53,7 +70,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await apiRequest("POST", "/api/auth/login", { email, password });
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: 'include', // Include cookies for JWT authentication
+        body: JSON.stringify({ email, password }),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Login failed");
+      }
+      
       const userData = await response.json();
       setUser(userData);
     } catch (error) {
@@ -64,7 +93,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signup = async (data: SignupData) => {
     try {
-      const response = await apiRequest("POST", "/api/auth/signup", data);
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: 'include', // Include cookies for JWT authentication
+        body: JSON.stringify(data),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Signup failed");
+      }
+      
       const userData = await response.json();
       setUser(userData);
     } catch (error) {
@@ -75,7 +116,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      await apiRequest("POST", "/api/auth/logout");
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: 'include', // Include cookies for JWT authentication
+      });
       setUser(null);
       // Clear all cached queries to prevent data leakage between accounts
       queryClient.clear();
@@ -95,10 +139,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refreshUser = async () => {
     try {
-      const response = await fetch("/api/auth/me");
+      const response = await fetch("/api/auth/me", {
+        credentials: 'include' // Include cookies for JWT authentication
+      });
       if (response.ok) {
         const userData = await response.json();
         setUser(userData);
+      } else if (response.status === 401) {
+        // Try refresh token
+        const refreshResponse = await fetch("/api/auth/refresh", {
+          credentials: 'include'
+        });
+        if (refreshResponse.ok) {
+          // Try getting user again after refresh
+          const retryResponse = await fetch("/api/auth/me", {
+            credentials: 'include'
+          });
+          if (retryResponse.ok) {
+            const userData = await retryResponse.json();
+            setUser(userData);
+          }
+        }
       }
     } catch (error) {
       console.error("Failed to refresh user:", error);
@@ -107,7 +168,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const completeOnboarding = async () => {
     try {
-      const response = await apiRequest("POST", "/api/auth/complete-onboarding");
+      const response = await fetch("/api/auth/complete-onboarding", {
+        method: "POST",
+        credentials: 'include',
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to complete onboarding");
+      }
+      
       const userData = await response.json();
       setUser(userData);
       queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
@@ -119,7 +188,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const completeProfile = async () => {
     try {
-      const response = await apiRequest("POST", "/api/auth/complete-profile");
+      const response = await fetch("/api/auth/complete-profile", {
+        method: "POST",
+        credentials: 'include',
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to complete profile");
+      }
+      
       const userData = await response.json();
       setUser(userData);
       queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });

@@ -1,0 +1,395 @@
+# Veri MVP Sprint 3: Replit Implementation Prompts
+
+## Master Sprint 3 Prompt
+
+**Copy this complete prompt to begin Sprint 3:**
+
+```
+Based on the Sprint 2 evaluation showing critical authentication and persistence failures, implement Sprint 3 fixes focusing on infrastructure before features.
+
+PRIORITY 1 - Fix Authentication (Days 1-2):
+The biggest issue is users getting logged out on every page refresh with 401 errors. Implement proper session persistence:
+
+1. Add refresh token rotation with httpOnly cookies
+2. Update authContext to handle token refresh automatically  
+3. Implement /api/auth/refresh endpoint
+4. Add withAuth middleware that checks and refreshes tokens
+5. Test across multiple browser tabs
+6. Store sessions properly (not in memory)
+
+Current problem: Every page refresh returns 401 and logs user out
+Success criteria: User stays logged in for at least 7 days
+
+PRIORITY 2 - Database Migration (Days 2-3):
+Replace MemStorage with the existing PostgreSQL schema that was created but never connected:
+
+1. Connect to PostgreSQL database (schema already exists)
+2. Migrate all MemStorage class methods to use database
+3. Update all API routes from storage.users to db.users
+4. Implement proper connection pooling
+5. Add database error handling and retries
+6. Test data persistence across server restarts
+
+Current problem: All data lost on server restart
+Success criteria: 100% data persistence
+
+PRIORITY 3 - Fix Production Build (Day 4):
+The app currently times out when building for production:
+
+1. Optimize vite.config.ts with manual chunks
+2. Implement code splitting for large components  
+3. Reduce bundle size (target <10MB)
+4. Add build caching
+5. Fix any build-time errors
+6. Test full deployment process
+
+Current problem: Build times out, can't deploy
+Success criteria: Build completes in <5 minutes
+
+PRIORITY 4 - OAuth Implementation (Days 5-6):
+Social connections show UI but don't actually work:
+
+1. Implement real Twitter OAuth 2.0 flow
+2. Store OAuth tokens securely in database
+3. Fetch and display real user data (handle, followers)
+4. Add disconnect functionality
+5. Handle OAuth errors gracefully
+6. Update profile to show verified badge
+
+Current problem: Social connections are just UI mockups
+Success criteria: Real Twitter data displayed and persisted
+
+PRIORITY 5 - Dynamic Leaderboard (Days 6-7):
+Leaderboard shows static sample data:
+
+1. Query real user scores from database
+2. Implement live rank calculation
+3. Add pagination for large lists
+4. Cache leaderboard queries (5 min TTL)
+5. Show rank changes with indicators
+6. Update in near real-time
+
+Current problem: Leaderboard never changes
+Success criteria: Shows real user rankings
+
+Keep all existing UI, animations, and styling exactly as is. Only fix backend infrastructure.
+```
+
+---
+
+## Phase-Specific Prompts
+
+### Phase 1: Authentication Fix
+
+```
+Fix the critical authentication issue where users are logged out on every page refresh:
+
+CURRENT PROBLEM:
+- Every page refresh returns 401 error
+- authContext loses user state
+- No session persistence
+- Tokens not stored properly
+
+IMPLEMENT:
+1. Modify server/routes.ts auth endpoints:
+   - Add /api/auth/refresh endpoint
+   - Implement refresh token rotation
+   - Set httpOnly secure cookies for tokens
+   
+2. Update client auth-context.tsx:
+   - Check for refresh token on mount
+   - Auto-refresh access token before expiry
+   - Handle 401s by trying refresh first
+   
+3. Add middleware for protected routes:
+   - Verify access token
+   - Auto-refresh if expired
+   - Only return 401 if refresh fails
+
+4. Cookie configuration:
+   - accessToken: 15 min expiry, httpOnly
+   - refreshToken: 7 days, httpOnly, secure
+   - sameSite: 'strict' for security
+
+Test by logging in, refreshing page, closing browser, and returning.
+Success = user stays logged in through all scenarios.
+```
+
+### Phase 2: Database Connection
+
+```
+Migrate from MemStorage to PostgreSQL database:
+
+CURRENT STATE:
+- PostgreSQL schema exists but not connected
+- Using MemStorage class (in-memory)
+- All data lost on server restart
+
+STEPS:
+1. In server/db.ts:
+   - Connect to PostgreSQL using connection string
+   - Use the existing drizzle schema
+   - Implement connection pooling
+   
+2. Create new storage/database.ts:
+   - Implement all MemStorage methods using database
+   - Match exact same interface
+   - Add proper error handling
+   
+3. Update server/routes.ts:
+   - Replace all storage.* calls with db.*
+   - Add try/catch blocks
+   - Return proper error responses
+   
+4. Migration checklist:
+   - storage.users.create() → db.users.insert()
+   - storage.users.get() → db.users.findUnique()
+   - storage.users.update() → db.users.update()
+   - storage.leaderboard.* → db.query with proper joins
+
+5. Test by creating user, restarting server, verifying data persists
+
+Keep the same API responses to avoid breaking frontend.
+```
+
+### Phase 3: Build Optimization
+
+```
+Fix production build timeout issue:
+
+CURRENT PROBLEM:
+- Vite build times out on Replit
+- Cannot deploy to production
+- Bundle size too large
+
+OPTIMIZE:
+1. Update vite.config.ts:
+```javascript
+build: {
+  rollupOptions: {
+    output: {
+      manualChunks: {
+        'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+        'ui-vendor': ['framer-motion', '@radix-ui/react-dropdown-menu'],
+        'query-vendor': ['@tanstack/react-query'],
+        'utils': ['clsx', 'date-fns', 'zod']
+      }
+    }
+  },
+  chunkSizeWarningLimit: 1000,
+  target: 'esnext',
+  minify: 'terser'
+}
+```
+
+2. Implement dynamic imports for heavy components
+3. Remove unused dependencies
+4. Optimize images and assets
+5. Add build progress logging
+6. Test with: npm run build
+
+Success = build completes in <5 minutes
+```
+
+### Phase 4: OAuth Integration
+
+```
+Implement real Twitter OAuth (not just UI):
+
+REQUIREMENTS:
+1. Register Twitter OAuth app
+2. Store credentials in environment variables
+3. Implement OAuth 2.0 flow with PKCE
+
+BACKEND IMPLEMENTATION:
+1. Create /api/auth/twitter/login endpoint:
+   - Generate state and code verifier
+   - Store in session
+   - Redirect to Twitter auth
+   
+2. Create /api/auth/twitter/callback:
+   - Verify state
+   - Exchange code for tokens
+   - Fetch user data from Twitter API
+   - Create/update user in database
+   - Set session cookies
+   
+3. Create /api/auth/twitter/disconnect:
+   - Remove tokens from database
+   - Update user profile
+
+FRONTEND UPDATES:
+1. Update SocialConnections component:
+   - Replace mock connection with real API call
+   - Show real Twitter handle
+   - Display follower count
+   - Add disconnect button
+
+2. Handle errors:
+   - Show toast for connection failures
+   - Graceful degradation if API down
+
+Test full flow from connection to disconnection.
+```
+
+### Phase 5: Real-time Leaderboard
+
+```
+Replace static leaderboard with dynamic data:
+
+CURRENT: Hardcoded sample data
+NEEDED: Real user rankings from database
+
+IMPLEMENT:
+1. Update /api/leaderboard endpoint:
+```typescript
+// Get top 100 users with real scores
+const leaderboard = await db.users
+  .select({
+    id: users.id,
+    name: users.name,
+    veriScore: users.veriScore,
+    avatar: users.avatar,
+    streakDays: users.streakDays,
+    platform: users.primaryPlatform
+  })
+  .orderBy(desc(users.veriScore))
+  .limit(100);
+
+// Add rank and tier calculation
+const withRanks = leaderboard.map((user, index) => ({
+  ...user,
+  rank: index + 1,
+  tier: calculateTier(user.veriScore),
+  change: calculateChange(user.id) // from cache
+}));
+```
+
+2. Add caching layer:
+   - Cache for 5 minutes
+   - Invalidate on score changes
+   - Use memory cache for now
+
+3. Update frontend:
+   - Remove hardcoded data
+   - Add loading states
+   - Implement pagination
+   - Show live indicators
+
+Success = leaderboard updates when users complete tasks
+```
+
+---
+
+## Testing Prompts
+
+### Authentication Testing
+```
+Test the authentication fix thoroughly:
+
+1. Login and refresh page - should stay logged in
+2. Close browser completely and reopen - should stay logged in  
+3. Open app in 3 different tabs - all should share session
+4. Wait 20 minutes (token expiry) - should auto-refresh
+5. Manually delete accessToken cookie - should use refresh token
+6. Login on mobile and desktop - both sessions work
+7. Logout in one tab - all tabs logged out
+
+Report any scenarios where user is unexpectedly logged out.
+```
+
+### Database Testing
+```
+Verify database persistence:
+
+1. Create new user account
+2. Complete several tasks
+3. Update profile information
+4. Restart the server completely
+5. Verify all data still exists
+6. Check PostgreSQL directly to confirm data
+
+Run these queries to verify:
+- SELECT COUNT(*) FROM users;
+- SELECT * FROM users ORDER BY created_at DESC LIMIT 5;
+- SELECT * FROM tasks WHERE user_id = '[test-user-id]';
+```
+
+---
+
+## Error Handling Patterns
+
+### For All Phases
+```
+Implement consistent error handling:
+
+1. API errors should return:
+{
+  error: "Human readable message",
+  code: "ERROR_CODE",
+  details: {} // optional debug info
+}
+
+2. Frontend should:
+- Show toast notifications for errors
+- Never show raw error messages
+- Provide actionable next steps
+- Log errors for debugging
+
+3. Common error scenarios:
+- Database connection lost
+- OAuth provider unavailable  
+- Session expired
+- Rate limit exceeded
+- Validation failures
+
+4. Never let the app crash - always graceful degradation
+```
+
+---
+
+## Rollback Plan
+
+If any phase breaks existing functionality:
+
+```
+ROLLBACK INSTRUCTIONS:
+1. Git revert to last working commit
+2. Restore database backup (if schema changed)
+3. Clear all browser cookies/storage
+4. Restart server
+5. Document what went wrong
+
+Keep the UI working at all costs - infrastructure fixes should be invisible to users except that things actually work now.
+```
+
+---
+
+## Final Integration Test
+
+```
+After all phases complete, run this full integration test:
+
+NEW USER FLOW:
+1. Sign up with email
+2. Complete onboarding
+3. Connect Twitter account  
+4. Complete 3 tasks
+5. Close browser
+6. Return next day
+7. Verify:
+   - Still logged in
+   - Twitter still connected
+   - Tasks saved
+   - Streak continued
+   - Leaderboard position updated
+
+PERFORMANCE CHECK:
+- Page load <2 seconds
+- API responses <200ms
+- Build time <5 minutes
+- No console errors
+- Mobile responsive
+
+If all pass, Sprint 3 is complete!
+```

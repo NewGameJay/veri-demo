@@ -1,0 +1,423 @@
+# Veri MVP Sprint 3: Critical Infrastructure Implementation Spec
+
+## 1. Clear Context + Problem Statement
+
+### Current Pain Points (From Sprint 2 Eval)
+- **401 Authentication Errors** - Users logged out on every page refresh (100% failure rate)
+- **No Data Persistence** - Using MemStorage instead of PostgreSQL database
+- **Production Build Failure** - Build timeouts prevent deployment
+- **Static Data** - Leaderboard and user data not actually updating
+- **Missing OAuth** - Social connections are just UI mockups
+
+### Desired Outcome
+A production-ready MVP where:
+- Users stay logged in across page refreshes and browser sessions
+- All data persists in PostgreSQL database
+- Application builds and deploys successfully
+- Real-time data updates for leaderboards and XP
+- At least one working OAuth provider (Twitter/YouTube)
+
+### Business Impact
+- **User Retention**: 90% of users abandon due to login issues
+- **Demo Readiness**: Cannot showcase to investors without persistence
+- **Creator Trust**: Need working OAuth to verify real creators
+- **Time Saved**: 15 minutes per demo avoiding login workarounds
+
+### Non-Negotiables
+- ✅ Session persistence must work 100% of the time
+- ✅ Database migration must preserve existing schema
+- ✅ Production build must complete in <5 minutes
+- ✅ Existing UI/animations must remain unchanged
+
+---
+
+## 2. Concrete Examples
+
+### Real Scenarios
+
+**Scenario 1: Creator First Login**
+```
+Sam signs up → completes profile → earns 100 XP → refreshes page
+CURRENT: Logged out, profile lost, XP gone
+EXPECTED: Still logged in, profile saved, XP persists
+```
+
+**Scenario 2: Daily Active User**
+```
+Maya logs in → completes 3 tasks → closes browser → returns next day
+CURRENT: Must recreate account, progress lost
+EXPECTED: Instant login, streak continues, XP accumulated
+```
+
+**Scenario 3: Social Verification**
+```
+Jordan clicks "Connect Twitter" → authorizes → returns to Veri
+CURRENT: Shows "connected" but no actual data
+EXPECTED: Real Twitter handle displayed, verified badge earned
+```
+
+### Sample Data
+```typescript
+// Current MemStorage User (lost on refresh)
+{
+  id: "temp_123",
+  email: "creator@example.com",
+  veriScore: 2500,
+  streakDays: 7,
+  completedTasks: ["task_1", "task_2"]
+}
+
+// Expected PostgreSQL User (persisted)
+{
+  id: "550e8400-e29b-41d4-a716-446655440000",
+  email: "creator@example.com",
+  veriScore: 2500,
+  streakDays: 7,
+  completedTasks: ["task_1", "task_2"],
+  createdAt: "2025-07-13T10:00:00Z",
+  lastLoginAt: "2025-07-13T15:30:00Z",
+  socialConnections: {
+    twitter: { handle: "@creator", verified: true }
+  }
+}
+```
+
+### Edge Cases That Will Happen
+1. **Multiple Tab Sessions** - User opens dashboard in 3 tabs
+2. **Expired Tokens** - User returns after 30 days
+3. **OAuth Failures** - Twitter API is down during connection
+4. **Duplicate Emails** - User tries to sign up with existing email
+5. **Race Conditions** - User completes task while leaderboard updates
+
+---
+
+## 3. Technical Constraints
+
+### Existing Systems
+- **Frontend**: React 18.3.1 + TypeScript + Vite
+- **Backend**: Express server with current MemStorage
+- **Database**: PostgreSQL schema exists (never connected)
+- **Auth**: Custom implementation (no session persistence)
+- **Deployment**: Replit hosting with build timeout issues
+
+### Data Flow Requirements
+```mermaid
+graph LR
+    A[User Action] --> B[API Request]
+    B --> C[Auth Middleware]
+    C --> D[PostgreSQL]
+    D --> E[Response]
+    E --> F[Update UI]
+    F --> G[Persist Session]
+```
+
+### Access Levels
+- **Public**: Landing page, leaderboard view
+- **Authenticated**: Dashboard, profile, tasks
+- **Verified Creator**: AI tools, campaigns
+- **Admin**: Analytics, user management
+
+### Performance Requirements
+- Session check: <50ms
+- Database queries: <100ms
+- Build time: <5 minutes
+- Page load: <2 seconds
+
+---
+
+## 4. Success Metrics
+
+### Quantifiable Goals
+- **Session Persistence**: 100% success rate (0 → 100%)
+- **Build Time**: Under 5 minutes (currently times out)
+- **Auth Response**: <50ms (currently 4ms but fails)
+- **Data Persistence**: 100% of user actions saved
+
+### Quality Indicators
+- Zero 401 errors on page refresh
+- All user data retrievable after 24 hours
+- OAuth connections display real user data
+- Leaderboard updates within 1 second
+
+### User Satisfaction
+- "I don't have to log in every time!"
+- "My progress is actually saved!"
+- "I can see my real Twitter followers!"
+
+### Business KPIs
+- User retention: 20% → 80% after login fix
+- Demo success rate: 40% → 95%
+- Creator verification: 0% → 60% with OAuth
+
+---
+
+## 5. Implementation Preferences
+
+### Architecture Patterns
+- Use existing Express + React Query setup
+- Implement refresh token rotation
+- Add Redis for session storage if needed
+- Keep current component structure intact
+
+### Database Migration Strategy
+1. Connect existing PostgreSQL schema
+2. Migrate MemStorage methods to database
+3. Add session table for auth persistence
+4. Implement proper foreign key constraints
+
+### Error Handling
+- User-friendly toast messages
+- Automatic retry for failed requests
+- Graceful OAuth failure handling
+- Session refresh without user intervention
+
+### Development Workflow
+- Test each fix in isolation
+- Maintain backward compatibility
+- Document all breaking changes
+- Provide migration scripts
+
+---
+
+## 6. Sprint 3 Phase Plan
+
+### Phase 1: Critical Auth Fix (Days 1-2)
+**Goal**: Fix session persistence completely
+
+**Tasks**:
+1. Implement proper JWT refresh token system
+2. Add httpOnly secure cookies for tokens
+3. Create auth refresh middleware
+4. Add session validation on all routes
+5. Test across multiple tabs/devices
+
+**Deliverable**: Zero logouts on refresh
+
+### Phase 2: Database Migration (Days 2-3)
+**Goal**: Replace MemStorage with PostgreSQL
+
+**Tasks**:
+1. Connect to existing PostgreSQL instance
+2. Migrate all MemStorage methods
+3. Update API routes to use database
+4. Add proper error handling
+5. Implement connection pooling
+
+**Deliverable**: All data persists permanently
+
+### Phase 3: Build System Fix (Day 4)
+**Goal**: Successful production deployment
+
+**Tasks**:
+1. Optimize Vite build configuration
+2. Implement code splitting
+3. Reduce bundle size
+4. Add build caching
+5. Test deployment pipeline
+
+**Deliverable**: Sub-5-minute builds
+
+### Phase 4: OAuth Implementation (Days 5-6)
+**Goal**: At least one working social login
+
+**Tasks**:
+1. Implement Twitter OAuth 2.0
+2. Store social data in database
+3. Add verification badges
+4. Handle OAuth errors gracefully
+5. Update profile with social data
+
+**Deliverable**: Real social connections
+
+### Phase 5: Real-time Features (Days 6-7)
+**Goal**: Live leaderboard and XP updates
+
+**Tasks**:
+1. Replace static leaderboard data
+2. Implement real-time queries
+3. Add optimistic UI updates
+4. Cache leaderboard data
+5. Add change indicators
+
+**Deliverable**: Dynamic leaderboard
+
+### Phase 6: Testing & Polish (Day 8)
+**Goal**: Production-ready release
+
+**Tasks**:
+1. End-to-end testing
+2. Load testing
+3. Security audit
+4. Performance optimization
+5. Documentation update
+
+**Deliverable**: Stable MVP ready for users
+
+---
+
+## 7. Technical Implementation Details
+
+### Session Persistence Solution
+```typescript
+// New auth middleware
+export const authMiddleware = async (req, res, next) => {
+  const accessToken = req.cookies.accessToken;
+  const refreshToken = req.cookies.refreshToken;
+  
+  if (!accessToken) {
+    // Try to refresh using refreshToken
+    if (refreshToken) {
+      const newTokens = await refreshAccessToken(refreshToken);
+      if (newTokens) {
+        res.cookie('accessToken', newTokens.accessToken, {
+          httpOnly: true,
+          secure: true,
+          sameSite: 'strict',
+          maxAge: 15 * 60 * 1000 // 15 minutes
+        });
+        req.user = newTokens.user;
+        return next();
+      }
+    }
+    return res.status(401).json({ error: 'Not authenticated' });
+  }
+  
+  // Verify and continue
+  try {
+    const payload = jwt.verify(accessToken, process.env.JWT_SECRET);
+    req.user = payload;
+    next();
+  } catch (error) {
+    // Token expired, try refresh
+    // ... refresh logic
+  }
+};
+```
+
+### Database Migration Example
+```typescript
+// Before (MemStorage)
+class MemStorage {
+  users = new Map();
+  
+  createUser(data) {
+    const user = { id: uuid(), ...data };
+    this.users.set(user.id, user);
+    return user;
+  }
+}
+
+// After (PostgreSQL)
+class DatabaseStorage {
+  async createUser(data) {
+    const user = await db.users.create({
+      data: {
+        id: uuid(),
+        ...data,
+        createdAt: new Date(),
+      }
+    });
+    return user;
+  }
+}
+```
+
+### Build Optimization
+```javascript
+// vite.config.ts updates
+export default defineConfig({
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          'ui-vendor': ['framer-motion', '@radix-ui/react-*'],
+          'utils': ['lodash', 'date-fns']
+        }
+      }
+    },
+    target: 'esnext',
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
+    }
+  }
+});
+```
+
+---
+
+## 8. Risk Mitigation
+
+### Potential Risks & Solutions
+
+1. **Data Loss During Migration**
+   - Solution: Implement dual-write period
+   - Backup MemStorage before migration
+   - Rollback plan ready
+
+2. **OAuth Provider Changes**
+   - Solution: Implement multiple providers
+   - Abstract OAuth logic
+   - Graceful degradation
+
+3. **Performance Degradation**
+   - Solution: Add caching layer
+   - Optimize database queries
+   - Monitor with metrics
+
+4. **Breaking Existing Features**
+   - Solution: Comprehensive test suite
+   - Feature flags for rollout
+   - A/B testing approach
+
+---
+
+## 9. Definition of Done
+
+### Sprint 3 Completion Checklist
+- [ ] Zero 401 errors on page refresh
+- [ ] All user data persists in PostgreSQL
+- [ ] Production build completes in <5 minutes
+- [ ] At least one OAuth provider working
+- [ ] Leaderboard shows real-time data
+- [ ] All existing UI/features still work
+- [ ] Documentation updated
+- [ ] Deployment successful
+
+### Handoff Requirements
+- Database migration scripts
+- Updated API documentation
+- Environment variable list
+- Deployment instructions
+- Rollback procedures
+
+---
+
+## 10. Communication During Sprint
+
+### Daily Standups
+- Quick Replit chat update on blockers
+- Share progress screenshots
+- Flag any architectural decisions needed
+
+### Mid-Sprint Review
+- Day 4: Auth + Database checkpoint
+- Decide on OAuth provider priority
+- Review build optimization results
+
+### End-Sprint Demo
+- Live demonstration of persistence
+- Show OAuth flow
+- Display real-time updates
+- Load test results
+
+---
+
+**Sprint 3 Start Date**: [TBD]
+**Sprint 3 End Date**: [TBD]
+**Primary Focus**: Fix what's broken before adding new features
+**Success Criteria**: A deployable, persistent, authenticated MVP

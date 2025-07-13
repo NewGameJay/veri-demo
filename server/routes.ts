@@ -5,6 +5,7 @@ import { insertUserSchema, insertSocialConnectionSchema, insertTaskSchema, inser
 import "./types";
 import healthRoutes from "./routes/health";
 import { requestTiming, errorTracking } from "./middleware/monitoring";
+import { authMiddleware, optionalAuthMiddleware, generateTokens, setAuthCookies, clearAuthCookies, type AuthenticatedRequest } from "./auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply monitoring middleware
@@ -26,7 +27,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const user = await storage.createUser(userData);
       
-      // Set user session
+      // Generate JWT tokens
+      const { accessToken, refreshToken } = generateTokens(user.id, user.email);
+      
+      // Set auth cookies
+      setAuthCookies(res, accessToken, refreshToken);
+      
+      // Also set legacy session for compatibility
       req.session.userId = user.id;
       
       res.status(201).json(user);
@@ -44,7 +51,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Invalid credentials" });
       }
       
-      // Set user session
+      // Generate JWT tokens
+      const { accessToken, refreshToken } = generateTokens(user.id, user.email);
+      
+      // Set auth cookies
+      setAuthCookies(res, accessToken, refreshToken);
+      
+      // Also set legacy session for compatibility
       req.session.userId = user.id;
       
       res.json(user);
@@ -54,19 +67,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.post("/api/auth/logout", (req, res) => {
+    // Clear JWT cookies
+    clearAuthCookies(res);
+    
+    // Also clear legacy session
     req.session.destroy((err) => {
       if (err) {
-        return res.status(500).json({ message: "Logout failed" });
+        console.error('Session destroy error:', err);
       }
-      // Clear session cookie
       res.clearCookie('connect.sid');
       res.json({ message: "Logged out successfully" });
     });
   });
 
-  app.get("/api/auth/me", async (req, res) => {
+  app.get("/api/auth/me", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
-      const userId = req.session.userId;
+      const userId = req.userId;
       if (!userId) {
         return res.status(401).json({ message: "Not authenticated" });
       }
@@ -82,9 +98,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/auth/complete-onboarding", async (req, res) => {
+  app.post("/api/auth/refresh", async (req, res) => {
     try {
-      const userId = req.session.userId;
+      const refreshToken = req.cookies.refreshToken;
+      if (!refreshToken) {
+        return res.status(401).json({ message: "No refresh token provided" });
+      }
+
+      // This will be handled by authMiddleware, but we can also provide a direct endpoint
+      const { verifyRefreshToken } = await import("./auth");
+      const payload = verifyRefreshToken(refreshToken);
+      
+      if (!payload) {
+        return res.status(401).json({ message: "Invalid refresh token" });
+      }
+
+      const user = await storage.getUser(payload.userId);
+      if (!user) {
+        return res.status(401).json({ message: "User not found" });
+      }
+
+      const { accessToken, refreshToken: newRefreshToken } = generateTokens(user.id, user.email);
+      setAuthCookies(res, accessToken, newRefreshToken);
+
+      res.json({ message: "Token refreshed successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Token refresh failed" });
+    }
+  });
+
+  app.post("/api/auth/complete-onboarding", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = req.userId;
       if (!userId) {
         return res.status(401).json({ message: "Not authenticated" });
       }
@@ -97,9 +142,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/auth/complete-profile", async (req, res) => {
+  app.post("/api/auth/complete-profile", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
-      const userId = req.session.userId;
+      const userId = req.userId;
       if (!userId) {
         return res.status(401).json({ message: "Not authenticated" });
       }
@@ -115,18 +160,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Auth middleware for protected routes
-  const requireAuth = async (req: any, res: any, next: any) => {
-    const userId = req.session.userId;
-    if (!userId) {
-      return res.status(401).json({ message: "Not authenticated" });
-    }
-    req.userId = userId;
-    next();
-  };
-
   // User routes
-  app.get("/api/users/:id", requireAuth, async (req, res) => {
+  app.get("/api/users/:id", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const user = await storage.getUser(id);
@@ -161,7 +196,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/users/:id", requireAuth, async (req, res) => {
+  app.patch("/api/users/:id", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const user = await storage.updateUser(id, req.body);
@@ -172,7 +207,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Social connection routes
-  app.get("/api/social-connections/:userId", requireAuth, async (req, res) => {
+  app.get("/api/social-connections/:userId", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
       const userId = parseInt(req.params.userId);
       const connections = await storage.getSocialConnections(userId);
@@ -182,7 +217,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/social-connections", requireAuth, async (req, res) => {
+  app.post("/api/social-connections", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
       const connectionData = insertSocialConnectionSchema.parse(req.body);
       const connection = await storage.createSocialConnection(connectionData);
@@ -204,7 +239,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/social-connections/:id", requireAuth, async (req, res) => {
+  app.patch("/api/social-connections/:id", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const connection = await storage.updateSocialConnection(id, req.body);
@@ -227,7 +262,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Task routes
-  app.get("/api/tasks/:userId", requireAuth, async (req, res) => {
+  app.get("/api/tasks/:userId", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
       const userId = parseInt(req.params.userId);
       const tasks = await storage.getTasks(userId);
@@ -237,7 +272,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/tasks", requireAuth, async (req, res) => {
+  app.post("/api/tasks", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
       const taskData = insertTaskSchema.parse(req.body);
       const task = await storage.createTask(taskData);
@@ -247,7 +282,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/tasks/:id", requireAuth, async (req, res) => {
+  app.patch("/api/tasks/:id", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const task = await storage.updateTask(id, req.body);
@@ -270,7 +305,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Task verification endpoint for frontend task completion
-  app.post("/api/tasks/verify", requireAuth, async (req, res) => {
+  app.post("/api/tasks/verify", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
       const { taskId, verificationUrl, points, streakBonus } = req.body;
       
@@ -320,7 +355,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Campaign routes
-  app.get("/api/campaigns", requireAuth, async (req, res) => {
+  app.get("/api/campaigns", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
       const campaigns = await storage.getCampaigns();
       res.json(campaigns);
@@ -329,7 +364,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/campaigns", requireAuth, async (req, res) => {
+  app.post("/api/campaigns", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
       const campaignData = insertCampaignSchema.parse({ ...req.body, userId: req.userId });
       const campaign = await storage.createCampaign(campaignData);
@@ -340,7 +375,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Profile routes
-  app.get("/api/profiles/:userId", requireAuth, async (req, res) => {
+  app.get("/api/profiles/:userId", authMiddleware, async (req: AuthenticatedRequest, res) => {
     const userId = parseInt(req.params.userId);
     try {
       const profile = await storage.getProfile(userId);
@@ -350,7 +385,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/profiles", requireAuth, async (req, res) => {
+  app.post("/api/profiles", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
       const profileData = insertProfileSchema.parse({ ...req.body, userId: req.userId });
       const profile = await storage.createProfile(profileData);
@@ -360,7 +395,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/profiles/:id", requireAuth, async (req, res) => {
+  app.patch("/api/profiles/:id", authMiddleware, async (req: AuthenticatedRequest, res) => {
     const id = parseInt(req.params.id);
     try {
       const profile = await storage.updateProfile(id, req.body);

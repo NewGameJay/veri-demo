@@ -1,13 +1,15 @@
 import express, { type Request, Response, NextFunction } from "express";
 import session from "express-session";
+import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
-// Session middleware
+// Session middleware (keeping for backward compatibility during migration)
 app.use(session({
   secret: process.env.SESSION_SECRET || "veri-mvp-secret-key",
   resave: false,
