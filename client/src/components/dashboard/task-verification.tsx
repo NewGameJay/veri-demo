@@ -52,6 +52,21 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
   const availableTasks = [
     {
       id: 0,
+      title: "MVP Demo Test Task",
+      description: "Complete this test task to unlock AI Agent tooling - Perfect for demos and testing!",
+      platform: "demo",
+      icon: Trophy,
+      color: "text-green-400",
+      points: 10000,
+      difficulty: "Easy",
+      estimatedTime: "30 seconds",
+      requirements: ["Enter any URL containing 'test', 'demo', or 'veri'", "Perfect for demos!", "Unlocks AI Agent tooling with 30-day streak"],
+      category: "mvp_demo",
+      brand: "Veri Platform",
+      streakBonus: 30
+    },
+    {
+      id: 1,
       title: "Create Gaming Highlights Reel",
       description: "Create a 60-second highlights reel from your best gaming moments and share it across platforms",
       platform: "youtube",
@@ -66,7 +81,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
       streakBonus: 3
     },
     {
-      id: 1,
+      id: 2,
       title: "Share Gaming Tips & Tricks",
       description: "Share your best gaming tips and strategies with the community across social platforms",
       platform: "twitter",
@@ -81,7 +96,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
       streakBonus: 1
     },
     {
-      id: 2,
+      id: 3,
       title: "Gameplay Livestream",
       description: "Host live gameplay stream on Twitch with interactive audience engagement",
       platform: "twitch",
@@ -95,7 +110,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
       brand: "Lusterlabs.xyz"
     },
     {
-      id: 3,
+      id: 4,
       title: "Short-form Video Teasers",
       description: "Create 2x short-form video teasers for TikTok and YouTube Shorts",
       platform: "tiktok",
@@ -109,7 +124,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
       brand: "Lusterlabs.xyz"
     },
     {
-      id: 4,
+      id: 5,
       title: "Social Media Campaign",
       description: "Create 3x social media posts across Twitter/X, Instagram, and Discord",
       platform: "twitter",
@@ -123,7 +138,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
       brand: "Hyve.gg"
     },
     {
-      id: 5,
+      id: 6,
       title: "Live Gaming Community Stream",
       description: "Host a live gaming stream with community interaction and Q&A session",
       platform: "twitch",
@@ -138,7 +153,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
       streakBonus: 2
     },
     {
-      id: 6,
+      id: 7,
       title: "Gaming Tutorial Creation",
       description: "Create detailed tutorial showing advanced gaming techniques and strategies",
       platform: "youtube",
@@ -153,7 +168,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
       streakBonus: 3
     },
     {
-      id: 7,
+      id: 8,
       title: "Live Event Participation",
       description: "Participate in live gaming event or community stream",
       platform: "community",
