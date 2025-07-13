@@ -265,8 +265,10 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
             setActiveTab("completed");
             
             // Invalidate and refetch user data to trigger VeriScore animation
-            queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
-            queryClient.invalidateQueries({ queryKey: [`/api/tasks/${userId}`] });
+            await queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+            await queryClient.invalidateQueries({ queryKey: [`/api/tasks/${userId}`] });
+            // Force immediate refresh to trigger animation
+            await queryClient.refetchQueries({ queryKey: ['/api/auth/me'] });
           } else {
             throw new Error("Backend verification failed");
           }
@@ -560,8 +562,8 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center space-x-3">
                         <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center group-hover:bg-green-500/30 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 relative">
-                          <task.icon className={`h-4 w-4 ${task.color} group-hover:scale-110 transition-transform duration-300`} />
-                          <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
+                          <CheckCircle2 className="h-4 w-4 text-green-400 group-hover:scale-110 transition-transform duration-300" />
+                          <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </div>
                         <div className="group-hover:translate-x-1 transition-transform duration-300">
                           <h3 className="font-medium text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
@@ -598,7 +600,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
                     
                     {/* Success indicator */}
                     <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                      <div className="w-2 h-2 rounded-full bg-green-400"></div>
                     </div>
                   </div>
                 ))}

@@ -47,9 +47,17 @@ export function VeriScoreCard() {
       // setPreviousScore will be called in onComplete
     }
     
-    // Handle XP changes separately
+    // Handle XP changes separately - trigger particle animation immediately
     if (!isFirstMount.current && activeUser?.xpPoints !== previousXP && activeUser?.xpPoints > 0) {
-      // XP increased - wait for animation
+      const currentXP = activeUser?.xpPoints || 0;
+      const prevXP = previousXP || 0;
+      
+      if (currentXP > prevXP) {
+        // XP increased - show particle animation
+        setShowXPParticles(true);
+        setTimeout(() => setShowXPParticles(false), 1000);
+        setPreviousXP(currentXP);
+      }
     }
   }, [veriScore, previousScore, activeUser?.xpPoints, previousXP]);
   
@@ -133,7 +141,7 @@ export function VeriScoreCard() {
                 {Math.round(animatedScore)}
                 {showParticles && (
                   <div className="particle-burst">
-                    {[...Array(8)].map((_, i) => (
+                    {[...Array(12)].map((_, i) => (
                       <div
                         key={i}
                         className="particle"
@@ -158,7 +166,7 @@ export function VeriScoreCard() {
               {Math.round(animatedXP).toLocaleString()}XP
               {showXPParticles && (
                 <div className="particle-burst">
-                  {[...Array(8)].map((_, i) => (
+                  {[...Array(12)].map((_, i) => (
                     <div
                       key={i}
                       className="particle"
