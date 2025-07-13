@@ -1,0 +1,213 @@
+I'll search for the eval guide in your project knowledge to understand the format that's working well for you.Based on the eval guide format from your project knowledge, here's a comprehensive prompt for Replit to analyze your current Veri MVP:
+
+---
+
+# **Comprehensive Veri MVP Evaluation Request for Replit**
+
+Please provide a thorough evaluation report of the current Veri MVP application following this structured format:
+
+## **1. Executive Summary**
+Provide a bottom-line assessment:
+- **Overall Status**: Does the MVP work? What percentage is functional?
+- **Key Achievements**: List the top 5 things working well
+- **Critical Issues**: List the top 5 blockers or broken features
+- **Recommendation**: Ship ready? Needs critical fixes? Major pivot needed?
+
+## **2. Feature Coverage Analysis**
+
+### **Functional Checklist** (Mark each as ✅ Working, ⚠️ Partial, ❌ Broken)
+Review against the original MVP spec:
+- [ ] **Onboarding Flow**
+  - Website home page
+  - Sign up process
+  - Sign in functionality
+  - Social connection integration
+  
+- [ ] **Profile Builder**
+  - Profile showcase display
+  - Profile selection mechanism
+  - Profile editor functionality
+  - Studio profile builder
+  - Creator profile builder
+  - My agent tool integration
+  
+- [ ] **Dashboard + Creator Tools**
+  - Streak tracking system
+  - Leaderboard functionality
+  - Profile card display
+  - Analytics dashboard
+  
+- [ ] **Engagement Tasks**
+  - Invite a friend feature
+  - P2P points transfer
+  - Task expansion mechanics
+  - Gamified campaign onboarding
+  
+- [ ] **Creator Analytics**
+  - Data visualization
+  - Performance metrics
+  - Engagement tracking
+  
+- [ ] **Global Leaderboard**
+  - Real-time updates
+  - Tier system
+  - Animation effects
+  
+- [ ] **Campaign Creation**
+  - Campaign setup flow
+  - Task creation interface
+  - Submission process
+
+### **Test Scenarios**
+Document specific user flows tested:
+1. New user complete onboarding → first task completion
+2. Creator profile setup → campaign creation
+3. Points earning → leaderboard update
+4. Mobile user complete flow
+5. Edge cases encountered
+
+## **3. Technical Performance Analysis**
+
+### **Speed Metrics**
+- Page load times (initial, subsequent)
+- API response times
+- Animation frame rates
+- Database query performance
+
+### **Scale Testing**
+- Concurrent user handling
+- Data volume limits hit
+- Memory usage patterns
+- API rate limit encounters
+
+### **Error Analysis**
+Provide a comprehensive list of ALL errors encountered:
+```
+Error Type | Frequency | Impact | Location
+Example: TypeError: Cannot read property 'id' | 5x daily | Blocks profile save | ProfileBuilder.tsx:45
+```
+
+## **4. Code Quality Assessment**
+
+### **Architecture Review**
+- Component organization coherence
+- State management patterns
+- API integration approach
+- Database schema effectiveness
+
+### **Code Patterns**
+- Consistent naming conventions?
+- Proper TypeScript usage?
+- Error handling implementation?
+- Performance optimizations present?
+
+### **Technical Debt Inventory**
+List areas needing refactoring with priority:
+1. **P0 - Critical**: [Component/Feature] - [Issue]
+2. **P1 - Important**: [Component/Feature] - [Issue]
+3. **P2 - Nice to have**: [Component/Feature] - [Issue]
+
+## **5. User Experience Validation**
+
+### **UI/UX Consistency**
+- Design system adherence
+- Component reusability
+- Visual hierarchy effectiveness
+- Interaction feedback presence
+
+### **Mobile Experience**
+- Touch target compliance (44px minimum)
+- Responsive breakpoint behavior
+- Gesture support implementation
+- Performance on mobile devices
+
+### **Accessibility Audit**
+- ARIA label implementation
+- Keyboard navigation support
+- Color contrast ratios
+- Screen reader compatibility
+
+## **6. Development History Analysis**
+
+### **Prompt → Output Tracking**
+Create a table of ALL significant prompts given and their results:
+```
+Date | Prompt Summary | Expected Outcome | Actual Result | Success Rate
+Example: 7/10 | "Add glass morphism to cards" | Glass effect on all cards | Only applied to 3/8 components | 40%
+```
+
+### **Feature Evolution**
+Track how features changed through iterations:
+- Original spec → Current implementation gaps
+- Features added beyond spec
+- Features removed or simplified
+- Unexpected behaviors emerged
+
+## **7. Integration Testing Results**
+
+### **External Services**
+- Authentication system status
+- Database connectivity reliability
+- Third-party API integrations
+- File upload/storage functionality
+
+### **Data Flow Validation**
+- User registration → profile creation
+- Task completion → points allocation
+- Points earned → leaderboard update
+- Campaign creation → task distribution
+
+## **8. Current State Screenshots**
+Provide visual evidence of:
+1. Desktop homepage
+2. Mobile responsive view
+3. Dashboard main screen
+4. Profile builder interface
+5. Any broken/error states
+6. Best implemented feature
+7. Worst implemented feature
+
+## **9. Actionable Next Steps**
+
+### **Immediate Fixes** (Before Sprint 3)
+List in priority order with time estimates:
+1. **[Feature]** - [Issue] - [Fix approach] - [2 hours]
+2. **[Feature]** - [Issue] - [Fix approach] - [4 hours]
+
+### **Sprint 3 Recommendations**
+Based on current state analysis:
+- **Must Have**: Critical functionality gaps
+- **Should Have**: UX improvements needed
+- **Could Have**: Nice-to-have enhancements
+- **Won't Have**: Out of scope items
+
+### **Implementation Strategy**
+Recommend the best approach for Sprint 3:
+- Continue building on current codebase?
+- Refactor specific modules?
+- Rebuild certain features?
+- Architecture changes needed?
+
+## **10. Lessons Learned**
+
+### **What Worked Well**
+- Prompting patterns that yielded good results
+- Architectural decisions that paid off
+- Features that exceeded expectations
+
+### **What Didn't Work**
+- Prompting approaches that failed
+- Technical choices causing issues
+- Assumptions that proved wrong
+
+### **Replit-Specific Insights**
+- Platform limitations encountered
+- Workarounds discovered
+- Performance optimizations needed
+- Best practices identified
+
+---
+
+**Additional Context**: We've completed 2 sprints on this Veri MVP. The goal is to understand exactly where we are before Sprint 3 begins. Be brutally honest about what's broken - we need truth not optimism. Include specific line numbers, component names, and technical details where relevant.
+
+**Output Format**: Provide this analysis as a markdown document with clear sections, bullet points, and code snippets where appropriate. Include a final TL;DR summary of "If you could only fix 5 things in Sprint 3, they would be..."
