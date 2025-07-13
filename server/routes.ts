@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertUserSchema, insertSocialConnectionSchema, insertTaskSchema, insertCampaignSchema, insertProfileSchema } from "@shared/schema";
+import { insertUserSchema, insertSocialConnectionSchema, insertTaskSchema, insertCampaignSchema, insertCampaignParticipantSchema, insertProfileSchema } from "@shared/schema";
 import "./types";
 import healthRoutes from "./routes/health";
 import { requestTiming, errorTracking } from "./middleware/monitoring";
@@ -388,13 +388,115 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/campaigns/:id", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const campaign = await storage.getCampaign(id);
+      if (!campaign) {
+        return res.status(404).json({ message: "Campaign not found" });
+      }
+      
+      // Get participants for this campaign
+      const participants = await storage.getCampaignParticipants(id);
+      
+      res.json({
+        ...campaign,
+        participants
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch campaign" });
+    }
+  });
+
   app.post("/api/campaigns", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
       const campaignData = insertCampaignSchema.parse({ ...req.body, userId: req.userId });
       const campaign = await storage.createCampaign(campaignData);
       res.status(201).json(campaign);
     } catch (error) {
+      console.error("Campaign creation error:", error);
       res.status(400).json({ message: "Invalid campaign data" });
+    }
+  });
+
+  app.patch("/api/campaigns/:id", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const campaign = await storage.updateCampaign(id, req.body);
+      res.json(campaign);
+    } catch (error) {
+      res.status(400).json({ message: "Failed to update campaign" });
+    }
+  });
+
+  // Campaign participation routes
+  app.post("/api/campaigns/:id/apply", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const campaignId = parseInt(req.params.id);
+      const { applicationData } = req.body;
+      
+      // Check if user already applied
+      const existing = await storage.getUserCampaignParticipation(req.userId!, campaignId);
+      if (existing) {
+        return res.status(409).json({ message: "Already applied to this campaign" });
+      }
+
+      const participant = await storage.createCampaignParticipant({
+        campaignId,
+        userId: req.userId!,
+        applicationData: JSON.stringify(applicationData)
+      });
+
+      res.status(201).json(participant);
+    } catch (error) {
+      console.error("Campaign application error:", error);
+      res.status(400).json({ message: "Failed to apply to campaign" });
+    }
+  });
+
+  app.post("/api/campaigns/:id/submit", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const campaignId = parseInt(req.params.id);
+      const { submissionData, submissionUrl } = req.body;
+      
+      // Find the user's participation record
+      const participation = await storage.getUserCampaignParticipation(req.userId!, campaignId);
+      if (!participation) {
+        return res.status(404).json({ message: "Not participating in this campaign" });
+      }
+
+      // Update participation with submission
+      const updatedParticipation = await storage.updateCampaignParticipant(participation.id, {
+        submissionData: JSON.stringify(submissionData),
+        submissionUrl,
+        status: "completed",
+        completedAt: new Date()
+      });
+
+      res.json(updatedParticipation);
+    } catch (error) {
+      console.error("Campaign submission error:", error);
+      res.status(400).json({ message: "Failed to submit to campaign" });
+    }
+  });
+
+  app.get("/api/campaigns/:id/participants", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const campaignId = parseInt(req.params.id);
+      const participants = await storage.getCampaignParticipants(campaignId);
+      res.json(participants);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch participants" });
+    }
+  });
+
+  app.get("/api/users/:userId/campaigns", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = parseInt(req.params.userId);
+      const participations = await storage.getUserParticipatedCampaigns(userId);
+      res.json(participations);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch user campaigns" });
     }
   });
 

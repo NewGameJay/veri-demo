@@ -13,6 +13,7 @@ import Analytics from "@/pages/analytics";
 import Leaderboard from "@/pages/leaderboard";
 import AIAgent from "@/pages/ai-agent";
 import Settings from "@/pages/settings";
+import Campaigns from "@/pages/campaigns";
 import OAuthDemo from "@/pages/oauth-demo";
 
 function Router() {
@@ -36,6 +37,7 @@ function Router() {
       <Route path="/analytics" component={Analytics} />
       <Route path="/leaderboard" component={Leaderboard} />
       <Route path="/ai-agent" component={AIAgent} />
+      <Route path="/campaigns" component={Campaigns} />
       <Route path="/settings" component={Settings} />
       <Route path="/oauth-demo" component={OAuthDemo} />
       <Route component={NotFound} />

@@ -67,14 +67,42 @@ export const tasks = pgTable("tasks", {
 
 export const campaigns = pgTable("campaigns", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id").references(() => users.id),
+  userId: integer("user_id").references(() => users.id), // Brand/creator who created the campaign
   title: text("title").notNull(),
   description: text("description"),
-  budget: integer("budget").notNull(),
-  status: text("status").default("active"), // active, paused, completed
+  budget: integer("budget").notNull(), // Total budget in cents
+  rewardPerAction: integer("reward_per_action").notNull(), // Payment per completed action
+  status: text("status").default("active"), // active, paused, completed, draft
+  campaignType: text("campaign_type").notNull(), // content_creation, engagement, review, social_post
   targetAudience: text("target_audience"),
+  requirements: text("requirements"), // JSON string for campaign requirements
+  platforms: text("platforms"), // JSON array of required platforms
+  tags: text("tags"), // JSON array of campaign tags
+  startDate: timestamp("start_date"),
+  endDate: timestamp("end_date"),
+  maxParticipants: integer("max_participants"),
+  currentParticipants: integer("current_participants").default(0),
+  isPublic: boolean("is_public").default(true),
+  verificationRequired: boolean("verification_required").default(true),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Campaign participation tracking
+export const campaignParticipants = pgTable("campaign_participants", {
+  id: serial("id").primaryKey(),
+  campaignId: integer("campaign_id").references(() => campaigns.id),
+  userId: integer("user_id").references(() => users.id),
+  status: text("status").default("applied"), // applied, accepted, rejected, completed, paid
+  applicationData: text("application_data"), // JSON string for application details
+  submissionData: text("submission_data"), // JSON string for submission details
+  submissionUrl: text("submission_url"), // URL to submitted content
+  isVerified: boolean("is_verified").default(false),
+  verificationNotes: text("verification_notes"),
+  earnedAmount: integer("earned_amount").default(0),
+  appliedAt: timestamp("applied_at").defaultNow(),
+  completedAt: timestamp("completed_at"),
+  paidAt: timestamp("paid_at"),
 });
 
 export const profiles = pgTable("profiles", {
@@ -131,7 +159,25 @@ export const insertCampaignSchema = createInsertSchema(campaigns).pick({
   title: true,
   description: true,
   budget: true,
+  rewardPerAction: true,
+  campaignType: true,
   targetAudience: true,
+  requirements: true,
+  platforms: true,
+  tags: true,
+  startDate: true,
+  endDate: true,
+  maxParticipants: true,
+  isPublic: true,
+  verificationRequired: true,
+});
+
+export const insertCampaignParticipantSchema = createInsertSchema(campaignParticipants).pick({
+  campaignId: true,
+  userId: true,
+  applicationData: true,
+  submissionData: true,
+  submissionUrl: true,
 });
 
 export const insertProfileSchema = createInsertSchema(profiles).pick({
@@ -155,5 +201,7 @@ export type Task = typeof tasks.$inferSelect;
 export type InsertTask = z.infer<typeof insertTaskSchema>;
 export type Campaign = typeof campaigns.$inferSelect;
 export type InsertCampaign = z.infer<typeof insertCampaignSchema>;
+export type CampaignParticipant = typeof campaignParticipants.$inferSelect;
+export type InsertCampaignParticipant = z.infer<typeof insertCampaignParticipantSchema>;
 export type Profile = typeof profiles.$inferSelect;
 export type InsertProfile = z.infer<typeof insertProfileSchema>;

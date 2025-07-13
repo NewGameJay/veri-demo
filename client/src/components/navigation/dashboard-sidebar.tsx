@@ -10,6 +10,7 @@ import { ChevronLeft } from 'lucide-react';
 import { ChevronRight } from 'lucide-react';
 import { BarChart } from 'lucide-react';
 import { Settings } from 'lucide-react';
+import { Target } from 'lucide-react';
 import { LogOut } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -68,6 +69,7 @@ export function DashboardSidebar({
     { id: "profile", label: "Profile", icon: User, path: "/profile" },
     { id: "analytics", label: "Analytics", icon: BarChart, path: "/analytics" },
     { id: "leaderboard", label: "Leaderboard", icon: Trophy, path: "/leaderboard" },
+    { id: "campaigns", label: "Campaigns", icon: Target, path: "/campaigns" },
     { id: "ai-agent", label: "AI Agent", icon: Bot, path: "/ai-agent" },
     { id: "settings", label: "Settings", icon: Settings, path: "/settings" },
   ];

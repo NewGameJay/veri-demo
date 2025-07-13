@@ -1,4 +1,4 @@
-import { users, socialConnections, leaderboard, tasks, campaigns, profiles, type User, type InsertUser, type SocialConnection, type InsertSocialConnection, type LeaderboardEntry, type InsertLeaderboardEntry, type Task, type InsertTask, type Campaign, type InsertCampaign, type Profile, type InsertProfile } from "@shared/schema";
+import { users, socialConnections, leaderboard, tasks, campaigns, campaignParticipants, profiles, type User, type InsertUser, type SocialConnection, type InsertSocialConnection, type LeaderboardEntry, type InsertLeaderboardEntry, type Task, type InsertTask, type Campaign, type InsertCampaign, type CampaignParticipant, type InsertCampaignParticipant, type Profile, type InsertProfile } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, sql } from "drizzle-orm";
 
@@ -29,8 +29,16 @@ export interface IStorage {
   
   // Campaign operations
   getCampaigns(userId?: number): Promise<Campaign[]>;
+  getCampaign(id: number): Promise<Campaign | undefined>;
   createCampaign(campaign: InsertCampaign): Promise<Campaign>;
   updateCampaign(id: number, updates: Partial<Campaign>): Promise<Campaign>;
+  
+  // Campaign participation operations
+  getCampaignParticipants(campaignId: number): Promise<CampaignParticipant[]>;
+  getUserCampaignParticipation(userId: number, campaignId: number): Promise<CampaignParticipant | undefined>;
+  createCampaignParticipant(participant: InsertCampaignParticipant): Promise<CampaignParticipant>;
+  updateCampaignParticipant(id: number, updates: Partial<CampaignParticipant>): Promise<CampaignParticipant>;
+  getUserParticipatedCampaigns(userId: number): Promise<CampaignParticipant[]>;
   
   // Profile operations
   getProfile(userId: number): Promise<Profile | undefined>;
@@ -246,6 +254,14 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
+  async getCampaign(id: number): Promise<Campaign | undefined> {
+    const [campaign] = await db
+      .select()
+      .from(campaigns)
+      .where(eq(campaigns.id, id));
+    return campaign || undefined;
+  }
+
   async createCampaign(campaignData: InsertCampaign): Promise<Campaign> {
     const [campaign] = await db
       .insert(campaigns)
@@ -268,6 +284,50 @@ export class DatabaseStorage implements IStorage {
       .where(eq(campaigns.id, id))
       .returning();
     return campaign;
+  }
+
+  // Campaign participation operations
+  async getCampaignParticipants(campaignId: number): Promise<CampaignParticipant[]> {
+    return await db
+      .select()
+      .from(campaignParticipants)
+      .where(eq(campaignParticipants.campaignId, campaignId));
+  }
+
+  async getUserCampaignParticipation(userId: number, campaignId: number): Promise<CampaignParticipant | undefined> {
+    const [participant] = await db
+      .select()
+      .from(campaignParticipants)
+      .where(eq(campaignParticipants.userId, userId))
+      .where(eq(campaignParticipants.campaignId, campaignId));
+    return participant || undefined;
+  }
+
+  async createCampaignParticipant(participantData: InsertCampaignParticipant): Promise<CampaignParticipant> {
+    const [participant] = await db
+      .insert(campaignParticipants)
+      .values({
+        ...participantData,
+        appliedAt: new Date(),
+      })
+      .returning();
+    return participant;
+  }
+
+  async updateCampaignParticipant(id: number, updates: Partial<CampaignParticipant>): Promise<CampaignParticipant> {
+    const [participant] = await db
+      .update(campaignParticipants)
+      .set(updates)
+      .where(eq(campaignParticipants.id, id))
+      .returning();
+    return participant;
+  }
+
+  async getUserParticipatedCampaigns(userId: number): Promise<CampaignParticipant[]> {
+    return await db
+      .select()
+      .from(campaignParticipants)
+      .where(eq(campaignParticipants.userId, userId));
   }
 
   // Profile operations
