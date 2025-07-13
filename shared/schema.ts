@@ -28,9 +28,16 @@ export const socialConnections = pgTable("social_connections", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id),
   platform: text("platform").notNull(), // twitter, youtube, instagram, etc.
+  platformId: text("platform_id"), // User ID on the platform
   platformUsername: text("platform_username").notNull(),
+  displayName: text("display_name"), // Display name on platform
+  followerCount: integer("follower_count").default(0),
+  profileImageUrl: text("profile_image_url"),
   isConnected: boolean("is_connected").default(false),
-  connectionData: text("connection_data"), // JSON string for platform-specific data
+  accessToken: text("access_token"), // OAuth access token
+  refreshToken: text("refresh_token"), // OAuth refresh token
+  expiresAt: timestamp("expires_at"), // Token expiration
+  connectionData: text("connection_data"), // JSON string for additional platform-specific data
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

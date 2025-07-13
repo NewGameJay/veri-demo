@@ -1,36 +1,93 @@
-import { useQuery } from "@tanstack/react-query";
-import { Twitter } from 'lucide-react';
-import { Youtube } from 'lucide-react';
-import { Instagram } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Twitter, Youtube, Instagram, ExternalLink } from 'lucide-react';
 import { GlassCard } from "@/components/ui/glass-card";
 import { CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/auth-context";
 import { VeriSkeleton } from "@/components/ui/veri-skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { handleOAuthConnection, disconnectTwitter, handleOAuthCallback, type SocialConnection } from '@/lib/oauth';
+import { useEffect } from 'react';
 
 export function SocialConnections() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const { data: connections, isLoading } = useQuery({
-    queryKey: ["/api/social-connections", user?.id],
+  const queryClient = useQueryClient();
+  
+  const { data: userData, isLoading } = useQuery({
+    queryKey: ["/api/users", user?.id],
     enabled: !!user?.id,
   });
 
-  const handleSocialConnect = (platform: string) => {
-    // Simulate OAuth flow
-    toast({
-      title: "Connecting to " + platform.charAt(0).toUpperCase() + platform.slice(1),
-      description: "Opening OAuth window...",
-    });
-    
-    // In a real app, this would open OAuth popup
-    setTimeout(() => {
+  // Check for OAuth callback on component mount
+  useEffect(() => {
+    const callbackResult = handleOAuthCallback();
+    if (callbackResult) {
       toast({
-        title: "Connection successful!",
-        description: `Your ${platform} account has been connected.`,
+        title: callbackResult.type === 'success' ? "Connection Successful!" : "Connection Failed",
+        description: callbackResult.message,
+        variant: callbackResult.type === 'error' ? 'destructive' : 'default',
       });
-    }, 2000);
+      
+      // Clear URL parameters
+      const url = new URL(window.location.href);
+      url.searchParams.delete('success');
+      url.searchParams.delete('error');
+      window.history.replaceState({}, document.title, url.toString());
+      
+      // Refresh user data
+      if (callbackResult.type === 'success') {
+        queryClient.invalidateQueries({ queryKey: ["/api/users", user?.id] });
+      }
+    }
+  }, [toast, queryClient, user?.id]);
+
+  const connectMutation = useMutation({
+    mutationFn: handleOAuthConnection,
+    onError: (error) => {
+      toast({
+        title: "Connection Failed",
+        description: error.message || "Failed to connect account",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const disconnectMutation = useMutation({
+    mutationFn: disconnectTwitter,
+    onSuccess: () => {
+      toast({
+        title: "Disconnected",
+        description: "Twitter account disconnected successfully",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/users", user?.id] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Disconnect Failed", 
+        description: error.message || "Failed to disconnect account",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSocialConnect = async (platform: string) => {
+    if (platform === 'twitter') {
+      const connection = userData?.socialConnections?.find((c: SocialConnection) => c.platform === 'twitter');
+      if (connection?.isConnected) {
+        // Disconnect if already connected
+        disconnectMutation.mutate();
+      } else {
+        // Connect if not connected
+        connectMutation.mutate(platform);
+      }
+    } else {
+      // For other platforms, show coming soon message
+      toast({
+        title: "Coming Soon",
+        description: `${platform.charAt(0).toUpperCase() + platform.slice(1)} integration is coming soon!`,
+      });
+    }
   };
 
   if (isLoading) {
@@ -91,13 +148,15 @@ export function SocialConnections() {
       </div>
       
       <div className="space-y-4">
-        {connections?.map((connection: any, index: number) => {
-          const Icon = platformIcons[connection.platform as keyof typeof platformIcons];
-          const bgColor = platformColors[connection.platform as keyof typeof platformColors];
+        {/* Show platform connections */}
+        {['twitter', 'youtube', 'instagram'].map((platform, index) => {
+          const connection = userData?.socialConnections?.find((c: SocialConnection) => c.platform === platform);
+          const Icon = platformIcons[platform as keyof typeof platformIcons];
+          const bgColor = platformColors[platform as keyof typeof platformColors];
           
           return (
             <div 
-              key={connection.id} 
+              key={platform} 
               className="glass-subtle glass-effect-hover p-4 rounded-xl hover-scale animate-slide-in"
               style={{ animationDelay: `${index * 150}ms` }}
             >
@@ -108,23 +167,27 @@ export function SocialConnections() {
                   </div>
                   <div>
                     <div className="text-sm font-inter font-medium text-white">
-                      {connection.platform.charAt(0).toUpperCase() + connection.platform.slice(1)}
+                      {platform.charAt(0).toUpperCase() + platform.slice(1)}
                     </div>
                     <div className="text-xs text-white/60 font-inter">
-                      @{connection.platformUsername || `user_${connection.platform}`}
+                      {connection?.platformUsername ? `@${connection.platformUsername}` : 'Not connected'}
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge 
-                    variant={connection.isConnected ? "default" : "secondary"}
-                    className={`${connection.isConnected ? 'veri-gradient text-white' : 'bg-yellow-500/20 text-yellow-400'} font-inter text-xs cursor-pointer hover:opacity-80 transition-opacity`}
-                    onClick={() => handleSocialConnect(connection.platform)}
+                    variant={connection?.isConnected ? "default" : "secondary"}
+                    className={`${connection?.isConnected ? 'veri-gradient text-white' : 'bg-yellow-500/20 text-yellow-400'} font-inter text-xs cursor-pointer hover:opacity-80 transition-opacity ${
+                      (connectMutation.isPending || disconnectMutation.isPending) && platform === 'twitter' ? 'opacity-50' : ''
+                    }`}
+                    onClick={() => handleSocialConnect(platform)}
                   >
-                    {connection.isConnected ? "Connected" : "Connect"}
+                    {(connectMutation.isPending || disconnectMutation.isPending) && platform === 'twitter' 
+                      ? 'Loading...' 
+                      : connection?.isConnected ? "Disconnect" : "Connect"}
                   </Badge>
                   <div className={`w-3 h-3 rounded-full pulse-glow ${
-                    connection.isConnected ? 'bg-green-400' : 'bg-yellow-400'
+                    connection?.isConnected ? 'bg-green-400' : 'bg-yellow-400'
                   }`}></div>
                 </div>
               </div>

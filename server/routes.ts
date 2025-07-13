@@ -6,6 +6,8 @@ import "./types";
 import healthRoutes from "./routes/health";
 import { requestTiming, errorTracking } from "./middleware/monitoring";
 import { authMiddleware, optionalAuthMiddleware, generateTokens, setAuthCookies, clearAuthCookies, type AuthenticatedRequest } from "./auth";
+import { initiateTwitterLogin, handleTwitterCallback, disconnectTwitter } from "./oauth";
+import { demoTwitterLogin, demoTwitterCallback, demoTwitterDisconnect } from "./oauth-demo";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply monitoring middleware
@@ -160,6 +162,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // OAuth routes - use real OAuth if credentials are available, demo otherwise
+  const useDemo = !process.env.TWITTER_CLIENT_ID || !process.env.TWITTER_CLIENT_SECRET;
+  
+  if (useDemo) {
+    console.log('Using demo OAuth implementation (Twitter credentials not configured)');
+    app.get("/api/auth/twitter/login", authMiddleware, demoTwitterLogin);
+    app.get("/api/auth/twitter/callback", demoTwitterCallback);
+    app.post("/api/auth/twitter/disconnect", authMiddleware, demoTwitterDisconnect);
+  } else {
+    console.log('Using real Twitter OAuth implementation');
+    app.get("/api/auth/twitter/login", authMiddleware, initiateTwitterLogin);
+    app.get("/api/auth/twitter/callback", handleTwitterCallback);
+    app.post("/api/auth/twitter/disconnect", authMiddleware, disconnectTwitter);
+  }
+
   // User routes
   app.get("/api/users/:id", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
@@ -168,7 +185,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      res.json(user);
+      
+      // Also fetch social connections
+      const socialConnections = await storage.getSocialConnections(id);
+      
+      res.json({
+        ...user,
+        socialConnections
+      });
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
     }

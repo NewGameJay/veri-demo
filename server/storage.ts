@@ -12,8 +12,11 @@ export interface IStorage {
   
   // Social connection operations
   getSocialConnections(userId: number): Promise<SocialConnection[]>;
+  getUserSocialConnection(userId: number, platform: string): Promise<SocialConnection | undefined>;
   createSocialConnection(connection: InsertSocialConnection): Promise<SocialConnection>;
   updateSocialConnection(id: number, updates: Partial<SocialConnection>): Promise<SocialConnection>;
+  updateUserSocialConnection(userId: number, connectionData: Partial<SocialConnection> & { platform: string }): Promise<SocialConnection>;
+  removeSocialConnection(userId: number, platform: string): Promise<void>;
   
   // Leaderboard operations
   getLeaderboard(category?: string, limit?: number): Promise<LeaderboardEntry[]>;
@@ -106,6 +109,51 @@ export class DatabaseStorage implements IStorage {
       .where(eq(socialConnections.id, id))
       .returning();
     return connection;
+  }
+
+  async getUserSocialConnection(userId: number, platform: string): Promise<SocialConnection | undefined> {
+    const [connection] = await db
+      .select()
+      .from(socialConnections)
+      .where(eq(socialConnections.userId, userId))
+      .where(eq(socialConnections.platform, platform));
+    return connection || undefined;
+  }
+
+  async updateUserSocialConnection(userId: number, connectionData: Partial<SocialConnection> & { platform: string }): Promise<SocialConnection> {
+    const existing = await this.getUserSocialConnection(userId, connectionData.platform);
+    
+    if (existing) {
+      // Update existing connection
+      const [updated] = await db
+        .update(socialConnections)
+        .set({
+          ...connectionData,
+          updatedAt: new Date(),
+        })
+        .where(eq(socialConnections.id, existing.id))
+        .returning();
+      return updated;
+    } else {
+      // Create new connection
+      const [created] = await db
+        .insert(socialConnections)
+        .values({
+          userId,
+          ...connectionData,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        } as InsertSocialConnection)
+        .returning();
+      return created;
+    }
+  }
+
+  async removeSocialConnection(userId: number, platform: string): Promise<void> {
+    await db
+      .delete(socialConnections)
+      .where(eq(socialConnections.userId, userId))
+      .where(eq(socialConnections.platform, platform));
   }
 
   // Leaderboard operations
