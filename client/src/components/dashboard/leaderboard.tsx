@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { TrendingUp, TrendingDown, Minus, Globe, Gamepad2, Heart, Laptop, Crown, Award, Medal } from "lucide-react";
 import { useState, useEffect } from "react";
 import { LeaderboardSkeleton } from "@/components/ui/veri-skeleton";
 
@@ -9,6 +10,14 @@ export function Leaderboard() {
     queryKey: ["/api/leaderboard"],
   });
   const [previousRanks, setPreviousRanks] = useState<Record<number, number>>({});
+  const [selectedCategory, setSelectedCategory] = useState<string>("global");
+
+  const categories = [
+    { id: "global", name: "Global", icon: Globe },
+    { id: "gaming", name: "Gaming", icon: Gamepad2 },
+    { id: "lifestyle", name: "Lifestyle", icon: Heart },
+    { id: "tech", name: "Tech", icon: Laptop },
+  ];
 
   if (isLoading) {
     return <LeaderboardSkeleton />;
@@ -23,10 +32,17 @@ export function Leaderboard() {
     }
   };
 
+  const getBadgeInfo = (rank: number, score: number) => {
+    if (score >= 90) return { tier: "Diamond", icon: Crown, color: "text-cyan-400", bgColor: "bg-cyan-500/20" };
+    if (score >= 70) return { tier: "Platinum", icon: Award, color: "text-purple-400", bgColor: "bg-purple-500/20" };
+    if (score >= 50) return { tier: "Gold", icon: Medal, color: "text-yellow-400", bgColor: "bg-yellow-500/20" };
+    return { tier: "Silver", icon: Medal, color: "text-gray-400", bgColor: "bg-gray-500/20" };
+  };
+
   const sampleUsers = [
-    { id: 2, name: "Alex Kim", category: "Gaming • Veri+ Creator", initials: "AK", color: "bg-purple-500", rankChange: 2 },
-    { id: 3, name: "Maria Johnson", category: "Lifestyle • Top 10%", initials: "MJ", color: "bg-blue-500", rankChange: -1 },
-    { id: 1, name: "Sam Huber", category: "Tech • Veri+ Creator", initials: "SH", color: "bg-purple-500", rankChange: 0 },
+    { id: 2, name: "Alex Kim", category: "Gaming • Diamond Tier", initials: "AK", color: "bg-purple-500", rankChange: 2, primaryCategory: "gaming" },
+    { id: 3, name: "Maria Johnson", category: "Lifestyle • Platinum Tier", initials: "MJ", color: "bg-blue-500", rankChange: -1, primaryCategory: "lifestyle" },
+    { id: 1, name: "Sam Huber", category: "Tech • Diamond Tier", initials: "SH", color: "bg-purple-500", rankChange: 0, primaryCategory: "tech" },
   ];
   
   const getRankChangeIcon = (change: number) => {
@@ -41,16 +57,47 @@ export function Leaderboard() {
     return "—";
   };
 
+  const filteredLeaderboard = leaderboard?.filter((entry: any) => {
+    if (selectedCategory === "global") return true;
+    const user = sampleUsers.find(u => u.id === entry.userId);
+    return user?.primaryCategory === selectedCategory;
+  });
+
   return (
     <div className="glass-medium glass-effect-hover rounded-xl p-6 lg:col-span-2">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">Live Leaderboard</h3>
           <div className="pulse-ring w-3 h-3 bg-green-500 rounded-full" aria-label="Live updates active"></div>
         </div>
+        
+        {/* Category Filter */}
+        <div className="flex flex-wrap gap-2 mb-6">
+          {categories.map((category) => {
+            const Icon = category.icon;
+            return (
+              <Button
+                key={category.id}
+                variant={selectedCategory === category.id ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedCategory(category.id)}
+                className={`flex items-center gap-2 ${
+                  selectedCategory === category.id 
+                    ? "veri-gradient text-white" 
+                    : "border-white/20 text-white/70 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {category.name}
+              </Button>
+            );
+          })}
+        </div>
         <div className="space-y-3" role="list" aria-label="VeriScore leaderboard rankings">
-          {leaderboard?.map((entry: any, index: number) => {
+          {filteredLeaderboard?.map((entry: any, index: number) => {
             const user = sampleUsers.find(u => u.id === entry.userId);
             const isCurrentUser = entry.userId === 1;
+            const badgeInfo = getBadgeInfo(entry.rank, entry.score);
+            const BadgeIcon = badgeInfo.icon;
             
             return (
               <div
@@ -80,7 +127,13 @@ export function Leaderboard() {
                   {user?.initials}
                 </div>
                 <div className="flex-1">
-                  <div className="font-medium text-white">{user?.name}{isCurrentUser && <span className="sr-only"> (You)</span>}</div>
+                  <div className="flex items-center gap-2">
+                    <div className="font-medium text-white">{user?.name}{isCurrentUser && <span className="sr-only"> (You)</span>}</div>
+                    <div className={`flex items-center gap-1 px-2 py-1 rounded-full ${badgeInfo.bgColor}`}>
+                      <BadgeIcon className={`w-3 h-3 ${badgeInfo.color}`} />
+                      <span className={`text-xs font-medium ${badgeInfo.color}`}>{badgeInfo.tier}</span>
+                    </div>
+                  </div>
                   <div className="text-xs text-white/60">{user?.category}</div>
                 </div>
                 <div className="flex items-center gap-2">

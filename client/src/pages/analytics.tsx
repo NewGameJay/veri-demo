@@ -1,15 +1,75 @@
 import { useState } from "react";
-import { BarChart, TrendingUp, Users, Eye, DollarSign, Calendar } from "lucide-react";
+import { BarChart, TrendingUp, Users, Eye, DollarSign, Calendar, Star, Play, ThumbsUp, Share2, Twitter, Instagram, Youtube, TrendingDown } from "lucide-react";
 import { Header } from "@/components/navigation/header";
 import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 
 export default function Analytics() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [timeRange, setTimeRange] = useState("7d");
+
+  const topContent = [
+    {
+      id: 1,
+      title: "Building the Future of Creator Economy",
+      platform: "twitter",
+      icon: Twitter,
+      engagement: 12500,
+      views: 45200,
+      likes: 890,
+      shares: 156,
+      revenue: "$234",
+      change: "+24%",
+      trend: "up",
+      date: "2 days ago"
+    },
+    {
+      id: 2,
+      title: "Gaming Setup Tour 2024",
+      platform: "youtube",
+      icon: Youtube,
+      engagement: 8900,
+      views: 23400,
+      likes: 1200,
+      shares: 89,
+      revenue: "$567",
+      change: "+18%",
+      trend: "up",
+      date: "1 week ago"
+    },
+    {
+      id: 3,
+      title: "Tech Review: Latest AI Tools",
+      platform: "instagram",
+      icon: Instagram,
+      engagement: 6700,
+      views: 18900,
+      likes: 945,
+      shares: 67,
+      revenue: "$189",
+      change: "-5%",
+      trend: "down",
+      date: "3 days ago"
+    },
+    {
+      id: 4,
+      title: "Morning Routine for Creators",
+      platform: "youtube",
+      icon: Youtube,
+      engagement: 5400,
+      views: 15600,
+      likes: 723,
+      shares: 45,
+      revenue: "$123",
+      change: "+12%",
+      trend: "up",
+      date: "1 week ago"
+    }
+  ];
 
   const stats = [
     {
@@ -66,7 +126,7 @@ export default function Analytics() {
           <div className="flex items-center justify-between mb-8">
             <h1 className="text-3xl font-bold text-white">Analytics</h1>
             <div className="flex gap-2">
-              {["24h", "7d", "30d", "90d"].map((range) => (
+              {["7d", "30d", "90d"].map((range) => (
                 <Button
                   key={range}
                   variant={timeRange === range ? "default" : "outline"}
@@ -175,6 +235,85 @@ export default function Analytics() {
               </CardContent>
             </Card>
           </div>
+
+          {/* Top Performing Content */}
+          <Card className="glass-medium border-white/20 mt-8">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <Star className="w-5 h-5" />
+                Top Performing Content
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {topContent.map((content, index) => {
+                  const Icon = content.icon;
+                  return (
+                    <motion.div
+                      key={content.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300"
+                    >
+                      <div className="flex-shrink-0">
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                          content.platform === 'twitter' ? 'bg-blue-500/20' :
+                          content.platform === 'instagram' ? 'bg-pink-500/20' :
+                          'bg-red-500/20'
+                        }`}>
+                          <Icon className={`w-6 h-6 ${
+                            content.platform === 'twitter' ? 'text-blue-400' :
+                            content.platform === 'instagram' ? 'text-pink-400' :
+                            'text-red-400'
+                          }`} />
+                        </div>
+                      </div>
+                      
+                      <div className="flex-1">
+                        <h3 className="font-medium text-white mb-1">{content.title}</h3>
+                        <div className="flex items-center gap-4 text-sm text-white/60">
+                          <span className="flex items-center gap-1">
+                            <Eye className="w-4 h-4" />
+                            {content.views.toLocaleString()}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <ThumbsUp className="w-4 h-4" />
+                            {content.likes.toLocaleString()}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Share2 className="w-4 h-4" />
+                            {content.shares}
+                          </span>
+                          <span className="text-white/40">•</span>
+                          <span>{content.date}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-3">
+                        <div className="text-right">
+                          <div className="font-bold text-white">{content.revenue}</div>
+                          <div className="text-xs text-white/60">Revenue</div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          {content.trend === 'up' ? (
+                            <TrendingUp className="w-4 h-4 text-green-400" />
+                          ) : (
+                            <TrendingDown className="w-4 h-4 text-red-400" />
+                          )}
+                          <span className={`text-sm font-medium ${
+                            content.trend === 'up' ? 'text-green-400' : 'text-red-400'
+                          }`}>
+                            {content.change}
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Recent Activity */}
           <Card className="glass-medium border-white/20 mt-8">
