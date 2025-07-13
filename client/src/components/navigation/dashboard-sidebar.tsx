@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Home, User, Trophy, Bot, Pin, PinOff, ChevronLeft, ChevronRight, BarChart, Settings, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useLocation, useRoute } from "wouter";
 import { useAuth } from "@/contexts/auth-context";
+import { triggerHaptic } from "@/lib/haptic";
 
 interface DashboardSidebarProps {
   isOpen: boolean;
@@ -28,6 +29,29 @@ export function DashboardSidebar({
   const { user, logout } = useAuth();
   const [activeItem, setActiveItem] = useState("dashboard");
 
+  // Keyboard navigation support
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isOpen) return;
+      
+      if (e.key === 'Escape') {
+        onClose();
+      }
+      
+      // Alt + number shortcuts for navigation
+      if (e.altKey && e.key >= '1' && e.key <= '6') {
+        e.preventDefault();
+        const index = parseInt(e.key) - 1;
+        if (menuItems[index]) {
+          handleNavigation(menuItems[index]);
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: Home, path: "/dashboard" },
     { id: "profile", label: "Profile", icon: User, path: "/profile" },
@@ -38,6 +62,7 @@ export function DashboardSidebar({
   ];
 
   const handleNavigation = (item: typeof menuItems[0]) => {
+    triggerHaptic("light");
     setActiveItem(item.id);
     setLocation(item.path);
     if (!isPinned) {
@@ -46,6 +71,7 @@ export function DashboardSidebar({
   };
 
   const handleLogout = async () => {
+    triggerHaptic("warning");
     try {
       await logout();
       // Navigation will be handled by the logout function
@@ -73,8 +99,10 @@ export function DashboardSidebar({
             variant="ghost"
             size="icon"
             onClick={onToggleCollapse}
-            className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 hover-scale"
+            className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 hover-scale touch-manipulation"
             title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            haptic="light"
           >
             {isCollapsed ? (
               <ChevronRight className="w-4 h-4 text-white/60" />
@@ -88,8 +116,10 @@ export function DashboardSidebar({
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 hover-scale"
+              className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 hover-scale touch-manipulation"
               title="Close sidebar"
+              aria-label="Close sidebar"
+              haptic="light"
             >
               <X className="w-5 h-5" />
             </Button>
@@ -101,7 +131,7 @@ export function DashboardSidebar({
 
       <div className="space-y-6">
         {/* Enhanced Navigation with Animations */}
-        <nav className="space-y-2">
+        <nav className="space-y-2" role="navigation" aria-label="Main navigation">
           {menuItems.map((item, index) => {
             const Icon = item.icon;
             return (
@@ -110,16 +140,23 @@ export function DashboardSidebar({
                 variant="ghost"
                 onClick={() => handleNavigation(item)}
                 className={cn(
-                  "w-full p-3 glass-subtle rounded-xl transition-all duration-300 hover-scale font-inter",
+                  "w-full p-3 glass-subtle rounded-xl transition-all duration-300 hover-scale font-inter touch-manipulation",
                   isCollapsed ? "justify-center" : "justify-start gap-3",
                   location === item.path && "veri-gradient text-white shadow-lg",
-                  "animate-slide-in"
+                  "animate-slide-in",
+                  "focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
                 )}
                 style={{ animationDelay: `${index * 100}ms` }}
-                title={isCollapsed ? item.label : undefined}
+                title={isCollapsed ? `${item.label} (Alt+${index + 1})` : `Alt+${index + 1}`}
+                aria-label={`Navigate to ${item.label}`}
+                aria-current={location === item.path ? "page" : undefined}
+                haptic="light"
               >
                 <Icon className="w-5 h-5" />
                 {!isCollapsed && <span className="font-medium">{item.label}</span>}
+                {!isCollapsed && (
+                  <span className="sr-only">Press Alt+{index + 1} for keyboard shortcut</span>
+                )}
               </Button>
             );
           })}
@@ -131,10 +168,13 @@ export function DashboardSidebar({
             variant="ghost"
             onClick={handleLogout}
             className={cn(
-              "w-full p-3 glass-subtle rounded-xl transition-all duration-300 hover-scale font-inter text-red-400 hover:text-red-300",
-              isCollapsed ? "justify-center" : "justify-start gap-3"
+              "w-full p-3 glass-subtle rounded-xl transition-all duration-300 hover-scale font-inter text-red-400 hover:text-red-300 touch-manipulation",
+              isCollapsed ? "justify-center" : "justify-start gap-3",
+              "focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2"
             )}
             title={isCollapsed ? "Log out" : undefined}
+            aria-label="Log out of your account"
+            haptic="warning"
           >
             <LogOut className="w-5 h-5" />
             {!isCollapsed && <span className="font-medium">Log out</span>}

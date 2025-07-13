@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { TaskSkeleton } from "@/components/ui/veri-skeleton";
 import { useQuery } from "@tanstack/react-query";
+import { triggerHaptic } from "@/lib/haptic";
 import type { Task } from "@shared/schema";
 import { 
   CheckCircle2, 
@@ -185,6 +186,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
     .sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
 
   const handleStartTask = (task: any) => {
+    triggerHaptic("light");
     setSelectedTask(task);
     toast({
       title: "Task started!",
@@ -194,6 +196,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
 
   const handleVerifyTask = async () => {
     if (!verificationUrl.trim()) {
+      triggerHaptic("error");
       toast({
         title: "URL required",
         description: "Please provide a URL to verify your task completion",
@@ -238,6 +241,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
           
           const result = await response.json();
           if (result.success) {
+            triggerHaptic("success");
             toast({
               title: "Task verified!",
               description: `Great work! You've earned ${selectedTask.points} XP points.`,
@@ -255,6 +259,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
           }
         } catch (backendError) {
           console.error("Backend verification error:", backendError);
+          triggerHaptic("error");
           toast({
             title: "Verification error",
             description: "Task verified but failed to update backend. Please refresh the page.",
@@ -262,6 +267,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
           });
         }
       } else {
+        triggerHaptic("error");
         toast({
           title: "Verification failed",
           description: selectedTask?.id === 0 ? 

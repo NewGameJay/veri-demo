@@ -45,9 +45,9 @@ export function Leaderboard() {
     <div className="glass-medium glass-effect-hover rounded-xl p-6 lg:col-span-2">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">Live Leaderboard</h3>
-          <div className="pulse-ring w-3 h-3 bg-green-500 rounded-full"></div>
+          <div className="pulse-ring w-3 h-3 bg-green-500 rounded-full" aria-label="Live updates active"></div>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-3" role="list" aria-label="VeriScore leaderboard rankings">
           {leaderboard?.map((entry: any, index: number) => {
             const user = sampleUsers.find(u => u.id === entry.userId);
             const isCurrentUser = entry.userId === 1;
@@ -55,7 +55,8 @@ export function Leaderboard() {
             return (
               <div
                 key={entry.id}
-                className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-500 hover-scale ${
+                role="listitem"
+                className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-500 hover-scale touch-manipulation ${
                   isCurrentUser 
                     ? 'bg-green-500/20 border border-green-500/30' 
                     : 'bg-white/5'
@@ -64,19 +65,26 @@ export function Leaderboard() {
                   animationDelay: `${index * 100}ms`,
                   animation: 'slideIn 0.6s ease-out forwards'
                 }}
+                aria-label={`${user?.name} ranked ${entry.rank} with ${entry.score} points${isCurrentUser ? ' (You)' : ''}`}
               >
-                <div className={`w-8 h-8 ${getRankColor(entry.rank)} rounded-full flex items-center justify-center font-bold text-sm text-white`}>
+                <div 
+                  className={`w-8 h-8 ${getRankColor(entry.rank)} rounded-full flex items-center justify-center font-bold text-sm text-white`}
+                  aria-label={`Rank ${entry.rank}`}
+                >
                   {entry.rank}
                 </div>
-                <div className={`w-8 h-8 ${user?.color} rounded-full flex items-center justify-center font-bold text-xs text-white`}>
+                <div 
+                  className={`w-8 h-8 ${user?.color} rounded-full flex items-center justify-center font-bold text-xs text-white`}
+                  aria-label={`${user?.name} avatar`}
+                >
                   {user?.initials}
                 </div>
                 <div className="flex-1">
-                  <div className="font-medium text-white">{user?.name}</div>
+                  <div className="font-medium text-white">{user?.name}{isCurrentUser && <span className="sr-only"> (You)</span>}</div>
                   <div className="text-xs text-white/60">{user?.category}</div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1" aria-label={`Rank change: ${getRankChangeText(user?.rankChange || 0)}`}>
                     {getRankChangeIcon(user?.rankChange || 0)}
                     <span className={`text-xs font-medium ${
                       user?.rankChange > 0 ? 'text-green-400' : 
@@ -87,7 +95,7 @@ export function Leaderboard() {
                     </span>
                   </div>
                   <div className="text-right">
-                    <div className="font-bold text-white">{entry.score}</div>
+                    <div className="font-bold text-white" aria-label={`${entry.score} VeriScore points`}>{entry.score}</div>
                     <div className="text-xs text-green-500">+{Math.floor(Math.random() * 20)}</div>
                   </div>
                 </div>

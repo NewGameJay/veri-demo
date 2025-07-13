@@ -76,7 +76,7 @@ export default function Leaderboard() {
           </div>
 
           {/* Category Tabs */}
-          <div className="flex gap-2 mb-8 overflow-x-auto">
+          <div className="flex gap-2 mb-8 overflow-x-auto" role="tablist" aria-label="Leaderboard categories">
             {categories.map((category) => {
               const Icon = category.icon;
               return (
@@ -85,6 +85,10 @@ export default function Leaderboard() {
                   variant={activeCategory === category.id ? "default" : "outline"}
                   onClick={() => setActiveCategory(category.id)}
                   className={activeCategory === category.id ? "veri-gradient text-white" : "border-white/20 text-white"}
+                  role="tab"
+                  aria-selected={activeCategory === category.id}
+                  aria-controls={`${category.id}-leaderboard`}
+                  haptic="light"
                 >
                   <Icon className="w-4 h-4 mr-2" />
                   {category.label}
