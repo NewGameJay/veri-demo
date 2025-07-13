@@ -35,6 +35,227 @@ export interface IStorage {
   updateProfile(id: number, updates: Partial<Profile>): Promise<Profile>;
 }
 
+export class DatabaseStorage implements IStorage {
+  // User operations
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user || undefined;
+  }
+
+  async createUser(userData: InsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values({
+        ...userData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning();
+    return user;
+  }
+
+  async updateUser(id: number, updates: Partial<User>): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({
+        ...updates,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, id))
+      .returning();
+    return user;
+  }
+
+  // Social connection operations
+  async getSocialConnections(userId: number): Promise<SocialConnection[]> {
+    return await db
+      .select()
+      .from(socialConnections)
+      .where(eq(socialConnections.userId, userId));
+  }
+
+  async createSocialConnection(connectionData: InsertSocialConnection): Promise<SocialConnection> {
+    const [connection] = await db
+      .insert(socialConnections)
+      .values({
+        ...connectionData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning();
+    return connection;
+  }
+
+  async updateSocialConnection(id: number, updates: Partial<SocialConnection>): Promise<SocialConnection> {
+    const [connection] = await db
+      .update(socialConnections)
+      .set({
+        ...updates,
+        updatedAt: new Date(),
+      })
+      .where(eq(socialConnections.id, id))
+      .returning();
+    return connection;
+  }
+
+  // Leaderboard operations
+  async getLeaderboard(category = "global", limit = 100): Promise<LeaderboardEntry[]> {
+    return await db
+      .select()
+      .from(leaderboard)
+      .where(eq(leaderboard.category, category))
+      .orderBy(desc(leaderboard.score))
+      .limit(limit);
+  }
+
+  async updateLeaderboard(entry: InsertLeaderboardEntry): Promise<LeaderboardEntry> {
+    // First check if entry exists
+    const existing = await db
+      .select()
+      .from(leaderboard)
+      .where(eq(leaderboard.userId, entry.userId!))
+      .where(eq(leaderboard.category, entry.category || "global"));
+
+    if (existing.length > 0) {
+      // Update existing entry
+      const [updated] = await db
+        .update(leaderboard)
+        .set({
+          ...entry,
+          updatedAt: new Date(),
+        })
+        .where(eq(leaderboard.id, existing[0].id))
+        .returning();
+      return updated;
+    } else {
+      // Create new entry
+      const [created] = await db
+        .insert(leaderboard)
+        .values({
+          ...entry,
+          updatedAt: new Date(),
+        })
+        .returning();
+      return created;
+    }
+  }
+
+  // Task operations
+  async getTasks(userId: number): Promise<Task[]> {
+    return await db
+      .select()
+      .from(tasks)
+      .where(eq(tasks.userId, userId))
+      .orderBy(desc(tasks.createdAt));
+  }
+
+  async createTask(taskData: InsertTask): Promise<Task> {
+    const [task] = await db
+      .insert(tasks)
+      .values({
+        ...taskData,
+        createdAt: new Date(),
+      })
+      .returning();
+    return task;
+  }
+
+  async updateTask(id: number, updates: Partial<Task>): Promise<Task> {
+    const [task] = await db
+      .update(tasks)
+      .set({
+        ...updates,
+        completedAt: updates.isCompleted ? new Date() : undefined,
+      })
+      .where(eq(tasks.id, id))
+      .returning();
+    return task;
+  }
+
+  // Campaign operations
+  async getCampaigns(userId?: number): Promise<Campaign[]> {
+    if (userId) {
+      return await db
+        .select()
+        .from(campaigns)
+        .where(eq(campaigns.userId, userId))
+        .orderBy(desc(campaigns.createdAt));
+    } else {
+      return await db
+        .select()
+        .from(campaigns)
+        .orderBy(desc(campaigns.createdAt));
+    }
+  }
+
+  async createCampaign(campaignData: InsertCampaign): Promise<Campaign> {
+    const [campaign] = await db
+      .insert(campaigns)
+      .values({
+        ...campaignData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning();
+    return campaign;
+  }
+
+  async updateCampaign(id: number, updates: Partial<Campaign>): Promise<Campaign> {
+    const [campaign] = await db
+      .update(campaigns)
+      .set({
+        ...updates,
+        updatedAt: new Date(),
+      })
+      .where(eq(campaigns.id, id))
+      .returning();
+    return campaign;
+  }
+
+  // Profile operations
+  async getProfile(userId: number): Promise<Profile | undefined> {
+    const [profile] = await db
+      .select()
+      .from(profiles)
+      .where(eq(profiles.userId, userId));
+    return profile || undefined;
+  }
+
+  async createProfile(profileData: InsertProfile): Promise<Profile> {
+    const [profile] = await db
+      .insert(profiles)
+      .values({
+        ...profileData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning();
+    return profile;
+  }
+
+  async updateProfile(id: number, updates: Partial<Profile>): Promise<Profile> {
+    const [profile] = await db
+      .update(profiles)
+      .set({
+        ...updates,
+        updatedAt: new Date(),
+      })
+      .where(eq(profiles.id, id))
+      .returning();
+    return profile;
+  }
+}
+
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private socialConnections: Map<number, SocialConnection>;
