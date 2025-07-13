@@ -191,3 +191,9 @@ The application is designed to scale from MVP to full marketplace functionality,
   - Particle burst animations (blue dots) now trigger immediately when XP points increase
   - Fixed query invalidation to ensure VeriScore and XP update in real-time after task completion
   - User's VeriScore is now at 100/100 (maximum) and XP at 775 points
+- ✅ Fixed critical functionality issues (July 11, 2025):
+  - Fixed logout functionality - properly clears session, cookies, localStorage, and query cache
+  - Fixed light mode toggle in settings - now properly connects to theme context and persists
+  - Fixed account switching stability - clears all user data and prevents account data leakage
+  - Enhanced session termination with complete cleanup for secure account switching
+  - Settings dark mode toggle now shows toast notification and updates immediately

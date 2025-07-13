@@ -204,24 +204,7 @@ export function VeriScoreCard() {
             <p className="text-green-400 font-inter">Creator & Influencer</p>
           </div>
 
-          {/* Debug Button - Remove after testing */}
-          <div className="mt-4 text-center">
-            <button
-              onClick={() => {
-                console.log('Manual trigger - setting particles to true');
-                setShowParticles(true);
-                setShowXPParticles(true);
-                setTimeout(() => {
-                  console.log('Manual trigger - setting particles to false');
-                  setShowParticles(false);
-                  setShowXPParticles(false);
-                }, 1000);
-              }}
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm"
-            >
-              Test Particle Animation
-            </button>
-          </div>
+
         </CardContent>
       </Card>
     </div>

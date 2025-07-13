@@ -45,9 +45,15 @@ export function DashboardSidebar({
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    setLocation("/");
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // Navigation will be handled by the logout function
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Fallback navigation if logout fails
+      setLocation("/");
+    }
   };
 
   return (

@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { User } from "@shared/schema";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 
 interface AuthContextType {
   user: User | null;
@@ -72,8 +72,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await apiRequest("POST", "/api/auth/logout");
       setUser(null);
+      // Clear all cached queries to prevent data leakage between accounts
+      queryClient.clear();
+      // Clear local storage to remove any persisted data
+      localStorage.clear();
+      // Force a page refresh to ensure clean state
+      window.location.href = "/";
     } catch (error) {
       console.error("Logout error:", error);
+      // Even if logout fails, clear local state and redirect
+      setUser(null);
+      queryClient.clear();
+      localStorage.clear();
+      window.location.href = "/";
     }
   };
 

@@ -58,6 +58,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (err) {
         return res.status(500).json({ message: "Logout failed" });
       }
+      // Clear session cookie
+      res.clearCookie('connect.sid');
       res.json({ message: "Logged out successfully" });
     });
   });

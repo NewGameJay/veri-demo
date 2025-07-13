@@ -7,11 +7,13 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { useTheme } from "@/contexts/theme-context";
 
 export default function Settings() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
   
   const [settings, setSettings] = useState({
     notifications: {
@@ -27,7 +29,6 @@ export default function Settings() {
       showStats: false,
     },
     appearance: {
-      darkMode: true,
       compactView: false,
     }
   });
@@ -204,13 +205,14 @@ export default function Settings() {
                   </Label>
                   <Switch
                     id="dark-mode"
-                    checked={settings.appearance.darkMode}
-                    onCheckedChange={(checked) => 
-                      setSettings({
-                        ...settings,
-                        appearance: { ...settings.appearance, darkMode: checked }
-                      })
-                    }
+                    checked={theme === "dark"}
+                    onCheckedChange={(checked) => {
+                      setTheme(checked ? "dark" : "light");
+                      toast({
+                        title: "Theme Updated",
+                        description: `Switched to ${checked ? "dark" : "light"} mode`,
+                      });
+                    }}
                   />
                 </div>
                 
