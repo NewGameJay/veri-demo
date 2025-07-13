@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowRight, Check, Star, User, BarChart3, Sparkles, ChevronRight } from "lucide-react";
+import { ArrowRight, Check, Star, User, BarChart3, Sparkles, ChevronRight, Twitter, Instagram, Youtube } from 'lucide-react';
 import { Header } from "@/components/navigation/header";
 import { MobileNav } from "@/components/navigation/mobile-nav";
 import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
@@ -8,7 +8,6 @@ import { AuthModal } from "@/components/auth/auth-modal";
 import { Button } from "@/components/ui/button";
 import { VeriLogo } from "@/components/ui/veri-logo";
 import { Card } from "@/components/ui/card";
-import { Twitter, Instagram, Youtube } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import { motion } from "framer-motion";
 

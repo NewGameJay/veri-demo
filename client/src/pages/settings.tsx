@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { Settings as SettingsIcon, Bell, Shield, Palette, Globe, CreditCard } from "lucide-react";
+import { Settings as SettingsIcon } from 'lucide-react';
+import { Bell } from 'lucide-react';
+import { Shield } from 'lucide-react';
+import { Palette } from 'lucide-react';
+import { Globe } from 'lucide-react';
+import { CreditCard } from 'lucide-react';
 import { Header } from "@/components/navigation/header";
 import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";

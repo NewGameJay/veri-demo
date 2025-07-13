@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { User, Camera, Twitter, Instagram, Youtube, Save, Plus } from "lucide-react";
+import { User } from 'lucide-react';
+import { Camera } from 'lucide-react';
+import { Twitter } from 'lucide-react';
+import { Instagram } from 'lucide-react';
+import { Youtube } from 'lucide-react';
+import { Save } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Header } from "@/components/navigation/header";
 import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
 import { Button } from "@/components/ui/button";

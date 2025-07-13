@@ -6,32 +6,30 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Brain, 
-  Zap, 
-  TrendingUp,
-  Video,
-  Search,
-  DollarSign,
-  Coins,
-  Gamepad2,
-  Lock,
-  Sparkles,
-  Clock,
-  Target,
-  BarChart3,
-  Upload,
-  RefreshCw,
-  AlertCircle,
-  CheckCircle2,
-  ArrowRight,
-  Trophy,
-  Scissors,
-  Lightbulb,
-  Shield,
-  Gem,
-  Rocket
-} from "lucide-react";
+import { Brain } from 'lucide-react';
+import { Zap } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
+import { Video } from 'lucide-react';
+import { Search } from 'lucide-react';
+import { DollarSign } from 'lucide-react';
+import { Coins } from 'lucide-react';
+import { Gamepad2 } from 'lucide-react';
+import { Lock } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
+import { Clock } from 'lucide-react';
+import { Target } from 'lucide-react';
+import { BarChart3 } from 'lucide-react';
+import { Upload } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { Trophy } from 'lucide-react';
+import { Scissors } from 'lucide-react';
+import { Lightbulb } from 'lucide-react';
+import { Shield } from 'lucide-react';
+import { Gem } from 'lucide-react';
+import { Rocket } from 'lucide-react';
 
 interface AIAgentsProps {
   userPoints: number;

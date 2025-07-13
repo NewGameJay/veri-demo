@@ -1,7 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, TrendingDown, Minus, Globe, Gamepad2, Heart, Laptop, Crown, Award, Medal, ChevronRight } from "lucide-react";
+import { TrendingUp } from 'lucide-react';
+import { TrendingDown } from 'lucide-react';
+import { Minus } from 'lucide-react';
+import { Globe } from 'lucide-react';
+import { Gamepad2 } from 'lucide-react';
+import { Heart } from 'lucide-react';
+import { Laptop } from 'lucide-react';
+import { Crown } from 'lucide-react';
+import { Award } from 'lucide-react';
+import { Medal } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { useState, useEffect } from "react";
 import { LeaderboardSkeleton } from "@/components/ui/veri-skeleton";
 import { useToast } from "@/hooks/use-toast";

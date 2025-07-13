@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { Trophy, Crown, Medal, TrendingUp, Star } from "lucide-react";
+import { Trophy } from 'lucide-react';
+import { Crown } from 'lucide-react';
+import { Medal } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { Header } from "@/components/navigation/header";
 import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

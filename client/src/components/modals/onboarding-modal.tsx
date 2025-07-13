@@ -9,7 +9,13 @@ import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/contexts/auth-context";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Twitter, Youtube, Instagram, CheckCircle2, ArrowRight, Users, TrendingUp } from "lucide-react";
+import { Twitter } from 'lucide-react';
+import { Youtube } from 'lucide-react';
+import { Instagram } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { Users } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 
 interface OnboardingModalProps {
   isOpen: boolean;

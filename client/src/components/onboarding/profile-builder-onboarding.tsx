@@ -3,21 +3,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { 
-  Bot, 
-  Star, 
-  Users, 
-  Lock, 
-  CheckCircle, 
-  ExternalLink,
-  Twitter,
-  Instagram,
-  Youtube,
-  Linkedin,
-  Shield,
-  Sparkles,
-  TrendingUp
-} from "lucide-react";
+import { Bot } from 'lucide-react';
+import { Star } from 'lucide-react';
+import { Users } from 'lucide-react';
+import { Lock } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
+import { Twitter } from 'lucide-react';
+import { Instagram } from 'lucide-react';
+import { Youtube } from 'lucide-react';
+import { Linkedin } from 'lucide-react';
+import { Shield } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 import { useAuth } from "@/contexts/auth-context";
 import { motion } from "framer-motion";
 import { triggerHaptic } from "@/lib/haptic";

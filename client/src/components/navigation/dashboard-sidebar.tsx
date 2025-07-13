@@ -1,5 +1,16 @@
 import { useState, useEffect } from "react";
-import { X, Home, User, Trophy, Bot, Pin, PinOff, ChevronLeft, ChevronRight, BarChart, Settings, LogOut } from "lucide-react";
+import { X } from 'lucide-react';
+import { Home } from 'lucide-react';
+import { User } from 'lucide-react';
+import { Trophy } from 'lucide-react';
+import { Bot } from 'lucide-react';
+import { Pin } from 'lucide-react';
+import { PinOff } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
+import { BarChart } from 'lucide-react';
+import { Settings } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useLocation, useRoute } from "wouter";

@@ -13,23 +13,21 @@ import { useQuery } from "@tanstack/react-query";
 import { triggerHaptic } from "@/lib/haptic";
 import type { Task } from "@shared/schema";
 import { motion } from "framer-motion";
-import { 
-  CheckCircle2, 
-  Clock, 
-  AlertCircle,
-  ExternalLink,
-  Twitter,
-  Youtube,
-  Instagram,
-  Music,
-  Linkedin,
-  Target,
-  Users,
-  Trophy,
-  RefreshCw,
-  Hash,
-  ArrowRight
-} from "lucide-react";
+import { CheckCircle2 } from 'lucide-react';
+import { Clock } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
+import { Twitter } from 'lucide-react';
+import { Youtube } from 'lucide-react';
+import { Instagram } from 'lucide-react';
+import { Music } from 'lucide-react';
+import { Linkedin } from 'lucide-react';
+import { Target } from 'lucide-react';
+import { Users } from 'lucide-react';
+import { Trophy } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
+import { Hash } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface TaskVerificationProps {
   userId: number;

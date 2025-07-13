@@ -9,77 +9,75 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  User, 
-  Camera, 
-  Link, 
-  MapPin, 
-  Globe,
-  Twitter,
-  Youtube,
-  Instagram,
-  Music,
-  Linkedin,
-  Github,
-  Video,
-  MessageCircle,
-  Facebook,
-  Palette,
-  ExternalLink,
-  Users,
-  TrendingUp,
-  Star,
-  Award,
-  Target,
-  Zap,
-  Sparkles,
-  Crown,
-  Shield,
-  Heart,
-  Eye,
-  Share,
-  Bookmark,
-  Edit,
-  Settings,
-  Plus,
-  X,
-  ChevronRight,
-  Upload,
-  Download,
-  Copy,
-  CheckCircle2,
-  AlertCircle,
-  Info,
-  Lightbulb,
-  Rocket,
-  Gift,
-  Coins,
-  Trophy,
-  Flame,
-  Coffee,
-  Gamepad2,
-  Code,
-  Cpu,
-  Database,
-  Server,
-  Cloud,
-  Smartphone,
-  Monitor,
-  Tablet,
-  Headphones,
-  Mic,
-  Image,
-  FileText,
-  Brush,
-  Scissors,
-  Wand2,
-  Layers,
-  Filter,
-  Maximize,
-  Minimize,
-  RotateCw,
-  RefreshCw
-} from "lucide-react";
+import { User } from 'lucide-react';
+import { Camera } from 'lucide-react';
+import { Link } from 'lucide-react';
+import { MapPin } from 'lucide-react';
+import { Globe } from 'lucide-react';
+import { Twitter } from 'lucide-react';
+import { Youtube } from 'lucide-react';
+import { Instagram } from 'lucide-react';
+import { Music } from 'lucide-react';
+import { Linkedin } from 'lucide-react';
+import { Github } from 'lucide-react';
+import { Video } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
+import { Facebook } from 'lucide-react';
+import { Palette } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
+import { Users } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
+import { Star } from 'lucide-react';
+import { Award } from 'lucide-react';
+import { Target } from 'lucide-react';
+import { Zap } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
+import { Crown } from 'lucide-react';
+import { Shield } from 'lucide-react';
+import { Heart } from 'lucide-react';
+import { Eye } from 'lucide-react';
+import { Share } from 'lucide-react';
+import { Bookmark } from 'lucide-react';
+import { Edit } from 'lucide-react';
+import { Settings } from 'lucide-react';
+import { Plus } from 'lucide-react';
+import { X } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
+import { Upload } from 'lucide-react';
+import { Download } from 'lucide-react';
+import { Copy } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
+import { Info } from 'lucide-react';
+import { Lightbulb } from 'lucide-react';
+import { Rocket } from 'lucide-react';
+import { Gift } from 'lucide-react';
+import { Coins } from 'lucide-react';
+import { Trophy } from 'lucide-react';
+import { Flame } from 'lucide-react';
+import { Coffee } from 'lucide-react';
+import { Gamepad2 } from 'lucide-react';
+import { Code } from 'lucide-react';
+import { Cpu } from 'lucide-react';
+import { Database } from 'lucide-react';
+import { Server } from 'lucide-react';
+import { Cloud } from 'lucide-react';
+import { Smartphone } from 'lucide-react';
+import { Monitor } from 'lucide-react';
+import { Tablet } from 'lucide-react';
+import { Headphones } from 'lucide-react';
+import { Mic } from 'lucide-react';
+import { Image } from 'lucide-react';
+import { FileText } from 'lucide-react';
+import { Brush } from 'lucide-react';
+import { Scissors } from 'lucide-react';
+import { Wand2 } from 'lucide-react';
+import { Layers } from 'lucide-react';
+import { Filter } from 'lucide-react';
+import { Maximize } from 'lucide-react';
+import { Minimize } from 'lucide-react';
+import { RotateCw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 
 interface ProfileBuilderProps {
   user: any;

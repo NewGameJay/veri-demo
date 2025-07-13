@@ -1,5 +1,7 @@
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle, XCircle, Info } from "lucide-react";
+import { CheckCircle } from 'lucide-react';
+import { XCircle } from 'lucide-react';
+import { Info } from 'lucide-react';
 
 export function useToastEnhanced() {
   const { toast } = useToast();

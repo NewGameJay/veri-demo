@@ -2,7 +2,14 @@ import { GlassCard } from "@/components/ui/glass-card";
 import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Star, ArrowUpRight, TrendingUp, Users, Award, Crown, Zap } from "lucide-react";
+import { Trophy } from 'lucide-react';
+import { Star } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
+import { Users } from 'lucide-react';
+import { Award } from 'lucide-react';
+import { Crown } from 'lucide-react';
+import { Zap } from 'lucide-react';
 
 export function CreatorShowcase() {
   const topCreators = [

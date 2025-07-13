@@ -8,39 +8,37 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { 
-  Database, 
-  Brain, 
-  Zap, 
-  Clock, 
-  CheckCircle2, 
-  AlertCircle,
-  ArrowRight,
-  Sparkles,
-  GitBranch,
-  Github,
-  Link,
-  RefreshCw,
-  Plus,
-  Settings,
-  Eye,
-  Edit,
-  Trash2,
-  Download,
-  Upload,
-  Code,
-  FileText,
-  Cpu,
-  BarChart3,
-  TrendingUp,
-  Users,
-  Target,
-  Lightbulb,
-  Rocket,
-  Shield,
-  Key,
-  Lock
-} from "lucide-react";
+import { Database } from 'lucide-react';
+import { Brain } from 'lucide-react';
+import { Zap } from 'lucide-react';
+import { Clock } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
+import { GitBranch } from 'lucide-react';
+import { Github } from 'lucide-react';
+import { Link } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
+import { Plus } from 'lucide-react';
+import { Settings } from 'lucide-react';
+import { Eye } from 'lucide-react';
+import { Edit } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+import { Download } from 'lucide-react';
+import { Upload } from 'lucide-react';
+import { Code } from 'lucide-react';
+import { FileText } from 'lucide-react';
+import { Cpu } from 'lucide-react';
+import { BarChart3 } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
+import { Users } from 'lucide-react';
+import { Target } from 'lucide-react';
+import { Lightbulb } from 'lucide-react';
+import { Rocket } from 'lucide-react';
+import { Shield } from 'lucide-react';
+import { Key } from 'lucide-react';
+import { Lock } from 'lucide-react';
 
 interface MemorizzIntegrationProps {
   userStreak: number;

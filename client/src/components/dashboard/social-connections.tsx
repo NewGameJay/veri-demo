@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { Twitter, Youtube, Instagram } from "lucide-react";
+import { Twitter } from 'lucide-react';
+import { Youtube } from 'lucide-react';
+import { Instagram } from 'lucide-react';
 import { GlassCard } from "@/components/ui/glass-card";
 import { CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

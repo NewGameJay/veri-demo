@@ -6,18 +6,16 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { 
-  ArrowLeft, 
-  ArrowRight, 
-  Sparkles, 
-  User, 
-  Globe, 
-  Briefcase, 
-  CheckCircle,
-  Shield,
-  X,
-  Loader2
-} from "lucide-react";
+import { ArrowLeft } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
+import { User } from 'lucide-react';
+import { Globe } from 'lucide-react';
+import { Briefcase } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
+import { Shield } from 'lucide-react';
+import { X } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useAuth } from "@/contexts/auth-context";
 import { motion, AnimatePresence } from "framer-motion";
 import { triggerHaptic } from "@/lib/haptic";

@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Menu, Moon, Sun, Bell, LogOut, User, Settings } from "lucide-react";
+import { Menu } from 'lucide-react';
+import { Moon } from 'lucide-react';
+import { Sun } from 'lucide-react';
+import { Bell } from 'lucide-react';
+import { LogOut } from 'lucide-react';
+import { User } from 'lucide-react';
+import { Settings } from 'lucide-react';
 import { VeriLogo } from "@/components/ui/veri-logo";
 import { Button } from "@/components/ui/button";
 import {

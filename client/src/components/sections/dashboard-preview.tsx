@@ -1,4 +1,5 @@
-import { Bot, CheckCircle2 } from "lucide-react";
+import { Bot } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import { GlassCard } from "@/components/ui/glass-card";
 import { CardContent } from "@/components/ui/card";
 import { VeriScoreCard } from "@/components/dashboard/veri-score-card";

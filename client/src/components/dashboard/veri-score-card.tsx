@@ -5,7 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/auth-context";
 import { useCounter } from "@/hooks/use-counter";
 import { useState, useEffect, useRef, useMemo } from "react";
-import { Star, Trophy, Zap, Award, Crown } from "lucide-react";
+import { Star } from 'lucide-react';
+import { Trophy } from 'lucide-react';
+import { Zap } from 'lucide-react';
+import { Award } from 'lucide-react';
+import { Crown } from 'lucide-react';
 import { VeriScoreCardSkeleton } from "@/components/ui/veri-skeleton";
 import { motion } from "framer-motion";
 
