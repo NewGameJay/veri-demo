@@ -272,7 +272,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Task verification endpoint for frontend task completion
   app.post("/api/tasks/verify", requireAuth, async (req, res) => {
     try {
-      const { taskId, verificationUrl, points } = req.body;
+      const { taskId, verificationUrl, points, streakBonus } = req.body;
       
       if (!req.userId) {
         return res.status(401).json({ message: "Unauthorized" });
@@ -281,9 +281,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Award XP points to user
       const user = await storage.getUser(req.userId);
       if (user) {
+        // Special handling for MVP demo task (taskId 0)
+        const isSpecialTask = taskId === 0;
+        const streakToAdd = isSpecialTask && streakBonus ? streakBonus : 1;
+        
         await storage.updateUser(req.userId, {
           xpPoints: (user.xpPoints || 0) + points,
-          streak: (user.streak || 0) + 1,
+          streak: (user.streak || 0) + streakToAdd,
         });
       }
 
@@ -299,7 +303,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         verificationData: JSON.stringify({ 
           url: verificationUrl,
           verifiedAt: new Date().toISOString(),
-          taskId: taskId
+          taskId: taskId,
+          streakBonus: streakBonus || 1
         })
       });
 

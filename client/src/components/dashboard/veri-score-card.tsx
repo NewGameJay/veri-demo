@@ -116,58 +116,49 @@ export function VeriScoreCard() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Enhanced VeriScore Card matching brand assets */}
-      <Card className="veri-gradient-card border-white/20 hover-scale">
-        <CardContent className="p-8">
-          {/* Header with Veri Icon */}
-          <div className="flex items-center justify-center mb-8">
-            <div className="w-16 h-16 veri-gradient rounded-2xl flex items-center justify-center shadow-lg">
-              <VeriLogo size="lg" showText={false} />
+      {/* Enhanced Rectangular VeriScore Card - v117 Style */}
+      <Card className="veri-gradient-card border-white/20 hover-scale w-full max-w-sm">
+        <CardContent className="p-6">
+          {/* Header with Veri Icon - Compact Layout */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="w-12 h-12 veri-gradient rounded-xl flex items-center justify-center shadow-lg">
+              <VeriLogo size="md" showText={false} />
+            </div>
+            <div className="text-right">
+              <div className="text-xs font-medium text-white/60 uppercase tracking-wider">VeriScore</div>
+              <div 
+                ref={scoreRef}
+                className="text-2xl font-termina text-white relative"
+              >
+                {Math.round(animatedScore)}
+                {showParticles && (
+                  <div className="particle-burst">
+                    {[...Array(8)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="particle"
+                        style={{
+                          animationDelay: `${i * 0.05}s`
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* VeriScore Title */}
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-termina text-white mb-2">VeriScore</h3>
-            <p className="text-white/60 font-inter">Calculated Weekly Based on</p>
-            <p className="text-green-400 font-inter text-sm underline cursor-pointer hover:text-green-300 transition-colors">VeriScore Analytics™</p>
-          </div>
-
-          {/* Main Score */}
-          <div className="text-center mb-8 relative">
-            <div 
-              ref={scoreRef}
-              className="text-6xl font-termina text-green-400 mb-2 transition-all duration-300 cursor-pointer relative"
-            >
-              {Math.round(animatedScore)}
-              {showParticles && (
-                <div className="particle-burst">
-                  {[...Array(12)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="particle"
-                      style={{
-                        animationDelay: `${i * 0.05}s`
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
-
-            </div>
-          </div>
-
-          {/* VeriPoints Section */}
-          <div className="text-center mb-8">
-            <h4 className="text-xl font-termina text-white mb-4">VeriPoints</h4>
+          {/* VeriPoints Section - Compact */}
+          <div className="mb-6">
+            <div className="text-xs font-medium text-white/60 uppercase tracking-wider mb-2">VeriPoints</div>
             <div 
               ref={xpRef}
-              className="text-4xl font-termina text-green-400 mb-6 relative"
+              className="text-2xl font-termina text-green-400 relative"
             >
               {Math.round(animatedXP).toLocaleString()}XP
               {showXPParticles && (
                 <div className="particle-burst">
-                  {[...Array(12)].map((_, i) => (
+                  {[...Array(8)].map((_, i) => (
                     <div
                       key={i}
                       className="particle"
@@ -178,30 +169,17 @@ export function VeriScoreCard() {
                   ))}
                 </div>
               )}
-
             </div>
           </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            <div className="glass-subtle p-4 rounded-xl text-center hover-scale">
-              <div className="text-2xl font-bold text-white mb-1">8.7K</div>
-              <div className="text-sm text-white/60 font-inter">Total Followers</div>
-            </div>
-            <div className="glass-subtle p-4 rounded-xl text-center hover-scale">
-              <div className="text-2xl font-bold text-white mb-1">12.5K</div>
-              <div className="text-sm text-white/60 font-inter">Engagement</div>
-            </div>
-          </div>
-
-          {/* User Info */}
+          {/* User Info - Compact */}
           <div className="text-center">
-            <h5 className="text-xl font-termina text-white mb-1">
+            <h5 className="text-lg font-termina text-white mb-1">
               {activeUser.firstName && activeUser.lastName 
                 ? `${activeUser.firstName} ${activeUser.lastName}`
                 : activeUser.username}
             </h5>
-            <p className="text-green-400 font-inter">Creator & Influencer</p>
+            <p className="text-green-400 font-inter text-sm">Creator & Influencer</p>
           </div>
 
 

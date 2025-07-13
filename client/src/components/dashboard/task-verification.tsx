@@ -53,80 +53,87 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
     {
       id: 0,
       title: "MVP Demo Test Task",
-      description: "Complete this test task to demo the VeriScore system - Perfect for demos and testing!",
+      description: "Complete this test task to unlock AI Agent tooling - Perfect for demos and testing!",
       platform: "demo",
       icon: Trophy,
       color: "text-green-400",
-      points: 100,
+      points: 10000,
       difficulty: "Easy",
       estimatedTime: "30 seconds",
-      requirements: ["Enter any URL containing 'test' or use 'demo.veri.app'", "Perfect for demos!", "Always verifies successfully"],
-      category: "mvp_demo"
+      requirements: ["Enter any URL containing 'test', 'demo', or 'veri'", "Perfect for demos!", "Unlocks AI Agent tooling with 30-day streak"],
+      category: "mvp_demo",
+      brand: "Veri Platform",
+      streakBonus: 30
     },
     {
       id: 1,
-      title: "Share on Twitter",
-      description: "Share your latest content on Twitter with #VeriCreator hashtag",
-      platform: "twitter",
-      icon: Twitter,
-      color: "text-blue-400",
-      points: 50,
-      difficulty: "Easy",
-      estimatedTime: "2 minutes",
-      requirements: ["Include #VeriCreator hashtag", "Tag @VeriPlatform", "Add relevant content"],
-      category: "social_engagement"
-    },
-    {
-      id: 2,
-      title: "Create YouTube Short",
-      description: "Create a 60-second YouTube Short about your creator journey",
+      title: "Sponsored Gameplay Video",
+      description: "Create sponsored gameplay video on YouTube featuring the latest gaming title",
       platform: "youtube",
       icon: Youtube,
       color: "text-red-400",
-      points: 150,
+      points: 500,
       difficulty: "Medium",
-      estimatedTime: "15 minutes",
-      requirements: ["60 seconds or less", "Mention Veri platform", "Include creator tips"],
-      category: "content_creation"
+      estimatedTime: "2 hours",
+      requirements: ["15-30 minute gameplay video", "Include sponsor mention in first 30 seconds", "Add branded overlay graphics"],
+      category: "sponsored_content",
+      brand: "Hyve.gg"
+    },
+    {
+      id: 2,
+      title: "Gameplay Livestream",
+      description: "Host live gameplay stream on Twitch with interactive audience engagement",
+      platform: "twitch",
+      icon: RefreshCw,
+      color: "text-purple-400",
+      points: 400,
+      difficulty: "Medium",
+      estimatedTime: "3 hours",
+      requirements: ["Minimum 2 hour live stream", "Engage with chat actively", "Use branded stream overlay"],
+      category: "live_streaming",
+      brand: "Lusterlabs.xyz"
     },
     {
       id: 3,
-      title: "Instagram Story Series",
-      description: "Create a 3-part Instagram Story series about your content strategy",
-      platform: "instagram",
-      icon: Instagram,
+      title: "Short-form Video Teasers",
+      description: "Create 2x short-form video teasers for TikTok and YouTube Shorts",
+      platform: "tiktok",
+      icon: Music,
       color: "text-pink-400",
-      points: 100,
-      difficulty: "Medium",
-      estimatedTime: "10 minutes",
-      requirements: ["3 connected stories", "Include polls/questions", "Tag @VeriPlatform"],
-      category: "content_creation"
+      points: 300,
+      difficulty: "Easy",
+      estimatedTime: "1 hour",
+      requirements: ["60 seconds maximum each", "Include trending gaming hashtags", "Cross-post to both platforms"],
+      category: "short_form_content",
+      brand: "Lusterlabs.xyz"
     },
     {
       id: 4,
-      title: "Community Engagement",
-      description: "Engage with 5 posts from other Veri creators",
-      platform: "community",
-      icon: Users,
-      color: "text-green-400",
-      points: 25,
+      title: "Social Media Campaign",
+      description: "Create 3x social media posts across Twitter/X, Instagram, and Discord",
+      platform: "twitter",
+      icon: Twitter,
+      color: "text-blue-400",
+      points: 250,
       difficulty: "Easy",
-      estimatedTime: "5 minutes",
-      requirements: ["Meaningful comments", "Support other creators", "Share valuable insights"],
-      category: "community_engagement"
+      estimatedTime: "45 minutes",
+      requirements: ["Announce collaboration", "Include branded hashtags", "Tag official accounts"],
+      category: "social_campaign",
+      brand: "Hyve.gg"
     },
     {
       id: 5,
-      title: "TikTok Creative Challenge",
-      description: "Create a TikTok video showcasing your creative process",
-      platform: "tiktok",
-      icon: Music,
-      color: "text-purple-400",
-      points: 200,
+      title: "Live Event Participation",
+      description: "Participate in live gaming event or community stream",
+      platform: "community",
+      icon: Users,
+      color: "text-green-400",
+      points: 600,
       difficulty: "Hard",
-      estimatedTime: "30 minutes",
-      requirements: ["Show creative process", "Use trending sounds", "Include #VeriCreator"],
-      category: "content_creation"
+      estimatedTime: "4 hours",
+      requirements: ["Participate in scheduled event", "Engage with community", "Represent brand professionally"],
+      category: "live_events",
+      brand: "Hyve.gg"
     },
     {
       id: 6,
@@ -235,16 +242,22 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
               points: selectedTask.points,
               title: selectedTask.title,
               description: selectedTask.description,
-              category: selectedTask.category
+              category: selectedTask.category,
+              streakBonus: selectedTask.streakBonus || 1
             }
           );
           
           const result = await response.json();
           if (result.success) {
             triggerHaptic("success");
+            const isSpecialTask = selectedTask.id === 0;
+            const message = isSpecialTask 
+              ? `Amazing! You've earned ${selectedTask.points} XP points and ${selectedTask.streakBonus || 1} day streak! AI Agent tooling is now unlocked.`
+              : `Great work! You've earned ${selectedTask.points} XP points.`;
+            
             toast({
               title: "Task verified!",
-              description: `Great work! You've earned ${selectedTask.points} XP points.`,
+              description: message,
             });
             
             setSelectedTask(null);
@@ -341,7 +354,14 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
                         <task.icon className={`h-5 w-5 ${task.color} group-hover:scale-105 transition-transform duration-300`} />
                       </div>
                       <div className="group-hover:translate-x-1 transition-transform duration-300">
-                        <h3 className="font-semibold text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-semibold text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
+                          {task.brand && (
+                            <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 text-xs">
+                              {task.brand}
+                            </Badge>
+                          )}
+                        </div>
                         <p className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">{task.description}</p>
                       </div>
                     </div>
@@ -421,11 +441,18 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
                 <div className="glass-subtle p-4 rounded-lg border border-white/10">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-lg bg-gray-500/20 flex items-center justify-center">
-                        <selectedTask.icon className={`h-5 w-5 ${selectedTask.color}`} />
+                      <div className="w-10 h-10 rounded-lg bg-gray-500/20 flex items-center justify-center animate-pulse">
+                        <selectedTask.icon className={`h-5 w-5 ${selectedTask.color} animate-pulse`} />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-white">{selectedTask.title}</h3>
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-semibold text-white">{selectedTask.title}</h3>
+                          {selectedTask.brand && (
+                            <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 text-xs">
+                              {selectedTask.brand}
+                            </Badge>
+                          )}
+                        </div>
                         <p className="text-sm text-white/60">{selectedTask.description}</p>
                       </div>
                     </div>
