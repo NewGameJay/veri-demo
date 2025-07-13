@@ -114,35 +114,44 @@
 }
 
 @layer components {
-  /* Standardized Glass Effect Variants */
+  /* Enhanced Glass Effect Variants with Premium Feel */
   .glass-subtle {
-    backdrop-filter: blur(8px);
-    @apply bg-white/5 border border-white/10 transform-gpu;
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    @apply bg-white/[0.08] border border-white/[0.12] transform-gpu;
     box-shadow: 
-      0 4px 16px 0 rgba(0, 0, 0, 0.05),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-    will-change: transform, opacity, background-color;
+      0 8px 32px 0 rgba(0, 0, 0, 0.12),
+      0 2px 16px 0 rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: transform, opacity, background-color, box-shadow;
   }
   
   .glass-medium {
-    backdrop-filter: blur(16px);
-    @apply bg-white/10 border border-white/20 transform-gpu;
+    backdrop-filter: blur(20px) saturate(200%);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    @apply bg-white/[0.12] border border-white/[0.18] transform-gpu;
     box-shadow: 
-      0 8px 32px 0 rgba(0, 0, 0, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-    will-change: transform, opacity, background-color;
+      0 12px 48px 0 rgba(0, 0, 0, 0.15),
+      0 4px 24px 0 rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: transform, opacity, background-color, box-shadow;
   }
   
   .glass-strong {
-    backdrop-filter: blur(24px);
-    @apply bg-white/15 border border-white/30 transform-gpu;
+    backdrop-filter: blur(28px) saturate(220%);
+    -webkit-backdrop-filter: blur(28px) saturate(220%);
+    @apply bg-white/[0.15] border border-white/[0.25] transform-gpu;
     box-shadow: 
-      0 16px 48px 0 rgba(0, 0, 0, 0.12),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15);
-    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-    will-change: transform, opacity, background-color;
+      0 16px 64px 0 rgba(0, 0, 0, 0.18),
+      0 6px 32px 0 rgba(0, 0, 0, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.06);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: transform, opacity, background-color, box-shadow;
   }
   
   /* Focus-within states for better form interactions */
@@ -210,6 +219,65 @@
     box-shadow: 
       0 8px 32px 0 rgba(0, 211, 162, 0.3),
       0 2px 8px 0 rgba(132, 86, 255, 0.2);
+  }
+  
+  /* Premium Micro-Interactions */
+  .hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, box-shadow;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 
+      0 20px 40px 0 rgba(0, 0, 0, 0.1),
+      0 8px 16px 0 rgba(0, 0, 0, 0.08);
+  }
+  
+  .hover-lift-subtle {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+  
+  .hover-lift-subtle:hover {
+    transform: translateY(-1px);
+  }
+  
+  .hover-glow {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: box-shadow;
+  }
+  
+  .hover-glow:hover {
+    box-shadow: 
+      0 0 20px rgba(0, 214, 162, 0.2),
+      0 0 40px rgba(0, 214, 162, 0.1);
+  }
+  
+  .hover-expand {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+  
+  .hover-expand:hover {
+    transform: scale(1.02);
+  }
+  
+  .interactive-focus {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, box-shadow;
+  }
+  
+  .interactive-focus:focus-visible {
+    outline: none;
+    transform: translateY(-1px);
+    box-shadow: 
+      0 0 0 3px rgba(0, 214, 162, 0.2),
+      0 8px 16px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  .interactive-focus:active {
+    transform: translateY(0px) scale(0.98);
   }
   
 

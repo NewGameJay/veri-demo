@@ -7,6 +7,7 @@ import { useCounter } from "@/hooks/use-counter";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Star, Trophy, Zap, Award, Crown } from "lucide-react";
 import { VeriScoreCardSkeleton } from "@/components/ui/veri-skeleton";
+import { motion } from "framer-motion";
 
 export function VeriScoreCard() {
   const { user } = useAuth();
@@ -125,13 +126,21 @@ export function VeriScoreCard() {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Enhanced Rectangular VeriScore Card - v117 Style */}
-      <Card className="veri-gradient-card border-white/20 hover-scale w-full max-w-sm">
+      <Card 
+        variant="glass" 
+        hover={true} 
+        className="veri-gradient-card border-white/20 hover-lift w-full max-w-sm"
+      >
         <CardContent className="p-6">
           {/* Header with Veri Icon - Compact Layout */}
           <div className="flex items-center justify-between mb-6">
-            <div className="w-12 h-12 veri-gradient rounded-xl flex items-center justify-center shadow-lg">
+            <motion.div 
+              className="w-12 h-12 veri-gradient rounded-xl flex items-center justify-center shadow-lg"
+              whileHover={{ scale: 1.05, rotate: 5 }}
+              transition={{ type: "spring", stiffness: 300, damping: 10 }}
+            >
               <VeriLogo size="md" showText={false} />
-            </div>
+            </motion.div>
             <div className="text-right">
               <div className="text-xs font-medium text-white/60 uppercase tracking-wider">VeriScore</div>
               <div 

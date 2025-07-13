@@ -12,6 +12,7 @@ import { TaskSkeleton } from "@/components/ui/veri-skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { triggerHaptic } from "@/lib/haptic";
 import type { Task } from "@shared/schema";
+import { motion } from "framer-motion";
 import { 
   CheckCircle2, 
   Clock, 

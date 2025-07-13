@@ -4,17 +4,39 @@ import { cn } from "@/lib/utils"
 
 const Card = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
-      className
-    )}
-    {...props}
-  />
-))
+  React.HTMLAttributes<HTMLDivElement> & {
+    hover?: boolean;
+    interactive?: boolean;
+    variant?: "default" | "glass" | "elevated" | "minimal";
+  }
+>(({ className, hover = false, interactive = false, variant = "default", ...props }, ref) => {
+  const baseClasses = "rounded-lg border bg-card text-card-foreground shadow-sm transform-gpu";
+  
+  const variantClasses = {
+    default: "border-border",
+    glass: "glass-subtle border-white/10",
+    elevated: "shadow-depth-2 border-white/5",
+    minimal: "border-transparent shadow-none"
+  };
+  
+  const interactionClasses = cn(
+    hover && "hover-lift cursor-pointer",
+    interactive && "interactive-focus hover-glow"
+  );
+  
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        baseClasses,
+        variantClasses[variant],
+        interactionClasses,
+        className
+      )}
+      {...props}
+    />
+  );
+})
 Card.displayName = "Card"
 
 const CardHeader = React.forwardRef<
