@@ -45,6 +45,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set());
   const [brandFilter, setBrandFilter] = useState("all");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
+  const [showAllTasks, setShowAllTasks] = useState(false);
   const { toast } = useToast();
 
   const toggleTaskExpansion = (taskId: number) => {
@@ -248,6 +249,10 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
     
     return true;
   });
+
+  // Limit to 6 tasks unless showAllTasks is true
+  const displayedTasks = showAllTasks ? availableTasksFiltered : availableTasksFiltered.slice(0, 6);
+  const hasMoreTasks = availableTasksFiltered.length > 6;
 
   // Filter completed tasks from backend data
   const completedTasks = completedTasksData
@@ -555,7 +560,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           
           <TabsContent value="available" className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {availableTasksFiltered.map((task) => {
+              {displayedTasks.map((task) => {
                 const isExpanded = expandedTasks.has(task.id);
                 return (
                   <div 
@@ -691,6 +696,57 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                 );
               })}
             </div>
+            
+            {/* View More Tasks Button */}
+            {hasMoreTasks && !showAllTasks && (
+              <div className="flex justify-center mt-6">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.2 }}
+                >
+                  <Button
+                    onClick={() => {
+                      setShowAllTasks(true);
+                      triggerHaptic("light");
+                    }}
+                    variant="outline"
+                    className="glass-subtle border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 hover-lift group"
+                  >
+                    View More Tasks ({availableTasksFiltered.length - 6} remaining)
+                    <ChevronDown className="ml-2 h-4 w-4 group-hover:translate-y-1 transition-transform duration-300" />
+                  </Button>
+                </motion.div>
+              </div>
+            )}
+            
+            {/* Show Less Tasks Button */}
+            {showAllTasks && hasMoreTasks && (
+              <div className="flex justify-center mt-6">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.2 }}
+                >
+                  <Button
+                    onClick={() => {
+                      setShowAllTasks(false);
+                      triggerHaptic("light");
+                      // Smooth scroll to top of tasks
+                      document.querySelector('[value="available"]')?.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                      });
+                    }}
+                    variant="outline"
+                    className="glass-subtle border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 hover-lift group"
+                  >
+                    Show Less Tasks
+                    <ChevronUp className="ml-2 h-4 w-4 group-hover:-translate-y-1 transition-transform duration-300" />
+                  </Button>
+                </motion.div>
+              </div>
+            )}
           </TabsContent>
           
           <TabsContent value="active" className="space-y-4">
