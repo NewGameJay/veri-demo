@@ -80,7 +80,19 @@ export async function handleOAuthConnection(platform: string) {
     
     // Redirect to OAuth provider
     console.log('Redirecting to Twitter OAuth URL:', authUrl);
-    window.location.href = authUrl;
+    // Try multiple redirect methods in case one fails
+    try {
+      window.location.assign(authUrl);
+    } catch (error) {
+      console.error('window.location.assign failed:', error);
+      try {
+        window.location.replace(authUrl);
+      } catch (error2) {
+        console.error('window.location.replace failed:', error2);
+        // Fallback: open in new tab
+        window.open(authUrl, '_blank');
+      }
+    }
   } catch (error) {
     console.error(`Failed to connect ${platform}:`, error);
     throw error;
