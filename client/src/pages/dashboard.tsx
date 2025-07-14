@@ -11,6 +11,8 @@ import { Leaderboard } from "@/components/dashboard/leaderboard";
 import { FAQ } from "@/components/dashboard/faq";
 import { MemorizzIntegration } from "@/components/integrations/memorizz-integration";
 import { AIAgents } from "@/components/dashboard/ai-agents";
+import { MilestoneCelebration } from "@/components/milestones/milestone-celebration";
+import { useMilestoneTracker } from "@/hooks/use-milestone-tracker";
 import { useAuth } from "@/contexts/auth-context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfileBuilderOnboarding } from "@/components/onboarding/profile-builder-onboarding";
@@ -22,6 +24,7 @@ export default function Dashboard() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showProfileBuilder, setShowProfileBuilder] = useState(false);
   const { user, needsOnboarding, completeOnboarding } = useAuth();
+  const { newMilestones, clearNewMilestones } = useMilestoneTracker();
 
   const { data: connections } = useQuery({
     queryKey: ["/api/social-connections", user?.id],
@@ -436,6 +439,14 @@ export default function Dashboard() {
           </Tabs>
         </div>
       </main>
+
+      {/* Milestone Celebration Modal */}
+      {newMilestones.length > 0 && (
+        <MilestoneCelebration
+          milestone={newMilestones[0]}
+          onClose={() => clearNewMilestones()}
+        />
+      )}
     </div>
   );
 }

@@ -11,6 +11,8 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { TaskSkeleton } from "@/components/ui/veri-skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { triggerHaptic } from "@/lib/haptic";
+import { SocialShare } from "@/components/social/social-share";
+import { useAuth } from "@/contexts/auth-context";
 import type { Task } from "@shared/schema";
 import { motion } from "framer-motion";
 import { CheckCircle2 } from 'lucide-react';
@@ -29,6 +31,7 @@ import { RefreshCw } from 'lucide-react';
 import { Hash } from 'lucide-react';
 import { ArrowRight } from 'lucide-react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { Share2 } from 'lucide-react';
 
 interface TaskVerificationProps {
   userId: number;
@@ -46,7 +49,10 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const [brandFilter, setBrandFilter] = useState("all");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
   const [showAllTasks, setShowAllTasks] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareTaskData, setShareTaskData] = useState<any>(null);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const toggleTaskExpansion = (taskId: number) => {
     setExpandedTasks(prev => {
@@ -379,6 +385,17 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
               title: "Task verified!",
               description: message,
             });
+
+            // Prepare share data and show social sharing modal
+            setShareTaskData({
+              type: "task",
+              title: selectedTask.title,
+              description: selectedTask.description || `Completed ${selectedTask.title} on Veri platform`,
+              xpEarned: selectedTask.points,
+              streakDay: userStreak + (selectedTask.streakBonus || 1), // Add streak bonus
+              veriScore: Math.min(100, Math.floor((userXP + selectedTask.points) / 10)), // Calculate new VeriScore
+              platform: selectedTask.platform
+            });
             
             setSelectedTask(null);
             setVerificationUrl("");
@@ -389,6 +406,11 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             await queryClient.invalidateQueries({ queryKey: [`/api/tasks/${userId}`] });
             // Force immediate refresh to trigger animation
             await queryClient.refetchQueries({ queryKey: ['/api/auth/me'] });
+
+            // Show social sharing modal after a brief delay for the success animation
+            setTimeout(() => {
+              setShowShareModal(true);
+            }, 1500);
           } else {
             throw new Error("Backend verification failed");
           }
@@ -922,15 +944,38 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                       <div className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">
                         Status: <span className="text-green-300 group-hover:font-medium transition-all duration-300">{task.status}</span>
                       </div>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-white/20 text-white hover:bg-green-500/10 hover:border-green-400/40 hover:text-green-400 group-hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25"
-                        onClick={() => window.open(task.verificationUrl, '_blank')}
-                      >
-                        View Submission
-                        <ExternalLink className="ml-1 h-3 w-3 group-hover:rotate-12 transition-transform duration-300" />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-blue-500/20 text-blue-400 hover:bg-blue-500/10 hover:border-blue-400/40 hover:text-blue-300 group-hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25"
+                          onClick={() => {
+                            triggerHaptic("light");
+                            setShareTaskData({
+                              type: "task",
+                              title: task.title,
+                              description: `Completed ${task.title} on Veri platform`,
+                              xpEarned: task.points,
+                              streakDay: userStreak,
+                              veriScore: Math.min(100, Math.floor(userXP / 10)),
+                              platform: task.platform
+                            });
+                            setShowShareModal(true);
+                          }}
+                        >
+                          <Share2 className="mr-1 h-3 w-3 group-hover:rotate-12 transition-transform duration-300" />
+                          Share
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-white/20 text-white hover:bg-green-500/10 hover:border-green-400/40 hover:text-green-400 group-hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25"
+                          onClick={() => window.open(task.verificationUrl, '_blank')}
+                        >
+                          View Submission
+                          <ExternalLink className="ml-1 h-3 w-3 group-hover:rotate-12 transition-transform duration-300" />
+                        </Button>
+                      </div>
                     </div>
                     
                     {/* Success indicator */}
@@ -944,6 +989,20 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           </TabsContent>
         </Tabs>
       </CardContent>
+
+      {/* Social Share Modal */}
+      {showShareModal && shareTaskData && user && (
+        <SocialShare
+          type={shareTaskData.type}
+          title={shareTaskData.title}
+          description={shareTaskData.description}
+          xpEarned={shareTaskData.xpEarned}
+          streakDay={shareTaskData.streakDay}
+          veriScore={shareTaskData.veriScore}
+          platform={shareTaskData.platform}
+          onClose={() => setShowShareModal(false)}
+        />
+      )}
     </Card>
   );
 }
