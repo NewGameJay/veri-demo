@@ -15,6 +15,7 @@ import AIAgent from "@/pages/ai-agent";
 import Settings from "@/pages/settings";
 import Campaigns from "@/pages/campaigns";
 import OAuthDemo from "@/pages/oauth-demo";
+import { DemoOAuth } from "@/components/demo/demo-oauth";
 
 function Router() {
   const { user, isLoading } = useAuth();
@@ -40,6 +41,7 @@ function Router() {
       <Route path="/campaigns" component={Campaigns} />
       <Route path="/settings" component={Settings} />
       <Route path="/oauth-demo" component={OAuthDemo} />
+      <Route path="/demo-oauth" component={DemoOAuth} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -17,6 +17,7 @@ export interface IStorage {
   updateSocialConnection(id: number, updates: Partial<SocialConnection>): Promise<SocialConnection>;
   updateUserSocialConnection(userId: number, connectionData: Partial<SocialConnection> & { platform: string }): Promise<SocialConnection>;
   removeSocialConnection(userId: number, platform: string): Promise<void>;
+  disconnectSocialConnection(userId: number, platform: string): Promise<void>;
   
   // Leaderboard operations
   getLeaderboard(category?: string, limit?: number): Promise<LeaderboardEntry[]>;
@@ -158,6 +159,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   async removeSocialConnection(userId: number, platform: string): Promise<void> {
+    await db
+      .delete(socialConnections)
+      .where(eq(socialConnections.userId, userId))
+      .where(eq(socialConnections.platform, platform));
+  }
+
+  async disconnectSocialConnection(userId: number, platform: string): Promise<void> {
     await db
       .delete(socialConnections)
       .where(eq(socialConnections.userId, userId))

@@ -273,6 +273,87 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Demo OAuth connection endpoint
+  app.post("/api/social-connections/demo-connect", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { platform } = req.body;
+      const userId = req.userId;
+
+      if (!platform) {
+        return res.status(400).json({ error: 'Platform is required' });
+      }
+
+      // Demo social connection data
+      const demoConnections = {
+        twitter: {
+          platformId: 'demo_twitter_123',
+          platformUsername: 'demo_creator',
+          displayName: 'Demo Creator',
+          followerCount: 15420,
+          profileImageUrl: 'https://via.placeholder.com/150',
+        },
+        youtube: {
+          platformId: 'demo_youtube_456',
+          platformUsername: 'democreator',
+          displayName: 'Demo Creator',
+          followerCount: 8750,
+          profileImageUrl: 'https://via.placeholder.com/150',
+        },
+        instagram: {
+          platformId: 'demo_instagram_789',
+          platformUsername: 'demo.creator',
+          displayName: 'Demo Creator',
+          followerCount: 32100,
+          profileImageUrl: 'https://via.placeholder.com/150',
+        },
+      };
+
+      const demoData = demoConnections[platform as keyof typeof demoConnections];
+      if (!demoData) {
+        return res.status(400).json({ error: 'Unsupported platform' });
+      }
+
+      const connection = await storage.createSocialConnection({
+        userId,
+        platform,
+        ...demoData,
+        isConnected: true,
+      });
+
+      // Award points for connecting social accounts
+      const user = await storage.getUser(userId);
+      if (user) {
+        await storage.updateUser(userId, {
+          xpPoints: (user.xpPoints || 0) + 25, // Award 25 points for social connection
+          streak: (user.streak || 0) + 1,
+        });
+      }
+
+      res.json(connection);
+    } catch (error) {
+      console.error('Error creating demo social connection:', error);
+      res.status(500).json({ error: 'Failed to create demo connection' });
+    }
+  });
+
+  // Social connection disconnect endpoint
+  app.post("/api/social-connections/disconnect", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { platform } = req.body;
+      const userId = req.userId;
+
+      if (!platform) {
+        return res.status(400).json({ error: 'Platform is required' });
+      }
+
+      await storage.disconnectSocialConnection(userId, platform);
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error disconnecting social connection:', error);
+      res.status(500).json({ error: 'Failed to disconnect' });
+    }
+  });
+
   // Leaderboard routes
   app.get("/api/leaderboard", async (req, res) => {
     try {
