@@ -34,14 +34,17 @@ interface TaskVerificationProps {
   userId: number;
   userStreak: number;
   userXP: number;
+  showFilters?: boolean;
 }
 
-export function TaskVerification({ userId, userStreak, userXP }: TaskVerificationProps) {
+export function TaskVerification({ userId, userStreak, userXP, showFilters = false }: TaskVerificationProps) {
   const [activeTab, setActiveTab] = useState("available");
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationUrl, setVerificationUrl] = useState("");
   const [selectedTask, setSelectedTask] = useState<any>(null);
   const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set());
+  const [brandFilter, setBrandFilter] = useState("all");
+  const [difficultyFilter, setDifficultyFilter] = useState("all");
   const { toast } = useToast();
 
   const toggleTaskExpansion = (taskId: number) => {
@@ -210,6 +213,28 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
       streakBonus: 2
     }
   ];
+
+  // Filter available tasks based on filters
+  const availableTasksFiltered = availableTasks.filter(task => {
+    const completedTaskIds = new Set(completedTasksData?.map(task => task.id) || []);
+    if (completedTaskIds.has(task.id)) return false;
+    
+    // Brand filter
+    if (brandFilter !== "all") {
+      if (!task.brand || task.brand.toLowerCase() !== brandFilter.toLowerCase()) {
+        return false;
+      }
+    }
+    
+    // Difficulty filter
+    if (difficultyFilter !== "all") {
+      if (task.difficulty.toLowerCase() !== difficultyFilter.toLowerCase()) {
+        return false;
+      }
+    }
+    
+    return true;
+  });
 
   // Filter completed tasks from backend data
   const completedTasks = completedTasksData
@@ -396,14 +421,53 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-3 bg-white/5">
-            <TabsTrigger value="available">Available ({availableTasks.length})</TabsTrigger>
+            <TabsTrigger value="available">Available ({availableTasksFiltered.length})</TabsTrigger>
             <TabsTrigger value="active">Active ({selectedTask ? 1 : 0})</TabsTrigger>
             <TabsTrigger value="completed">Completed ({completedTasks.length})</TabsTrigger>
           </TabsList>
           
+          {/* Task Filters - Show only when showFilters is true and on available tab */}
+          {showFilters && activeTab === "available" && (
+            <div className="mt-4 mb-4 p-4 glass-subtle rounded-lg border border-white/10">
+              <div className="flex flex-wrap gap-4 items-center">
+                <div className="flex items-center space-x-2">
+                  <label className="text-sm font-medium text-white/80">Brand:</label>
+                  <select 
+                    value={brandFilter} 
+                    onChange={(e) => setBrandFilter(e.target.value)}
+                    className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    <option value="all">All Brands</option>
+                    <option value="Veri Platform">Veri Platform</option>
+                    <option value="Hyve.gg">Hyve</option>
+                    <option value="Lusterlabs.xyz">Lusterlabs</option>
+                  </select>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <label className="text-sm font-medium text-white/80">Difficulty:</label>
+                  <select 
+                    value={difficultyFilter} 
+                    onChange={(e) => setDifficultyFilter(e.target.value)}
+                    className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    <option value="all">All Levels</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                  </select>
+                </div>
+                
+                <div className="flex items-center space-x-2 text-white/60 text-sm">
+                  <span>Showing {availableTasksFiltered.length} of {availableTasks.length} tasks</span>
+                </div>
+              </div>
+            </div>
+          )}
+          
           <TabsContent value="available" className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {availableTasks.map((task) => {
+              {availableTasksFiltered.map((task) => {
                 const isExpanded = expandedTasks.has(task.id);
                 return (
                   <div 
