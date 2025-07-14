@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CampaignCreation } from "@/components/campaigns/campaign-creation";
 import { CampaignList } from "@/components/campaigns/campaign-list";
+import { Header } from "@/components/navigation/header";
+import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
+import { MobileNav } from "@/components/navigation/mobile-nav";
+import { useAuth } from "@/contexts/auth-context";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Plus, 
   Target, 
@@ -17,39 +22,98 @@ import {
 
 export default function CampaignsPage() {
   const [activeTab, setActiveTab] = useState("browse");
+  const [isDashboardOpen, setIsDashboardOpen] = useState(false);
+  const [isDashboardPinned, setIsDashboardPinned] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const { user, isLoading } = useAuth();
+  const { toast } = useToast();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isLoading && !user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to access campaigns.",
+        variant: "destructive",
+      });
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1500);
+    }
+  }, [user, isLoading, toast]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-800 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-800 flex items-center justify-center">
+        <div className="text-white">Redirecting to login...</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">Campaigns</h1>
-          <p className="text-muted-foreground">
-            Create and participate in brand campaigns to earn rewards
-          </p>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="outline"
-            onClick={() => setActiveTab("browse")}
-            className={activeTab === "browse" ? "bg-emerald-50 border-emerald-200" : ""}
-          >
-            <Target className="h-4 w-4 mr-2" />
-            Browse Campaigns
-          </Button>
-          <Button 
-            onClick={() => setActiveTab("create")}
-            className={activeTab === "create" ? "bg-emerald-600 hover:bg-emerald-700" : ""}
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Create Campaign
-          </Button>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-900 text-white">
+      <Header 
+        onToggleDashboard={() => setIsDashboardOpen(!isDashboardOpen)}
+        onToggleMobileNav={() => setIsMobileNavOpen(!isMobileNavOpen)}
+        isDashboardPinned={isDashboardPinned}
+        isDashboardOpen={isDashboardOpen}
+      />
+      
+      <DashboardSidebar 
+        isOpen={isDashboardOpen}
+        isPinned={isDashboardPinned}
+        isCollapsed={isCollapsed}
+        onClose={() => setIsDashboardOpen(false)}
+        onPin={() => setIsDashboardPinned(!isDashboardPinned)}
+        onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
+      />
+      
+      <MobileNav 
+        isOpen={isMobileNavOpen}
+        onClose={() => setIsMobileNavOpen(false)}
+      />
+      
+      <div className={`transition-all duration-300 ${isDashboardPinned && !isCollapsed ? 'ml-64' : isDashboardPinned && isCollapsed ? 'ml-16' : 'ml-0'}`}>
+        <div className="container mx-auto p-6 space-y-6 pt-20">
+          {/* Header */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+              <h1 className="text-3xl font-bold">Campaigns</h1>
+              <p className="text-muted-foreground">
+                Create and participate in brand campaigns to earn rewards
+              </p>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="outline"
+                onClick={() => setActiveTab("browse")}
+                className={activeTab === "browse" ? "bg-emerald-50 border-emerald-200" : ""}
+              >
+                <Target className="h-4 w-4 mr-2" />
+                Browse Campaigns
+              </Button>
+              <Button 
+                onClick={() => setActiveTab("create")}
+                className={activeTab === "create" ? "bg-emerald-600 hover:bg-emerald-700" : ""}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Create Campaign
+              </Button>
+            </div>
+          </div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {/* Quick Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
@@ -97,10 +161,10 @@ export default function CampaignsPage() {
             </div>
           </CardContent>
         </Card>
-      </div>
+          </div>
 
-      {/* Main Content */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
+          {/* Main Content */}
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="browse" className="flex items-center gap-2">
             <Target className="h-4 w-4" />
@@ -116,15 +180,15 @@ export default function CampaignsPage() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="browse" className="space-y-6">
-          <CampaignList />
-        </TabsContent>
+            <TabsContent value="browse" className="space-y-6">
+              <CampaignList />
+            </TabsContent>
 
-        <TabsContent value="create" className="space-y-6">
-          <CampaignCreation onSuccess={() => setActiveTab("browse")} />
-        </TabsContent>
+            <TabsContent value="create" className="space-y-6">
+              <CampaignCreation onSuccess={() => setActiveTab("browse")} />
+            </TabsContent>
 
-        <TabsContent value="analytics" className="space-y-6">
+            <TabsContent value="analytics" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -254,9 +318,11 @@ export default function CampaignsPage() {
                 </div>
               </CardContent>
             </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
     </div>
   );
 }
