@@ -72,7 +72,7 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto">
           {/* Enhanced Welcome Section with Animation */}
           <div className="mb-8 animate-fade-in pt-[20px] pb-[20px]">
-            <h1 className="text-3xl font-termina text-white mb-2 tracking-tight">
+            <h1 className="text-3xl font-termina text-white mb-2 tracking-tight pt-[8px] pb-[8px]">
               🚀 Welcome back, {user.firstName || user.username}!
             </h1>
             <p className="text-white/60 font-inter">
