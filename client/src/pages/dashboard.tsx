@@ -7,6 +7,7 @@ import { TaskVerification } from "@/components/dashboard/task-verification";
 import { ProfileBuilder } from "@/components/dashboard/profile-builder";
 import { SocialConnections } from "@/components/dashboard/social-connections";
 import { Leaderboard } from "@/components/dashboard/leaderboard";
+import { FAQ } from "@/components/dashboard/faq";
 import { MemorizzIntegration } from "@/components/integrations/memorizz-integration";
 import { AIAgents } from "@/components/dashboard/ai-agents";
 import { useAuth } from "@/contexts/auth-context";
@@ -73,7 +74,7 @@ export default function Dashboard() {
           {/* Welcome Header and Streak Highlight - 2 Column Layout */}
           <div className="mb-8 grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
             {/* Welcome Text - Left Column */}
-            <div className="glass-effect p-6 rounded-xl border border-white/20 bg-[#ffffff00]">
+            <div className="p-6">
               <h1 className="text-3xl font-termina text-white mb-3 tracking-tight">
                 🚀 Welcome back, {user.firstName || user.username}!
               </h1>
@@ -200,6 +201,9 @@ export default function Dashboard() {
 
                   {/* Leaderboard */}
                   <Leaderboard />
+
+                  {/* FAQ Section - Expandable */}
+                  <FAQ />
                 </div>
               </div>
             </TabsContent>
@@ -228,6 +232,9 @@ export default function Dashboard() {
 
                   {/* Leaderboard */}
                   <Leaderboard />
+
+                  {/* FAQ Section - Expandable */}
+                  <FAQ />
                 </div>
               </div>
             </TabsContent>
@@ -426,33 +433,13 @@ export default function Dashboard() {
 
                   {/* Leaderboard */}
                   <Leaderboard />
+
+                  {/* FAQ Section - Expandable */}
+                  <FAQ />
                 </div>
               </div>
             </TabsContent>
           </Tabs>
-
-          {/* FAQ Section */}
-          <div className="mt-12 mb-8 glass-effect p-6 rounded-xl border border-white/20">
-            <h3 className="text-xl font-termina text-white mb-6">Frequently Asked Questions</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="text-white font-semibold mb-2">How do streaks work?</h4>
-                <p className="text-white/70 text-sm">Complete at least one task daily to maintain your streak. Longer streaks unlock higher XP multipliers and exclusive features like AI Agents.</p>
-              </div>
-              <div>
-                <h4 className="text-white font-semibold mb-2">What are XP multipliers?</h4>
-                <p className="text-white/70 text-sm">Streak rewards that multiply your XP earnings: 3+ days = 1.5x, 7+ days = 2x, 10+ days = 2.5x. Higher VeriScore means better opportunities.</p>
-              </div>
-              <div>
-                <h4 className="text-white font-semibold mb-2">How do I unlock AI Agents?</h4>
-                <p className="text-white/70 text-sm">Maintain a 10-day streak to unlock our AI Agent suite. These agents help optimize your content and find better brand partnerships.</p>
-              </div>
-              <div>
-                <h4 className="text-white font-semibold mb-2">What brands can I work with?</h4>
-                <p className="text-white/70 text-sm">We partner with gaming brands like Hyve, Lusterlabs, and the Veri Platform. Complete your profile to access premium campaigns.</p>
-              </div>
-            </div>
-          </div>
         </div>
       </main>
     </div>
