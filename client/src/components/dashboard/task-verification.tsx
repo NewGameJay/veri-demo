@@ -1347,6 +1347,15 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const displayedTasks = availableTasksFiltered.slice(0, tasksPerPage);
   const hasMoreTasks = availableTasksFiltered.length > tasksPerPage;
   
+  // Debug logging
+  console.log("Debug Task Pagination:", {
+    totalTasks: microTasks.length,
+    filteredTasks: availableTasksFiltered.length,
+    tasksPerPage,
+    displayedTasks: displayedTasks.length,
+    hasMoreTasks
+  });
+  
   const handleLoadMore = () => {
     triggerHaptic("light");
     setTasksPerPage(prev => prev + LOAD_MORE_INCREMENT);
