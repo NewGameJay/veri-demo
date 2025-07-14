@@ -8,6 +8,7 @@ import { AuthModal } from "@/components/auth/auth-modal";
 import { Button } from "@/components/ui/button";
 import { VeriLogo } from "@/components/ui/veri-logo";
 import { Card } from "@/components/ui/card";
+import { LiquidGlassButton } from "@/components/ui/liquid-glass-button";
 import { useAuth } from "@/contexts/auth-context";
 import { motion } from "framer-motion";
 
@@ -126,12 +127,13 @@ export default function Home() {
               <ArrowRight className="w-5 h-5" />
             </Button>
             
-            <Button
+            <LiquidGlassButton
               variant="outline"
-              className="border-white/20 text-white hover:bg-white/10 px-8 py-4 rounded-full text-lg"
+              size="lg"
+              className="px-8 py-4"
             >
               Learn More
-            </Button>
+            </LiquidGlassButton>
           </motion.div>
 
           {/* Hero Stats */}
@@ -441,12 +443,13 @@ export default function Home() {
               Start Your Journey
               <ArrowRight className="w-5 h-5" />
             </Button>
-            <Button
+            <LiquidGlassButton
               variant="outline"
-              className="border-white/20 text-white hover:bg-white/10 px-8 py-4 rounded-full text-lg"
+              size="lg"
+              className="px-8 py-4"
             >
               Watch Demo
-            </Button>
+            </LiquidGlassButton>
           </div>
           <p className="text-sm text-white/40 mt-8">
             No setup fees • Cancel anytime • 30-day money-back guarantee
