@@ -82,26 +82,28 @@ export default function Dashboard() {
             </p>
           </div>
 
-          {/* Enhanced Dashboard Tabs with Glass Effect - Moved to Top */}
+          {/* Enhanced Dashboard Tabs with Glass Effect - Sticky Navigation */}
           <Tabs defaultValue="tasks" className="w-full animate-slide-in mb-6">
-            <TabsList className="grid w-full grid-cols-4 bg-gray-900/50 border border-white/20">
-              <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
-                Tasks
-              </TabsTrigger>
-              <TabsTrigger value="profile" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
-                Profile
-              </TabsTrigger>
-              <TabsTrigger 
-                value="ai-agent" 
-                className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300"
-                disabled={!isMemorizzUnlocked}
-              >
-                AI Agent {!isMemorizzUnlocked && "🔒"}
-              </TabsTrigger>
-              <TabsTrigger value="analytics" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
-                Analytics
-              </TabsTrigger>
-            </TabsList>
+            <div className="sticky top-20 z-20 sticky-tabs rounded-lg mb-6 p-1">
+              <TabsList className="grid w-full grid-cols-4 bg-transparent border-0">
+                <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
+                  Tasks
+                </TabsTrigger>
+                <TabsTrigger value="profile" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
+                  Profile
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="ai-agent" 
+                  className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300"
+                  disabled={!isMemorizzUnlocked}
+                >
+                  AI Agent {!isMemorizzUnlocked && "🔒"}
+                </TabsTrigger>
+                <TabsTrigger value="analytics" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
+                  Analytics
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value="tasks" className="mt-6">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

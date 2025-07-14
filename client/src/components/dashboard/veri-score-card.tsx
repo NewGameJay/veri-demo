@@ -4,6 +4,7 @@ import { VeriLogo } from "@/components/ui/veri-logo";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/auth-context";
 import { useCounter } from "@/hooks/use-counter";
+import { useScrollEffect } from "@/hooks/use-scroll-effect";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Star } from 'lucide-react';
 import { Trophy } from 'lucide-react';
@@ -15,6 +16,7 @@ import { motion } from "framer-motion";
 
 export function VeriScoreCard() {
   const { user } = useAuth();
+  const { scrollY, isScrolling } = useScrollEffect();
   const [previousScore, setPreviousScore] = useState<number | null>(null);
   const [previousXP, setPreviousXP] = useState<number | null>(null);
   const [showParticles, setShowParticles] = useState(false);
@@ -127,12 +129,32 @@ export function VeriScoreCard() {
     );
   }
 
+  // Calculate scroll effect - subtle movement with spring back
+  const scrollOffset = Math.min(scrollY * 0.015, 6);
+  const floatY = isScrolling ? scrollOffset : 0;
+
   return (
-    <Card 
-      variant="glass" 
-      hover={true} 
-      className="veri-gradient-card border-white/20 hover-lift w-full h-64 relative"
+    <motion.div
+      animate={{
+        y: floatY,
+        scale: isScrolling ? 1.015 : 1,
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 400,
+        damping: 35,
+        mass: 0.6,
+      }}
+      className="sticky top-32 z-10 floating-card"
+      style={{
+        '--scroll-offset': `${scrollOffset}px`,
+      } as React.CSSProperties}
     >
+      <Card 
+        variant="glass" 
+        hover={true} 
+        className="veri-gradient-card border-white/20 hover-lift w-full h-64 relative"
+      >
       <CardContent className="p-6 h-full flex flex-col justify-between">
         {/* Top Row - Logo and VeriScore */}
         <div className="flex items-start justify-between">
@@ -205,5 +227,6 @@ export function VeriScoreCard() {
         </div>
       </CardContent>
     </Card>
+    </motion.div>
   );
 }

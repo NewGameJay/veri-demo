@@ -566,4 +566,33 @@
   .animate-shimmer {
     animation: shimmer 2s infinite;
   }
+
+  /* Floating Scroll Effects */
+  .floating-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+
+  .floating-card.scrolling {
+    transform: translateY(var(--scroll-offset, 0)) scale(1.02);
+    filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.15));
+  }
+
+  .sticky-tabs {
+    backdrop-filter: blur(12px);
+    background: rgba(31, 41, 55, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Scroll bounce animation */
+  @keyframes bounce-back {
+    0% { transform: translateY(var(--scroll-offset, 0)) scale(1.02); }
+    50% { transform: translateY(calc(var(--scroll-offset, 0) * 0.5)) scale(1.01); }
+    100% { transform: translateY(0) scale(1); }
+  }
+
+  .bounce-back {
+    animation: bounce-back 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
 }
