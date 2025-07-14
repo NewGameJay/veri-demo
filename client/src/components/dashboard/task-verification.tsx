@@ -413,33 +413,36 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
                       animationDelay: `${task.id * 100}ms`
                     }}
                   >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center space-x-3">
+                    <div className="mb-3">
+                      {/* Title at the top */}
+                      <div className="flex items-center space-x-3 mb-2">
                         <div className="w-10 h-10 rounded-lg bg-gray-500/20 flex items-center justify-center group-hover:bg-white/5 transition-all duration-300">
                           <task.icon className={`h-5 w-5 ${task.color} transition-transform duration-300`} />
                         </div>
-                        <div className="transition-transform duration-300 flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
-                            {task.brand && (
-                              <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 text-xs">
-                                {task.brand}
-                              </Badge>
-                            )}
-                          </div>
-                          <p className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300 line-clamp-2">
-                            {task.description}
-                          </p>
+                        <h3 className="font-semibold text-white group-hover:text-green-300 transition-colors duration-300 flex-1">{task.title}</h3>
+                      </div>
+                      
+                      {/* Badges below title */}
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center space-x-2">
+                          <Badge variant="secondary" className="bg-blue-500/20 text-blue-400 group-hover:bg-blue-500/30 group-hover:text-blue-300 transition-all duration-300">
+                            {task.points} XP
+                          </Badge>
+                          <Badge variant="secondary" className={`${getDifficultyColor(task.difficulty)} transition-all duration-300`}>
+                            {task.difficulty}
+                          </Badge>
+                          {task.brand && (
+                            <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 text-xs">
+                              {task.brand}
+                            </Badge>
+                          )}
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2 transition-transform duration-300">
-                        <Badge variant="secondary" className="bg-blue-500/20 text-blue-400 group-hover:bg-blue-500/30 group-hover:text-blue-300 transition-all duration-300">
-                          {task.points} XP
-                        </Badge>
-                        <Badge variant="secondary" className={`${getDifficultyColor(task.difficulty)} transition-all duration-300`}>
-                          {task.difficulty}
-                        </Badge>
-                      </div>
+                      
+                      {/* Description */}
+                      <p className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300 line-clamp-2">
+                        {task.description}
+                      </p>
                     </div>
                     
                     <div className="flex items-center justify-between mb-3 transition-transform duration-300">
@@ -530,26 +533,31 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
             {selectedTask ? (
               <div className="space-y-4">
                 <div className="glass-subtle p-4 rounded-lg border border-white/10">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center space-x-3">
+                  <div className="mb-3">
+                    {/* Title at the top */}
+                    <div className="flex items-center space-x-3 mb-2">
                       <div className="w-10 h-10 rounded-lg bg-gray-500/20 flex items-center justify-center animate-pulse">
                         <selectedTask.icon className={`h-5 w-5 ${selectedTask.color} animate-pulse`} />
                       </div>
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-white">{selectedTask.title}</h3>
-                          {selectedTask.brand && (
-                            <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 text-xs">
-                              {selectedTask.brand}
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-sm text-white/60">{selectedTask.description}</p>
+                      <h3 className="font-semibold text-white flex-1">{selectedTask.title}</h3>
+                    </div>
+                    
+                    {/* Badges below title */}
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center space-x-2">
+                        <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-400">
+                          In Progress
+                        </Badge>
+                        {selectedTask.brand && (
+                          <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 text-xs">
+                            {selectedTask.brand}
+                          </Badge>
+                        )}
                       </div>
                     </div>
-                    <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-400">
-                      In Progress
-                    </Badge>
+                    
+                    {/* Description */}
+                    <p className="text-sm text-white/60">{selectedTask.description}</p>
                   </div>
                   
                   <div className="mt-3 pt-3 border-t border-white/10">
