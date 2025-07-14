@@ -1348,23 +1348,60 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   // Get the current active tasks (all 80 gaming tasks)
   const availableTasks = microTasks;
 
-  // Filter available tasks based on filters
-  const availableTasksFiltered = availableTasks.filter(task => {
-    const completedTaskIds = new Set(completedTasksData?.map(task => task.id) || []);
-    if (completedTaskIds.has(task.id)) return false;
-    
-    // Brand filter
+  // Create display tasks by combining database tasks with essential demo tasks
+  const combinedTasks = [
+    // MVP Demo Test Task (always first)
+    {
+      id: 0,
+      title: "MVP Demo Test Task",
+      description: "Complete this demo task to test the verification system",
+      platform: "demo",
+      icon: Trophy,
+      color: "text-green-400",
+      points: 25,
+      difficulty: "Easy",
+      estimatedTime: "2 minutes",
+      requirements: ["Submit any URL containing 'test', 'demo', or 'veri'", "Get instant verification", "Unlock AI Agent features"],
+      category: "mvp_demo",
+      brand: "Veri Platform",
+      streakBonus: 1
+    },
+    // Add database tasks that aren't completed yet
+    ...(completedTasksData || []).filter(task => !task.isCompleted).map(task => ({
+      id: task.id,
+      title: task.title,
+      description: task.description || "Complete this gaming task to earn points",
+      platform: task.category?.toLowerCase() || "gaming",
+      icon: Youtube, // Default icon for database tasks
+      color: "text-blue-400",
+      points: task.points,
+      difficulty: "Medium", // Default difficulty
+      estimatedTime: "15-30 minutes",
+      requirements: ["Complete the task", "Submit verification URL", "Engage with community"],
+      category: task.category || "gaming_content",
+      brand: "Gaming Network",
+      streakBonus: 1
+    }))
+  ];
+
+  // Filter combined tasks based on filters
+  const availableTasksFiltered = combinedTasks.filter(task => {
+    // Apply brand filter
     if (brandFilter !== "all") {
-      if (!task.brand || task.brand.toLowerCase() !== brandFilter.toLowerCase()) {
-        return false;
-      }
+      const taskBrand = task.brand?.toLowerCase().replace(/\./g, '') || '';
+      const filterBrand = brandFilter.toLowerCase().replace(/\./g, '');
+      
+      if (filterBrand === 'veri platform' && task.id !== 0) return false;
+      if (filterBrand === 'hyvegg' && !taskBrand.includes('hyve')) return false;
+      if (filterBrand === 'lusterlabsxyz' && !taskBrand.includes('luster')) return false;
     }
     
-    // Difficulty filter
+    // Apply difficulty filter
     if (difficultyFilter !== "all") {
-      if (task.difficulty.toLowerCase() !== difficultyFilter.toLowerCase()) {
-        return false;
-      }
+      const taskDifficulty = task.difficulty?.toLowerCase() || '';
+      if (difficultyFilter === "easy" && taskDifficulty !== "easy") return false;
+      if (difficultyFilter === "medium" && taskDifficulty !== "medium") return false;
+      if (difficultyFilter === "hard" && !["hard", "extreme", "expert"].includes(taskDifficulty)) return false;
     }
     
     return true;
@@ -1376,7 +1413,8 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   
   // Debug logging
   console.log("Debug Task Pagination:", {
-    totalTasks: microTasks.length,
+    totalTasks: combinedTasks.length,
+    databaseTasks: (completedTasksData || []).filter(task => !task.isCompleted).length,
     filteredTasks: availableTasksFiltered.length,
     tasksPerPage,
     displayedTasks: displayedTasks.length,

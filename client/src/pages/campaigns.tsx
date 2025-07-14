@@ -191,7 +191,7 @@ export default function CampaignsPage() {
         </TabsList>
 
             <TabsContent value="browse" className="space-y-6">
-              <CampaignList />
+              <CampaignList userStreak={user?.streak || 0} />
             </TabsContent>
 
             {isBrand && (

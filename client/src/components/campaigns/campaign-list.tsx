@@ -77,9 +77,16 @@ const STATUS_COLORS = {
   draft: "bg-gray-100 text-gray-800",
 };
 
-export function CampaignList() {
+interface CampaignListProps {
+  userStreak?: number;
+}
+
+export function CampaignList({ userStreak = 0 }: CampaignListProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Veri+ Creator requirement: 3+ day streak
+  const isVeriPlusCreator = userStreak >= 3;
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
   const [applicationData, setApplicationData] = useState({
     interest: "",
@@ -270,16 +277,58 @@ export function CampaignList() {
     );
   }
 
+  // Veri+ Access Control Alert
+  if (!isVeriPlusCreator) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold">Available Campaigns</h2>
+            <p className="text-muted-foreground">
+              Discover and participate in brand campaigns
+            </p>
+          </div>
+        </div>
+        
+        <Card className="p-6 text-center border-orange-200 bg-orange-50/50">
+          <div className="mb-4">
+            <Zap className="h-12 w-12 mx-auto mb-3 text-orange-500" />
+            <h3 className="font-semibold text-lg mb-2 text-orange-800">Veri+ Creator Required</h3>
+            <p className="text-orange-700 mb-4">
+              You need a <strong>3+ day task streak</strong> to access brand campaigns. Complete daily tasks to unlock this feature!
+            </p>
+            <div className="flex items-center justify-center gap-2 text-sm">
+              <Badge variant="outline" className="border-orange-300 text-orange-700">
+                Current Streak: {userStreak} days
+              </Badge>
+              <span className="text-orange-600">•</span>
+              <Badge variant="outline" className="border-green-300 text-green-700">
+                Required: 3+ days
+              </Badge>
+            </div>
+          </div>
+          <p className="text-sm text-orange-600 mb-4">
+            Complete tasks daily to build your streak and unlock premium campaign access!
+          </p>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Available Campaigns</h2>
           <p className="text-muted-foreground">
-            Discover and participate in brand campaigns
+            Discover and participate in brand campaigns • Veri+ Creator Access
           </p>
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Badge variant="outline" className="border-green-300 text-green-700 flex items-center gap-1">
+            <Zap className="h-3 w-3" />
+            Veri+ Creator
+          </Badge>
           <TrendingUp className="h-4 w-4" />
           {campaigns?.length || 0} campaigns available
         </div>
