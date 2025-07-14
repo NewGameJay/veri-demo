@@ -48,26 +48,24 @@ export async function disconnectTwitter(): Promise<void> {
 }
 
 // Generic OAuth handler
-export function handleOAuthConnection(platform: string) {
-  return async () => {
-    try {
-      let authUrl: string;
-      
-      switch (platform) {
-        case 'twitter':
-          authUrl = await initiateTwitterLogin();
-          break;
-        default:
-          throw new Error(`Unsupported platform: ${platform}`);
-      }
-      
-      // Redirect to OAuth provider
-      window.location.href = authUrl;
-    } catch (error) {
-      console.error(`Failed to connect ${platform}:`, error);
-      throw error;
+export async function handleOAuthConnection(platform: string) {
+  try {
+    let authUrl: string;
+    
+    switch (platform) {
+      case 'twitter':
+        authUrl = await initiateTwitterLogin();
+        break;
+      default:
+        throw new Error(`Unsupported platform: ${platform}`);
     }
-  };
+    
+    // Redirect to OAuth provider
+    window.location.href = authUrl;
+  } catch (error) {
+    console.error(`Failed to connect ${platform}:`, error);
+    throw error;
+  }
 }
 
 // OAuth callback handler
