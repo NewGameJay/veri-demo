@@ -222,7 +222,7 @@ export default function Home() {
         </div>
       </section>
       {/* Getting Started Section */}
-      <section className="py-24 px-8">
+      <section className="py-24 px-8 pt-[55px] pb-[55px]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">Getting started</h2>
