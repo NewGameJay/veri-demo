@@ -535,7 +535,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                   </button>
                 </div>
 
-                {/* Results and Clear */}
+                {/* Clear Filters */}
                 <div className="flex items-center gap-4">
                   {(brandFilter !== "all" || difficultyFilter !== "all") && (
                     <button

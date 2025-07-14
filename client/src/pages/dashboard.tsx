@@ -127,7 +127,7 @@ export default function Dashboard() {
                   {!isMemorizzUnlocked && (
                     <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 px-4 py-3 glass-effect bg-black/95 backdrop-blur-xl text-white text-sm rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap z-50 border border-emerald-400/30 shadow-xl shadow-emerald-500/20">
                       <div className="text-emerald-400 font-medium mb-1">🔒 AI Agent Locked</div>
-                      <div className="text-white/90">Complete 10 Day Task Streak to Unlock your Veri AI Agent</div>
+                      <div className="text-white/90">Complete 10 Day Task Streak to Unlock your Veri AI Agent Studio</div>
                       <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-3 h-3 bg-black/95 rotate-45 border-r border-b border-emerald-400/30 -mt-1.5"></div>
                     </div>
                   )}
