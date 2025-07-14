@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/auth-context";
 import { VeriSkeleton } from "@/components/ui/veri-skeleton";
 import { useToast } from "@/hooks/use-toast";
-import { handleOAuthConnection, disconnectTwitter, handleOAuthCallback, type SocialConnection } from '@/lib/oauth';
+import { handleOAuthConnection, disconnectTwitter, handleOAuthCallback, initiateTwitterLogin, type SocialConnection } from '@/lib/oauth';
 import { useEffect } from 'react';
 
 export function SocialConnections() {
@@ -78,8 +78,15 @@ export function SocialConnections() {
         // Disconnect if already connected
         disconnectMutation.mutate();
       } else {
-        // Connect if not connected
-        connectMutation.mutate(platform);
+        // Connect if not connected - try direct navigation
+        try {
+          const authUrl = await initiateTwitterLogin();
+          console.log('Direct navigation to:', authUrl);
+          window.open(authUrl, '_blank', 'noopener,noreferrer');
+        } catch (error) {
+          console.error('Direct Twitter connection failed:', error);
+          connectMutation.mutate(platform);
+        }
       }
     } else {
       // For other platforms, show coming soon message

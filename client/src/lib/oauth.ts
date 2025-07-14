@@ -78,21 +78,20 @@ export async function handleOAuthConnection(platform: string) {
         throw new Error(`Unsupported platform: ${platform}`);
     }
     
-    // Redirect to OAuth provider
-    console.log('Redirecting to Twitter OAuth URL:', authUrl);
-    // Try multiple redirect methods in case one fails
-    try {
-      window.location.assign(authUrl);
-    } catch (error) {
-      console.error('window.location.assign failed:', error);
-      try {
-        window.location.replace(authUrl);
-      } catch (error2) {
-        console.error('window.location.replace failed:', error2);
-        // Fallback: open in new tab
-        window.open(authUrl, '_blank');
-      }
-    }
+    // Create a temporary link element and click it
+    console.log('Creating link for Twitter OAuth URL:', authUrl);
+    const link = document.createElement('a');
+    link.href = authUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Also try direct navigation as fallback
+    setTimeout(() => {
+      window.location.href = authUrl;
+    }, 100);
   } catch (error) {
     console.error(`Failed to connect ${platform}:`, error);
     throw error;
