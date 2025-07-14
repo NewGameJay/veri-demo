@@ -179,11 +179,38 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
       category: "content_sharing",
       brand: "Luster Labs",
       streakBonus: 1
-    }
-  ];
-
-  // Campaign data (higher-tier locked content)
-  const campaigns = [
+    },
+    // Continue with more gaming tasks
+    {
+      id: 6,
+      title: "Gaming Setup Tour",
+      description: "Show off your gaming setup and streaming gear",
+      platform: "instagram",
+      icon: Instagram,
+      color: "text-pink-400",
+      points: 30,
+      difficulty: "Easy",
+      estimatedTime: "10-15 minutes",
+      requirements: ["Film setup walkthrough", "Show key gaming gear", "Share setup tips", "Use branded hashtags"],
+      category: "lifestyle_content",
+      brand: "Hyve.gg",
+      streakBonus: 2
+    },
+    {
+      id: 7,
+      title: "Gaming News Reaction",
+      description: "React to latest gaming industry news",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 35,
+      difficulty: "Medium",
+      estimatedTime: "15-20 minutes",
+      requirements: ["Pick trending gaming news", "Record reaction video", "Share personal insights", "Encourage discussion"],
+      category: "reaction_content",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 2
+    },
     {
       id: 101,
       title: "Gaming Highlights Reel Creation",
