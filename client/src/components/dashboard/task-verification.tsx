@@ -421,7 +421,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Target className="h-5 w-5 text-green-400" />
-            <CardTitle className="text-foreground">Task Verification</CardTitle>
+            <CardTitle className="text-white">Task Verification</CardTitle>
           </div>
           <div className="flex items-center space-x-2">
             <Badge variant="secondary" className="bg-purple-500/20 text-purple-400">
@@ -432,7 +432,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             </Badge>
           </div>
         </div>
-        <CardDescription className="text-muted-foreground">
+        <CardDescription className="text-white/60">
           Complete tasks to earn XP points and build your creator streak
         </CardDescription>
       </CardHeader>
@@ -450,7 +450,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 {/* Filter Label and Tags */}
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm font-medium text-foreground/80 mr-2">Filter By:</span>
+                  <span className="text-sm font-medium text-white/80 mr-2">Filter By:</span>
                   
                   {/* Brand Tags */}
                   <button
@@ -458,7 +458,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                     className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
                       brandFilter === "all" 
                         ? "bg-emerald-500/30 text-emerald-300 border border-emerald-500/50" 
-                        : "bg-background/10 text-foreground/70 border border-foreground/20 hover:bg-background/20 hover:text-foreground dark:bg-white/10 dark:text-white/70 dark:border-white/20 dark:hover:bg-white/20 dark:hover:text-white"
+                        : "bg-white/10 text-white/70 border border-white/20 hover:bg-white/20 hover:text-white"
                     }`}
                   >
                     All Brands
@@ -591,7 +591,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                     <div className="mb-3">
                       {/* Title */}
                       <div className="mb-2">
-                        <h3 className="font-semibold text-foreground dark:text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
+                        <h3 className="font-semibold text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
                       </div>
                       
                       {/* Badges below title */}
@@ -609,13 +609,13 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                       </div>
                       
                       {/* Description */}
-                      <p className="text-sm text-muted-foreground dark:text-white/70 group-hover:text-foreground dark:group-hover:text-white/90 transition-colors duration-300 line-clamp-2">
+                      <p className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300 line-clamp-2">
                         {task.description}
                       </p>
                     </div>
                     
                     <div className="flex items-center justify-between mb-3 transition-transform duration-300">
-                      <div className="flex items-center space-x-4 text-sm text-muted-foreground dark:text-white/70 group-hover:text-foreground dark:group-hover:text-white/90 transition-colors duration-300">
+                      <div className="flex items-center space-x-4 text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">
                         <div className="flex items-center space-x-1 transition-transform duration-300">
                           <Clock className="h-4 w-4 transition-colors duration-300" />
                           <span>{task.estimatedTime}</span>
@@ -630,7 +630,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                         onClick={() => toggleTaskExpansion(task.id)}
                         size="sm"
                         variant="ghost"
-                        className="text-muted-foreground dark:text-white/60 hover:text-foreground dark:hover:text-white hover:bg-background/10 dark:hover:bg-white/10 p-1 h-6 w-6"
+                        className="text-white/60 hover:text-white hover:bg-white/10 p-1 h-6 w-6"
                       >
                         {isExpanded ? (
                           <ChevronUp className="h-4 w-4" />
@@ -711,7 +711,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                       triggerHaptic("light");
                     }}
                     variant="outline"
-                    className="glass-subtle border-foreground/20 dark:border-white/20 text-foreground dark:text-white hover:bg-background/10 dark:hover:bg-white/10 hover:border-foreground/30 dark:hover:border-white/30 transition-all duration-300 hover-lift group"
+                    className="glass-subtle border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 hover-lift group"
                   >
                     View More Tasks ({availableTasksFiltered.length - 6} remaining)
                     <ChevronDown className="ml-2 h-4 w-4 group-hover:translate-y-1 transition-transform duration-300" />
@@ -739,7 +739,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                       });
                     }}
                     variant="outline"
-                    className="glass-subtle border-foreground/20 dark:border-white/20 text-foreground dark:text-white hover:bg-background/10 dark:hover:bg-white/10 hover:border-foreground/30 dark:hover:border-white/30 transition-all duration-300 hover-lift group"
+                    className="glass-subtle border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 hover-lift group"
                   >
                     Show Less Tasks
                     <ChevronUp className="ml-2 h-4 w-4 group-hover:-translate-y-1 transition-transform duration-300" />

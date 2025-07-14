@@ -118,51 +118,27 @@
   .glass-subtle {
     backdrop-filter: blur(12px) saturate(180%);
     -webkit-backdrop-filter: blur(12px) saturate(180%);
-    @apply transform-gpu;
-    background-color: rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    box-shadow: 
-      0 8px 32px 0 rgba(0, 0, 0, 0.08),
-      0 2px 16px 0 rgba(0, 0, 0, 0.05),
-      inset 0 1px 0 rgba(0, 0, 0, 0.05),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.02);
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    will-change: transform, opacity, background-color, box-shadow;
-  }
-  
-  .dark .glass-subtle {
-    background-color: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.12);
+    @apply bg-white/[0.08] border border-white/[0.12] transform-gpu;
     box-shadow: 
       0 8px 32px 0 rgba(0, 0, 0, 0.12),
       0 2px 16px 0 rgba(0, 0, 0, 0.08),
       inset 0 1px 0 rgba(255, 255, 255, 0.08),
       inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: transform, opacity, background-color, box-shadow;
   }
   
   .glass-medium {
     backdrop-filter: blur(20px) saturate(200%);
     -webkit-backdrop-filter: blur(20px) saturate(200%);
-    @apply transform-gpu;
-    background-color: rgba(0, 0, 0, 0.12);
-    border: 1px solid rgba(0, 0, 0, 0.18);
-    box-shadow: 
-      0 12px 48px 0 rgba(0, 0, 0, 0.08),
-      0 4px 24px 0 rgba(0, 0, 0, 0.05),
-      inset 0 1px 0 rgba(0, 0, 0, 0.05),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.02);
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    will-change: transform, opacity, background-color, box-shadow;
-  }
-  
-  .dark .glass-medium {
-    background-color: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.18);
+    @apply bg-white/[0.12] border border-white/[0.18] transform-gpu;
     box-shadow: 
       0 12px 48px 0 rgba(0, 0, 0, 0.15),
       0 4px 24px 0 rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.12),
       inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: transform, opacity, background-color, box-shadow;
   }
   
   .glass-strong {
