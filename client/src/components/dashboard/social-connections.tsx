@@ -6,13 +6,16 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/auth-context";
 import { VeriSkeleton } from "@/components/ui/veri-skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { useScrollEffect } from "@/hooks/use-scroll-effect";
 import { handleOAuthConnection, disconnectTwitter, handleOAuthCallback, initiateTwitterLogin, type SocialConnection } from '@/lib/oauth';
 import { useEffect } from 'react';
+import { motion } from "framer-motion";
 
 export function SocialConnections() {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { scrollY, isScrolling } = useScrollEffect();
   
   const { data: userData, isLoading } = useQuery({
     queryKey: ["/api/users", user?.id],
@@ -143,8 +146,28 @@ export function SocialConnections() {
     instagram: "bg-gradient-to-br from-purple-500 to-pink-500", // Instagram gradient
   };
 
+  // Calculate scroll effect - follow VeriScore card movement
+  const scrollOffset = Math.min(scrollY * 0.012, 5);
+  const floatY = isScrolling ? scrollOffset : 0;
+
   return (
-    <div className="veri-gradient-card rounded-xl p-6 hover-scale animate-fade-in">
+    <motion.div
+      animate={{
+        y: floatY,
+        scale: isScrolling ? 1.01 : 1,
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 400,
+        damping: 35,
+        mass: 0.6,
+      }}
+      className="sticky top-40 z-10 floating-card"
+      style={{
+        '--scroll-offset': `${scrollOffset}px`,
+      } as React.CSSProperties}
+    >
+      <div className="veri-gradient-card rounded-xl p-6 hover-scale animate-fade-in">
       <div className="flex items-center gap-3 mb-6">
         <div className="w-8 h-8 veri-gradient rounded-lg flex items-center justify-center">
           <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
@@ -221,5 +244,6 @@ export function SocialConnections() {
         )}
       </div>
     </div>
+    </motion.div>
   );
 }
