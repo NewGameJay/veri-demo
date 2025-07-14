@@ -194,23 +194,13 @@
       0 12px 48px 0 rgba(0, 211, 162, 0.35),
       0 4px 16px 0 rgba(0, 211, 162, 0.25),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    transform: translateY(-1px) scale(1.02);
+    transform: translateY(-1px);
   }
   
   /* Subtle and Glassy Hover Effects */
   .glass-hover-subtle {
     backdrop-filter: blur(20px) saturate(180%);
     transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  
-  .glass-hover-subtle:hover {
-    backdrop-filter: blur(24px) saturate(200%);
-    transform: translateY(-2px) scale(1.005);
-    box-shadow: 
-      0 8px 40px 0 rgba(0, 0, 0, 0.08),
-      0 2px 12px 0 rgba(0, 211, 162, 0.05),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.02);
   }
   
   /* Enhanced Hover Effects */
@@ -227,20 +217,9 @@
     will-change: transform, box-shadow;
   }
   
-  .hover-lift:hover {
-    transform: translateY(-2px) scale(1.01);
-    box-shadow: 
-      0 20px 40px 0 rgba(0, 0, 0, 0.1),
-      0 8px 16px 0 rgba(0, 0, 0, 0.08);
-  }
-  
   .hover-lift-subtle {
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform;
-  }
-  
-  .hover-lift-subtle:hover {
-    transform: translateY(-1px);
   }
   
   .hover-glow {
@@ -248,19 +227,9 @@
     will-change: box-shadow;
   }
   
-  .hover-glow:hover {
-    box-shadow: 
-      0 0 20px rgba(0, 214, 162, 0.2),
-      0 0 40px rgba(0, 214, 162, 0.1);
-  }
-  
   .hover-expand {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform;
-  }
-  
-  .hover-expand:hover {
-    transform: scale(1.02);
   }
   
   .interactive-focus {
@@ -294,11 +263,6 @@
   /* Apple-like Animations */
   .hover-scale {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .hover-scale:hover {
-    transform: scale(1.05) translateY(-2px);
-    box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.45);
   }
   
   /* Smooth Animations with GPU optimization */

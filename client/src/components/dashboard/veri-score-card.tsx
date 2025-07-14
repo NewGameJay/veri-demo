@@ -134,21 +134,7 @@ export function VeriScoreCard() {
   const floatY = isScrolling ? scrollOffset : 0;
 
   return (
-    <motion.div
-      animate={{
-        y: floatY,
-        scale: isScrolling ? 1.015 : 1,
-      }}
-      transition={{
-        type: "spring",
-        stiffness: 400,
-        damping: 35,
-        mass: 0.6,
-      }}
-      className="sticky top-32 z-10 floating-card"
-      style={{
-        '--scroll-offset': `${scrollOffset}px`,
-      } as React.CSSProperties}
+    <div className="sticky top-32 z-10"
     >
       <Card 
         variant="glass" 
@@ -227,6 +213,6 @@ export function VeriScoreCard() {
         </div>
       </CardContent>
     </Card>
-    </motion.div>
+    </div>
   );
 }

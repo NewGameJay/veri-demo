@@ -151,21 +151,7 @@ export function SocialConnections() {
   const floatY = isScrolling ? scrollOffset : 0;
 
   return (
-    <motion.div
-      animate={{
-        y: floatY,
-        scale: isScrolling ? 1.01 : 1,
-      }}
-      transition={{
-        type: "spring",
-        stiffness: 400,
-        damping: 35,
-        mass: 0.6,
-      }}
-      className="sticky top-40 z-10 floating-card"
-      style={{
-        '--scroll-offset': `${scrollOffset}px`,
-      } as React.CSSProperties}
+    <div className="sticky top-40 z-10"
     >
       <div className="veri-gradient-card rounded-xl p-6 hover-scale animate-fade-in">
       <div className="flex items-center gap-3 mb-6">
@@ -244,6 +230,6 @@ export function SocialConnections() {
         )}
       </div>
     </div>
-    </motion.div>
+    </div>
   );
 }

@@ -408,17 +408,17 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
                 return (
                   <div 
                     key={task.id} 
-                    className="group glass-subtle p-4 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300 animate-fade-in hover:bg-white/[0.08] relative"
+                    className="group glass-subtle p-4 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300 animate-fade-in relative"
                     style={{
                       animationDelay: `${task.id * 100}ms`
                     }}
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 rounded-lg bg-gray-500/20 flex items-center justify-center group-hover:bg-white/5 transition-all duration-300 group-hover:scale-105 group-hover:rotate-3">
-                          <task.icon className={`h-5 w-5 ${task.color} group-hover:scale-105 transition-transform duration-300`} />
+                        <div className="w-10 h-10 rounded-lg bg-gray-500/20 flex items-center justify-center group-hover:bg-white/5 transition-all duration-300">
+                          <task.icon className={`h-5 w-5 ${task.color} transition-transform duration-300`} />
                         </div>
-                        <div className="group-hover:translate-x-1 transition-transform duration-300 flex-1">
+                        <div className="transition-transform duration-300 flex-1">
                           <div className="flex items-center gap-2 mb-1">
                             <h3 className="font-semibold text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
                             {task.brand && (
@@ -432,24 +432,24 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2 group-hover:scale-105 transition-transform duration-300">
+                      <div className="flex items-center space-x-2 transition-transform duration-300">
                         <Badge variant="secondary" className="bg-blue-500/20 text-blue-400 group-hover:bg-blue-500/30 group-hover:text-blue-300 transition-all duration-300">
                           {task.points} XP
                         </Badge>
-                        <Badge variant="secondary" className={`${getDifficultyColor(task.difficulty)} group-hover:scale-105 transition-all duration-300`}>
+                        <Badge variant="secondary" className={`${getDifficultyColor(task.difficulty)} transition-all duration-300`}>
                           {task.difficulty}
                         </Badge>
                       </div>
                     </div>
                     
-                    <div className="flex items-center justify-between mb-3 group-hover:translate-x-1 transition-transform duration-300">
+                    <div className="flex items-center justify-between mb-3 transition-transform duration-300">
                       <div className="flex items-center space-x-4 text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">
-                        <div className="flex items-center space-x-1 group-hover:scale-105 transition-transform duration-300">
-                          <Clock className="h-4 w-4 group-hover:text-green-300 transition-colors duration-300" />
+                        <div className="flex items-center space-x-1 transition-transform duration-300">
+                          <Clock className="h-4 w-4 transition-colors duration-300" />
                           <span>{task.estimatedTime}</span>
                         </div>
-                        <div className="flex items-center space-x-1 group-hover:scale-105 transition-transform duration-300">
-                          <Hash className="h-4 w-4 group-hover:text-purple-300 transition-colors duration-300" />
+                        <div className="flex items-center space-x-1 transition-transform duration-300">
+                          <Hash className="h-4 w-4 transition-colors duration-300" />
                           <span>{task.category.replace('_', ' ')}</span>
                         </div>
                       </div>
@@ -499,7 +499,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
                       <Button
                         onClick={() => handleStartTask(task)}
                         size="sm"
-                        className="veri-gradient group-hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25 w-full"
+                        className="veri-gradient transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25 w-full"
                         disabled={selectedTask?.id === task.id}
                       >
                         {selectedTask?.id === task.id ? (
@@ -510,7 +510,7 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
                         ) : (
                           <>
                             Start Task
-                            <ArrowRight className="ml-1 h-3 w-3 group-hover:translate-x-1 transition-transform duration-300" />
+                            <ArrowRight className="ml-1 h-3 w-3 transition-transform duration-300" />
                           </>
                         )}
                       </Button>

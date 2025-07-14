@@ -112,21 +112,7 @@ export function Leaderboard() {
   const floatY = isScrolling ? scrollOffset : 0;
 
   return (
-    <motion.div
-      animate={{
-        y: floatY,
-        scale: isScrolling ? 1.005 : 1,
-      }}
-      transition={{
-        type: "spring",
-        stiffness: 400,
-        damping: 35,
-        mass: 0.6,
-      }}
-      className="sticky top-48 z-10 floating-card"
-      style={{
-        '--scroll-offset': `${scrollOffset}px`,
-      } as React.CSSProperties}
+    <div className="sticky top-48 z-10"
     >
       <div className="glass-medium glass-effect-hover rounded-xl p-6 lg:col-span-2">
         <div className="flex items-center justify-between mb-4">
@@ -244,6 +230,6 @@ export function Leaderboard() {
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }
