@@ -38,6 +38,7 @@ export async function initiateTwitterLogin(): Promise<string> {
     }
     
     const data = await response.json() as OAuthResponse;
+    console.log('Twitter OAuth URL received:', data.authUrl);
     return data.authUrl;
   } catch (error) {
     console.error('Failed to initiate Twitter login:', error);
@@ -78,6 +79,7 @@ export async function handleOAuthConnection(platform: string) {
     }
     
     // Redirect to OAuth provider
+    console.log('Redirecting to Twitter OAuth URL:', authUrl);
     window.location.href = authUrl;
   } catch (error) {
     console.error(`Failed to connect ${platform}:`, error);
