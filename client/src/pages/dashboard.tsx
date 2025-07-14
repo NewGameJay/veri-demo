@@ -77,7 +77,7 @@ export default function Dashboard() {
               {/* Welcome Text */}
               <div>
                 <h1 className="text-3xl font-termina mb-2 tracking-tight">
-                  🚀 <span className="bg-gradient-to-r from-white via-emerald-300 to-white bg-clip-text text-transparent animate-gradient-shift">Welcome back, {user.firstName || user.username}!</span>
+                  🚀 <span className="bg-gradient-to-r from-white via-emerald-300 to-white bg-clip-text text-transparent animate-gradient-shift font-semibold">Welcome back, {user.firstName || user.username}!</span>
                 </h1>
                 <p className="text-white/60 font-inter leading-relaxed">
                   Here's your creator dashboard with all your progress and opportunities.
