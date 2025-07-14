@@ -110,8 +110,7 @@ export function Leaderboard() {
   // Scroll effects removed - static positioning
 
   return (
-    <div className="sticky top-48 z-10"
-    >
+    <div>
       <div className="glass-medium glass-effect-hover rounded-xl p-6 lg:col-span-2">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">Live Leaderboard</h3>

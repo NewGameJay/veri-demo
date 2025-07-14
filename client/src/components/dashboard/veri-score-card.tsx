@@ -132,8 +132,7 @@ export function VeriScoreCard() {
   // Scroll effects removed - static positioning
 
   return (
-    <div className="sticky top-32 z-10"
-    >
+    <div>
       <Card 
         variant="glass" 
         hover={true} 

@@ -149,8 +149,7 @@ export function SocialConnections() {
   // Scroll effects removed - static positioning
 
   return (
-    <div className="sticky top-40 z-10"
-    >
+    <div>
       <div className="veri-gradient-card rounded-xl p-6 hover-scale animate-fade-in">
       <div className="flex items-center gap-3 mb-6">
         <div className="w-8 h-8 veri-gradient rounded-lg flex items-center justify-center">
