@@ -88,7 +88,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
     enabled: !!userId,
   });
 
-  // Micro-task data (quick actions)
+  // Comprehensive gaming task data (80 total tasks)
   const microTasks = [
     {
       id: 0,
@@ -1318,7 +1318,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
     }
   ];
 
-  // Get the current active tasks (only micro tasks now)
+  // Get the current active tasks (all 80 gaming tasks)
   const availableTasks = microTasks;
 
   // Filter available tasks based on filters
