@@ -73,7 +73,7 @@ export default function Dashboard() {
           {/* Welcome Header and Streak Highlight - 2 Column Layout */}
           <div className="mb-8 grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
             {/* Welcome Text - Left Column */}
-            <div className="glass-effect p-6 rounded-xl border border-white/20">
+            <div className="glass-effect p-6 rounded-xl border border-white/20 bg-[#ffffff00]">
               <h1 className="text-3xl font-termina text-white mb-3 tracking-tight">
                 🚀 Welcome back, {user.firstName || user.username}!
               </h1>
