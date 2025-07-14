@@ -60,7 +60,6 @@ export default function Dashboard() {
         onDashboardToggle={handleDashboardToggle}
         onMobileMenuToggle={handleDashboardToggle}
       />
-      
       <DashboardSidebar
         isOpen={isDashboardOpen}
         isPinned={false}
@@ -69,11 +68,10 @@ export default function Dashboard() {
         onPin={() => {}} // Removed pin functionality
         onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
       />
-
       <main className="pt-20 px-4 lg:px-6">
         <div className="max-w-7xl mx-auto">
           {/* Enhanced Welcome Section with Animation */}
-          <div className="mb-8 animate-fade-in">
+          <div className="mb-8 animate-fade-in pt-[20px] pb-[20px]">
             <h1 className="text-3xl font-termina text-white mb-2 tracking-tight">
               🚀 Welcome back, {user.firstName || user.username}!
             </h1>
