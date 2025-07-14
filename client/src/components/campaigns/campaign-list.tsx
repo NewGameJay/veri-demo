@@ -83,9 +83,17 @@ export function CampaignList() {
   const [submissionUrl, setSubmissionUrl] = useState("");
   const [submissionData, setSubmissionData] = useState("");
 
-  const { data: campaigns, isLoading } = useQuery({
+  const { data: campaigns, isLoading, error } = useQuery({
     queryKey: ["/api/campaigns"],
-    queryFn: () => apiRequest("/api/campaigns"),
+    queryFn: async () => {
+      try {
+        const response = await apiRequest("GET", "/api/campaigns");
+        return await response.json();
+      } catch (err) {
+        console.error("Campaign fetch error:", err);
+        throw err;
+      }
+    },
   });
 
   const applyToCampaignMutation = useMutation({
@@ -206,6 +214,23 @@ export function CampaignList() {
     );
   }
 
+  if (error) {
+    return (
+      <Card className="p-6 text-center">
+        <div className="text-red-500 mb-2">
+          <Target className="h-8 w-8 mx-auto mb-2" />
+          <h3 className="font-semibold">Error Loading Campaigns</h3>
+        </div>
+        <p className="text-muted-foreground mb-4">
+          {error.message || "Failed to load campaigns. Please try again."}
+        </p>
+        <Button onClick={() => window.location.reload()} variant="outline">
+          Retry
+        </Button>
+      </Card>
+    );
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -221,8 +246,19 @@ export function CampaignList() {
         </div>
       </div>
 
-      <div className="grid gap-4">
-        {campaigns?.map((campaign: Campaign) => (
+      {campaigns?.length === 0 ? (
+        <Card className="p-8 text-center">
+          <div className="text-muted-foreground mb-4">
+            <Target className="h-12 w-12 mx-auto mb-3 opacity-50" />
+            <h3 className="font-semibold text-lg mb-2">No Campaigns Available</h3>
+            <p className="text-sm">
+              There are currently no active campaigns available. Check back later for new opportunities!
+            </p>
+          </div>
+        </Card>
+      ) : (
+        <div className="grid gap-4">
+          {campaigns?.map((campaign: Campaign) => (
           <Card key={campaign.id} className="hover:shadow-md transition-shadow">
             <CardHeader>
               <div className="flex items-start justify-between">
@@ -438,18 +474,7 @@ export function CampaignList() {
             </CardContent>
           </Card>
         ))}
-      </div>
-
-      {(!campaigns || campaigns.length === 0) && (
-        <Card>
-          <CardContent className="text-center py-8">
-            <div className="text-muted-foreground">
-              <Target className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <h3 className="font-semibold mb-2">No campaigns available</h3>
-              <p>Check back later for new campaign opportunities</p>
-            </div>
-          </CardContent>
-        </Card>
+        </div>
       )}
     </div>
   );
