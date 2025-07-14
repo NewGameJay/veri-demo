@@ -59,6 +59,9 @@ export default function CampaignsPage() {
     );
   }
 
+  const isBrand = user?.userType === "studio" || user?.profileType === "studio";
+  const isCreator = user?.userType === "creator" || user?.profileType === "creator";
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <Header 
@@ -89,7 +92,10 @@ export default function CampaignsPage() {
             <div>
               <h1 className="text-3xl font-bold">Campaigns</h1>
               <p className="text-muted-foreground">
-                Create and participate in brand campaigns to earn rewards
+                {isBrand 
+                  ? "Create and manage brand campaigns to connect with creators"
+                  : "Discover and participate in brand campaigns to earn rewards"
+                }
               </p>
             </div>
             
@@ -102,13 +108,15 @@ export default function CampaignsPage() {
                 <Target className="h-4 w-4 mr-2" />
                 Browse Campaigns
               </Button>
-              <Button 
-                onClick={() => setActiveTab("create")}
-                className={activeTab === "create" ? "bg-emerald-600 hover:bg-emerald-700" : ""}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Create Campaign
-              </Button>
+              {isBrand && (
+                <Button 
+                  onClick={() => setActiveTab("create")}
+                  className={activeTab === "create" ? "bg-emerald-600 hover:bg-emerald-700" : ""}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Campaign
+                </Button>
+              )}
             </div>
           </div>
 
@@ -165,15 +173,17 @@ export default function CampaignsPage() {
 
           {/* Main Content */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className={`grid w-full ${isBrand ? 'grid-cols-3' : 'grid-cols-2'}`}>
           <TabsTrigger value="browse" className="flex items-center gap-2">
             <Target className="h-4 w-4" />
             Browse Campaigns
           </TabsTrigger>
-          <TabsTrigger value="create" className="flex items-center gap-2">
-            <Plus className="h-4 w-4" />
-            Create Campaign
-          </TabsTrigger>
+          {isBrand && (
+            <TabsTrigger value="create" className="flex items-center gap-2">
+              <Plus className="h-4 w-4" />
+              Create Campaign
+            </TabsTrigger>
+          )}
           <TabsTrigger value="analytics" className="flex items-center gap-2">
             <BarChart3 className="h-4 w-4" />
             Analytics
@@ -184,9 +194,11 @@ export default function CampaignsPage() {
               <CampaignList />
             </TabsContent>
 
-            <TabsContent value="create" className="space-y-6">
-              <CampaignCreation onSuccess={() => setActiveTab("browse")} />
-            </TabsContent>
+            {isBrand && (
+              <TabsContent value="create" className="space-y-6">
+                <CampaignCreation onSuccess={() => setActiveTab("browse")} />
+              </TabsContent>
+            )}
 
             <TabsContent value="analytics" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
