@@ -32,6 +32,7 @@ import { Hash } from 'lucide-react';
 import { ArrowRight } from 'lucide-react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Share2 } from 'lucide-react';
+import { Twitch } from 'lucide-react';
 
 interface TaskVerificationProps {
   userId: number;
@@ -48,7 +49,9 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set());
   const [brandFilter, setBrandFilter] = useState("all");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
-  const [showAllTasks, setShowAllTasks] = useState(false);
+  const [tasksPerPage, setTasksPerPage] = useState(6);
+  const INITIAL_TASKS_PER_PAGE = 6;
+  const LOAD_MORE_INCREMENT = 6;
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareTaskData, setShareTaskData] = useState<any>(null);
   const { toast } = useToast();
@@ -244,6 +247,623 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
       brand: "Luster Labs",
       streakBonus: 10,
       isLocked: true
+    },
+    // Additional Gaming Tasks (10-50)
+    {
+      id: 10,
+      title: "Create Valorant Gameplay Highlights",
+      description: "Share your best Valorant plays with the gaming community",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 35,
+      difficulty: "Medium",
+      estimatedTime: "15-20 minutes",
+      requirements: ["Record 2-3 gameplay clips", "Edit highlights video", "Upload to YouTube", "Use hashtags #Valorant #Gaming"],
+      category: "gaming_content",
+      brand: "Hyve.gg",
+      streakBonus: 2
+    },
+    {
+      id: 11,
+      title: "Stream FPS Tips on Twitch",
+      description: "Share aim training and positioning tips live",
+      platform: "twitch",
+      icon: Twitch,
+      color: "text-purple-400",
+      points: 50,
+      difficulty: "Hard",
+      estimatedTime: "1-2 hours",
+      requirements: ["Stream for minimum 1 hour", "Share 5+ concrete tips", "Engage with chat", "Use !tips command"],
+      category: "live_streaming",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 3
+    },
+    {
+      id: 12,
+      title: "Review New Gaming Mouse",
+      description: "Test and review the latest gaming peripherals",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 40,
+      difficulty: "Medium",
+      estimatedTime: "20-30 minutes",
+      requirements: ["Unbox and test mouse", "Record review video", "Cover DPI, weight, features", "Include gameplay footage"],
+      category: "hardware_review",
+      brand: "Hyve.gg",
+      streakBonus: 2
+    },
+    {
+      id: 13,
+      title: "Create CSGO Strategy Guide",
+      description: "Share advanced strategies for competitive play",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 45,
+      difficulty: "Hard",
+      estimatedTime: "30-45 minutes",
+      requirements: ["Cover map strategies", "Include smoke/flash tips", "Record gameplay examples", "Add timestamps"],
+      category: "educational_content",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 3
+    },
+    {
+      id: 14,
+      title: "React to Gaming News",
+      description: "Share thoughts on latest gaming industry news",
+      platform: "twitch",
+      icon: Twitch,
+      color: "text-purple-400",
+      points: 25,
+      difficulty: "Easy",
+      estimatedTime: "10-15 minutes",
+      requirements: ["Pick trending gaming news", "Stream reaction live", "Share personal opinion", "Engage with viewers"],
+      category: "reaction_content",
+      brand: "Hyve.gg",
+      streakBonus: 1
+    },
+    {
+      id: 15,
+      title: "Host Among Us Community Game",
+      description: "Organize and host a community gaming session",
+      platform: "discord",
+      icon: Users,
+      color: "text-indigo-400",
+      points: 30,
+      difficulty: "Medium",
+      estimatedTime: "45-60 minutes",
+      requirements: ["Set up Discord voice channel", "Invite 8+ community members", "Host full game session", "Keep energy high"],
+      category: "community_engagement",
+      brand: "Hyve.gg",
+      streakBonus: 2
+    },
+    {
+      id: 16,
+      title: "Speedrun Challenge Attempt",
+      description: "Attempt a speedrun of your favorite indie game",
+      platform: "twitch",
+      icon: Twitch,
+      color: "text-purple-400",
+      points: 55,
+      difficulty: "Hard",
+      estimatedTime: "2-3 hours",
+      requirements: ["Choose speedrun category", "Stream attempt live", "Explain strategies", "Compare to PB/WR"],
+      category: "speedrun_content",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 4
+    },
+    {
+      id: 17,
+      title: "Create Gaming Setup Tour",
+      description: "Showcase your complete gaming battlestation",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 35,
+      difficulty: "Medium",
+      estimatedTime: "15-25 minutes",
+      requirements: ["Film complete setup", "Detail each component", "Mention specs and prices", "Include cable management"],
+      category: "setup_showcase",
+      brand: "Hyve.gg",
+      streakBonus: 2
+    },
+    {
+      id: 18,
+      title: "Collaborate on Minecraft Build",
+      description: "Work with another creator on epic build project",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 60,
+      difficulty: "Hard",
+      estimatedTime: "2-4 hours",
+      requirements: ["Find collaboration partner", "Plan build project", "Record building process", "Create time-lapse"],
+      category: "collaboration",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 4
+    },
+    {
+      id: 19,
+      title: "Host Retro Gaming Night",
+      description: "Stream classic games with nostalgic commentary",
+      platform: "twitch",
+      icon: Twitch,
+      color: "text-purple-400",
+      points: 40,
+      difficulty: "Medium",
+      estimatedTime: "1-2 hours",
+      requirements: ["Choose retro game (90s-2000s)", "Share personal memories", "Engage chat with stories", "Play for full stream"],
+      category: "retro_gaming",
+      brand: "Hyve.gg",
+      streakBonus: 2
+    },
+    {
+      id: 20,
+      title: "Create Mobile Gaming Content",
+      description: "Review and play trending mobile games",
+      platform: "tiktok",
+      icon: Music,
+      color: "text-purple-400",
+      points: 25,
+      difficulty: "Easy",
+      estimatedTime: "10-15 minutes",
+      requirements: ["Download trending mobile game", "Record gameplay", "Add trendy audio", "Use relevant hashtags"],
+      category: "mobile_gaming",
+      brand: "Hyve.gg",
+      streakBonus: 1
+    },
+    // More Gaming Tasks (21-50)
+    {
+      id: 21,
+      title: "League of Legends Jungle Guide",
+      description: "Create comprehensive jungle pathing guide",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 50,
+      difficulty: "Hard",
+      estimatedTime: "45-60 minutes",
+      requirements: ["Cover optimal pathing", "Explain gank timings", "Show ward placements", "Include team fight positioning"],
+      category: "educational_content",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 3
+    },
+    {
+      id: 22,
+      title: "Unbox Gaming Headset Live",
+      description: "Live unboxing and first impressions stream",
+      platform: "twitch",
+      icon: Twitch,
+      color: "text-purple-400",
+      points: 30,
+      difficulty: "Easy",
+      estimatedTime: "20-30 minutes",
+      requirements: ["Stream unboxing live", "Test audio quality", "Compare to current headset", "Answer chat questions"],
+      category: "unboxing_content",
+      brand: "Hyve.gg",
+      streakBonus: 2
+    },
+    {
+      id: 23,
+      title: "Create Gaming Meme Compilation",
+      description: "Compile funny gaming moments into short video",
+      platform: "tiktok",
+      icon: Music,
+      color: "text-purple-400",
+      points: 20,
+      difficulty: "Easy",
+      estimatedTime: "15-20 minutes",
+      requirements: ["Collect funny gaming clips", "Add trending audio", "Use popular meme format", "Post with gaming hashtags"],
+      category: "meme_content",
+      brand: "Hyve.gg",
+      streakBonus: 1
+    },
+    {
+      id: 24,
+      title: "Apex Legends Ranked Climb",
+      description: "Document your ranked progression journey",
+      platform: "twitch",
+      icon: Twitch,
+      color: "text-purple-400",
+      points: 45,
+      difficulty: "Medium",
+      estimatedTime: "2-3 hours",
+      requirements: ["Stream ranked matches", "Explain decision making", "Track RP progression", "Set climbing goals"],
+      category: "ranked_gameplay",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 3
+    },
+    {
+      id: 25,
+      title: "Host Gaming Quiz Night",
+      description: "Run interactive gaming trivia for community",
+      platform: "twitch",
+      icon: Twitch,
+      color: "text-purple-400",
+      points: 35,
+      difficulty: "Medium",
+      estimatedTime: "60-90 minutes",
+      requirements: ["Prepare 20+ trivia questions", "Use interactive tools", "Award prizes to winners", "Cover multiple game genres"],
+      category: "community_engagement",
+      brand: "Hyve.gg",
+      streakBonus: 2
+    },
+    {
+      id: 26,
+      title: "Review Indie Game Discovery",
+      description: "Play and review hidden gem indie games",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 40,
+      difficulty: "Medium",
+      estimatedTime: "30-45 minutes",
+      requirements: ["Play for minimum 2 hours", "Cover gameplay mechanics", "Discuss art style and music", "Give honest recommendation"],
+      category: "indie_game_review",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 2
+    },
+    {
+      id: 27,
+      title: "Create Controller Settings Guide",
+      description: "Share optimal controller configurations",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 25,
+      difficulty: "Easy",
+      estimatedTime: "10-15 minutes",
+      requirements: ["Show controller interface", "Explain each setting", "Test in actual gameplay", "Provide downloadable config"],
+      category: "tutorial_content",
+      brand: "Hyve.gg",
+      streakBonus: 1
+    },
+    {
+      id: 28,
+      title: "Stream Horror Game Marathon",
+      description: "Play scary games with live reactions",
+      platform: "twitch",
+      icon: Twitch,
+      color: "text-purple-400",
+      points: 55,
+      difficulty: "Hard",
+      estimatedTime: "3-4 hours",
+      requirements: ["Play 3+ horror games", "Maintain high energy", "Interact with scared chat", "Use face cam for reactions"],
+      category: "horror_gaming",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 4
+    },
+    {
+      id: 29,
+      title: "Gaming Chair Review",
+      description: "Test and review ergonomic gaming chairs",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 35,
+      difficulty: "Medium",
+      estimatedTime: "20-30 minutes",
+      requirements: ["Test for 1 week minimum", "Cover comfort and build quality", "Compare to previous chair", "Include assembly footage"],
+      category: "hardware_review",
+      brand: "Hyve.gg",
+      streakBonus: 2
+    },
+    {
+      id: 30,
+      title: "Create Gaming Workout Video",
+      description: "Show exercises designed for gamers",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 30,
+      difficulty: "Medium",
+      estimatedTime: "20-25 minutes",
+      requirements: ["Demonstrate 8+ exercises", "Focus on wrist/back health", "Show proper form", "Create beginner routine"],
+      category: "health_fitness",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 2
+    },
+    {
+      id: 31,
+      title: "Fortnite Building Tutorial",
+      description: "Teach advanced building techniques",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 40,
+      difficulty: "Medium",
+      estimatedTime: "25-35 minutes",
+      requirements: ["Cover basic to advanced builds", "Show key bindings", "Practice in creative mode", "Include combat scenarios"],
+      category: "tutorial_content",
+      brand: "Hyve.gg",
+      streakBonus: 2
+    },
+    {
+      id: 32,
+      title: "Host Charity Gaming Stream",
+      description: "Organize fundraising stream for good cause",
+      platform: "twitch",
+      icon: Twitch,
+      color: "text-purple-400",
+      points: 75,
+      difficulty: "Hard",
+      estimatedTime: "4-6 hours",
+      requirements: ["Set up donation tracking", "Stream for extended period", "Engage with donors", "Reach fundraising goal"],
+      category: "charity_stream",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 5
+    },
+    {
+      id: 33,
+      title: "Gaming News Weekly Roundup",
+      description: "Summarize week's biggest gaming news",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 35,
+      difficulty: "Medium",
+      estimatedTime: "30-40 minutes",
+      requirements: ["Cover 5+ major news items", "Add personal commentary", "Include relevant footage", "Post every Friday"],
+      category: "news_content",
+      brand: "Hyve.gg",
+      streakBonus: 2
+    },
+    {
+      id: 34,
+      title: "Competitive Overwatch Analysis",
+      description: "Break down professional match strategies",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 50,
+      difficulty: "Hard",
+      estimatedTime: "45-60 minutes",
+      requirements: ["Analyze recent pro match", "Explain team compositions", "Break down key moments", "Use slow-motion replays"],
+      category: "esports_analysis",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 3
+    },
+    {
+      id: 35,
+      title: "Gaming Setup Budget Guide",
+      description: "Create affordable gaming setup recommendations",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 40,
+      difficulty: "Medium",
+      estimatedTime: "25-35 minutes",
+      requirements: ["Set $500, $1000, $2000 budgets", "Recommend specific products", "Explain price-to-performance", "Include future upgrade paths"],
+      category: "buyer_guide",
+      brand: "Hyve.gg",
+      streakBonus: 2
+    },
+    {
+      id: 36,
+      title: "Stream Variety Game Night",
+      description: "Play multiple games based on chat votes",
+      platform: "twitch",
+      icon: Twitch,
+      color: "text-purple-400",
+      points: 45,
+      difficulty: "Medium",
+      estimatedTime: "2-3 hours",
+      requirements: ["Let chat choose games", "Play 4+ different games", "Switch every 30-45 minutes", "Maintain high energy"],
+      category: "variety_streaming",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 3
+    },
+    {
+      id: 37,
+      title: "Gaming Keyboard Sound Test",
+      description: "Test and compare mechanical keyboard switches",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 30,
+      difficulty: "Easy",
+      estimatedTime: "15-20 minutes",
+      requirements: ["Test 3+ switch types", "Record typing audio", "Gaming performance test", "Discuss tactile feedback"],
+      category: "hardware_review",
+      brand: "Hyve.gg",
+      streakBonus: 1
+    },
+    {
+      id: 38,
+      title: "Create Gaming Highlight Montage",
+      description: "Edit epic gaming moments into cinematic video",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 45,
+      difficulty: "Hard",
+      estimatedTime: "2-3 hours",
+      requirements: ["Collect best clips from month", "Add dynamic editing", "Sync to epic music", "Include slow-motion effects"],
+      category: "montage_content",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 3
+    },
+    {
+      id: 39,
+      title: "Host Gaming Podcast Episode",
+      description: "Record gaming discussion with guest or solo",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 50,
+      difficulty: "Medium",
+      estimatedTime: "60-90 minutes",
+      requirements: ["Prepare discussion topics", "Record high quality audio", "Edit for smooth flow", "Post with timestamps"],
+      category: "podcast_content",
+      brand: "Hyve.gg",
+      streakBonus: 3
+    },
+    {
+      id: 40,
+      title: "Gaming Monitor Comparison",
+      description: "Compare different gaming monitor specifications",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 45,
+      difficulty: "Medium",
+      estimatedTime: "30-40 minutes",
+      requirements: ["Test 2+ monitors side by side", "Compare refresh rates", "Show color accuracy", "Test input lag"],
+      category: "hardware_review",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 2
+    },
+    {
+      id: 41,
+      title: "Stream Cozy Gaming Session",
+      description: "Play relaxing games with chill vibes",
+      platform: "twitch",
+      icon: Twitch,
+      color: "text-purple-400",
+      points: 35,
+      difficulty: "Easy",
+      estimatedTime: "1-2 hours",
+      requirements: ["Choose calming games", "Create cozy atmosphere", "Chat casually with viewers", "Play lo-fi background music"],
+      category: "cozy_gaming",
+      brand: "Hyve.gg",
+      streakBonus: 2
+    },
+    {
+      id: 42,
+      title: "Gaming Culture Deep Dive",
+      description: "Explore gaming subculture or community",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 55,
+      difficulty: "Hard",
+      estimatedTime: "60-90 minutes",
+      requirements: ["Research gaming community", "Interview community members", "Explain culture significance", "Show gameplay examples"],
+      category: "documentary_content",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 4
+    },
+    {
+      id: 43,
+      title: "Gaming Fails Compilation",
+      description: "Compile funny gaming mistakes and fails",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 25,
+      difficulty: "Easy",
+      estimatedTime: "20-30 minutes",
+      requirements: ["Collect funny fail clips", "Add comedic editing", "Include sound effects", "Keep positive tone"],
+      category: "comedy_content",
+      brand: "Hyve.gg",
+      streakBonus: 1
+    },
+    {
+      id: 44,
+      title: "Pro Gamer Daily Routine",
+      description: "Document a day in the life of competitive gaming",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 50,
+      difficulty: "Medium",
+      estimatedTime: "Full day filming",
+      requirements: ["Film morning to night", "Show practice routine", "Include meal prep", "Discuss mental health"],
+      category: "lifestyle_content",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 3
+    },
+    {
+      id: 45,
+      title: "Gaming Accessibility Review",
+      description: "Review gaming accessibility features",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 40,
+      difficulty: "Medium",
+      estimatedTime: "30-45 minutes",
+      requirements: ["Test accessibility options", "Interview disabled gamers", "Show adaptive controllers", "Advocate for inclusion"],
+      category: "accessibility_content",
+      brand: "Hyve.gg",
+      streakBonus: 2
+    },
+    {
+      id: 46,
+      title: "Stream Viewer Game Requests",
+      description: "Play games suggested by your community",
+      platform: "twitch",
+      icon: Twitch,
+      color: "text-purple-400",
+      points: 40,
+      difficulty: "Medium",
+      estimatedTime: "2-3 hours",
+      requirements: ["Take viewer suggestions", "Try each game for 30+ minutes", "Give honest first impressions", "Thank viewers for suggestions"],
+      category: "community_requested",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 2
+    },
+    {
+      id: 47,
+      title: "Gaming Graphics Settings Guide",
+      description: "Optimize graphics settings for performance",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 35,
+      difficulty: "Medium",
+      estimatedTime: "25-35 minutes",
+      requirements: ["Test different settings", "Show FPS comparisons", "Explain visual quality impact", "Provide recommended configs"],
+      category: "optimization_guide",
+      brand: "Hyve.gg",
+      streakBonus: 2
+    },
+    {
+      id: 48,
+      title: "Gaming Industry Career Guide",
+      description: "Explore different gaming industry career paths",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 50,
+      difficulty: "Hard",
+      estimatedTime: "45-60 minutes",
+      requirements: ["Interview industry professionals", "Explain career requirements", "Show portfolio examples", "Provide actionable advice"],
+      category: "career_advice",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 3
+    },
+    {
+      id: 49,
+      title: "Gaming Community Art Showcase",
+      description: "Feature fan art and community creations",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 30,
+      difficulty: "Easy",
+      estimatedTime: "20-30 minutes",
+      requirements: ["Collect community submissions", "Feature 10+ artworks", "Credit all artists", "Encourage more submissions"],
+      category: "community_showcase",
+      brand: "Hyve.gg",
+      streakBonus: 2
+    },
+    {
+      id: 50,
+      title: "Ultimate Gaming Challenge Stream",
+      description: "Complete an epic gaming challenge live",
+      platform: "twitch",
+      icon: Twitch,
+      color: "text-purple-400",
+      points: 100,
+      difficulty: "Extreme",
+      estimatedTime: "6-12 hours",
+      requirements: ["Choose major challenge (speedrun, 24hr stream, etc)", "Engage viewers throughout", "Document entire journey", "Celebrate completion"],
+      category: "marathon_challenge",
+      brand: "Lusterlabs.xyz",
+      streakBonus: 10
     }
   ];
 
@@ -272,9 +892,19 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
     return true;
   });
 
-  // Limit to 6 tasks unless showAllTasks is true
-  const displayedTasks = showAllTasks ? availableTasksFiltered : availableTasksFiltered.slice(0, 6);
-  const hasMoreTasks = availableTasksFiltered.length > 6;
+  // Limit tasks based on tasksPerPage
+  const displayedTasks = availableTasksFiltered.slice(0, tasksPerPage);
+  const hasMoreTasks = availableTasksFiltered.length > tasksPerPage;
+  
+  const handleLoadMore = () => {
+    triggerHaptic("light");
+    setTasksPerPage(prev => prev + LOAD_MORE_INCREMENT);
+  };
+  
+  const handleShowLess = () => {
+    triggerHaptic("light");
+    setTasksPerPage(INITIAL_TASKS_PER_PAGE);
+  };
 
   // Filter completed tasks from backend data
   const completedTasks = completedTasksData
@@ -738,7 +1368,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
               </div>
             
             {/* View More Tasks Button */}
-            {hasMoreTasks && !showAllTasks && (
+            {hasMoreTasks && (
               <div className="flex justify-center mt-6">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -746,14 +1376,11 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                   transition={{ duration: 0.3, delay: 0.2 }}
                 >
                   <Button
-                    onClick={() => {
-                      setShowAllTasks(true);
-                      triggerHaptic("light");
-                    }}
+                    onClick={handleLoadMore}
                     variant="outline"
                     className="glass-subtle border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 hover-lift group"
                   >
-                    View More Tasks ({availableTasksFiltered.length - 6} remaining)
+                    View More Tasks ({availableTasksFiltered.length - tasksPerPage} remaining)
                     <ChevronDown className="ml-2 h-4 w-4 group-hover:translate-y-1 transition-transform duration-300" />
                   </Button>
                 </motion.div>
@@ -761,7 +1388,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             )}
             
             {/* Show Less Tasks Button */}
-            {showAllTasks && hasMoreTasks && (
+            {tasksPerPage > INITIAL_TASKS_PER_PAGE && (
               <div className="flex justify-center mt-6">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -769,15 +1396,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                   transition={{ duration: 0.3, delay: 0.2 }}
                 >
                   <Button
-                    onClick={() => {
-                      setShowAllTasks(false);
-                      triggerHaptic("light");
-                      // Smooth scroll to top of tasks
-                      document.querySelector('[value="available"]')?.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'start' 
-                      });
-                    }}
+                    onClick={handleShowLess}
                     variant="outline"
                     className="glass-subtle border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 hover-lift group"
                   >
