@@ -19,12 +19,12 @@ export function LiquidGlassButton({
   const baseClasses = `
     relative overflow-hidden rounded-full font-medium
     transform-gpu backdrop-blur-xl
-    before:content-[''] before:absolute before:inset-0 before:rounded-full before:opacity-0
+    before:content-[''] before:absolute before:inset-0 before:rounded-full before:opacity-30
     after:content-[''] after:absolute after:inset-0 after:rounded-full after:opacity-0
     border border-white/20 shadow-lg
-    transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]
+    transition-all duration-500 ease-out
     hover:scale-[1.02] hover:-translate-y-1 active:scale-95
-    hover:before:opacity-100 hover:after:opacity-100
+    hover:before:opacity-60 hover:after:opacity-100
     before:transition-all before:duration-700 before:ease-out
     after:transition-all after:duration-1000 after:ease-out
   `;
@@ -49,10 +49,10 @@ export function LiquidGlassButton({
       shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:shadow-2xl
     `,
     outline: `
-      bg-transparent border-white/30 text-white backdrop-blur-md
-      before:bg-white/10 before:opacity-0 hover:before:opacity-100
-      after:bg-gradient-to-r after:from-white/20 after:via-white/10 after:to-transparent after:opacity-0 hover:after:opacity-100
-      hover:border-white/50 hover:bg-white/5 hover:shadow-white/10
+      bg-white/5 border-white/30 text-white backdrop-blur-md
+      before:bg-white/15 
+      after:bg-gradient-to-r after:from-white/20 after:via-white/10 after:to-transparent 
+      hover:border-white/50 hover:bg-white/10 hover:shadow-white/20
     `
   };
 
@@ -62,10 +62,10 @@ export function LiquidGlassButton({
     lg: 'px-8 py-4 text-lg'
   };
 
-  // Liquid shimmer effect only on hover
+  // Subtle shimmer effect only on hover
   const liquidEffect = `
-    after:bg-gradient-to-r after:from-white/30 after:via-white/10 after:to-white/30
     hover:after:animate-shimmer
+    hover:shadow-2xl hover:shadow-white/10
   `;
 
   return (
