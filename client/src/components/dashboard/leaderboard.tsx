@@ -113,7 +113,7 @@ export function Leaderboard() {
     <div>
       <div className="glass-medium glass-effect-hover rounded-xl p-6 lg:col-span-2">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-white">Live Leaderboard</h3>
+          <h3 className="text-lg font-semibold text-foreground dark:text-white">Live Leaderboard</h3>
           <div className="pulse-ring w-3 h-3 bg-green-500 rounded-full" aria-label="Live updates active"></div>
         </div>
         
@@ -135,7 +135,7 @@ export function Leaderboard() {
                   className={`flex items-center gap-2 hover-lift-subtle ${
                     selectedCategory === category.id 
                       ? "veri-gradient text-white hover-glow" 
-                      : "border-white/20 text-white/70 hover:text-white hover:bg-white/5"
+                      : "border-foreground/20 dark:border-white/20 text-muted-foreground dark:text-white/70 hover:text-foreground dark:hover:text-white hover:bg-background/5 dark:hover:bg-white/5"
                   }`}
                 >
                   <Icon className="w-4 h-4" />

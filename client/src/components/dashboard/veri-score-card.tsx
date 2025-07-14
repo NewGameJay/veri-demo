@@ -152,10 +152,10 @@ export function VeriScoreCard() {
 
           {/* VeriScore - Top Right */}
           <div className="text-right">
-            <div className="text-xs font-medium text-white/60 uppercase tracking-wider">VERISCORE</div>
+            <div className="text-xs font-medium text-muted-foreground dark:text-white/60 uppercase tracking-wider">VERISCORE</div>
             <div 
               ref={scoreRef}
-              className="text-3xl font-termina text-white relative"
+              className="text-3xl font-termina text-foreground dark:text-white relative"
             >
               {Math.round(animatedScore)}
               {showParticles && (
@@ -177,7 +177,7 @@ export function VeriScoreCard() {
 
         {/* Center - VeriPoints */}
         <div className="text-center">
-          <div className="text-xs font-medium text-white/60 uppercase tracking-wider mb-2">VERIPOINTS</div>
+          <div className="text-xs font-medium text-muted-foreground dark:text-white/60 uppercase tracking-wider mb-2">VERIPOINTS</div>
           <div 
             ref={xpRef}
             className="text-3xl font-termina text-green-400 relative"

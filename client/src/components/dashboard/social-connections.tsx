@@ -157,7 +157,7 @@ export function SocialConnections() {
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
           </svg>
         </div>
-        <h3 className="text-lg font-termina text-white">Social Connections</h3>
+        <h3 className="text-lg font-termina text-foreground dark:text-white">Social Connections</h3>
       </div>
       
       <div className="space-y-4">
@@ -179,10 +179,10 @@ export function SocialConnections() {
                     <Icon className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-sm font-inter font-medium text-white">
+                    <div className="text-sm font-inter font-medium text-foreground dark:text-white">
                       {platform.charAt(0).toUpperCase() + platform.slice(1)}
                     </div>
-                    <div className="text-xs text-white/60 font-inter">
+                    <div className="text-xs text-muted-foreground dark:text-white/60 font-inter">
                       {connection?.platformUsername ? `@${connection.platformUsername}` : 'Not connected'}
                     </div>
                   </div>

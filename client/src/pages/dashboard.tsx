@@ -77,9 +77,9 @@ export default function Dashboard() {
               {/* Welcome Text */}
               <div>
                 <h1 className="text-3xl font-termina mb-2 tracking-tight">
-                  🚀 <span className="bg-gradient-to-r from-white via-emerald-300 to-white bg-clip-text text-transparent animate-gradient-shift font-semibold">Welcome back, {user.firstName || user.username}!</span>
+                  🚀 <span className="bg-gradient-to-r from-foreground via-emerald-300 to-foreground dark:from-white dark:via-emerald-300 dark:to-white bg-clip-text text-transparent animate-gradient-shift font-semibold">Welcome back, {user.firstName || user.username}!</span>
                 </h1>
-                <p className="text-white/60 font-inter leading-relaxed">
+                <p className="text-muted-foreground dark:text-white/60 font-inter leading-relaxed">
                   Here's your creator dashboard with all your progress and opportunities.
                 </p>
               </div>
@@ -92,7 +92,7 @@ export default function Dashboard() {
                       <span className="text-lg font-termina text-white">{userStreak}</span>
                     </div>
                     <div>
-                      <div className="text-white font-termina text-sm">
+                      <div className="text-foreground dark:text-white font-termina text-sm">
                         {userStreak} Day Streak 🔥
                       </div>
                       <div className="text-emerald-400 font-inter text-xs">
@@ -111,15 +111,15 @@ export default function Dashboard() {
           <Tabs defaultValue="tasks" className="w-full animate-slide-in mb-6">
             <div className="sticky top-20 z-20 sticky-tabs rounded-lg mb-6 p-1">
               <TabsList className="grid w-full grid-cols-4 bg-transparent border-0">
-                <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
+                <TabsTrigger value="tasks" className="text-foreground dark:text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
                   Tasks
                 </TabsTrigger>
-                <TabsTrigger value="profile" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
+                <TabsTrigger value="profile" className="text-foreground dark:text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
                   Profile
                 </TabsTrigger>
                 <TabsTrigger 
                   value="ai-agent" 
-                  className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300 relative group"
+                  className="text-foreground dark:text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300 relative group"
                   disabled={!isMemorizzUnlocked}
                   title={!isMemorizzUnlocked ? "Complete 10 Day Task Streak to Unlock your Veri AI Agent" : ""}
                 >
@@ -132,7 +132,7 @@ export default function Dashboard() {
                     </div>
                   )}
                 </TabsTrigger>
-                <TabsTrigger value="analytics" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
+                <TabsTrigger value="analytics" className="text-foreground dark:text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
                   Analytics
                 </TabsTrigger>
               </TabsList>
