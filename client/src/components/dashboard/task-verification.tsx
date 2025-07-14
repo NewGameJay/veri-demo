@@ -429,37 +429,117 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           {/* Task Filters - Show only when showFilters is true and on available tab */}
           {showFilters && activeTab === "available" && (
             <div className="mt-4 mb-4 p-4 glass-subtle rounded-lg border border-white/10">
-              <div className="flex flex-wrap gap-4 items-center">
-                <div className="flex items-center space-x-2">
-                  <label className="text-sm font-medium text-white/80">Brand:</label>
-                  <select 
-                    value={brandFilter} 
-                    onChange={(e) => setBrandFilter(e.target.value)}
-                    className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  >
-                    <option value="all">All Brands</option>
-                    <option value="Veri Platform">Veri Platform</option>
-                    <option value="Hyve.gg">Hyve</option>
-                    <option value="Lusterlabs.xyz">Lusterlabs</option>
-                  </select>
+              <div className="space-y-4">
+                {/* Brand Filter */}
+                <div>
+                  <label className="text-sm font-medium text-white/80 mb-2 block">Filter by Brand:</label>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => setBrandFilter("all")}
+                      className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
+                        brandFilter === "all" 
+                          ? "bg-emerald-500/30 text-emerald-300 border border-emerald-500/50" 
+                          : "bg-white/10 text-white/70 border border-white/20 hover:bg-white/20 hover:text-white"
+                      }`}
+                    >
+                      All Brands
+                    </button>
+                    <button
+                      onClick={() => setBrandFilter("Veri Platform")}
+                      className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
+                        brandFilter === "Veri Platform" 
+                          ? "bg-purple-500/30 text-purple-300 border border-purple-500/50" 
+                          : "bg-purple-500/20 text-purple-400 border border-purple-500/30 hover:bg-purple-500/30 hover:text-purple-300"
+                      }`}
+                    >
+                      Veri Platform
+                    </button>
+                    <button
+                      onClick={() => setBrandFilter("Hyve.gg")}
+                      className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
+                        brandFilter === "Hyve.gg" 
+                          ? "bg-purple-500/30 text-purple-300 border border-purple-500/50" 
+                          : "bg-purple-500/20 text-purple-400 border border-purple-500/30 hover:bg-purple-500/30 hover:text-purple-300"
+                      }`}
+                    >
+                      Hyve
+                    </button>
+                    <button
+                      onClick={() => setBrandFilter("Lusterlabs.xyz")}
+                      className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
+                        brandFilter === "Lusterlabs.xyz" 
+                          ? "bg-purple-500/30 text-purple-300 border border-purple-500/50" 
+                          : "bg-purple-500/20 text-purple-400 border border-purple-500/30 hover:bg-purple-500/30 hover:text-purple-300"
+                      }`}
+                    >
+                      Lusterlabs
+                    </button>
+                  </div>
                 </div>
                 
-                <div className="flex items-center space-x-2">
-                  <label className="text-sm font-medium text-white/80">Difficulty:</label>
-                  <select 
-                    value={difficultyFilter} 
-                    onChange={(e) => setDifficultyFilter(e.target.value)}
-                    className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  >
-                    <option value="all">All Levels</option>
-                    <option value="easy">Easy</option>
-                    <option value="medium">Medium</option>
-                    <option value="hard">Hard</option>
-                  </select>
+                {/* Difficulty Filter */}
+                <div>
+                  <label className="text-sm font-medium text-white/80 mb-2 block">Filter by Difficulty:</label>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => setDifficultyFilter("all")}
+                      className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
+                        difficultyFilter === "all" 
+                          ? "bg-emerald-500/30 text-emerald-300 border border-emerald-500/50" 
+                          : "bg-white/10 text-white/70 border border-white/20 hover:bg-white/20 hover:text-white"
+                      }`}
+                    >
+                      All Levels
+                    </button>
+                    <button
+                      onClick={() => setDifficultyFilter("easy")}
+                      className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
+                        difficultyFilter === "easy" 
+                          ? "bg-green-500/30 text-green-300 border border-green-500/50" 
+                          : "bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30 hover:text-green-300"
+                      }`}
+                    >
+                      Easy
+                    </button>
+                    <button
+                      onClick={() => setDifficultyFilter("medium")}
+                      className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
+                        difficultyFilter === "medium" 
+                          ? "bg-yellow-500/30 text-yellow-300 border border-yellow-500/50" 
+                          : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 hover:bg-yellow-500/30 hover:text-yellow-300"
+                      }`}
+                    >
+                      Medium
+                    </button>
+                    <button
+                      onClick={() => setDifficultyFilter("hard")}
+                      className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
+                        difficultyFilter === "hard" 
+                          ? "bg-red-500/30 text-red-300 border border-red-500/50" 
+                          : "bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 hover:text-red-300"
+                      }`}
+                    >
+                      Hard
+                    </button>
+                  </div>
                 </div>
                 
-                <div className="flex items-center space-x-2 text-white/60 text-sm">
-                  <span>Showing {availableTasksFiltered.length} of {availableTasks.length} tasks</span>
+                {/* Results Counter */}
+                <div className="flex items-center justify-between">
+                  <div className="text-white/60 text-sm">
+                    Showing {availableTasksFiltered.length} of {availableTasks.length} tasks
+                  </div>
+                  {(brandFilter !== "all" || difficultyFilter !== "all") && (
+                    <button
+                      onClick={() => {
+                        setBrandFilter("all");
+                        setDifficultyFilter("all");
+                      }}
+                      className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors duration-200"
+                    >
+                      Clear filters
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
