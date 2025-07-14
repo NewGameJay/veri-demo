@@ -537,9 +537,6 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
 
                 {/* Results and Clear */}
                 <div className="flex items-center gap-4">
-                  <div className="text-white/60 text-sm">
-                    {availableTasksFiltered.length} of {availableTasks.length} tasks
-                  </div>
                   {(brandFilter !== "all" || difficultyFilter !== "all") && (
                     <button
                       onClick={() => {
