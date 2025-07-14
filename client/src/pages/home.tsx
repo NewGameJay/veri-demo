@@ -43,17 +43,22 @@ export default function Home() {
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-black via-gray-900 to-emerald-950/50">
       {/* Custom Header for Landing Page */}
       <header className="fixed top-0 left-0 right-0 z-50 px-8 py-6">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <VeriLogo />
+        <div className="max-w-7xl mx-auto grid grid-cols-3 items-center">
+          {/* Left - Logo */}
+          <div className="justify-self-start">
+            <VeriLogo />
+          </div>
           
-          <nav className="hidden md:flex items-center gap-8 text-center">
+          {/* Center - Navigation */}
+          <nav className="hidden md:flex items-center justify-center gap-8">
             <a href="#features" className="text-white/70 hover:text-white transition-colors">Features</a>
             <a href="#creators" className="text-white/70 hover:text-white transition-colors">For Creators</a>
             <a href="#brands" className="text-white/70 hover:text-white transition-colors">For Brands</a>
             <a href="#about" className="text-white/70 hover:text-white transition-colors">About</a>
           </nav>
 
-          <div className="flex items-center gap-4">
+          {/* Right - Auth Buttons */}
+          <div className="justify-self-end flex items-center gap-4">
             <button 
               onClick={handleSignIn}
               className="text-white/70 hover:text-white transition-colors"
