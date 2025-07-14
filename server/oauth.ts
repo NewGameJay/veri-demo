@@ -10,7 +10,7 @@ import { AuthenticatedRequest } from './auth';
 // Twitter OAuth configuration
 const TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT_ID;
 const TWITTER_CLIENT_SECRET = process.env.TWITTER_CLIENT_SECRET;
-const TWITTER_REDIRECT_URI = process.env.TWITTER_REDIRECT_URI || 'http://localhost:5000/api/auth/twitter/callback';
+const TWITTER_REDIRECT_URI = process.env.TWITTER_REDIRECT_URI || `${process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'http://localhost:5000'}/api/auth/twitter/callback`;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5000';
 
 // Twitter OAuth URLs
@@ -50,12 +50,12 @@ export async function initiateTwitterLogin(req: AuthenticatedRequest, res: Respo
     const state = generateRandomState();
     oauthStates.set(state, { userId, timestamp: Date.now() });
 
-    // Create Twitter OAuth URL
+    // Create Twitter OAuth URL with proper configuration
     const params = new URLSearchParams({
       response_type: 'code',
       client_id: TWITTER_CLIENT_ID,
       redirect_uri: TWITTER_REDIRECT_URI,
-      scope: 'tweet.read users.read follows.read offline.access',
+      scope: 'users.read tweet.read offline.access',
       state: state,
       code_challenge: 'challenge',
       code_challenge_method: 'plain'
