@@ -19,7 +19,9 @@ import {
   ExternalLink,
   Send,
   Eye,
-  TrendingUp
+  TrendingUp,
+  AlertCircle,
+  Zap
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -195,6 +197,33 @@ export function CampaignList() {
     }
   };
 
+  const parseRequirements = (requirements?: string) => {
+    if (!requirements) return null;
+    try {
+      return JSON.parse(requirements);
+    } catch {
+      return null;
+    }
+  };
+
+  const isUrgent = (campaign: Campaign) => {
+    const requirements = parseRequirements(campaign.requirements);
+    if (!requirements) return false;
+    
+    const urgencyText = requirements.urgency || "";
+    return urgencyText.includes("URGENT") || urgencyText.includes("ENDING SOON") || urgencyText.includes("days");
+  };
+
+  const getUrgencyColor = (urgencyText: string) => {
+    if (urgencyText.includes("URGENT") || urgencyText.includes("2 days")) {
+      return "bg-red-100 text-red-800 border-red-200";
+    } else if (urgencyText.includes("ENDING SOON")) {
+      return "bg-orange-100 text-orange-800 border-orange-200";
+    } else {
+      return "bg-yellow-100 text-yellow-800 border-yellow-200";
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -258,7 +287,13 @@ export function CampaignList() {
         </Card>
       ) : (
         <div className="grid gap-4">
-          {campaigns?.map((campaign: Campaign) => (
+          {campaigns?.sort((a, b) => {
+            const aUrgent = isUrgent(a);
+            const bUrgent = isUrgent(b);
+            if (aUrgent && !bUrgent) return -1;
+            if (!aUrgent && bUrgent) return 1;
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          }).map((campaign: Campaign) => (
           <Card key={campaign.id} className="hover:shadow-md transition-shadow">
             <CardHeader>
               <div className="flex items-start justify-between">
@@ -268,10 +303,22 @@ export function CampaignList() {
                     <Badge className={STATUS_COLORS[campaign.status as keyof typeof STATUS_COLORS]}>
                       {campaign.status}
                     </Badge>
+                    {isUrgent(campaign) && (
+                      <Badge className={`${getUrgencyColor(parseRequirements(campaign.requirements)?.urgency || "")} flex items-center gap-1`}>
+                        <AlertCircle className="h-3 w-3" />
+                        {parseRequirements(campaign.requirements)?.urgency?.includes("URGENT") ? "URGENT" : "ENDING SOON"}
+                      </Badge>
+                    )}
                   </div>
                   <CardDescription className="text-sm">
                     {campaign.description}
                   </CardDescription>
+                  {isUrgent(campaign) && (
+                    <div className="flex items-center gap-1 mt-2 text-sm font-medium text-orange-600">
+                      <Clock className="h-4 w-4" />
+                      {parseRequirements(campaign.requirements)?.urgency}
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-col items-end gap-1">
                   <div className="flex items-center gap-1 text-sm font-medium text-green-600">
@@ -379,6 +426,22 @@ export function CampaignList() {
                         <div>
                           <h4 className="font-semibold mb-2">Requirements</h4>
                           <p className="text-sm text-muted-foreground">{campaign.requirements}</p>
+                        </div>
+                      )}
+                      
+                      {parseRequirements(campaign.requirements)?.contentExamples && (
+                        <div>
+                          <h4 className="font-semibold mb-2 flex items-center gap-2">
+                            <Zap className="h-4 w-4" />
+                            Content Examples
+                          </h4>
+                          <div className="space-y-2">
+                            {parseRequirements(campaign.requirements)?.contentExamples.map((example: string, index: number) => (
+                              <div key={index} className="bg-muted p-3 rounded-lg">
+                                <p className="text-sm text-muted-foreground font-mono">{example}</p>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       )}
                       

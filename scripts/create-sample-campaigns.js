@@ -9,34 +9,40 @@ import { campaigns } from '../shared/schema.ts';
 const sampleCampaigns = [
   {
     userId: 12, // Brand account user ID
-    title: "BitByte Gaming Platform Launch - Creator Partnership",
-    description: "Drive your audience to sign up for BitByte, the new gaming platform launching February 26th. Earn $2,000/month for 3 months with weekly deliverables including streams, threads, and gameplay content.",
+    title: "🚀 Hyve BitByte Launch - Creator Partnership Program",
+    description: "Join Hyve's exclusive creator program for the BitByte launch on February 26th. Drive your audience to the revolutionary gaming platform with cross-chain compatibility and seamless onboarding. Monthly partnership: $2,000 for 3 months.",
     budget: 600000, // $6,000 total (3 months x $2,000)
     rewardPerAction: 200000, // $2,000 per month
     status: "active",
     campaignType: "content_creation",
-    targetAudience: "Gaming creators with 10K+ followers",
+    targetAudience: "Web3 gaming creators with 10K+ followers",
     requirements: JSON.stringify({
       minFollowers: 10000,
       platforms: ["Twitter", "Twitch", "YouTube"],
+      urgency: "Applications close in 7 days",
       deliverables: {
         weekly: [
-          "1 Educational thread about platform features",
-          "1 Live stream with gameplay walkthrough", 
-          "1 VOD with creator referral code",
-          "1 Announcement post"
+          "1 Educational thread about Hyve ecosystem features",
+          "1 Live stream with BitByte gameplay walkthrough", 
+          "1 VOD with your unique creator referral code",
+          "1 Announcement post driving sign-ups"
         ],
         monthly: [
           "Community game night hosting",
-          "Social media giveaway",
-          "Platform feature breakdown"
+          "Social media giveaway with XP boosts",
+          "Platform feature breakdown and tips"
         ]
       },
+      contentExamples: [
+        "Educational Thread: 'The Hyve ecosystem lets you play across platforms without limits – no app stores, no fees and no walled gardens. Here's how BitByte is changing Web3 gaming... [thread]'",
+        "Stream Title: 'BitByte First Look - Fast & Furious 10-Player Battles + Weekly Prize Pools!'",
+        "VOD Example: 'Why Hyve is the Future of Blockchain Gaming - My Creator Code Inside'"
+      ],
       duration: "3 months",
       testPeriod: "Month 1 evaluation before continuation"
     }),
     platforms: JSON.stringify(["Twitter", "Twitch", "YouTube"]),
-    tags: JSON.stringify(["gaming", "platform-launch", "partnership", "long-term"]),
+    tags: JSON.stringify(["web3", "blockchain", "gaming", "hyve", "bitbyte"]),
     startDate: new Date("2025-02-24"),
     endDate: new Date("2025-05-24"),
     maxParticipants: 5,
@@ -46,34 +52,40 @@ const sampleCampaigns = [
   },
   {
     userId: 12,
-    title: "Lifestyle Creator - Wellness App Review Campaign",
-    description: "Partner with WellnessHub to create authentic content showcasing their new mindfulness app. Perfect for lifestyle creators who want to share genuine health and wellness experiences with their audience.",
-    budget: 150000, // $1,500 total
-    rewardPerAction: 50000, // $500 per creator
+    title: "⏰ Luster Labs - Web3 Gaming Alpha Access (ENDING SOON)",
+    description: "EXPIRES IN 2 DAYS! Partner with Luster Labs to showcase their cutting-edge Web3 gaming platform. Early access to alpha builds, exclusive NFT rewards, and creator revenue sharing program.",
+    budget: 250000, // $2,500 total
+    rewardPerAction: 83333, // ~$833 per creator
     status: "active", 
     campaignType: "review",
-    targetAudience: "Lifestyle & wellness creators",
+    targetAudience: "Web3 gaming creators and blockchain enthusiasts",
     requirements: JSON.stringify({
       minFollowers: 5000,
-      platforms: ["Instagram", "TikTok", "YouTube"],
+      platforms: ["Twitter", "YouTube", "Twitch"],
+      urgency: "URGENT - Applications close in 2 days",
       deliverables: [
-        "7-day app usage documentation",
-        "1 long-form review video (5+ minutes)",
-        "3 short-form posts showing app in daily routine",
-        "1 Instagram story series",
-        "Honest feedback and testimonial"
+        "1 Alpha gameplay video (10+ minutes)",
+        "3 Twitter threads about Web3 gaming innovation",
+        "1 Live stream featuring alpha gameplay",
+        "Community AMA session about the platform",
+        "Honest review and feedback to development team"
       ],
-      guidelines: [
-        "Must use app for minimum 7 days",
-        "Content must be authentic and honest",
-        "Include personal wellness journey context",
-        "Use provided hashtags and mention handles"
+      contentExamples: [
+        "Thread Example: 'Just got access to @LusterLabs alpha and wow... This is what Web3 gaming should be. True asset ownership, cross-game compatibility, and actual FUN gameplay. Thread on what makes this different 🧵'",
+        "Video Title: 'Luster Labs Alpha Review - The Future of Blockchain Gaming is HERE'",
+        "Stream Title: 'EXCLUSIVE: Luster Labs Alpha Gameplay - Web3 Gaming Done Right'"
+      ],
+      requirements: [
+        "Experience with Web3 gaming platforms",
+        "Active engagement with blockchain gaming community",
+        "Professional video editing and streaming setup",
+        "Willingness to provide constructive feedback"
       ]
     }),
-    platforms: JSON.stringify(["Instagram", "TikTok", "YouTube"]),
-    tags: JSON.stringify(["wellness", "app-review", "lifestyle", "authentic"]),
+    platforms: JSON.stringify(["Twitter", "YouTube", "Twitch"]),
+    tags: JSON.stringify(["web3", "blockchain", "gaming", "alpha", "luster-labs"]),
     startDate: new Date("2025-01-15"),
-    endDate: new Date("2025-02-15"),
+    endDate: new Date("2025-01-17"), // Ending soon
     maxParticipants: 3,
     currentParticipants: 1,
     isPublic: true,
@@ -81,34 +93,40 @@ const sampleCampaigns = [
   },
   {
     userId: 12,
-    title: "Tech Creator - AI Tool Integration Series",
-    description: "Create educational content about integrating AI tools into creator workflows. Perfect for tech creators who want to help their audience understand practical AI applications.",
-    budget: 300000, // $3,000 total
-    rewardPerAction: 75000, // $750 per creator
+    title: "🎮 Hyve Guild Tournament Series - Creator Sponsorship",
+    description: "Become an official sponsor for Hyve's Guild Tournament Series featuring BitByte and upcoming games. Drive community engagement and tournament sign-ups while earning revenue from referrals.",
+    budget: 400000, // $4,000 total
+    rewardPerAction: 100000, // $1,000 per creator
     status: "active",
-    campaignType: "content_creation",
-    targetAudience: "Tech creators and developer educators",
+    campaignType: "engagement",
+    targetAudience: "Gaming creators and esports enthusiasts",
     requirements: JSON.stringify({
       minFollowers: 15000,
-      platforms: ["YouTube", "Twitter", "LinkedIn"],
+      platforms: ["Twitch", "YouTube", "Twitter"],
+      urgency: "Tournament starts in 10 days",
       deliverables: [
-        "1 comprehensive tutorial video (15+ minutes)",
-        "1 Twitter thread with key insights",
-        "1 LinkedIn article with professional insights",
-        "2 follow-up posts with tips and tricks",
-        "Code examples and resources shared"
+        "1 Tournament announcement stream",
+        "2 Practice streams leading up to event",
+        "Live tournament co-streaming or commentary",
+        "3 Twitter posts promoting guild sign-ups",
+        "1 Post-tournament recap and highlights video"
       ],
-      techRequirements: [
-        "Experience with AI tools (ChatGPT, Claude, etc.)",
-        "Basic coding knowledge preferred",
-        "Screen recording capabilities",
-        "Professional video editing skills"
+      contentExamples: [
+        "Announcement: 'The @Hyve_Labs Guild Tournament is HERE! $10k prize pool, custom skins, and bragging rights. Join my guild and let's dominate BitByte together!'",
+        "Stream Title: 'Guild Tournament Prep - BitByte Strategy & Practice Session'",
+        "Thread: 'Guild Tournament Update: Weekly prizes, leaderboard battles, and exclusive NFT rewards. Here's everything you need to know... 🧵'"
+      ],
+      requirements: [
+        "Active in competitive gaming scene",
+        "Experience with tournament formats and commentary",
+        "Strong streaming setup and audience engagement",
+        "Ability to recruit and lead a gaming guild"
       ]
     }),
-    platforms: JSON.stringify(["YouTube", "Twitter", "LinkedIn"]),
-    tags: JSON.stringify(["tech", "ai", "education", "tutorial"]),
+    platforms: JSON.stringify(["Twitch", "YouTube", "Twitter"]),
+    tags: JSON.stringify(["web3", "gaming", "tournament", "guild", "hyve"]),
     startDate: new Date("2025-01-20"),
-    endDate: new Date("2025-03-20"),
+    endDate: new Date("2025-04-20"),
     maxParticipants: 4,
     currentParticipants: 2,
     isPublic: true,
@@ -116,71 +134,83 @@ const sampleCampaigns = [
   },
   {
     userId: 12,
-    title: "Fashion Creator - Summer Collection Showcase",
-    description: "Partner with emerging fashion brand StyleForward to showcase their summer collection. Create authentic styling content that resonates with your fashion-forward audience.",
-    budget: 200000, // $2,000 total
-    rewardPerAction: 40000, // $400 per creator
+    title: "💎 Luster Labs - NFT Gaming Integration Showcase",
+    description: "Showcase Luster Labs' revolutionary NFT integration in Web3 gaming. Demonstrate true asset ownership, cross-game compatibility, and play-to-earn mechanics to your audience.",
+    budget: 300000, // $3,000 total
+    rewardPerAction: 75000, // $750 per creator
     status: "active",
-    campaignType: "social_post",
-    targetAudience: "Fashion and style creators",
+    campaignType: "content_creation",
+    targetAudience: "NFT creators and Web3 gaming enthusiasts",
     requirements: JSON.stringify({
       minFollowers: 8000,
-      platforms: ["Instagram", "TikTok"],
+      platforms: ["YouTube", "Twitter", "Twitch"],
+      urgency: "Applications close in 5 days",
       deliverables: [
-        "1 styling video featuring 3+ pieces",
-        "3 outfit posts with styling tips",
-        "1 Instagram Reel showing versatility",
-        "Story series with behind-the-scenes content",
-        "Honest styling recommendations"
+        "1 In-depth NFT integration breakdown video",
+        "3 Educational threads about Web3 gaming economics",
+        "1 Live demo of cross-game asset transfers",
+        "Community workshop on NFT gaming strategies",
+        "Collaboration with other Web3 creators"
       ],
-      brandGuidelines: [
-        "Tag @StyleForward in all posts",
-        "Use hashtag #StyleForwardSummer",
-        "Include authentic styling tips",
-        "Show pieces in different settings"
+      contentExamples: [
+        "Video Title: 'This is How NFTs Should Work in Games - Luster Labs Deep Dive'",
+        "Thread: 'Just transferred my sword from Game A to Game B seamlessly. @LusterLabs is solving the biggest problem in Web3 gaming - here's how... 🧵'",
+        "Stream: 'Live NFT Trading + Gaming - Real Asset Ownership Demo'"
+      ],
+      requirements: [
+        "Deep understanding of NFT technology",
+        "Experience with Web3 gaming platforms",
+        "Professional content creation skills",
+        "Active NFT community engagement"
       ]
     }),
-    platforms: JSON.stringify(["Instagram", "TikTok"]),
-    tags: JSON.stringify(["fashion", "styling", "summer", "collection"]),
+    platforms: JSON.stringify(["YouTube", "Twitter", "Twitch"]),
+    tags: JSON.stringify(["nft", "web3", "gaming", "blockchain", "luster-labs"]),
     startDate: new Date("2025-01-10"),
-    endDate: new Date("2025-02-28"),
-    maxParticipants: 5,
-    currentParticipants: 3,
+    endDate: new Date("2025-03-10"),
+    maxParticipants: 4,
+    currentParticipants: 1,
     isPublic: true,
     verificationRequired: true
   },
   {
     userId: 12,
-    title: "Gaming Creator - Tournament Series Promotion",
-    description: "Promote the upcoming EsportsArena tournament series with engaging content that drives sign-ups and viewership. Perfect for gaming creators who want to support competitive gaming.",
-    budget: 400000, // $4,000 total
-    rewardPerAction: 100000, // $1,000 per creator
+    title: "🔥 Hyve Platform Beta - Content Creator Early Access",
+    description: "Get exclusive early access to Hyve's complete gaming platform before public launch. Create content around the ecosystem, social features, and upcoming game releases.",
+    budget: 350000, // $3,500 total
+    rewardPerAction: 87500, // $875 per creator
     status: "active",
-    campaignType: "engagement",
-    targetAudience: "Gaming creators and esports enthusiasts",
+    campaignType: "content_creation",
+    targetAudience: "Web3 gaming content creators",
     requirements: JSON.stringify({
-      minFollowers: 20000,
-      platforms: ["Twitch", "YouTube", "Twitter"],
+      minFollowers: 12000,
+      platforms: ["YouTube", "Twitch", "Twitter"],
+      urgency: "Beta access limited - Apply within 4 days",
       deliverables: [
-        "1 tournament announcement stream",
-        "2 practice/training streams leading up to event",
-        "Live tournament commentary or co-streaming",
-        "3 Twitter posts promoting sign-ups",
-        "1 post-tournament recap video"
+        "1 Platform overview and first impressions video",
+        "2 Feature deep-dive videos (wallet, social, games)",
+        "3 Twitter threads about platform benefits",
+        "1 Live Q&A session with your audience",
+        "Beta feedback and bug reporting to development team"
       ],
-      gamingRequirements: [
-        "Active in competitive gaming scene",
-        "Experience with tournament formats",
-        "Good streaming setup and commentary skills",
-        "Willingness to participate or promote actively"
+      contentExamples: [
+        "Video: 'Hyve Platform Beta First Look - The Future of Web3 Gaming Ecosystems'",
+        "Thread: 'Beta testing @Hyve_Labs platform and the onboarding is SMOOTH. No complex wallet setup, instant gameplay, cross-chain compatibility. This is how Web3 should feel... 🧵'",
+        "Stream: 'Hyve Beta Deep Dive - Social Features, Wallet Integration, & More'"
+      ],
+      requirements: [
+        "Experience with Web3 gaming platforms",
+        "Strong technical communication skills",
+        "Ability to provide constructive development feedback",
+        "Regular content creation schedule"
       ]
     }),
-    platforms: JSON.stringify(["Twitch", "YouTube", "Twitter"]),
-    tags: JSON.stringify(["gaming", "esports", "tournament", "competitive"]),
+    platforms: JSON.stringify(["YouTube", "Twitch", "Twitter"]),
+    tags: JSON.stringify(["web3", "gaming", "beta", "platform", "hyve"]),
     startDate: new Date("2025-01-25"),
-    endDate: new Date("2025-04-25"),
+    endDate: new Date("2025-03-25"),
     maxParticipants: 4,
-    currentParticipants: 1,
+    currentParticipants: 0,
     isPublic: true,
     verificationRequired: true
   }
