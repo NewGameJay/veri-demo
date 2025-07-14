@@ -39,7 +39,6 @@ interface TaskVerificationProps {
 
 export function TaskVerification({ userId, userStreak, userXP, showFilters = false }: TaskVerificationProps) {
   const [activeTab, setActiveTab] = useState("available");
-  const [taskType, setTaskType] = useState("tasks"); // New state for Tasks vs Campaigns
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationUrl, setVerificationUrl] = useState("");
   const [selectedTask, setSelectedTask] = useState<any>(null);
@@ -242,8 +241,8 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
     }
   ];
 
-  // Get the current active tasks based on selected type
-  const availableTasks = taskType === "tasks" ? microTasks : campaigns;
+  // Get the current active tasks (only micro tasks now)
+  const availableTasks = microTasks;
 
   // Filter available tasks based on filters
   const availableTasksFiltered = availableTasks.filter(task => {
@@ -454,35 +453,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {/* Task vs Campaign Toggle Tabs */}
-        <div className="mb-6">
-          <div className="flex items-center justify-center">
-            <div className="glass-subtle rounded-lg p-1 border border-white/10">
-              <div className="flex">
-                <button
-                  onClick={() => setTaskType("tasks")}
-                  className={`px-6 py-2 rounded-md text-sm font-medium transition-all duration-300 ${
-                    taskType === "tasks"
-                      ? "bg-white/10 text-white shadow-lg"
-                      : "text-white/60 hover:text-white/80"
-                  }`}
-                >
-                  Tasks
-                </button>
-                <button
-                  onClick={() => setTaskType("campaigns")}
-                  className={`px-6 py-2 rounded-md text-sm font-medium transition-all duration-300 ${
-                    taskType === "campaigns"
-                      ? "bg-white/10 text-white shadow-lg"
-                      : "text-white/60 hover:text-white/80"
-                  }`}
-                >
-                  Campaigns
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-3 bg-white/5">
@@ -606,58 +577,6 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           )}
           
           <TabsContent value="available" className="space-y-4">
-            {/* Campaign Locked State */}
-            {taskType === "campaigns" && userStreak < 7 ? (
-              <div className="text-center py-12">
-                <motion.div
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500/20 to-teal-500/20 flex items-center justify-center mx-auto mb-6"
-                >
-                  <Lock className="h-10 w-10 text-white/60" />
-                </motion.div>
-                <h3 className="text-xl font-semibold text-white mb-3">Campaigns Locked</h3>
-                <p className="text-white/60 mb-6 max-w-md mx-auto">
-                  Complete a 7-day streak to unlock access to premium campaign content. 
-                  These campaigns offer higher rewards and brand partnership opportunities.
-                </p>
-                <div className="space-y-3 max-w-xs mx-auto">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-white/60">Streak Progress</span>
-                    <span className="text-white font-medium">{userStreak}/7 days</span>
-                  </div>
-                  <Progress value={(userStreak / 7) * 100} className="h-2" />
-                  <p className="text-sm text-white/40">
-                    {7 - userStreak} more days to unlock
-                  </p>
-                </div>
-                
-                {/* Preview of Campaign Types */}
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
-                  {campaigns.slice(0, 4).map((campaign) => (
-                    <div key={campaign.id} className="relative glass-subtle p-4 rounded-lg border border-white/10 opacity-60">
-                      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-teal-500/10 rounded-lg"></div>
-                      <div className="absolute top-2 right-2">
-                        <Lock className="h-4 w-4 text-white/40" />
-                      </div>
-                      <div className="relative">
-                        <div className="flex items-center space-x-2 mb-2">
-                          <campaign.icon className={`h-5 w-5 ${campaign.color}`} />
-                          <h4 className="font-semibold text-white text-sm">{campaign.title}</h4>
-                        </div>
-                        <p className="text-white/60 text-xs mb-3">{campaign.description}</p>
-                        <div className="flex items-center justify-between">
-                          <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-400 text-xs">
-                            {campaign.points} XP
-                          </Badge>
-                          <span className="text-xs text-white/40">{campaign.difficulty}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {displayedTasks.map((task) => {
                   const isExpanded = expandedTasks.has(task.id);
@@ -795,7 +714,6 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                 );
                 })}
               </div>
-            )}
             
             {/* View More Tasks Button */}
             {hasMoreTasks && !showAllTasks && (

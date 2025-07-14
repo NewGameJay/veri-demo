@@ -4,6 +4,7 @@ import { Header } from "@/components/navigation/header";
 import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
 import { VeriScoreCard } from "@/components/dashboard/veri-score-card";
 import { TaskVerification } from "@/components/dashboard/task-verification";
+import { CampaignExplore } from "@/components/dashboard/campaign-explore";
 import { ProfileBuilder } from "@/components/dashboard/profile-builder";
 import { SocialConnections } from "@/components/dashboard/social-connections";
 import { Leaderboard } from "@/components/dashboard/leaderboard";
@@ -110,9 +111,12 @@ export default function Dashboard() {
           {/* Enhanced Dashboard Tabs with Glass Effect - Sticky Navigation */}
           <Tabs defaultValue="tasks" className="w-full animate-slide-in mb-6">
             <div className="sticky top-20 z-20 sticky-tabs rounded-lg mb-6 p-1">
-              <TabsList className="grid w-full grid-cols-4 bg-transparent border-0">
+              <TabsList className="grid w-full grid-cols-5 bg-transparent border-0">
                 <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
                   Tasks
+                </TabsTrigger>
+                <TabsTrigger value="campaigns" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
+                  Campaigns
                 </TabsTrigger>
                 <TabsTrigger value="profile" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
                   Profile
@@ -162,6 +166,13 @@ export default function Dashboard() {
                   <Leaderboard />
                 </div>
               </div>
+            </TabsContent>
+
+            <TabsContent value="campaigns" className="mt-6">
+              <CampaignExplore 
+                userStreak={userStreak}
+                userXP={userXP}
+              />
             </TabsContent>
 
             <TabsContent value="profile" className="mt-6">
