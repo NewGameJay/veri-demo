@@ -102,13 +102,7 @@ export default function Dashboard() {
                   </div>
                 </div>
                 
-                {/* XP Display */}
-                <div className="glass-effect px-4 py-3 rounded-xl border border-white/20">
-                  <div className="text-center">
-                    <div className="text-white font-termina text-lg">{userXP}</div>
-                    <div className="text-white/60 font-inter text-xs">XP Points</div>
-                  </div>
-                </div>
+                
               </div>
             </div>
           </div>
