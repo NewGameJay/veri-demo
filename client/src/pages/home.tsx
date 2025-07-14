@@ -92,7 +92,7 @@ export default function Home() {
           >
             Create to Resonate.
             <br />
-            <span className="bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent animate-gradient-shift">
               Impact to Earn.
             </span>
           </motion.h1>
