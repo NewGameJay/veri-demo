@@ -1,0 +1,45 @@
+# Replit Sprint 4 Execution Prompt
+
+I have a Sprint 4 Implementation Guide (Veri MVP Sprint 4 Implementation Guide.md) that contains 7 development tasks. I need you to:
+
+## Execution Process:
+
+1. **Read and understand** the entire Sprint 4 Implementation Guide
+2. **Execute each sprint task** in order (4.1 through 4.7)
+3. **After completing each task:**
+   - Show me visual proof of the implementation (screenshots or describe what changed)
+   - Run the test checklist from the "Test & Verify" section
+   - Tell me the test results (✅ pass or ❌ fail for each item)
+   - Provide specific instructions on how I can verify the changes myself
+   - Ask: "Task 4.X complete. Here's what I implemented: [summary]. Would you like to test this yourself or make any adjustments before I proceed to Task 4.X+1?"
+
+## Specific Requirements:
+
+### For Each Task Completion:
+1. **Visual Evidence**: Show before/after screenshots or describe the visual changes
+2. **Test Results**:
+Sprint 4.1 Test Results: ✅ Toggle tabs switch between Tasks and Campaigns views ✅ Tasks show micro-actions with quick completion
+❌ Campaigns display locked state until streak met (issue: lock icon not showing) ✅ Visual hierarchy clearly differentiates the two types ✅ Streak requirements clearly communicated
+
+3. **Verification Instructions**:
+To verify on your end:
+    •    Navigate to the Tasks page
+    •    Click the new "Campaigns" tab
+    •    Check that campaigns show as locked with overlay
+    •    Complete a 7-day streak and verify unlock
+    •    Test on mobile to ensure responsive design
+
+4. **Wait for my confirmation** before proceeding to the next task
+
+## Priority Order:
+- Complete all P0 tasks first (4.1, 4.2, 4.3, 4.4)
+- Then move to P1 tasks (4.5, 4.6, 4.7)
+- Reference Sprint 3 work and maintain consistency with existing styles
+
+## Important Notes:
+- Matt's design decisions are final - if anything conflicts, follow Matt's vision
+- Don't rebuild working features - enhance and fix only
+- Keep all existing glass morphism effects and animations
+- Test each implementation thoroughly before showing results
+
+Start with Sprint 4.1 (Task vs Campaign Architecture Refactor) and show me the results.

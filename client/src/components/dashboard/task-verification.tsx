@@ -39,6 +39,7 @@ interface TaskVerificationProps {
 
 export function TaskVerification({ userId, userStreak, userXP, showFilters = false }: TaskVerificationProps) {
   const [activeTab, setActiveTab] = useState("available");
+  const [taskType, setTaskType] = useState("tasks"); // New state for Tasks vs Campaigns
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationUrl, setVerificationUrl] = useState("");
   const [selectedTask, setSelectedTask] = useState<any>(null);
@@ -79,7 +80,8 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
     enabled: !!userId,
   });
 
-  const availableTasks = [
+  // Micro-task data (quick actions)
+  const microTasks = [
     {
       id: 0,
       title: "MVP Demo Test Task",
@@ -97,136 +99,151 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
     },
     {
       id: 1,
-      title: "Create Gaming Highlights Reel",
-      description: "Create a 60-second highlights reel from your best gaming moments and share it across platforms",
-      platform: "youtube",
-      icon: Youtube,
-      color: "text-red-400",
-      points: 500,
-      difficulty: "Medium",
-      estimatedTime: "2 hours",
-      requirements: ["Record 3-5 epic gaming moments", "Edit into 60-second highlights", "Upload to YouTube/TikTok", "Include #GamingHighlights"],
-      category: "gaming_content",
-      brand: "Hyve.gg",
-      streakBonus: 3
-    },
-    {
-      id: 2,
-      title: "Share Gaming Tips & Tricks",
-      description: "Share your best gaming tips and strategies with the community across social platforms",
+      title: "Retweet Gaming Content",
+      description: "Share this gaming announcement with your audience",
       platform: "twitter",
       icon: Twitter,
       color: "text-blue-400",
-      points: 250,
+      points: 10,
       difficulty: "Easy",
-      estimatedTime: "30 minutes",
-      requirements: ["Post 3-5 useful gaming tips", "Include relevant hashtags", "Tag @community", "Include screenshots/GIFs"],
-      category: "gaming_tips",
-      brand: "Lusterlabs.xyz",
+      estimatedTime: "1 minute",
+      requirements: ["Retweet the pinned post", "Add relevant comment"],
+      category: "social_engagement",
+      brand: "Hyve.gg",
+      streakBonus: 1
+    },
+    {
+      id: 2,
+      title: "Share Blog Post to IG Stories",
+      description: "Reformat this blog post for Instagram Stories",
+      platform: "instagram",
+      icon: Instagram,
+      color: "text-pink-400",
+      points: 15,
+      difficulty: "Easy",
+      estimatedTime: "3-5 minutes",
+      requirements: ["Create story slide", "Tag brand account", "Include swipe-up link"],
+      category: "content_sharing",
+      brand: "Luster Labs",
       streakBonus: 1
     },
     {
       id: 3,
-      title: "Gameplay Livestream",
-      description: "Host live gameplay stream on Twitch with interactive audience engagement",
-      platform: "twitch",
-      icon: RefreshCw,
-      color: "text-purple-400",
-      points: 400,
-      difficulty: "Medium",
-      estimatedTime: "3 hours",
-      requirements: ["Minimum 2 hour live stream", "Engage with chat actively", "Use branded stream overlay"],
-      category: "live_streaming",
-      brand: "Lusterlabs.xyz"
-    },
-    {
-      id: 4,
-      title: "Short-form Video Teasers",
-      description: "Create 2x short-form video teasers for TikTok and YouTube Shorts",
-      platform: "tiktok",
-      icon: Music,
-      color: "text-pink-400",
-      points: 300,
-      difficulty: "Easy",
-      estimatedTime: "1 hour",
-      requirements: ["60 seconds maximum each", "Include trending gaming hashtags", "Cross-post to both platforms"],
-      category: "short_form_content",
-      brand: "Lusterlabs.xyz"
-    },
-    {
-      id: 5,
-      title: "Social Media Campaign",
-      description: "Create 3x social media posts across Twitter/X, Instagram, and Discord",
+      title: "Like & Comment on Post",
+      description: "Engage with this brand post authentically",
       platform: "twitter",
       icon: Twitter,
       color: "text-blue-400",
-      points: 250,
+      points: 5,
       difficulty: "Easy",
-      estimatedTime: "45 minutes",
-      requirements: ["Announce collaboration", "Include branded hashtags", "Tag official accounts"],
-      category: "social_campaign",
-      brand: "Hyve.gg"
-    },
-    {
-      id: 6,
-      title: "Live Gaming Community Stream",
-      description: "Host a live gaming stream with community interaction and Q&A session",
-      platform: "twitch",
-      icon: Users,
-      color: "text-purple-400",
-      points: 400,
-      difficulty: "Medium",
-      estimatedTime: "2-3 hours",
-      requirements: ["Minimum 90 minute stream", "Interact with chat consistently", "Play trending games", "Include community challenges"],
-      category: "live_streaming",
+      estimatedTime: "30 seconds",
+      requirements: ["Like the post", "Leave thoughtful comment"],
+      category: "social_engagement",
       brand: "Hyve.gg",
-      streakBonus: 2
+      streakBonus: 1
     },
     {
-      id: 7,
-      title: "Gaming Tutorial Creation",
-      description: "Create detailed tutorial showing advanced gaming techniques and strategies",
-      platform: "youtube",
-      icon: Youtube,
-      color: "text-red-400",
-      points: 350,
-      difficulty: "Hard",
-      estimatedTime: "3-4 hours",
-      requirements: ["Record step-by-step tutorial", "Include commentary explaining strategy", "Upload to YouTube", "Add timestamps and chapters"],
-      category: "educational_content",
-      brand: "Lusterlabs.xyz",
-      streakBonus: 3
-    },
-    {
-      id: 8,
-      title: "Live Event Participation",
-      description: "Participate in live gaming event or community stream",
-      platform: "community",
-      icon: Users,
-      color: "text-green-400",
-      points: 600,
-      difficulty: "Hard",
-      estimatedTime: "4 hours",
-      requirements: ["Participate in scheduled event", "Engage with community", "Represent brand professionally"],
-      category: "live_events",
-      brand: "Hyve.gg"
-    },
-    {
-      id: 9,
-      title: "Creator Economy Reaction Video",
-      description: "Create reaction video responding to popular gaming content and trends",
-      platform: "youtube",
-      icon: Youtube,
-      color: "text-red-400",
-      points: 300,
-      difficulty: "Medium",
-      estimatedTime: "1-2 hours",
-      requirements: ["React to trending gaming content", "Add insightful commentary", "Include your gameplay clips", "Upload to YouTube/TikTok"],
-      category: "reaction_content",
+      id: 4,
+      title: "Quick Gaming Tip Tweet",
+      description: "Share one quick gaming tip in a tweet",
+      platform: "twitter",
+      icon: Twitter,
+      color: "text-blue-400",
+      points: 20,
+      difficulty: "Easy",
+      estimatedTime: "2-3 minutes",
+      requirements: ["Include #VeriTips hashtag", "Tag @VeriClub", "Share personal gaming advice"],
+      category: "gaming_tips",
       brand: "Hyve.gg",
-      streakBonus: 2
+      streakBonus: 1
+    },
+    {
+      id: 5,
+      title: "Cross-Platform Content Share",
+      description: "Share your latest stream highlight to TikTok",
+      platform: "tiktok",
+      icon: Music,
+      color: "text-pink-400",
+      points: 25,
+      difficulty: "Easy",
+      estimatedTime: "5 minutes",
+      requirements: ["Upload 30-60 second clip", "Use trending audio", "Include brand hashtag"],
+      category: "content_sharing",
+      brand: "Luster Labs",
+      streakBonus: 1
     }
   ];
+
+  // Campaign data (higher-tier locked content)
+  const campaigns = [
+    {
+      id: 101,
+      title: "Gaming Highlights Reel Creation",
+      description: "Create a comprehensive gaming highlights reel showcasing your best moments",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 500,
+      difficulty: "Hard",
+      estimatedTime: "4-6 hours",
+      requirements: ["Record 10+ highlight clips", "Professional editing", "Custom thumbnail", "Upload to YouTube"],
+      category: "video_content",
+      brand: "Hyve.gg",
+      streakBonus: 3,
+      isLocked: true
+    },
+    {
+      id: 102,
+      title: "Multi-Platform Content Campaign",
+      description: "Create a coordinated content campaign across multiple platforms",
+      platform: "multi",
+      icon: Users,
+      color: "text-purple-400",
+      points: 750,
+      difficulty: "Hard",
+      estimatedTime: "8-10 hours",
+      requirements: ["Content for 3+ platforms", "Consistent branding", "Scheduled posting", "Community engagement"],
+      category: "brand_partnership",
+      brand: "Luster Labs",
+      streakBonus: 5,
+      isLocked: true
+    },
+    {
+      id: 103,
+      title: "Full Video Tutorial Series",
+      description: "Create a comprehensive tutorial series for gaming strategies",
+      platform: "youtube",
+      icon: Youtube,
+      color: "text-red-400",
+      points: 1000,
+      difficulty: "Expert",
+      estimatedTime: "12-15 hours",
+      requirements: ["5+ episode series", "Professional production", "Detailed script", "Community follow-up"],
+      category: "educational_content",
+      brand: "Hyve.gg",
+      streakBonus: 7,
+      isLocked: true
+    },
+    {
+      id: 104,
+      title: "Brand Partnership Execution",
+      description: "Execute a full brand partnership with deliverables and reporting",
+      platform: "multi",
+      icon: Trophy,
+      color: "text-yellow-400",
+      points: 1500,
+      difficulty: "Expert",
+      estimatedTime: "20+ hours",
+      requirements: ["Contract negotiations", "Content creation", "Performance reporting", "Relationship management"],
+      category: "brand_partnership",
+      brand: "Luster Labs",
+      streakBonus: 10,
+      isLocked: true
+    }
+  ];
+
+  // Get the current active tasks based on selected type
+  const availableTasks = taskType === "tasks" ? microTasks : campaigns;
 
   // Filter available tasks based on filters
   const availableTasksFiltered = availableTasks.filter(task => {
@@ -437,6 +454,36 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {/* Task vs Campaign Toggle Tabs */}
+        <div className="mb-6">
+          <div className="flex items-center justify-center">
+            <div className="glass-subtle rounded-lg p-1 border border-white/10">
+              <div className="flex">
+                <button
+                  onClick={() => setTaskType("tasks")}
+                  className={`px-6 py-2 rounded-md text-sm font-medium transition-all duration-300 ${
+                    taskType === "tasks"
+                      ? "bg-white/10 text-white shadow-lg"
+                      : "text-white/60 hover:text-white/80"
+                  }`}
+                >
+                  Tasks
+                </button>
+                <button
+                  onClick={() => setTaskType("campaigns")}
+                  className={`px-6 py-2 rounded-md text-sm font-medium transition-all duration-300 ${
+                    taskType === "campaigns"
+                      ? "bg-white/10 text-white shadow-lg"
+                      : "text-white/60 hover:text-white/80"
+                  }`}
+                >
+                  Campaigns
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-3 bg-white/5">
             <TabsTrigger value="available">Available ({availableTasksFiltered.length})</TabsTrigger>
@@ -559,18 +606,70 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           )}
           
           <TabsContent value="available" className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {displayedTasks.map((task) => {
-                const isExpanded = expandedTasks.has(task.id);
-                return (
-                  <div 
-                    key={task.id} 
-                    className="group glass-subtle p-4 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300 animate-fade-in relative"
-                    style={{
-                      animationDelay: `${task.id * 100}ms`
-                    }}
-                  >
-                    {/* Task Image Header */}
+            {/* Campaign Locked State */}
+            {taskType === "campaigns" && userStreak < 7 ? (
+              <div className="text-center py-12">
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500/20 to-teal-500/20 flex items-center justify-center mx-auto mb-6"
+                >
+                  <Lock className="h-10 w-10 text-white/60" />
+                </motion.div>
+                <h3 className="text-xl font-semibold text-white mb-3">Campaigns Locked</h3>
+                <p className="text-white/60 mb-6 max-w-md mx-auto">
+                  Complete a 7-day streak to unlock access to premium campaign content. 
+                  These campaigns offer higher rewards and brand partnership opportunities.
+                </p>
+                <div className="space-y-3 max-w-xs mx-auto">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-white/60">Streak Progress</span>
+                    <span className="text-white font-medium">{userStreak}/7 days</span>
+                  </div>
+                  <Progress value={(userStreak / 7) * 100} className="h-2" />
+                  <p className="text-sm text-white/40">
+                    {7 - userStreak} more days to unlock
+                  </p>
+                </div>
+                
+                {/* Preview of Campaign Types */}
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                  {campaigns.slice(0, 4).map((campaign) => (
+                    <div key={campaign.id} className="relative glass-subtle p-4 rounded-lg border border-white/10 opacity-60">
+                      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-teal-500/10 rounded-lg"></div>
+                      <div className="absolute top-2 right-2">
+                        <Lock className="h-4 w-4 text-white/40" />
+                      </div>
+                      <div className="relative">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <campaign.icon className={`h-5 w-5 ${campaign.color}`} />
+                          <h4 className="font-semibold text-white text-sm">{campaign.title}</h4>
+                        </div>
+                        <p className="text-white/60 text-xs mb-3">{campaign.description}</p>
+                        <div className="flex items-center justify-between">
+                          <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-400 text-xs">
+                            {campaign.points} XP
+                          </Badge>
+                          <span className="text-xs text-white/40">{campaign.difficulty}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {displayedTasks.map((task) => {
+                  const isExpanded = expandedTasks.has(task.id);
+                  return (
+                    <div 
+                      key={task.id} 
+                      className="group glass-subtle p-4 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300 animate-fade-in relative"
+                      style={{
+                        animationDelay: `${task.id * 100}ms`
+                      }}
+                    >
+                      {/* Task Image Header */}
                     <div className="relative mb-3 overflow-hidden rounded-lg">
                       <div className={`h-32 relative ${getTaskGradient(task.platform, task.category)}`}>
                         <div className="absolute inset-0 bg-black/20"></div>
@@ -694,8 +793,9 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                     </div>
                   </div>
                 );
-              })}
-            </div>
+                })}
+              </div>
+            )}
             
             {/* View More Tasks Button */}
             {hasMoreTasks && !showAllTasks && (
