@@ -17,12 +17,16 @@ export function LiquidGlassButton({
   ...props
 }: LiquidGlassButtonProps) {
   const baseClasses = `
-    relative overflow-hidden rounded-full font-medium transition-all duration-300 ease-out
-    transform-gpu will-change-transform backdrop-blur-xl
-    before:content-[''] before:absolute before:inset-0 before:rounded-full before:transition-all before:duration-500
-    after:content-[''] after:absolute after:inset-0 after:rounded-full after:transition-all after:duration-700
-    hover:scale-105 hover:-translate-y-0.5 active:scale-95
+    relative overflow-hidden rounded-full font-medium
+    transform-gpu backdrop-blur-xl
+    before:content-[''] before:absolute before:inset-0 before:rounded-full before:opacity-0
+    after:content-[''] after:absolute after:inset-0 after:rounded-full after:opacity-0
     border border-white/20 shadow-lg
+    transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]
+    hover:scale-[1.02] hover:-translate-y-1 active:scale-95
+    hover:before:opacity-100 hover:after:opacity-100
+    before:transition-all before:duration-700 before:ease-out
+    after:transition-all after:duration-1000 after:ease-out
   `;
 
   const variantClasses = {
@@ -58,11 +62,10 @@ export function LiquidGlassButton({
     lg: 'px-8 py-4 text-lg'
   };
 
-  // Animated liquid effect on hover
+  // Liquid shimmer effect only on hover
   const liquidEffect = `
-    before:animate-pulse hover:before:animate-none
-    after:bg-gradient-to-r after:from-white/20 after:via-transparent after:to-white/20
-    after:animate-shimmer hover:after:animate-none
+    after:bg-gradient-to-r after:from-white/30 after:via-white/10 after:to-white/30
+    hover:after:animate-shimmer
   `;
 
   return (

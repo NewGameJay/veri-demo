@@ -46,7 +46,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <VeriLogo />
           
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-8 text-center">
             <a href="#features" className="text-white/70 hover:text-white transition-colors">Features</a>
             <a href="#creators" className="text-white/70 hover:text-white transition-colors">For Creators</a>
             <a href="#brands" className="text-white/70 hover:text-white transition-colors">For Brands</a>
@@ -69,7 +69,6 @@ export default function Home() {
           </div>
         </div>
       </header>
-
       <DashboardSidebar
         isOpen={isDashboardOpen}
         isPinned={false}
@@ -78,7 +77,6 @@ export default function Home() {
         onPin={() => {}}
         onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
       />
-
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 px-8">
         <div className="max-w-7xl mx-auto text-center">
@@ -160,7 +158,6 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
-
       {/* Why Creators Choose Veri Section */}
       <section className="py-24 px-8">
         <div className="max-w-7xl mx-auto">
@@ -219,7 +216,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Getting Started Section */}
       <section className="py-24 px-8">
         <div className="max-w-7xl mx-auto">
@@ -341,7 +337,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Trusted By Section */}
       <section className="py-24 px-8 bg-black/30">
         <div className="max-w-7xl mx-auto">
@@ -424,7 +419,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="py-24 px-8">
         <div className="max-w-4xl mx-auto text-center">
@@ -456,7 +450,6 @@ export default function Home() {
           </p>
         </div>
       </section>
-
       {/* Footer */}
       <footer className="border-t border-white/10 py-12 px-8 bg-black/50">
         <div className="max-w-6xl mx-auto">
@@ -512,7 +505,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-
       <MobileNav />
       <OnboardingModal
         isOpen={isOnboardingOpen}
