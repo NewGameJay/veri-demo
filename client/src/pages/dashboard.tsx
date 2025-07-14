@@ -75,7 +75,7 @@ export default function Dashboard() {
           {/* Enhanced Welcome Section with Animation */}
           <div className="mb-8 animate-fade-in">
             <h1 className="text-3xl font-termina text-white mb-2 tracking-tight">
-              Welcome back, {user.firstName || user.username}!
+              🚀 Welcome back, {user.firstName || user.username}!
             </h1>
             <p className="text-white/60 font-inter">
               Here's your creator dashboard with all your progress and opportunities.
