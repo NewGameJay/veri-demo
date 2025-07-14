@@ -28,6 +28,7 @@ import { Trophy } from 'lucide-react';
 import { RefreshCw } from 'lucide-react';
 import { Hash } from 'lucide-react';
 import { ArrowRight } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 interface TaskVerificationProps {
   userId: number;
@@ -40,7 +41,20 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationUrl, setVerificationUrl] = useState("");
   const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set());
   const { toast } = useToast();
+
+  const toggleTaskExpansion = (taskId: number) => {
+    setExpandedTasks(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(taskId)) {
+        newSet.delete(taskId);
+      } else {
+        newSet.add(taskId);
+      }
+      return newSet;
+    });
+  };
 
   // Fetch completed tasks from backend
   const { data: completedTasksData = [], isLoading: tasksLoading } = useQuery<Task[]>({
@@ -388,99 +402,127 @@ export function TaskVerification({ userId, userStreak, userXP }: TaskVerificatio
           </TabsList>
           
           <TabsContent value="available" className="space-y-4">
-            <div className="space-y-4">
-              {availableTasks.map((task) => (
-                <div 
-                  key={task.id} 
-                  className="group glass-subtle p-4 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer animate-fade-in hover:bg-white/[0.08]"
-                  style={{
-                    animationDelay: `${task.id * 100}ms`
-                  }}
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-lg bg-gray-500/20 flex items-center justify-center group-hover:bg-white/5 transition-all duration-300 group-hover:scale-105 group-hover:rotate-3">
-                        <task.icon className={`h-5 w-5 ${task.color} group-hover:scale-105 transition-transform duration-300`} />
-                      </div>
-                      <div className="group-hover:translate-x-1 transition-transform duration-300">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
-                          {task.brand && (
-                            <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 text-xs">
-                              {task.brand}
-                            </Badge>
-                          )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {availableTasks.map((task) => {
+                const isExpanded = expandedTasks.has(task.id);
+                return (
+                  <div 
+                    key={task.id} 
+                    className="group glass-subtle p-4 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300 animate-fade-in hover:bg-white/[0.08] relative"
+                    style={{
+                      animationDelay: `${task.id * 100}ms`
+                    }}
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 rounded-lg bg-gray-500/20 flex items-center justify-center group-hover:bg-white/5 transition-all duration-300 group-hover:scale-105 group-hover:rotate-3">
+                          <task.icon className={`h-5 w-5 ${task.color} group-hover:scale-105 transition-transform duration-300`} />
                         </div>
-                        <p className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">{task.description}</p>
+                        <div className="group-hover:translate-x-1 transition-transform duration-300 flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-semibold text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
+                            {task.brand && (
+                              <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 text-xs">
+                                {task.brand}
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300 line-clamp-2">
+                            {task.description}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-center space-x-2 group-hover:scale-105 transition-transform duration-300">
-                      <Badge variant="secondary" className="bg-blue-500/20 text-blue-400 group-hover:bg-blue-500/30 group-hover:text-blue-300 transition-all duration-300">
-                        {task.points} XP
-                      </Badge>
-                      <Badge variant="secondary" className={`${getDifficultyColor(task.difficulty)} group-hover:scale-105 transition-all duration-300`}>
-                        {task.difficulty}
-                      </Badge>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between group-hover:translate-x-1 transition-transform duration-300">
-                    <div className="flex items-center space-x-4 text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">
-                      <div className="flex items-center space-x-1 group-hover:scale-105 transition-transform duration-300">
-                        <Clock className="h-4 w-4 group-hover:text-green-300 transition-colors duration-300" />
-                        <span>{task.estimatedTime}</span>
-                      </div>
-                      <div className="flex items-center space-x-1 group-hover:scale-105 transition-transform duration-300">
-                        <Hash className="h-4 w-4 group-hover:text-purple-300 transition-colors duration-300" />
-                        <span>{task.category.replace('_', ' ')}</span>
+                      <div className="flex items-center space-x-2 group-hover:scale-105 transition-transform duration-300">
+                        <Badge variant="secondary" className="bg-blue-500/20 text-blue-400 group-hover:bg-blue-500/30 group-hover:text-blue-300 transition-all duration-300">
+                          {task.points} XP
+                        </Badge>
+                        <Badge variant="secondary" className={`${getDifficultyColor(task.difficulty)} group-hover:scale-105 transition-all duration-300`}>
+                          {task.difficulty}
+                        </Badge>
                       </div>
                     </div>
                     
-                    <Button
-                      onClick={() => handleStartTask(task)}
-                      size="sm"
-                      className="veri-gradient group-hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25"
-                      disabled={selectedTask?.id === task.id}
-                    >
-                      {selectedTask?.id === task.id ? (
-                        <>
-                          <CheckCircle2 className="mr-1 h-3 w-3" />
-                          Started
-                        </>
-                      ) : (
-                        <>
-                          Start Task
-                          <ArrowRight className="ml-1 h-3 w-3 group-hover:translate-x-1 transition-transform duration-300" />
-                        </>
-                      )}
-                    </Button>
+                    <div className="flex items-center justify-between mb-3 group-hover:translate-x-1 transition-transform duration-300">
+                      <div className="flex items-center space-x-4 text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">
+                        <div className="flex items-center space-x-1 group-hover:scale-105 transition-transform duration-300">
+                          <Clock className="h-4 w-4 group-hover:text-green-300 transition-colors duration-300" />
+                          <span>{task.estimatedTime}</span>
+                        </div>
+                        <div className="flex items-center space-x-1 group-hover:scale-105 transition-transform duration-300">
+                          <Hash className="h-4 w-4 group-hover:text-purple-300 transition-colors duration-300" />
+                          <span>{task.category.replace('_', ' ')}</span>
+                        </div>
+                      </div>
+                      
+                      <Button
+                        onClick={() => toggleTaskExpansion(task.id)}
+                        size="sm"
+                        variant="ghost"
+                        className="text-white/60 hover:text-white hover:bg-white/10 p-1 h-6 w-6"
+                      >
+                        {isExpanded ? (
+                          <ChevronUp className="h-4 w-4" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                    
+                    {/* Expandable Requirements Section */}
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="mb-3 pt-3 border-t border-white/15 group-hover:border-white/25 transition-colors duration-300"
+                      >
+                        <h4 className="text-sm font-medium text-white mb-2 group-hover:text-green-300 transition-colors duration-300">Full Requirements:</h4>
+                        <ul className="space-y-2">
+                          {task.requirements.map((req, index) => (
+                            <li 
+                              key={index} 
+                              className="text-sm text-white/70 flex items-start space-x-2 group-hover:text-white/90 transition-all duration-300 group-hover:translate-x-1"
+                              style={{
+                                animationDelay: `${(task.id * 100) + (index * 50)}ms`
+                              }}
+                            >
+                              <div className="w-1 h-1 rounded-full bg-white/50 group-hover:bg-green-300 group-hover:scale-150 transition-all duration-300 mt-2"></div>
+                              <span className="group-hover:font-medium transition-all duration-300 flex-1">{req}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </motion.div>
+                    )}
+                    
+                    <div className="flex justify-center">
+                      <Button
+                        onClick={() => handleStartTask(task)}
+                        size="sm"
+                        className="veri-gradient group-hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25 w-full"
+                        disabled={selectedTask?.id === task.id}
+                      >
+                        {selectedTask?.id === task.id ? (
+                          <>
+                            <CheckCircle2 className="mr-1 h-3 w-3" />
+                            Started
+                          </>
+                        ) : (
+                          <>
+                            Start Task
+                            <ArrowRight className="ml-1 h-3 w-3 group-hover:translate-x-1 transition-transform duration-300" />
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                    
+                    {/* Hover indicator */}
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                    </div>
                   </div>
-                  
-                  {/* Requirements with enhanced hover animations */}
-                  <div className="mt-3 pt-3 border-t border-white/15 group-hover:border-white/25 transition-colors duration-300">
-                    <h4 className="text-sm font-medium text-white mb-2 group-hover:text-green-300 transition-colors duration-300">Requirements:</h4>
-                    <ul className="space-y-1">
-                      {task.requirements.map((req, index) => (
-                        <li 
-                          key={index} 
-                          className="text-sm text-white/70 flex items-center space-x-2 group-hover:text-white/90 transition-all duration-300 group-hover:translate-x-1"
-                          style={{
-                            animationDelay: `${(task.id * 100) + (index * 50)}ms`
-                          }}
-                        >
-                          <div className="w-1 h-1 rounded-full bg-white/50 group-hover:bg-green-300 group-hover:scale-150 transition-all duration-300"></div>
-                          <span className="group-hover:font-medium transition-all duration-300">{req}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  {/* Hover indicator */}
-                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </TabsContent>
           
