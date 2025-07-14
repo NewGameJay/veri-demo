@@ -15,7 +15,7 @@ import { ChevronRight } from 'lucide-react';
 import { useState, useEffect } from "react";
 import { LeaderboardSkeleton } from "@/components/ui/veri-skeleton";
 import { useToast } from "@/hooks/use-toast";
-import { useScrollEffect } from "@/hooks/use-scroll-effect";
+
 import { motion } from "framer-motion";
 
 export function Leaderboard() {
@@ -23,7 +23,7 @@ export function Leaderboard() {
     queryKey: ["/api/leaderboard"],
   });
   const { toast } = useToast();
-  const { scrollY, isScrolling } = useScrollEffect();
+
   const [previousRanks, setPreviousRanks] = useState<Record<number, number>>({});
   const [selectedCategory, setSelectedCategory] = useState<string>("global");
   const [showFullLeaderboard, setShowFullLeaderboard] = useState(false);
@@ -107,9 +107,7 @@ export function Leaderboard() {
 
   const displayedLeaderboard = showFullLeaderboard ? filteredLeaderboard : filteredLeaderboard?.slice(0, 5);
 
-  // Calculate scroll effect - follow VeriScore and social connections
-  const scrollOffset = Math.min(scrollY * 0.010, 4);
-  const floatY = isScrolling ? scrollOffset : 0;
+  // Scroll effects removed - static positioning
 
   return (
     <div className="sticky top-48 z-10"

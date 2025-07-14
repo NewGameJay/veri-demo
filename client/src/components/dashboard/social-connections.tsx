@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/auth-context";
 import { VeriSkeleton } from "@/components/ui/veri-skeleton";
 import { useToast } from "@/hooks/use-toast";
-import { useScrollEffect } from "@/hooks/use-scroll-effect";
+
 import { handleOAuthConnection, disconnectTwitter, handleOAuthCallback, initiateTwitterLogin, type SocialConnection } from '@/lib/oauth';
 import { useEffect } from 'react';
 import { motion } from "framer-motion";
@@ -15,7 +15,7 @@ export function SocialConnections() {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { scrollY, isScrolling } = useScrollEffect();
+
   
   const { data: userData, isLoading } = useQuery({
     queryKey: ["/api/users", user?.id],
@@ -146,9 +146,7 @@ export function SocialConnections() {
     instagram: "bg-gradient-to-br from-purple-500 to-pink-500", // Instagram gradient
   };
 
-  // Calculate scroll effect - follow VeriScore card movement
-  const scrollOffset = Math.min(scrollY * 0.012, 5);
-  const floatY = isScrolling ? scrollOffset : 0;
+  // Scroll effects removed - static positioning
 
   return (
     <div className="sticky top-40 z-10"

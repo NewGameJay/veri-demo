@@ -4,7 +4,7 @@ import { VeriLogo } from "@/components/ui/veri-logo";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/auth-context";
 import { useCounter } from "@/hooks/use-counter";
-import { useScrollEffect } from "@/hooks/use-scroll-effect";
+
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Star } from 'lucide-react';
 import { Trophy } from 'lucide-react';
@@ -16,7 +16,7 @@ import { motion } from "framer-motion";
 
 export function VeriScoreCard() {
   const { user } = useAuth();
-  const { scrollY, isScrolling } = useScrollEffect();
+
   const [previousScore, setPreviousScore] = useState<number | null>(null);
   const [previousXP, setPreviousXP] = useState<number | null>(null);
   const [showParticles, setShowParticles] = useState(false);
@@ -129,9 +129,7 @@ export function VeriScoreCard() {
     );
   }
 
-  // Calculate scroll effect - subtle movement with spring back
-  const scrollOffset = Math.min(scrollY * 0.015, 6);
-  const floatY = isScrolling ? scrollOffset : 0;
+  // Scroll effects removed - static positioning
 
   return (
     <div className="sticky top-32 z-10"
