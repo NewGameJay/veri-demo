@@ -206,7 +206,7 @@ export function SocialConnections() {
           );
         })}
         
-        {!connections?.length && (
+        {!userData?.socialConnections?.length && (
           <div className="text-center py-8">
             <div className="text-white/40 font-inter text-sm mb-2">No platforms connected yet</div>
             <div className="text-white/60 font-inter text-xs">Connect your social media to start earning XP!</div>
