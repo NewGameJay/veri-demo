@@ -76,8 +76,8 @@ export default function Dashboard() {
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 p-6">
               {/* Welcome Text */}
               <div>
-                <h1 className="text-3xl font-termina text-white mb-2 tracking-tight">
-                  🚀 Welcome back, {user.firstName || user.username}!
+                <h1 className="text-3xl font-termina mb-2 tracking-tight">
+                  🚀 <span className="bg-gradient-to-r from-white via-emerald-300 to-white bg-clip-text text-transparent animate-gradient-shift">Welcome back, {user.firstName || user.username}!</span>
                 </h1>
                 <p className="text-white/60 font-inter leading-relaxed">
                   Here's your creator dashboard with all your progress and opportunities.
@@ -121,13 +121,14 @@ export default function Dashboard() {
                   value="ai-agent" 
                   className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300 relative group"
                   disabled={!isMemorizzUnlocked}
-                  title={!isMemorizzUnlocked ? "Complete 10 Day Streak to unlock access to our Veri AI Agent suite." : ""}
+                  title={!isMemorizzUnlocked ? "Complete 10 Day Task Streak to Unlock your Veri AI Agent" : ""}
                 >
                   AI Agent {!isMemorizzUnlocked && "🔒"}
                   {!isMemorizzUnlocked && (
-                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-black/90 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 border border-white/20">
-                      Complete 10 Day Streak to unlock access to our Veri AI Agent suite.
-                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-2 h-2 bg-black/90 rotate-45 border-r border-b border-white/20"></div>
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 px-4 py-3 glass-effect bg-black/95 backdrop-blur-xl text-white text-sm rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap z-50 border border-emerald-400/30 shadow-xl shadow-emerald-500/20">
+                      <div className="text-emerald-400 font-medium mb-1">🔒 AI Agent Locked</div>
+                      <div className="text-white/90">Complete 10 Day Task Streak to Unlock your Veri AI Agent</div>
+                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-3 h-3 bg-black/95 rotate-45 border-r border-b border-emerald-400/30 -mt-1.5"></div>
                     </div>
                   )}
                 </TabsTrigger>
