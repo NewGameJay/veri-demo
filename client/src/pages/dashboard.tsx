@@ -71,55 +71,43 @@ export default function Dashboard() {
       />
       <main className="pt-20 px-4 lg:px-6">
         <div className="max-w-7xl mx-auto">
-          {/* Welcome Header and Streak Highlight - 2 Column Layout */}
-          <div className="mb-8 grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
-            {/* Welcome Text - Left Column */}
-            <div className="p-6">
-              <h1 className="text-3xl font-termina text-white mb-3 tracking-tight">
-                🚀 Welcome back, {user.firstName || user.username}!
-              </h1>
-              <p className="text-white/60 font-inter leading-relaxed">
-                Here's your creator dashboard with all your progress and opportunities.
-              </p>
-            </div>
-
-            {/* Streak Highlight - Right Column */}
-            <div className="glass-effect p-6 rounded-xl border border-white/20 bg-gradient-to-r from-emerald-500/10 to-blue-500/10">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-r from-emerald-500 to-blue-500 flex items-center justify-center">
-                    <span className="text-2xl font-termina text-white">{userStreak}</span>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-termina text-white mb-1">
-                      {userStreak} Day Streak! 🔥
-                    </h3>
-                    <p className="text-white/70 font-inter">
-                      Complete daily tasks to unlock XP multipliers. Next milestone: {userStreak >= 10 ? '15' : '10'} days
-                    </p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-emerald-400 font-termina text-lg">
-                    {userStreak >= 10 ? '2.5x' : userStreak >= 7 ? '2x' : userStreak >= 3 ? '1.5x' : '1x'} XP Multiplier
-                  </div>
-                  <div className="text-white/60 text-sm font-inter">
-                    {userStreak >= 10 ? 'AI Agent Unlocked!' : `${10 - userStreak} days to AI Agent`}
-                  </div>
-                </div>
+          {/* Streamlined Welcome Header with Compact Streak */}
+          <div className="mb-6 animate-fade-in">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 p-6">
+              {/* Welcome Text */}
+              <div>
+                <h1 className="text-3xl font-termina text-white mb-2 tracking-tight">
+                  🚀 Welcome back, {user.firstName || user.username}!
+                </h1>
+                <p className="text-white/60 font-inter leading-relaxed">
+                  Here's your creator dashboard with all your progress and opportunities.
+                </p>
               </div>
-              
-              {/* Streak Progress Bar */}
-              <div className="mt-4">
-                <div className="flex justify-between text-sm text-white/60 mb-2">
-                  <span>Progress to next reward</span>
-                  <span>{userStreak >= 10 ? '10/10' : `${userStreak}/10`}</span>
+
+              {/* Compact Streak Display */}
+              <div className="flex items-center gap-4">
+                <div className="glass-effect px-4 py-3 rounded-xl border border-white/20 bg-gradient-to-r from-emerald-500/10 to-blue-500/10">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-emerald-500 to-blue-500 flex items-center justify-center">
+                      <span className="text-lg font-termina text-white">{userStreak}</span>
+                    </div>
+                    <div>
+                      <div className="text-white font-termina text-sm">
+                        {userStreak} Day Streak 🔥
+                      </div>
+                      <div className="text-emerald-400 font-inter text-xs">
+                        {userStreak >= 10 ? '2.5x' : userStreak >= 7 ? '2x' : userStreak >= 3 ? '1.5x' : '1x'} XP Multiplier
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="w-full bg-white/10 rounded-full h-2">
-                  <div 
-                    className="bg-gradient-to-r from-emerald-500 to-blue-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${Math.min((userStreak / 10) * 100, 100)}%` }}
-                  ></div>
+                
+                {/* XP Display */}
+                <div className="glass-effect px-4 py-3 rounded-xl border border-white/20">
+                  <div className="text-center">
+                    <div className="text-white font-termina text-lg">{userXP}</div>
+                    <div className="text-white/60 font-inter text-xs">XP Points</div>
+                  </div>
                 </div>
               </div>
             </div>

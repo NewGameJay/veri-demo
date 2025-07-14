@@ -59,6 +59,19 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
     });
   };
 
+  const getTaskGradient = (platform: string, category: string) => {
+    if (platform === 'demo' || category === 'mvp_demo') {
+      return 'bg-gradient-to-br from-green-500/30 via-emerald-500/20 to-teal-500/30';
+    }
+    if (platform === 'youtube' || platform === 'twitch' || category.includes('gaming')) {
+      return 'bg-gradient-to-br from-purple-500/30 via-blue-500/20 to-indigo-500/30';
+    }
+    if (platform === 'twitter' || platform === 'instagram' || platform === 'tiktok') {
+      return 'bg-gradient-to-br from-pink-500/30 via-purple-500/20 to-blue-500/30';
+    }
+    return 'bg-gradient-to-br from-purple-600/20 via-blue-600/20 to-teal-600/20';
+  };
+
   // Fetch completed tasks from backend
   const { data: completedTasksData = [], isLoading: tasksLoading } = useQuery<Task[]>({
     queryKey: [`/api/tasks/${userId}`],
@@ -426,108 +439,106 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             <TabsTrigger value="completed">Completed ({completedTasks.length})</TabsTrigger>
           </TabsList>
           
-          {/* Task Filters - Show only when showFilters is true and on available tab */}
+          {/* Combined Filters - Show only when showFilters is true and on available tab */}
           {showFilters && activeTab === "available" && (
             <div className="mt-4 mb-4 p-4 glass-subtle rounded-lg border border-white/10">
-              <div className="space-y-4">
-                {/* Brand Filter */}
-                <div>
-                  <label className="text-sm font-medium text-white/80 mb-2 block">Filter by Brand:</label>
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      onClick={() => setBrandFilter("all")}
-                      className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
-                        brandFilter === "all" 
-                          ? "bg-emerald-500/30 text-emerald-300 border border-emerald-500/50" 
-                          : "bg-white/10 text-white/70 border border-white/20 hover:bg-white/20 hover:text-white"
-                      }`}
-                    >
-                      All Brands
-                    </button>
-                    <button
-                      onClick={() => setBrandFilter("Veri Platform")}
-                      className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
-                        brandFilter === "Veri Platform" 
-                          ? "bg-purple-500/30 text-purple-300 border border-purple-500/50" 
-                          : "bg-purple-500/20 text-purple-400 border border-purple-500/30 hover:bg-purple-500/30 hover:text-purple-300"
-                      }`}
-                    >
-                      Veri Platform
-                    </button>
-                    <button
-                      onClick={() => setBrandFilter("Hyve.gg")}
-                      className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
-                        brandFilter === "Hyve.gg" 
-                          ? "bg-purple-500/30 text-purple-300 border border-purple-500/50" 
-                          : "bg-purple-500/20 text-purple-400 border border-purple-500/30 hover:bg-purple-500/30 hover:text-purple-300"
-                      }`}
-                    >
-                      Hyve
-                    </button>
-                    <button
-                      onClick={() => setBrandFilter("Lusterlabs.xyz")}
-                      className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
-                        brandFilter === "Lusterlabs.xyz" 
-                          ? "bg-purple-500/30 text-purple-300 border border-purple-500/50" 
-                          : "bg-purple-500/20 text-purple-400 border border-purple-500/30 hover:bg-purple-500/30 hover:text-purple-300"
-                      }`}
-                    >
-                      Lusterlabs
-                    </button>
-                  </div>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                {/* Filter Label and Tags */}
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-sm font-medium text-white/80 mr-2">Filter By:</span>
+                  
+                  {/* Brand Tags */}
+                  <button
+                    onClick={() => setBrandFilter("all")}
+                    className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
+                      brandFilter === "all" 
+                        ? "bg-emerald-500/30 text-emerald-300 border border-emerald-500/50" 
+                        : "bg-white/10 text-white/70 border border-white/20 hover:bg-white/20 hover:text-white"
+                    }`}
+                  >
+                    All Brands
+                  </button>
+                  <button
+                    onClick={() => setBrandFilter("Veri Platform")}
+                    className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
+                      brandFilter === "Veri Platform" 
+                        ? "bg-purple-500/30 text-purple-300 border border-purple-500/50" 
+                        : "bg-purple-500/20 text-purple-400 border border-purple-500/30 hover:bg-purple-500/30 hover:text-purple-300"
+                    }`}
+                  >
+                    Veri
+                  </button>
+                  <button
+                    onClick={() => setBrandFilter("Hyve.gg")}
+                    className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
+                      brandFilter === "Hyve.gg" 
+                        ? "bg-purple-500/30 text-purple-300 border border-purple-500/50" 
+                        : "bg-purple-500/20 text-purple-400 border border-purple-500/30 hover:bg-purple-500/30 hover:text-purple-300"
+                    }`}
+                  >
+                    Hyve
+                  </button>
+                  <button
+                    onClick={() => setBrandFilter("Lusterlabs.xyz")}
+                    className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
+                      brandFilter === "Lusterlabs.xyz" 
+                        ? "bg-purple-500/30 text-purple-300 border border-purple-500/50" 
+                        : "bg-purple-500/20 text-purple-400 border border-purple-500/30 hover:bg-purple-500/30 hover:text-purple-300"
+                    }`}
+                  >
+                    Lusterlabs
+                  </button>
+                  
+                  {/* Separator */}
+                  <div className="w-px h-4 bg-white/20 mx-1"></div>
+                  
+                  {/* Difficulty Tags */}
+                  <button
+                    onClick={() => setDifficultyFilter("all")}
+                    className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
+                      difficultyFilter === "all" 
+                        ? "bg-emerald-500/30 text-emerald-300 border border-emerald-500/50" 
+                        : "bg-white/10 text-white/70 border border-white/20 hover:bg-white/20 hover:text-white"
+                    }`}
+                  >
+                    All Levels
+                  </button>
+                  <button
+                    onClick={() => setDifficultyFilter("easy")}
+                    className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
+                      difficultyFilter === "easy" 
+                        ? "bg-green-500/30 text-green-300 border border-green-500/50" 
+                        : "bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30 hover:text-green-300"
+                    }`}
+                  >
+                    Easy
+                  </button>
+                  <button
+                    onClick={() => setDifficultyFilter("medium")}
+                    className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
+                      difficultyFilter === "medium" 
+                        ? "bg-yellow-500/30 text-yellow-300 border border-yellow-500/50" 
+                        : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 hover:bg-yellow-500/30 hover:text-yellow-300"
+                    }`}
+                  >
+                    Medium
+                  </button>
+                  <button
+                    onClick={() => setDifficultyFilter("hard")}
+                    className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
+                      difficultyFilter === "hard" 
+                        ? "bg-red-500/30 text-red-300 border border-red-500/50" 
+                        : "bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 hover:text-red-300"
+                    }`}
+                  >
+                    Hard
+                  </button>
                 </div>
-                
-                {/* Difficulty Filter */}
-                <div>
-                  <label className="text-sm font-medium text-white/80 mb-2 block">Filter by Difficulty:</label>
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      onClick={() => setDifficultyFilter("all")}
-                      className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
-                        difficultyFilter === "all" 
-                          ? "bg-emerald-500/30 text-emerald-300 border border-emerald-500/50" 
-                          : "bg-white/10 text-white/70 border border-white/20 hover:bg-white/20 hover:text-white"
-                      }`}
-                    >
-                      All Levels
-                    </button>
-                    <button
-                      onClick={() => setDifficultyFilter("easy")}
-                      className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
-                        difficultyFilter === "easy" 
-                          ? "bg-green-500/30 text-green-300 border border-green-500/50" 
-                          : "bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30 hover:text-green-300"
-                      }`}
-                    >
-                      Easy
-                    </button>
-                    <button
-                      onClick={() => setDifficultyFilter("medium")}
-                      className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
-                        difficultyFilter === "medium" 
-                          ? "bg-yellow-500/30 text-yellow-300 border border-yellow-500/50" 
-                          : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 hover:bg-yellow-500/30 hover:text-yellow-300"
-                      }`}
-                    >
-                      Medium
-                    </button>
-                    <button
-                      onClick={() => setDifficultyFilter("hard")}
-                      className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
-                        difficultyFilter === "hard" 
-                          ? "bg-red-500/30 text-red-300 border border-red-500/50" 
-                          : "bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 hover:text-red-300"
-                      }`}
-                    >
-                      Hard
-                    </button>
-                  </div>
-                </div>
-                
-                {/* Results Counter */}
-                <div className="flex items-center justify-between">
+
+                {/* Results and Clear */}
+                <div className="flex items-center gap-4">
                   <div className="text-white/60 text-sm">
-                    Showing {availableTasksFiltered.length} of {availableTasks.length} tasks
+                    {availableTasksFiltered.length} of {availableTasks.length} tasks
                   </div>
                   {(brandFilter !== "all" || difficultyFilter !== "all") && (
                     <button
@@ -557,27 +568,39 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                       animationDelay: `${task.id * 100}ms`
                     }}
                   >
-                    <div className="mb-3">
-                      {/* Title at the top */}
-                      <div className="flex items-center space-x-3 mb-2">
-                        <div className="w-10 h-10 rounded-lg bg-gray-500/20 flex items-center justify-center group-hover:bg-white/5 transition-all duration-300">
-                          <task.icon className={`h-5 w-5 ${task.color} transition-transform duration-300`} />
+                    {/* Task Image Header */}
+                    <div className="relative mb-3 overflow-hidden rounded-lg">
+                      <div className={`h-32 relative ${getTaskGradient(task.platform, task.category)}`}>
+                        <div className="absolute inset-0 bg-black/20"></div>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="text-center">
+                            <task.icon className={`h-8 w-8 ${task.color} mb-2 mx-auto`} />
+                            <div className="text-white/90 font-semibold text-sm">{task.platform.toUpperCase()}</div>
+                          </div>
                         </div>
-                        <h3 className="font-semibold text-white group-hover:text-green-300 transition-colors duration-300 flex-1">{task.title}</h3>
+                        <div className="absolute top-2 right-2">
+                          <Badge variant="secondary" className="bg-black/50 text-white text-xs">
+                            {task.points} XP
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mb-3">
+                      {/* Title */}
+                      <div className="mb-2">
+                        <h3 className="font-semibold text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
                       </div>
                       
                       {/* Badges below title */}
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center space-x-2">
-                          <Badge variant="secondary" className="bg-blue-500/20 text-blue-400 group-hover:bg-blue-500/30 group-hover:text-blue-300 transition-all duration-300">
-                            {task.points} XP
-                          </Badge>
                           <Badge variant="secondary" className={`${getDifficultyColor(task.difficulty)} transition-all duration-300`}>
                             {task.difficulty}
                           </Badge>
                           {task.brand && (
                             <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 text-xs">
-                              {task.brand}
+                              {task.brand.replace('.gg', '').replace('.xyz', '')}
                             </Badge>
                           )}
                         </div>

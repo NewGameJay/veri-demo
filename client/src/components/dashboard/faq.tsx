@@ -24,7 +24,7 @@ export function FAQ() {
   ];
 
   return (
-    <div className="glass-effect p-4 rounded-xl border border-white/20 bg-white/5 backdrop-blur-md transition-all duration-300">
+    <div className="glass-effect p-4 rounded-xl border border-white/20 bg-white/5 backdrop-blur-md transition-all duration-300 min-h-[120px]">
       <div 
         className="flex items-center justify-between cursor-pointer hover:bg-white/5 p-2 rounded-lg transition-colors"
         onClick={() => setIsExpanded(!isExpanded)}
