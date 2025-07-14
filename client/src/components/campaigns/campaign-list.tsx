@@ -81,7 +81,16 @@ export function CampaignList() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
-  const [applicationData, setApplicationData] = useState("");
+  const [applicationData, setApplicationData] = useState({
+    interest: "",
+    experience: "",
+    approach: "",
+    youtubeUrl: "",
+    twitchUrl: "",
+    socialUrls: "",
+    brandWorkUrls: "",
+    availability: "immediate"
+  });
   const [submissionUrl, setSubmissionUrl] = useState("");
   const [submissionData, setSubmissionData] = useState("");
 
@@ -99,10 +108,9 @@ export function CampaignList() {
   });
 
   const applyToCampaignMutation = useMutation({
-    mutationFn: async ({ campaignId, applicationData }: { campaignId: number; applicationData: string }) => {
-      return apiRequest(`/api/campaigns/${campaignId}/apply`, {
-        method: "POST",
-        body: { applicationData },
+    mutationFn: async ({ campaignId, applicationData }: { campaignId: number; applicationData: typeof applicationData }) => {
+      return apiRequest("POST", `/api/campaigns/${campaignId}/apply`, {
+        applicationData: JSON.stringify(applicationData),
       });
     },
     onSuccess: () => {
@@ -112,7 +120,16 @@ export function CampaignList() {
         description: "Your application has been submitted successfully.",
       });
       queryClient.invalidateQueries({ queryKey: ["/api/campaigns"] });
-      setApplicationData("");
+      setApplicationData({
+        interest: "",
+        experience: "",
+        approach: "",
+        youtubeUrl: "",
+        twitchUrl: "",
+        socialUrls: "",
+        brandWorkUrls: "",
+        availability: "immediate"
+      });
       setSelectedCampaign(null);
     },
     onError: (error) => {
@@ -153,14 +170,7 @@ export function CampaignList() {
     },
   });
 
-  const handleApply = () => {
-    if (!selectedCampaign || !applicationData.trim()) return;
-    
-    applyToCampaignMutation.mutate({
-      campaignId: selectedCampaign.id,
-      applicationData: applicationData.trim(),
-    });
-  };
+
 
   const handleSubmit = () => {
     if (!selectedCampaign || !submissionUrl.trim()) return;
@@ -507,16 +517,79 @@ export function CampaignList() {
                         Tell us why you're perfect for this campaign
                       </DialogDescription>
                     </DialogHeader>
-                    <div className="space-y-4">
+                    <div className="space-y-4 max-h-[60vh] overflow-y-auto">
                       <div>
-                        <Label htmlFor="application">Application Message</Label>
+                        <Label htmlFor="interest">Campaign Interest Statement</Label>
                         <Textarea
-                          id="application"
-                          placeholder="Describe your relevant experience, audience, and how you plan to complete this campaign..."
-                          value={applicationData}
-                          onChange={(e) => setApplicationData(e.target.value)}
-                          className="min-h-[100px]"
+                          id="interest"
+                          placeholder="Why are you interested in this campaign? (3-5 lines minimum)"
+                          value={applicationData.interest || ''}
+                          onChange={(e) => setApplicationData(prev => ({ ...prev, interest: e.target.value }))}
+                          className="min-h-[80px]"
                         />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="experience">Relevant Experience</Label>
+                        <Textarea
+                          id="experience"
+                          placeholder="Share relevant content creation experience and links to previous work..."
+                          value={applicationData.experience || ''}
+                          onChange={(e) => setApplicationData(prev => ({ ...prev, experience: e.target.value }))}
+                          className="min-h-[80px]"
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="approach">Content Approach</Label>
+                        <Textarea
+                          id="approach"
+                          placeholder="How would you approach this campaign? Share your creative brief response..."
+                          value={applicationData.approach || ''}
+                          onChange={(e) => setApplicationData(prev => ({ ...prev, approach: e.target.value }))}
+                          className="min-h-[80px]"
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="portfolio">Portfolio Links</Label>
+                        <div className="space-y-2">
+                          <Input
+                            placeholder="YouTube channel URL"
+                            value={applicationData.youtubeUrl || ''}
+                            onChange={(e) => setApplicationData(prev => ({ ...prev, youtubeUrl: e.target.value }))}
+                          />
+                          <Input
+                            placeholder="Twitch stream URL"
+                            value={applicationData.twitchUrl || ''}
+                            onChange={(e) => setApplicationData(prev => ({ ...prev, twitchUrl: e.target.value }))}
+                          />
+                          <Input
+                            placeholder="Social media profiles"
+                            value={applicationData.socialUrls || ''}
+                            onChange={(e) => setApplicationData(prev => ({ ...prev, socialUrls: e.target.value }))}
+                          />
+                          <Input
+                            placeholder="Previous brand work examples"
+                            value={applicationData.brandWorkUrls || ''}
+                            onChange={(e) => setApplicationData(prev => ({ ...prev, brandWorkUrls: e.target.value }))}
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="availability">Availability</Label>
+                        <Select value={applicationData.availability || 'immediate'} onValueChange={(value) => setApplicationData(prev => ({ ...prev, availability: value }))}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select your availability" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="immediate">Immediate start</SelectItem>
+                            <SelectItem value="1week">Within 1 week</SelectItem>
+                            <SelectItem value="2weeks">Within 2 weeks</SelectItem>
+                            <SelectItem value="flexible">Flexible timeline</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                       
                       <div className="flex justify-end gap-2">
@@ -524,8 +597,23 @@ export function CampaignList() {
                           Cancel
                         </Button>
                         <Button 
-                          onClick={handleApply}
-                          disabled={!applicationData.trim() || applyToCampaignMutation.isPending}
+                          onClick={() => {
+                            // Validate required fields
+                            if (!applicationData.interest.trim() || !applicationData.experience.trim() || !applicationData.approach.trim()) {
+                              toast({
+                                title: "Missing Information",
+                                description: "Please fill in the interest statement, experience, and content approach fields",
+                                variant: "destructive",
+                              });
+                              return;
+                            }
+                            
+                            applyToCampaignMutation.mutate({
+                              campaignId: selectedCampaign!.id,
+                              applicationData
+                            });
+                          }}
+                          disabled={applyToCampaignMutation.isPending}
                         >
                           {applyToCampaignMutation.isPending ? "Applying..." : "Submit Application"}
                         </Button>
