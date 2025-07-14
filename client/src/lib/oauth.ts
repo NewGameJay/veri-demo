@@ -25,11 +25,20 @@ export interface SocialConnection {
 // Twitter OAuth Functions
 export async function initiateTwitterLogin(): Promise<string> {
   try {
-    const response = await apiRequest<OAuthResponse>('/api/auth/twitter/login', {
+    const response = await fetch('/api/auth/twitter/login', {
       method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
     
-    return response.authUrl;
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json() as OAuthResponse;
+    return data.authUrl;
   } catch (error) {
     console.error('Failed to initiate Twitter login:', error);
     throw new Error('Failed to initiate Twitter login');
@@ -38,9 +47,17 @@ export async function initiateTwitterLogin(): Promise<string> {
 
 export async function disconnectTwitter(): Promise<void> {
   try {
-    await apiRequest('/api/auth/twitter/disconnect', {
+    const response = await fetch('/api/auth/twitter/disconnect', {
       method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
   } catch (error) {
     console.error('Failed to disconnect Twitter:', error);
     throw new Error('Failed to disconnect Twitter');
