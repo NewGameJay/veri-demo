@@ -12,6 +12,8 @@ import { AIAgents } from "@/components/dashboard/ai-agents";
 import { useAuth } from "@/contexts/auth-context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfileBuilderOnboarding } from "@/components/onboarding/profile-builder-onboarding";
+import { Eye, TrendingUp, Users, DollarSign } from "lucide-react";
+import { FaTwitter, FaYoutube, FaInstagram } from "react-icons/fa";
 
 export default function Dashboard() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
@@ -80,50 +82,80 @@ export default function Dashboard() {
             </p>
           </div>
 
-          {/* Dashboard Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left Column - Main Content */}
-            <div className="lg:col-span-8 space-y-6">
-              {/* VeriScore Card */}
-              <VeriScoreCard />
+          {/* Enhanced Dashboard Tabs with Glass Effect - Moved to Top */}
+          <Tabs defaultValue="tasks" className="w-full animate-slide-in mb-6">
+            <TabsList className="grid w-full grid-cols-4 bg-gray-900/50 border border-white/20">
+              <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
+                Tasks
+              </TabsTrigger>
+              <TabsTrigger value="profile" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
+                Profile
+              </TabsTrigger>
+              <TabsTrigger 
+                value="ai-agent" 
+                className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300"
+                disabled={!isMemorizzUnlocked}
+              >
+                AI Agent {!isMemorizzUnlocked && "🔒"}
+              </TabsTrigger>
+              <TabsTrigger value="analytics" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
+                Analytics
+              </TabsTrigger>
+            </TabsList>
 
-              {/* Enhanced Dashboard Tabs with Glass Effect */}
-              <Tabs defaultValue="tasks" className="w-full animate-slide-in">
-                <TabsList className="grid w-full grid-cols-4 bg-gray-900/50 border border-white/20">
-                  <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
-                    Tasks
-                  </TabsTrigger>
-                  <TabsTrigger value="profile" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
-                    Profile
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="ai-agent" 
-                    className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300"
-                    disabled={!isMemorizzUnlocked}
-                  >
-                    AI Agent {!isMemorizzUnlocked && "🔒"}
-                  </TabsTrigger>
-                  <TabsTrigger value="analytics" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
-                    Analytics
-                  </TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="tasks" className="mt-6">
+            <TabsContent value="tasks" className="mt-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Left Column - Main Content */}
+                <div className="lg:col-span-8 space-y-6">
                   <TaskVerification 
                     userId={user.id} 
                     userStreak={userStreak}
                     userXP={userXP}
                   />
-                </TabsContent>
+                </div>
 
-                <TabsContent value="profile" className="mt-6">
+                {/* Right Column - Sidebar Content */}
+                <div className="lg:col-span-4 space-y-6">
+                  {/* Vertical VeriScore Card */}
+                  <VeriScoreCard />
+                  
+                  {/* Social Connections */}
+                  <SocialConnections />
+
+                  {/* Leaderboard */}
+                  <Leaderboard />
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="profile" className="mt-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Left Column - Main Content */}
+                <div className="lg:col-span-8 space-y-6">
                   <ProfileBuilder 
                     user={user} 
                     profileType="creator"
                   />
-                </TabsContent>
+                </div>
 
-                <TabsContent value="ai-agent" className="mt-6">
+                {/* Right Column - Sidebar Content */}
+                <div className="lg:col-span-4 space-y-6">
+                  {/* Vertical VeriScore Card */}
+                  <VeriScoreCard />
+                  
+                  {/* Social Connections */}
+                  <SocialConnections />
+
+                  {/* Leaderboard */}
+                  <Leaderboard />
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="ai-agent" className="mt-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Left Column - Main Content */}
+                <div className="lg:col-span-8 space-y-6">
                   <AIAgents 
                     userPoints={user.points || 0}
                     userStreak={userStreak}
@@ -132,52 +164,101 @@ export default function Dashboard() {
                       console.log(`Used agent ${agentId} for ${pointsCost} points`);
                     }}
                   />
-                </TabsContent>
+                </div>
 
-                <TabsContent value="analytics" className="mt-6">
-                  <div className="glass-effect p-6 rounded-xl border border-white/20">
-                    <h3 className="text-xl font-semibold text-white mb-4">Analytics Dashboard</h3>
-                    <p className="text-white/60">
-                      Detailed analytics and performance metrics coming soon. Track your engagement, 
-                      follower growth, and earnings across all connected platforms.
-                    </p>
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </div>
+                {/* Right Column - Sidebar Content */}
+                <div className="lg:col-span-4 space-y-6">
+                  {/* Vertical VeriScore Card */}
+                  <VeriScoreCard />
+                  
+                  {/* Social Connections */}
+                  <SocialConnections />
 
-            {/* Right Column - Sidebar Content */}
-            <div className="lg:col-span-4 space-y-6">
-              {/* Social Connections */}
-              <SocialConnections />
-
-              {/* Leaderboard */}
-              <Leaderboard />
-
-              {/* Quick Stats */}
-              <div className="glass-effect p-6 rounded-xl border border-white/20">
-                <h3 className="text-lg font-semibold text-white mb-4">Quick Stats</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-white/60">Connected Platforms</span>
-                    <span className="text-white font-medium">{connections?.length || 0}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-white/60">Completed Tasks</span>
-                    <span className="text-white font-medium">
-                      {userTasks?.filter((task: any) => task.isCompleted).length || 0}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-white/60">Current Level</span>
-                    <span className="text-white font-medium">
-                      {Math.floor((userXP || 0) / 100) + 1}
-                    </span>
-                  </div>
+                  {/* Leaderboard */}
+                  <Leaderboard />
                 </div>
               </div>
-            </div>
-          </div>
+            </TabsContent>
+
+            <TabsContent value="analytics" className="mt-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Left Column - Main Content */}
+                <div className="lg:col-span-8 space-y-6">
+                  {/* Analytics Dashboard */}
+                  <div className="glass-effect p-6 rounded-xl border border-white/20">
+                    <h3 className="text-xl font-semibold text-white mb-6">Analytics Dashboard</h3>
+                    
+                    {/* Stats Grid */}
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                      <div className="glass-effect p-4 rounded-lg border border-white/10">
+                        <div className="text-blue-400 text-sm font-medium">Total Views</div>
+                        <div className="text-2xl font-termina text-white">124.5K</div>
+                        <div className="text-green-400 text-xs">+12.3%</div>
+                      </div>
+                      <div className="glass-effect p-4 rounded-lg border border-white/10">
+                        <div className="text-green-400 text-sm font-medium">Engagement</div>
+                        <div className="text-2xl font-termina text-white">8.4%</div>
+                        <div className="text-green-400 text-xs">+2.1%</div>
+                      </div>
+                      <div className="glass-effect p-4 rounded-lg border border-white/10">
+                        <div className="text-purple-400 text-sm font-medium">Followers</div>
+                        <div className="text-2xl font-termina text-white">1,234</div>
+                        <div className="text-green-400 text-xs">+18.5%</div>
+                      </div>
+                      <div className="glass-effect p-4 rounded-lg border border-white/10">
+                        <div className="text-emerald-400 text-sm font-medium">Revenue</div>
+                        <div className="text-2xl font-termina text-white">$3,456</div>
+                        <div className="text-green-400 text-xs">+24.7%</div>
+                      </div>
+                    </div>
+
+                    {/* Top Content */}
+                    <div className="glass-effect p-4 rounded-lg border border-white/10">
+                      <h4 className="text-lg font-semibold text-white mb-4">Top Performing Content</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400">
+                              <FaTwitter className="w-4 h-4" />
+                            </div>
+                            <div>
+                              <div className="text-white font-medium">Building the Future of Creator Economy</div>
+                              <div className="text-white/60 text-sm">12.5K engagement • $234 revenue</div>
+                            </div>
+                          </div>
+                          <div className="text-green-400 text-sm">+24%</div>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center text-red-400">
+                              <FaYoutube className="w-4 h-4" />
+                            </div>
+                            <div>
+                              <div className="text-white font-medium">Gaming Setup Tour 2024</div>
+                              <div className="text-white/60 text-sm">8.9K engagement • $567 revenue</div>
+                            </div>
+                          </div>
+                          <div className="text-green-400 text-sm">+18%</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column - Sidebar Content */}
+                <div className="lg:col-span-4 space-y-6">
+                  {/* Vertical VeriScore Card */}
+                  <VeriScoreCard />
+                  
+                  {/* Social Connections */}
+                  <SocialConnections />
+
+                  {/* Leaderboard */}
+                  <Leaderboard />
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </main>
     </div>
