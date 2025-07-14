@@ -20,8 +20,16 @@ export function LiquidGlassButton({
     relative overflow-hidden rounded-full font-medium
     transform-gpu backdrop-blur-xl
     border border-white/20 shadow-lg
-    transition-all duration-300 ease-out
+    transition-all duration-500 ease-out
     hover:scale-[1.02] hover:-translate-y-1 active:scale-95
+    before:content-[''] before:absolute before:inset-0 before:rounded-full before:opacity-0
+    after:content-[''] after:absolute after:inset-0 after:rounded-full after:opacity-0
+    hover:before:opacity-100 hover:after:opacity-100
+    before:transition-all before:duration-700 before:ease-out
+    after:transition-all after:duration-1000 after:ease-out
+    before:bg-gradient-to-r before:from-emerald-400/30 before:via-purple-400/20 before:to-blue-400/30
+    after:bg-gradient-to-r after:from-transparent after:via-white/20 after:to-transparent
+    after:animate-pulse
   `;
 
   const variantClasses = {
@@ -57,9 +65,17 @@ export function LiquidGlassButton({
     lg: 'px-8 py-4 text-lg'
   };
 
-  // Simple hover glow effect
+  // Impressive gradient animation on hover
   const liquidEffect = `
-    hover:shadow-xl hover:shadow-white/10
+    hover:shadow-2xl hover:shadow-emerald-500/20
+    hover:border-emerald-400/40
+    group relative
+    before:bg-gradient-conic before:from-emerald-400 before:via-purple-400 before:via-blue-400 before:to-emerald-400
+    before:blur-md before:opacity-0 hover:before:opacity-40 hover:before:animate-conic-spin
+    after:bg-gradient-to-r after:from-emerald-400/0 after:via-emerald-400/60 after:to-emerald-400/0
+    after:translate-x-[-100%] hover:after:translate-x-[100%] hover:after:animate-shimmer after:transition-transform after:duration-1000
+    hover:bg-gradient-to-r hover:from-emerald-500/10 hover:via-purple-500/10 hover:to-blue-500/10
+    hover:animate-gradient-shift
   `;
 
   return (
