@@ -192,7 +192,7 @@ export function SocialConnections() {
                 </div>
               </div>
               
-              {connection.isConnected && (
+              {connection?.isConnected && (
                 <div className="mt-3 pt-3 border-t border-white/10">
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-white/60 font-inter">Followers</span>
