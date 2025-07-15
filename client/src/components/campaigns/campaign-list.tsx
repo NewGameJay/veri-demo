@@ -379,99 +379,92 @@ export function CampaignList() {
               const urgencyText = requirements?.urgency || "";
               const thumbnail = CAMPAIGN_THUMBNAILS[campaign.campaignType as keyof typeof CAMPAIGN_THUMBNAILS] || CAMPAIGN_THUMBNAILS.content_creation;
               
+              // Get gradient colors based on campaign index
+              const gradients = [
+                "from-purple-500 to-purple-700",
+                "from-green-500 to-green-700", 
+                "from-orange-500 to-red-600",
+                "from-blue-500 to-blue-700",
+                "from-pink-500 to-pink-700",
+                "from-teal-500 to-teal-700"
+              ];
+              const gradientIndex = index % gradients.length;
+              const gradientClass = gradients[gradientIndex];
+
               return (
-                <Card key={campaign.id} className="group hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer overflow-hidden bg-white">
-                  {/* Campaign Thumbnail */}
-                  <div className="relative h-40 bg-gradient-to-br from-purple-400 to-pink-400 overflow-hidden">
-                    <div 
-                      className="absolute inset-0 bg-cover bg-center opacity-80"
-                      style={{ 
-                        backgroundImage: `url(${thumbnail})`,
-                        filter: 'brightness(0.9) contrast(1.1)'
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    
-                    {/* Budget Badge */}
-                    <div className="absolute top-3 left-3">
-                      <div className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
-                        <DollarSign className="w-3 h-3" />
-                        Budget {formatCurrency(campaign.budget)}
+                <Card key={campaign.id} className="group hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer overflow-hidden bg-white rounded-2xl">
+                  {/* Campaign Header with Gradient */}
+                  <div className={`relative h-32 bg-gradient-to-br ${gradientClass} overflow-hidden`}>
+                    {/* Budget Badge - Top Left */}
+                    <div className="absolute top-4 left-4">
+                      <div className="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-bold">
+                        {formatCurrency(campaign.budget)}
                       </div>
                     </div>
                     
-                    {/* Urgency Badge */}
-                    {urgent && (
-                      <div className="absolute top-3 right-3">
-                        <Badge className={`text-xs font-medium border ${getUrgencyColor(urgencyText)}`}>
-                          {urgencyText.includes("URGENT") ? "URGENT" : 
-                           urgencyText.includes("ENDING SOON") ? "ENDING SOON" : 
-                           "LIMITED TIME"}
-                        </Badge>
-                      </div>
-                    )}
-                    
-                    {/* Creator Count */}
-                    <div className="absolute bottom-3 left-3 flex items-center gap-1 text-white/90 text-sm">
-                      <Users className="w-4 h-4" />
-                      <span>{campaign.currentParticipants} creators</span>
-                    </div>
-                    
-                    {/* Brand Verification Badge */}
-                    <div className="absolute bottom-3 right-3">
-                      <div className="bg-white/20 backdrop-blur-sm rounded-full p-1">
-                        <CheckCircle className="w-4 h-4 text-white" />
-                      </div>
+                    {/* Star Icon - Top Right */}
+                    <div className="absolute top-4 right-4">
+                      {urgent ? (
+                        <div className="bg-orange-500 text-white px-2 py-1 rounded text-xs font-bold">
+                          URGENT
+                        </div>
+                      ) : (
+                        <div className="text-white/60">
+                          <Trophy className="w-4 h-4" />
+                        </div>
+                      )}
                     </div>
                   </div>
                   
                   {/* Campaign Content */}
-                  <CardContent className="p-4">
-                    <div className="space-y-3">
-                      {/* Brand Name */}
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-gray-900 rounded text-white text-xs flex items-center justify-center font-bold">
-                          {campaign.title.charAt(0)}
-                        </div>
-                        <span className="text-sm font-medium text-gray-600">
-                          {campaign.title.includes("Hyve") ? "Hyve Gaming" : 
-                           campaign.title.includes("Luster") ? "Luster Labs" : 
-                           "Verified Brand"}
-                        </span>
-                        <CheckCircle className="w-3 h-3 text-blue-500" />
+                  <CardContent className="p-4 space-y-3">
+                    {/* Brand Name with Verification */}
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 bg-gray-900 rounded text-white text-xs flex items-center justify-center font-bold">
+                        {campaign.title.includes("Hyve") ? "H" : 
+                         campaign.title.includes("Luster") ? "L" : 
+                         campaign.title.includes("Solana") ? "S" :
+                         campaign.title.charAt(0)}
                       </div>
-                      
-                      {/* Campaign Title */}
-                      <h3 className="font-semibold text-gray-900 line-clamp-2 leading-tight">
-                        {campaign.title}
-                      </h3>
-                      
-                      {/* Campaign Description */}
-                      <p className="text-sm text-gray-600 line-clamp-2">
-                        {campaign.description}
-                      </p>
-                      
-                      {/* Campaign Type & Platforms */}
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <Badge variant="secondary" className="text-xs">
-                          {CAMPAIGN_TYPE_LABELS[campaign.campaignType as keyof typeof CAMPAIGN_TYPE_LABELS]}
-                        </Badge>
-                        {parsePlatforms(campaign.platforms).slice(0, 2).map((platform: string) => (
-                          <Badge key={platform} variant="outline" className="text-xs">
-                            {platform}
-                          </Badge>
-                        ))}
-                      </div>
-                      
-                      {/* Action Button */}
-                      <Button 
-                        className="w-full mt-2 bg-purple-600 hover:bg-purple-700 text-white"
-                        onClick={() => triggerHaptic("light")}
-                      >
-                        <Eye className="w-4 h-4 mr-2" />
-                        View Details
-                      </Button>
+                      <span className="text-sm font-medium text-gray-900">
+                        {campaign.title.includes("Hyve") ? "Hyve Gaming" : 
+                         campaign.title.includes("Luster") ? "Luster Labs" : 
+                         campaign.title.includes("Solana") ? "Solana Foundation" :
+                         "Verified Brand"}
+                      </span>
+                      <CheckCircle className="w-4 h-4 text-gray-400" />
+                      <span className="text-sm text-gray-500 ml-auto">{campaign.currentParticipants} creators</span>
                     </div>
+                    
+                    {/* Campaign Title */}
+                    <h3 className="font-semibold text-gray-900 text-base leading-tight">
+                      {campaign.title}
+                    </h3>
+                    
+                    {/* Campaign Description */}
+                    <p className="text-sm text-gray-600 line-clamp-2">
+                      {campaign.description}
+                    </p>
+                    
+                    {/* Duration and Participation Info */}
+                    <div className="flex items-center justify-between text-sm text-gray-500">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-3 h-3" />
+                        <span>{Math.floor(Math.random() * 6) + 1} {Math.random() > 0.5 ? 'days' : 'week'}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Users className="w-3 h-3" />
+                        <span>{campaign.currentParticipants} participating</span>
+                      </div>
+                    </div>
+                    
+                    {/* Apply Now Button */}
+                    <Button 
+                      className="w-full mt-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg h-10"
+                      onClick={() => triggerHaptic("light")}
+                    >
+                      Apply Now
+                    </Button>
                   </CardContent>
                 </Card>
               );
