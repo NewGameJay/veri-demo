@@ -848,6 +848,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // MCP API routes
+  app.get("/api/mcp/status", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { mcpServer } = await import("./mcp/mcpServer");
+      const status = mcpServer.getStatus();
+      res.json(status);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get MCP status" });
+    }
+  });
+
+  app.get("/api/mcp/tools", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { toolRegistry } = await import("./mcp/toolRegistry");
+      const tools = await toolRegistry.getAvailableTools();
+      res.json(tools);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get MCP tools" });
+    }
+  });
+
+  app.post("/api/mcp/tools/:toolName", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { toolRegistry } = await import("./mcp/toolRegistry");
+      const result = await toolRegistry.callTool(req.params.toolName, req.body);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to call MCP tool" });
+    }
+  });
+
+  app.get("/api/mcp/connectors", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { mcpConfigManager } = await import("./mcp/settings/mcpConfig");
+      const connectors = mcpConfigManager.generateUIConfig();
+      res.json(connectors);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get MCP connectors" });
+    }
+  });
+
+  app.post("/api/mcp/connectors/:connectorId/configure", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { mcpConfigManager } = await import("./mcp/settings/mcpConfig");
+      mcpConfigManager.updateConnectorConfig(req.params.connectorId, req.body);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to configure MCP connector" });
+    }
+  });
+
+  app.get("/api/mcp/connectors/:connectorId/status", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { mcpConfigManager } = await import("./mcp/settings/mcpConfig");
+      const status = mcpConfigManager.getConnectorStatus(req.params.connectorId);
+      res.json(status);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get connector status" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

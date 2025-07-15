@@ -5,6 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useQuery } from "@tanstack/react-query";
 import { 
   Zap, 
   FileText, 
@@ -28,44 +29,20 @@ interface ConnectorStatus {
   comingSoon?: boolean;
 }
 
-const connectors: ConnectorStatus[] = [
-  {
-    id: 'google-drive',
-    name: 'Google Drive',
-    description: 'Access documents, spreadsheets, and presentations',
-    icon: FileText,
-    status: 'disconnected',
-    permissions: ['Read documents', 'Access shared files', 'File metadata'],
-    comingSoon: true
-  },
-  {
-    id: 'slack',
-    name: 'Slack',
-    description: 'Import communications and channel data',
-    icon: MessageSquare,
-    status: 'disconnected',
-    permissions: ['Read messages', 'Access channels', 'User profiles'],
-    comingSoon: true
-  },
-  {
-    id: 'notion',
-    name: 'Notion',
-    description: 'Connect knowledge bases and documentation',
-    icon: Database,
-    status: 'disconnected',
-    permissions: ['Read pages', 'Access databases', 'Search content'],
-    comingSoon: true
-  },
-  {
-    id: 'custom',
-    name: 'Custom API',
-    description: 'Build your own data connectors',
-    icon: Settings,
-    status: 'disconnected',
-    permissions: ['Custom endpoints', 'Webhook support', 'API key management'],
-    comingSoon: true
+const getIconForConnector = (id: string) => {
+  switch (id) {
+    case 'google-drive':
+      return FileText;
+    case 'slack':
+      return MessageSquare;
+    case 'notion':
+      return Database;
+    case 'custom':
+      return Settings;
+    default:
+      return Settings;
   }
-];
+};
 
 const StatusIcon = ({ status }: { status: ConnectorStatus['status'] }) => {
   switch (status) {
@@ -100,6 +77,19 @@ const StatusBadge = ({ status }: { status: ConnectorStatus['status'] }) => {
 };
 
 export function VeriConnectors() {
+  const { data: connectors, isLoading } = useQuery({
+    queryKey: ['/api/mcp/connectors'],
+    select: (data: any[]) => data.map((connector: any) => ({
+      ...connector,
+      icon: getIconForConnector(connector.id),
+      comingSoon: true // Demo mode - all connectors show as coming soon
+    }))
+  });
+
+  const { data: mcpStatus } = useQuery({
+    queryKey: ['/api/mcp/status']
+  });
+
   const handleConnect = (connectorId: string) => {
     // This would normally trigger OAuth flow
     console.log(`Connecting to ${connectorId}`);
@@ -115,6 +105,22 @@ export function VeriConnectors() {
     console.log(`Testing connection to ${connectorId}`);
   };
 
+  if (isLoading) {
+    return (
+      <Card className="glass-medium border-white/20">
+        <CardHeader>
+          <CardTitle className="text-white flex items-center gap-2">
+            <Zap className="w-5 h-5" />
+            Veri Connectors
+          </CardTitle>
+          <CardDescription className="text-white/60">
+            Loading connectors...
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
   return (
     <Card className="glass-medium border-white/20">
       <CardHeader>
@@ -127,7 +133,7 @@ export function VeriConnectors() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        {connectors.map((connector) => {
+        {connectors?.map((connector) => {
           const IconComponent = connector.icon;
           
           return (
@@ -149,7 +155,7 @@ export function VeriConnectors() {
               <div className="mb-4">
                 <Label className="text-white/80 text-sm mb-2 block">Permissions</Label>
                 <div className="flex flex-wrap gap-2">
-                  {connector.permissions.map((permission) => (
+                  {connector.permissions?.map((permission: string) => (
                     <Badge
                       key={permission}
                       variant="outline"
@@ -257,7 +263,7 @@ export function VeriConnectors() {
               )}
             </div>
           );
-        })}
+        }) || []}
 
         {/* MCP Protocol Info */}
         <div className="p-4 rounded-lg border border-blue-400/20 bg-blue-500/10">
@@ -269,15 +275,17 @@ export function VeriConnectors() {
             Veri Connectors use the Model Context Protocol to securely integrate with external services, 
             providing your AI agents with rich context while maintaining data privacy.
           </p>
-          <Button
-            variant="outline"
-            size="sm"
-            className="border-blue-400/20 text-blue-400"
-            disabled={true}
-          >
-            <ExternalLink className="w-4 h-4 mr-1" />
-            Learn More
-          </Button>
+          <div className="flex gap-2">
+            <Badge variant="outline" className="text-xs border-blue-400/20 text-blue-400">
+              Protocol Version 1.0
+            </Badge>
+            <Badge variant="outline" className="text-xs border-white/20 text-white/60">
+              {mcpStatus?.enabled ? 'Server Running' : 'Demo Mode'}
+            </Badge>
+            <Badge variant="outline" className="text-xs border-white/20 text-white/60">
+              {connectors?.length || 0} Connectors Available
+            </Badge>
+          </div>
         </div>
       </CardContent>
     </Card>
