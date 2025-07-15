@@ -61,7 +61,7 @@ export function Header({ onDashboardToggle, onMobileMenuToggle, onSignIn }: Head
           variant="ghost"
           size="icon"
           onClick={onDashboardToggle}
-          className="hidden lg:block p-2 hover:bg-accent rounded-xl transition-colors text-foreground"
+          className="hidden lg:block p-2 hover:bg-accent rounded-xl transition-colors text-foreground flex items-center justify-center"
         >
           <Menu className="w-5 h-5" />
         </Button>
