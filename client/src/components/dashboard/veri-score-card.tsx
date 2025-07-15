@@ -136,11 +136,12 @@ export function VeriScoreCard() {
       <Card 
         variant="glass" 
         hover={true} 
-        className="bg-gray-900/80 backdrop-blur-xl border-white/20 hover-lift w-full relative rounded-2xl shadow-2xl"
+        className="veri-gradient-card border-white/20 hover-lift w-full h-64 relative"
       >
-      <CardContent className="p-6 h-full flex flex-col space-y-6">
-        {/* Top Row - Veri Logo */}
-        <div className="flex justify-center">
+      <CardContent className="p-6 h-full flex flex-col justify-between">
+        {/* Top Row - Logo and VeriScore */}
+        <div className="flex items-start justify-between">
+          {/* Logo - Top Left */}
           <motion.div 
             className="w-12 h-12 veri-gradient rounded-xl flex items-center justify-center shadow-lg"
             whileHover={{ scale: 1.05, rotate: 5 }}
@@ -148,39 +149,38 @@ export function VeriScoreCard() {
           >
             <VeriLogo size="md" showText={false} />
           </motion.div>
-        </div>
 
-        {/* VeriScore Title and Score */}
-        <div className="text-center">
-          <h3 className="text-xl font-termina text-white mb-3">VeriScore</h3>
-          <div 
-            ref={scoreRef}
-            className="text-6xl font-termina bg-gradient-to-r from-emerald-400 via-blue-500 to-purple-600 bg-clip-text text-transparent relative mb-2"
-          >
-            {Math.round(animatedScore)}
-            {showParticles && (
-              <div className="particle-burst">
-                {[...Array(12)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="particle"
-                    style={{
-                      animationDelay: `${i * 0.05}s`
-                    }}
-                  />
-                ))}
-              </div>
-            )}
+          {/* VeriScore - Top Right */}
+          <div className="text-right">
+            <div className="text-xs font-medium text-white/60 uppercase tracking-wider">VERISCORE</div>
+            <div 
+              ref={scoreRef}
+              className="text-3xl font-termina text-white relative"
+            >
+              {Math.round(animatedScore)}
+              {showParticles && (
+                <div className="particle-burst">
+                  {[...Array(12)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="particle"
+                      style={{
+                        animationDelay: `${i * 0.05}s`
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-          <p className="text-white/60 text-sm">Calculated Weekly Based on VeriScore Analytics™</p>
         </div>
 
-        {/* VeriPoints Section */}
+        {/* Center - VeriPoints */}
         <div className="text-center">
-          <div className="text-lg font-termina text-white mb-2">VeriPoints</div>
+          <div className="text-xs font-medium text-white/60 uppercase tracking-wider mb-2">VERIPOINTS</div>
           <div 
             ref={xpRef}
-            className="text-3xl font-termina text-emerald-400 relative"
+            className="text-3xl font-termina text-green-400 relative"
           >
             {Math.round(animatedXP).toLocaleString()}XP
             {showXPParticles && (
@@ -199,26 +199,14 @@ export function VeriScoreCard() {
           </div>
         </div>
 
-        {/* Metrics Cards */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-white/5 rounded-xl p-3 text-center backdrop-blur-sm">
-            <div className="text-lg font-termina text-white">8.7K</div>
-            <div className="text-xs text-white/60">Total Followers</div>
-          </div>
-          <div className="bg-white/5 rounded-xl p-3 text-center backdrop-blur-sm">
-            <div className="text-lg font-termina text-white">12.5K</div>
-            <div className="text-xs text-white/60">Engagement</div>
-          </div>
-        </div>
-
-        {/* User Info */}
+        {/* Bottom - User Info */}
         <div className="text-center">
           <h5 className="text-lg font-termina text-white mb-1">
             {activeUser.firstName && activeUser.lastName 
               ? `${activeUser.firstName} ${activeUser.lastName}`
-              : activeUser.username || "Sam Huber"}
+              : activeUser.username}
           </h5>
-          <p className="text-white/60 font-inter text-sm">Creator & Influencer</p>
+          <p className="text-green-400 font-inter text-sm">Creator & Influencer</p>
         </div>
       </CardContent>
     </Card>

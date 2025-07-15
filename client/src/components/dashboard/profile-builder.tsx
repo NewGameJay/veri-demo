@@ -298,7 +298,8 @@ export function ProfileBuilder({ user, profileType }: ProfileBuilderProps) {
           Build your {profileType} profile to showcase your work and connect with your audience
         </CardDescription>
       </CardHeader>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <CardContent>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Profile Form */}
           <div>
             <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -514,6 +515,7 @@ export function ProfileBuilder({ user, profileType }: ProfileBuilderProps) {
             <ProfilePreview />
           </div>
         </div>
+      </CardContent>
     </Card>
   );
 }
