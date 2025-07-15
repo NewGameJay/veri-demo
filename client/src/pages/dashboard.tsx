@@ -183,7 +183,7 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* Left Column - Main Content */}
                 <div className="lg:col-span-8 space-y-6">
-                  <div className="glass-effect p-6 rounded-xl border border-white/20">
+                  <div className="glass-effect p-6 rounded-xl border border-white/20 bg-[#1b1d27]">
                     <h2 className="text-2xl font-semibold text-white mb-6">Profile Builder 2.0</h2>
                     <ProfileBuilder2 />
                   </div>
@@ -440,7 +440,6 @@ export default function Dashboard() {
           </Tabs>
         </div>
       </main>
-
       {/* Milestone Celebration Modal */}
       {newMilestones.length > 0 && (
         <MilestoneCelebration
@@ -448,8 +447,6 @@ export default function Dashboard() {
           onClose={() => clearNewMilestones()}
         />
       )}
-
-
     </div>
   );
 }
