@@ -1,168 +1,211 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Card } from "@/components/ui/card";
+import { useState } from "react";
+import { User } from 'lucide-react';
+import { Camera } from 'lucide-react';
+import { Twitter } from 'lucide-react';
+import { Instagram } from 'lucide-react';
+import { Youtube } from 'lucide-react';
+import { Save } from 'lucide-react';
+import { Plus } from 'lucide-react';
+import { Header } from "@/components/navigation/header";
+import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
 import { Button } from "@/components/ui/button";
-import { useQuery } from "@tanstack/react-query";
-import { EnhancedProfileBuilder } from "@/components/profile/enhanced-profile-builder";
-import { ProfileShowcase } from "@/components/profile/profile-showcase";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/auth-context";
-import { Edit, Share2, Settings, Eye } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { VeriScoreCard } from "@/components/dashboard/veri-score-card";
 
-export function ProfilePage() {
+export default function Profile() {
+  const [isDashboardOpen, setIsDashboardOpen] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const { user } = useAuth();
-  // Start with builder if user hasn't completed profile setup
-  const hasCompletedProfile = user?.profileType && user?.bio;
-  const [mode, setMode] = useState<'showcase' | 'builder'>(hasCompletedProfile ? 'showcase' : 'builder');
+  const { toast } = useToast();
   
-  // Fetch user profile data
-  const { data: profileData, isLoading } = useQuery({
-    queryKey: [`/api/users/${user?.id}`],
-    enabled: !!user?.id,
+  const [profileData, setProfileData] = useState({
+    bio: "Creator & Influencer passionate about authentic content and community building.",
+    website: "https://veri.app/samhuber",
+    location: "Los Angeles, CA",
+    interests: ["Gaming", "Web3", "Content Creation", "AI Technology"]
   });
 
-  // Sample data for demonstration - in real app this would come from the API
-  const sampleProfileData = {
-    name: user?.username || 'Creator',
-    username: user?.email?.split('@')[0] || 'creator',
-    bio: 'Web3 Gaming Creator • Content Creator • Digital Avatar Designer • From the intersection of technology and creativity',
-    avatar: '/api/placeholder/100/100',
-    banner: '',
-    veriScore: user?.veriScore || 99,
-    xpPoints: user?.xpPoints || 2500,
-    followers: 8700,
-    following: 1250,
-    rank: 2,
-    totalUsers: 50000,
-    isVerified: true,
-    joinDate: 'Jan 2024',
-    socialConnections: {
-      twitter: { followers: 12500, verified: true },
-      instagram: { followers: 8900, verified: false },
-      youtube: { subscribers: 15600, verified: true },
-      twitch: { followers: 3200, verified: false }
-    },
-    topContent: [
-      {
-        id: '1',
-        platform: 'twitter' as const,
-        title: 'Just launched my new course on content creation of "The Marketing Magic of Community" - From solo creator to community builder.',
-        views: 15600,
-        likes: 847,
-        shares: 203,
-        revenue: 125,
-        thumbnail: '/api/placeholder/400/200',
-        date: '4 days ago',
-        engagement: 8.2
-      },
-      {
-        id: '2',
-        platform: 'instagram' as const,
-        title: 'Behind the scenes of my content creation process. From solo creator to community builders.',
-        views: 12400,
-        likes: 1240,
-        shares: 156,
-        revenue: 89,
-        thumbnail: '/api/placeholder/400/200',
-        date: '1 day ago',
-        engagement: 12.1
-      },
-      {
-        id: '3',
-        platform: 'youtube' as const,
-        title: 'How to grow on social media in 2025: The complete guide',
-        views: 8900,
-        likes: 567,
-        shares: 89,
-        revenue: 234,
-        thumbnail: '/api/placeholder/400/200',
-        date: '1 week ago',
-        engagement: 7.8
-      }
-    ],
-    privacySettings: {
-      showScore: true,
-      showRank: true,
-      showEarnings: false,
-      showTopContent: true,
-    }
+  const handleSaveProfile = () => {
+    toast({
+      title: "Profile Updated",
+      description: "Your profile has been successfully updated.",
+    });
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center">
-        <div className="text-white">Loading profile...</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 p-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-white mb-2">My Profile</h1>
-          <p className="text-white/70">Build and manage your creator profile</p>
+    <div className="min-h-screen bg-background">
+      <Header
+        onDashboardToggle={() => setIsDashboardOpen(!isDashboardOpen)}
+        onMobileMenuToggle={() => setIsDashboardOpen(!isDashboardOpen)}
+      />
+      <DashboardSidebar
+        isOpen={isDashboardOpen}
+        isPinned={true}
+        isCollapsed={isCollapsed}
+        onClose={() => setIsDashboardOpen(false)}
+        onPin={() => {}}
+        onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
+      />
+      
+      <main className={`pt-20 transition-all duration-300 ${isDashboardOpen ? (isCollapsed ? 'lg:ml-20' : 'lg:ml-80') : ''}`}>
+        <div className="max-w-7xl mx-auto px-4 lg:px-6 py-8">
+          <h1 className="text-3xl font-bold text-white mb-8">Profile</h1>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Profile Info */}
+            <div className="lg:col-span-2 space-y-6">
+              <Card className="glass-medium border-white/20">
+                <CardHeader>
+                  <CardTitle className="text-white">Personal Information</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="relative">
+                      <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                        {user?.username?.substring(0, 2).toUpperCase() || "VU"}
+                      </div>
+                      <Button
+                        size="icon"
+                        variant="secondary"
+                        className="absolute bottom-0 right-0 rounded-full"
+                      >
+                        <Camera className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white">{user?.username || "Veri User"}</h3>
+                      <p className="text-white/60">@{user?.username || "veriuser"}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="firstName" className="text-white">First Name</Label>
+                      <Input
+                        id="firstName"
+                        defaultValue={user?.firstName || ""}
+                        className="bg-white/10 border-white/20 text-white"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="lastName" className="text-white">Last Name</Label>
+                      <Input
+                        id="lastName"
+                        defaultValue={user?.lastName || ""}
+                        className="bg-white/10 border-white/20 text-white"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="email" className="text-white">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      defaultValue={user?.email || ""}
+                      className="bg-white/10 border-white/20 text-white"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="bio" className="text-white">Bio</Label>
+                    <Textarea
+                      id="bio"
+                      value={profileData.bio}
+                      onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
+                      className="bg-white/10 border-white/20 text-white"
+                      rows={4}
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="website" className="text-white">Website</Label>
+                    <Input
+                      id="website"
+                      type="url"
+                      value={profileData.website}
+                      onChange={(e) => setProfileData({ ...profileData, website: e.target.value })}
+                      className="bg-white/10 border-white/20 text-white"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="location" className="text-white">Location</Label>
+                    <Input
+                      id="location"
+                      value={profileData.location}
+                      onChange={(e) => setProfileData({ ...profileData, location: e.target.value })}
+                      className="bg-white/10 border-white/20 text-white"
+                    />
+                  </div>
+                  
+                  <Button
+                    onClick={handleSaveProfile}
+                    className="veri-gradient text-white"
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    Save Changes
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              {/* Social Connections */}
+              <Card className="glass-medium border-white/20">
+                <CardHeader>
+                  <CardTitle className="text-white">Social Connections</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Twitter className="w-5 h-5 text-blue-400" />
+                      <div>
+                        <p className="font-medium text-white">Twitter</p>
+                        <p className="text-sm text-white/60">@samhuber</p>
+                      </div>
+                    </div>
+                    <span className="text-green-400 text-sm">Connected</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Instagram className="w-5 h-5 text-pink-400" />
+                      <div>
+                        <p className="font-medium text-white">Instagram</p>
+                        <p className="text-sm text-white/60">@samhuber</p>
+                      </div>
+                    </div>
+                    <span className="text-green-400 text-sm">Connected</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Youtube className="w-5 h-5 text-red-400" />
+                      <div>
+                        <p className="font-medium text-white">YouTube</p>
+                        <p className="text-sm text-white/60">Not connected</p>
+                      </div>
+                    </div>
+                    <Button size="sm" variant="outline" className="border-white/20 text-white">
+                      <Plus className="w-4 h-4 mr-1" />
+                      Connect
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            {/* VeriScore Card */}
+            <div>
+              <VeriScoreCard />
+            </div>
+          </div>
         </div>
-
-        {/* Mode Toggle */}
-        <div className="flex items-center space-x-4 mb-6">
-          <Button
-            onClick={() => setMode('showcase')}
-            variant={mode === 'showcase' ? 'default' : 'outline'}
-            className={mode === 'showcase' ? 'veri-gradient' : 'glass-subtle border-white/20 text-white'}
-          >
-            <Eye className="w-4 h-4 mr-2" />
-            Showcase
-          </Button>
-          <Button
-            onClick={() => setMode('builder')}
-            variant={mode === 'builder' ? 'default' : 'outline'}
-            className={mode === 'builder' ? 'veri-gradient' : 'glass-subtle border-white/20 text-white'}
-          >
-            <Settings className="w-4 h-4 mr-2" />
-            Builder
-          </Button>
-        </div>
-
-        {/* Content */}
-        <AnimatePresence mode="wait">
-          {mode === 'showcase' && (
-            <motion.div
-              key="showcase"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <ProfileShowcase 
-                profileData={sampleProfileData}
-                onEdit={() => setMode('builder')}
-                isPreview={false}
-              />
-            </motion.div>
-          )}
-
-          {mode === 'builder' && (
-            <motion.div
-              key="builder"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <EnhancedProfileBuilder 
-                onComplete={(data) => {
-                  console.log('Profile completed:', data);
-                  setMode('showcase');
-                }}
-                initialData={sampleProfileData}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+      </main>
     </div>
   );
 }
-
-export default ProfilePage;

@@ -34,9 +34,7 @@ function Router() {
         {user ? <Dashboard /> : <Home />}
       </Route>
       <Route path="/dashboard" component={Dashboard} />
-      <Route path="/profile">
-        <Dashboard defaultTab="profile" />
-      </Route>
+      <Route path="/profile" component={Profile} />
       <Route path="/analytics" component={Analytics} />
       <Route path="/leaderboard" component={Leaderboard} />
       <Route path="/ai-agent" component={AIAgent} />
