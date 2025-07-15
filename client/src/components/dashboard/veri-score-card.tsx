@@ -136,51 +136,56 @@ export function VeriScoreCard() {
       <Card 
         variant="glass" 
         hover={true} 
-        className="veri-gradient-card border-white/20 hover-lift w-full h-64 relative"
+        className="veri-gradient-card border-white/20 hover-lift w-full relative"
       >
-      <CardContent className="p-6 h-full flex flex-col justify-between">
-        {/* Top Row - Logo and VeriScore */}
-        <div className="flex items-start justify-between">
-          {/* Logo - Top Left */}
+      <CardContent className="p-6 flex flex-col space-y-6">
+        {/* Top - Logo and VeriScore Text */}
+        <div className="text-center space-y-4">
           <motion.div 
-            className="w-12 h-12 veri-gradient rounded-xl flex items-center justify-center shadow-lg"
+            className="w-16 h-16 veri-gradient rounded-2xl flex items-center justify-center shadow-lg mx-auto"
             whileHover={{ scale: 1.05, rotate: 5 }}
             transition={{ type: "spring", stiffness: 300, damping: 10 }}
           >
-            <VeriLogo size="md" showText={false} />
+            <VeriLogo size="lg" showText={false} />
           </motion.div>
+          <h3 className="text-xl font-termina text-white">VeriScore</h3>
+        </div>
 
-          {/* VeriScore - Top Right */}
-          <div className="text-right">
-            <div className="text-xs font-medium text-white/60 uppercase tracking-wider">VERISCORE</div>
-            <div 
-              ref={scoreRef}
-              className="text-3xl font-termina text-white relative"
-            >
-              {Math.round(animatedScore)}
-              {showParticles && (
-                <div className="particle-burst">
-                  {[...Array(12)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="particle"
-                      style={{
-                        animationDelay: `${i * 0.05}s`
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
+        {/* Large VeriScore Number */}
+        <div className="text-center">
+          <div 
+            ref={scoreRef}
+            className="text-6xl font-termina text-green-400 relative"
+          >
+            {Math.round(animatedScore)}
+            {showParticles && (
+              <div className="particle-burst">
+                {[...Array(12)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="particle"
+                    style={{
+                      animationDelay: `${i * 0.05}s`
+                    }}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Center - VeriPoints */}
-        <div className="text-center">
-          <div className="text-xs font-medium text-white/60 uppercase tracking-wider mb-2">VERIPOINTS</div>
+        {/* Analytics Info Box */}
+        <div className="bg-gray-700/50 rounded-xl p-3 text-center">
+          <p className="text-sm text-white/70">Calculated Weekly Based on</p>
+          <p className="text-sm text-green-400 font-medium">VeriScore Analytics™</p>
+        </div>
+
+        {/* VeriPoints Section */}
+        <div className="text-center space-y-2">
+          <h4 className="text-lg font-termina text-white">VeriPoints</h4>
           <div 
             ref={xpRef}
-            className="text-3xl font-termina text-green-400 relative"
+            className="text-4xl font-termina text-green-400 relative"
           >
             {Math.round(animatedXP).toLocaleString()}XP
             {showXPParticles && (
@@ -199,9 +204,21 @@ export function VeriScoreCard() {
           </div>
         </div>
 
-        {/* Bottom - User Info */}
-        <div className="text-center">
-          <h5 className="text-lg font-termina text-white mb-1">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-gray-700/50 rounded-xl p-4 text-center">
+            <div className="text-xl font-termina text-white">8.7K</div>
+            <div className="text-sm text-white/70">Total Followers</div>
+          </div>
+          <div className="bg-gray-700/50 rounded-xl p-4 text-center">
+            <div className="text-xl font-termina text-white">12.5K</div>
+            <div className="text-sm text-white/70">Engagement</div>
+          </div>
+        </div>
+
+        {/* User Info */}
+        <div className="text-center space-y-1">
+          <h5 className="text-xl font-termina text-white">
             {activeUser.firstName && activeUser.lastName 
               ? `${activeUser.firstName} ${activeUser.lastName}`
               : activeUser.username}
