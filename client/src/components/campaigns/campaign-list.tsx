@@ -22,7 +22,8 @@ import {
   Eye,
   TrendingUp,
   AlertCircle,
-  Zap
+  Zap,
+  Trophy
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -373,7 +374,7 @@ export function CampaignList() {
               if (aUrgent && !bUrgent) return -1;
               if (!aUrgent && bUrgent) return 1;
               return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-            }).map((campaign: Campaign) => {
+            }).map((campaign: Campaign, index: number) => {
               const urgent = isUrgent(campaign);
               const requirements = parseRequirements(campaign.requirements);
               const urgencyText = requirements?.urgency || "";
