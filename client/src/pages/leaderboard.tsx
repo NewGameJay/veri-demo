@@ -56,15 +56,30 @@ export default function Leaderboard() {
     { id: "tech", label: "Tech", icon: TrendingUp },
   ];
 
+  // Determine limit based on page: 10 for first page, 50 for second, 100+ after
+  const getLimit = (page: number) => {
+    if (page === 1) return 10;
+    if (page === 2) return 50;
+    return 100;
+  };
+
   // Fetch leaderboard data with pagination and filters
   const { data: leaderboardData, isLoading, refetch } = useQuery<LeaderboardResponse>({
-    queryKey: ['/api/leaderboard', {
-      page: currentPage,
-      category: activeCategory,
-      tier: tierFilter,
-      search: searchTerm,
-      limit: 100
-    }],
+    queryKey: ['/api/leaderboard', currentPage, activeCategory, tierFilter, searchTerm],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: getLimit(currentPage).toString(),
+      });
+      
+      if (activeCategory !== "global") params.append('category', activeCategory);
+      if (tierFilter) params.append('tier', tierFilter);
+      if (searchTerm) params.append('search', searchTerm);
+      
+      const response = await fetch(`/api/leaderboard?${params}`);
+      if (!response.ok) throw new Error('Failed to fetch leaderboard');
+      return response.json();
+    },
     refetchInterval: 30000, // Refresh every 30 seconds
   });
 
@@ -72,6 +87,11 @@ export default function Leaderboard() {
   const { data: userPosition } = useQuery<UserPositionResponse>({
     queryKey: ['/api/leaderboard/user', user?.id],
     enabled: !!user?.id,
+    queryFn: async () => {
+      const response = await fetch(`/api/leaderboard/user/${user?.id}`);
+      if (!response.ok) throw new Error('Failed to fetch user position');
+      return response.json();
+    },
   });
 
   // Reset page when filters change
@@ -133,6 +153,12 @@ export default function Leaderboard() {
     }
   };
 
+  const getLoadMoreText = () => {
+    if (currentPage === 1) return "View Top 50";
+    if (currentPage === 2) return "View Top 100";
+    return "Load More Rankings";
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header
@@ -158,7 +184,7 @@ export default function Leaderboard() {
               </h1>
               <p className="text-white/60 mt-2">
                 {leaderboardData?.totalUsers ? 
-                  `Compete with ${leaderboardData.totalUsers.toLocaleString()} creators worldwide` :
+                  `Showing ${currentPage === 1 ? 'Top 10' : currentPage === 2 ? 'Top 50' : `Top ${getLimit(currentPage)}`} of ${leaderboardData.totalUsers.toLocaleString()} creators worldwide` :
                   "Loading global rankings..."
                 }
               </p>
@@ -416,7 +442,7 @@ export default function Leaderboard() {
                         className="border-white/20 text-white hover:bg-white/10"
                       >
                         <ChevronDown className="w-4 h-4 mr-2" />
-                        Load More Rankings
+                        {getLoadMoreText()}
                       </Button>
                     </div>
                   )}
