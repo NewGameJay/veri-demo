@@ -16,12 +16,6 @@ import { CheckCircle } from 'lucide-react';
 import { Shield } from 'lucide-react';
 import { X } from 'lucide-react';
 import { Loader2 } from 'lucide-react';
-import { Gamepad2 } from 'lucide-react';
-import { Building2 } from 'lucide-react';
-import { Users } from 'lucide-react';
-import { Crown } from 'lucide-react';
-import { Star } from 'lucide-react';
-import { Zap } from 'lucide-react';
 import { useAuth } from "@/contexts/auth-context";
 import { motion, AnimatePresence } from "framer-motion";
 import { triggerHaptic } from "@/lib/haptic";
@@ -57,11 +51,6 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
 
   const steps = [
     {
-      id: 'profile-type',
-      title: 'Profile Type Selection',
-      description: 'Choose your creator profile type'
-    },
-    {
       id: 'basic-info',
       title: 'Basic Information',
       description: 'Tell us about yourself'
@@ -75,50 +64,6 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
       id: 'review',
       title: 'Review & Publish',
       description: 'Final review before going live'
-    }
-  ];
-
-  // Profile type options based on Matt's design
-  const profileTypes = [
-    {
-      id: 'gaming-creator',
-      title: 'Gaming Creator',
-      description: 'Content creator focused on gaming, streaming, and gaming culture',
-      icon: Gamepad2,
-      color: 'from-purple-500 to-pink-500',
-      features: ['Gaming content', 'Live streaming', 'Community building', 'Brand partnerships'],
-      userType: 'creator' as const,
-      profileType: 'individual' as const
-    },
-    {
-      id: 'lifestyle-creator',
-      title: 'Lifestyle Creator',
-      description: 'Multi-platform creator covering lifestyle, tech, and entertainment',
-      icon: Star,
-      color: 'from-emerald-500 to-teal-500',
-      features: ['Lifestyle content', 'Social media', 'Product reviews', 'Collaborations'],
-      userType: 'creator' as const,
-      profileType: 'individual' as const
-    },
-    {
-      id: 'studio-agency',
-      title: 'Studio/Agency',
-      description: 'Creative studio or talent agency managing multiple creators',
-      icon: Building2,
-      color: 'from-blue-500 to-indigo-500',
-      features: ['Talent management', 'Campaign creation', 'Multi-creator projects', 'Agency tools'],
-      userType: 'studio' as const,
-      profileType: 'business' as const
-    },
-    {
-      id: 'community-manager',
-      title: 'Community Manager',
-      description: 'Building and managing gaming/creator communities',
-      icon: Users,
-      color: 'from-orange-500 to-red-500',
-      features: ['Community growth', 'Event hosting', 'Creator partnerships', 'Brand advocacy'],
-      userType: 'community' as const,
-      profileType: 'individual' as const
     }
   ];
 
@@ -185,25 +130,13 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
       : [...array, item];
   };
 
-  const handleProfileTypeSelect = (profileType: typeof profileTypes[0]) => {
-    triggerHaptic("light");
-    setFormData(prev => ({
-      ...prev,
-      userType: profileType.userType,
-      profileType: profileType.profileType
-    }));
-    handleNext();
-  };
-
   const isStepValid = () => {
     switch (currentStep) {
       case 0:
-        return true; // Profile type selection - always valid
-      case 1:
         return formData.name.trim() !== '' && formData.interests.length > 0;
-      case 2:
+      case 1:
         return formData.bio.trim() !== '';
-      case 3:
+      case 2:
         return true;
       default:
         return false;
@@ -269,56 +202,6 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
 
               {/* Step Content */}
               {currentStep === 0 && (
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {profileTypes.map((type) => {
-                      const Icon = type.icon;
-                      return (
-                        <motion.div
-                          key={type.id}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className="cursor-pointer"
-                          onClick={() => handleProfileTypeSelect(type)}
-                        >
-                          <Card className="glass-subtle border-white/10 hover:border-white/30 transition-all duration-300 hover-lift group">
-                            <CardHeader className="text-center pb-3">
-                              <div className={`w-16 h-16 mx-auto rounded-2xl bg-gradient-to-r ${type.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                                <Icon className="w-8 h-8 text-white" />
-                              </div>
-                              <CardTitle className="text-lg text-white group-hover:text-emerald-300 transition-colors">
-                                {type.title}
-                              </CardTitle>
-                              <p className="text-sm text-white/70 group-hover:text-white/90 transition-colors">
-                                {type.description}
-                              </p>
-                            </CardHeader>
-                            <CardContent className="pt-0">
-                              <div className="space-y-2">
-                                {type.features.map((feature, index) => (
-                                  <div key={index} className="flex items-center text-sm text-white/60 group-hover:text-white/80 transition-colors">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-3"></div>
-                                    {feature}
-                                  </div>
-                                ))}
-                              </div>
-                              <Button 
-                                className="w-full mt-4 veri-gradient opacity-80 group-hover:opacity-100 transition-opacity"
-                                size="sm"
-                              >
-                                Select {type.title}
-                                <ChevronRight className="w-4 h-4 ml-2" />
-                              </Button>
-                            </CardContent>
-                          </Card>
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {currentStep === 1 && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>

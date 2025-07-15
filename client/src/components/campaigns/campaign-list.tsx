@@ -77,27 +77,11 @@ const STATUS_COLORS = {
   draft: "bg-gray-100 text-gray-800",
 };
 
-interface CampaignListProps {
-  userStreak?: number;
-}
-
-export function CampaignList({ userStreak = 0 }: CampaignListProps) {
+export function CampaignList() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-
-  // Veri+ Creator requirement: 3+ day streak
-  const isVeriPlusCreator = userStreak >= 3;
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
-  const [applicationData, setApplicationData] = useState({
-    interest: "",
-    experience: "",
-    approach: "",
-    youtubeUrl: "",
-    twitchUrl: "",
-    socialUrls: "",
-    brandWorkUrls: "",
-    availability: "immediate"
-  });
+  const [applicationData, setApplicationData] = useState("");
   const [submissionUrl, setSubmissionUrl] = useState("");
   const [submissionData, setSubmissionData] = useState("");
 
@@ -115,9 +99,10 @@ export function CampaignList({ userStreak = 0 }: CampaignListProps) {
   });
 
   const applyToCampaignMutation = useMutation({
-    mutationFn: async ({ campaignId, applicationData }: { campaignId: number; applicationData: typeof applicationData }) => {
-      return apiRequest("POST", `/api/campaigns/${campaignId}/apply`, {
-        applicationData: JSON.stringify(applicationData),
+    mutationFn: async ({ campaignId, applicationData }: { campaignId: number; applicationData: string }) => {
+      return apiRequest(`/api/campaigns/${campaignId}/apply`, {
+        method: "POST",
+        body: { applicationData },
       });
     },
     onSuccess: () => {
@@ -127,16 +112,7 @@ export function CampaignList({ userStreak = 0 }: CampaignListProps) {
         description: "Your application has been submitted successfully.",
       });
       queryClient.invalidateQueries({ queryKey: ["/api/campaigns"] });
-      setApplicationData({
-        interest: "",
-        experience: "",
-        approach: "",
-        youtubeUrl: "",
-        twitchUrl: "",
-        socialUrls: "",
-        brandWorkUrls: "",
-        availability: "immediate"
-      });
+      setApplicationData("");
       setSelectedCampaign(null);
     },
     onError: (error) => {
@@ -177,7 +153,14 @@ export function CampaignList({ userStreak = 0 }: CampaignListProps) {
     },
   });
 
-
+  const handleApply = () => {
+    if (!selectedCampaign || !applicationData.trim()) return;
+    
+    applyToCampaignMutation.mutate({
+      campaignId: selectedCampaign.id,
+      applicationData: applicationData.trim(),
+    });
+  };
 
   const handleSubmit = () => {
     if (!selectedCampaign || !submissionUrl.trim()) return;
@@ -277,58 +260,16 @@ export function CampaignList({ userStreak = 0 }: CampaignListProps) {
     );
   }
 
-  // Veri+ Access Control Alert
-  if (!isVeriPlusCreator) {
-    return (
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold">Available Campaigns</h2>
-            <p className="text-muted-foreground">
-              Discover and participate in brand campaigns
-            </p>
-          </div>
-        </div>
-        
-        <Card className="p-6 text-center border-orange-200 bg-orange-50/50">
-          <div className="mb-4">
-            <Zap className="h-12 w-12 mx-auto mb-3 text-orange-500" />
-            <h3 className="font-semibold text-lg mb-2 text-orange-800">Veri+ Creator Required</h3>
-            <p className="text-orange-700 mb-4">
-              You need a <strong>3+ day task streak</strong> to access brand campaigns. Complete daily tasks to unlock this feature!
-            </p>
-            <div className="flex items-center justify-center gap-2 text-sm">
-              <Badge variant="outline" className="border-orange-300 text-orange-700">
-                Current Streak: {userStreak} days
-              </Badge>
-              <span className="text-orange-600">•</span>
-              <Badge variant="outline" className="border-green-300 text-green-700">
-                Required: 3+ days
-              </Badge>
-            </div>
-          </div>
-          <p className="text-sm text-orange-600 mb-4">
-            Complete tasks daily to build your streak and unlock premium campaign access!
-          </p>
-        </Card>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Available Campaigns</h2>
           <p className="text-muted-foreground">
-            Discover and participate in brand campaigns • Veri+ Creator Access
+            Discover and participate in brand campaigns
           </p>
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Badge variant="outline" className="border-green-300 text-green-700 flex items-center gap-1">
-            <Zap className="h-3 w-3" />
-            Veri+ Creator
-          </Badge>
           <TrendingUp className="h-4 w-4" />
           {campaigns?.length || 0} campaigns available
         </div>
@@ -566,79 +507,16 @@ export function CampaignList({ userStreak = 0 }: CampaignListProps) {
                         Tell us why you're perfect for this campaign
                       </DialogDescription>
                     </DialogHeader>
-                    <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+                    <div className="space-y-4">
                       <div>
-                        <Label htmlFor="interest">Campaign Interest Statement</Label>
+                        <Label htmlFor="application">Application Message</Label>
                         <Textarea
-                          id="interest"
-                          placeholder="Why are you interested in this campaign? (3-5 lines minimum)"
-                          value={applicationData.interest || ''}
-                          onChange={(e) => setApplicationData(prev => ({ ...prev, interest: e.target.value }))}
-                          className="min-h-[80px]"
+                          id="application"
+                          placeholder="Describe your relevant experience, audience, and how you plan to complete this campaign..."
+                          value={applicationData}
+                          onChange={(e) => setApplicationData(e.target.value)}
+                          className="min-h-[100px]"
                         />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="experience">Relevant Experience</Label>
-                        <Textarea
-                          id="experience"
-                          placeholder="Share relevant content creation experience and links to previous work..."
-                          value={applicationData.experience || ''}
-                          onChange={(e) => setApplicationData(prev => ({ ...prev, experience: e.target.value }))}
-                          className="min-h-[80px]"
-                        />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="approach">Content Approach</Label>
-                        <Textarea
-                          id="approach"
-                          placeholder="How would you approach this campaign? Share your creative brief response..."
-                          value={applicationData.approach || ''}
-                          onChange={(e) => setApplicationData(prev => ({ ...prev, approach: e.target.value }))}
-                          className="min-h-[80px]"
-                        />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="portfolio">Portfolio Links</Label>
-                        <div className="space-y-2">
-                          <Input
-                            placeholder="YouTube channel URL"
-                            value={applicationData.youtubeUrl || ''}
-                            onChange={(e) => setApplicationData(prev => ({ ...prev, youtubeUrl: e.target.value }))}
-                          />
-                          <Input
-                            placeholder="Twitch stream URL"
-                            value={applicationData.twitchUrl || ''}
-                            onChange={(e) => setApplicationData(prev => ({ ...prev, twitchUrl: e.target.value }))}
-                          />
-                          <Input
-                            placeholder="Social media profiles"
-                            value={applicationData.socialUrls || ''}
-                            onChange={(e) => setApplicationData(prev => ({ ...prev, socialUrls: e.target.value }))}
-                          />
-                          <Input
-                            placeholder="Previous brand work examples"
-                            value={applicationData.brandWorkUrls || ''}
-                            onChange={(e) => setApplicationData(prev => ({ ...prev, brandWorkUrls: e.target.value }))}
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <Label htmlFor="availability">Availability</Label>
-                        <Select value={applicationData.availability || 'immediate'} onValueChange={(value) => setApplicationData(prev => ({ ...prev, availability: value }))}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select your availability" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="immediate">Immediate start</SelectItem>
-                            <SelectItem value="1week">Within 1 week</SelectItem>
-                            <SelectItem value="2weeks">Within 2 weeks</SelectItem>
-                            <SelectItem value="flexible">Flexible timeline</SelectItem>
-                          </SelectContent>
-                        </Select>
                       </div>
                       
                       <div className="flex justify-end gap-2">
@@ -646,23 +524,8 @@ export function CampaignList({ userStreak = 0 }: CampaignListProps) {
                           Cancel
                         </Button>
                         <Button 
-                          onClick={() => {
-                            // Validate required fields
-                            if (!applicationData.interest.trim() || !applicationData.experience.trim() || !applicationData.approach.trim()) {
-                              toast({
-                                title: "Missing Information",
-                                description: "Please fill in the interest statement, experience, and content approach fields",
-                                variant: "destructive",
-                              });
-                              return;
-                            }
-                            
-                            applyToCampaignMutation.mutate({
-                              campaignId: selectedCampaign!.id,
-                              applicationData
-                            });
-                          }}
-                          disabled={applyToCampaignMutation.isPending}
+                          onClick={handleApply}
+                          disabled={!applicationData.trim() || applyToCampaignMutation.isPending}
                         >
                           {applyToCampaignMutation.isPending ? "Applying..." : "Submit Application"}
                         </Button>
