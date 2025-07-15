@@ -445,7 +445,7 @@ export function EnhancedProfileBuilder({ onComplete, initialData }: ProfileBuild
               const isCompleted = ['type-selection', 'basic-info', 'customization', 'preview'].indexOf(currentStep) > index;
               
               return (
-                <React.Fragment key={step}>
+                <div key={step} className="contents">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-colors ${
                     isActive ? 'border-emerald-500 bg-emerald-500 text-white' :
                     isCompleted ? 'border-emerald-500 bg-emerald-500/20 text-emerald-400' :
@@ -462,7 +462,7 @@ export function EnhancedProfileBuilder({ onComplete, initialData }: ProfileBuild
                       isCompleted ? 'bg-emerald-500' : 'bg-white/20'
                     }`} />
                   )}
-                </React.Fragment>
+                </div>
               );
             })}
           </div>
