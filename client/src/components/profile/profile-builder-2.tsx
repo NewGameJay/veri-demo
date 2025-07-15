@@ -115,6 +115,10 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
   const [activeTab, setActiveTab] = useState("edit");
   const [copiedUrl, setCopiedUrl] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isGeneratingBio, setIsGeneratingBio] = useState(false);
+  const [showVeriScore, setShowVeriScore] = useState(true);
+  const [showRank, setShowRank] = useState(true);
+  const [showSocialIcons, setShowSocialIcons] = useState(true);
   
   const [profileData, setProfileData] = useState({
     name: user?.username || "Creator",
@@ -125,7 +129,12 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
     bannerUrl: "",
     avatarUrl: "",
     joinDate: "January 2024",
-    verified: true
+    verified: true,
+    topContent: [
+      { platform: "youtube", title: "Epic Gaming Montage - Best Plays 2024", url: "https://youtube.com/watch?v=abc123" },
+      { platform: "twitch", title: "Live Gaming Session - New Strategy!", url: "https://twitch.tv/creator/video/123" },
+      { platform: "twitter", title: "Thread: How to improve your gaming setup", url: "https://twitter.com/creator/status/123" }
+    ]
   });
 
   // Fetch user data
@@ -137,6 +146,12 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
   // Fetch social connections
   const { data: socialConnections } = useQuery({
     queryKey: [`/api/social-connections/${user?.id}`],
+    enabled: !!user?.id,
+  });
+
+  // Fetch leaderboard data for rank
+  const { data: leaderboardData } = useQuery({
+    queryKey: [`/api/leaderboard/user/${user?.id}`],
     enabled: !!user?.id,
   });
 
@@ -203,9 +218,67 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
     setTimeout(() => setCopiedUrl(false), 2000);
   };
 
+  const handleGenerateAIBio = async () => {
+    setIsGeneratingBio(true);
+    try {
+      // Simulate AI bio generation with BrightMatter AI Engine
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const aiGeneratedBios = [
+        "🎮 Elite gaming creator | 🏆 Championship competitor | 💡 Building Web3 gaming communities | 🔥 Authentic content that inspires millions",
+        "🌟 Professional content creator | 🎯 Strategic gameplay expert | 🚀 Pioneering the future of gaming | 💎 Delivering premium gaming experiences",
+        "🔥 Gaming industry innovator | 🎮 Competitive esports athlete | 🌐 Web3 gaming evangelist | ⚡ Creating viral gaming content daily"
+      ];
+      
+      const randomBio = aiGeneratedBios[Math.floor(Math.random() * aiGeneratedBios.length)];
+      setProfileData(prev => ({ ...prev, bio: randomBio }));
+      
+      triggerHaptic("success");
+      toast({
+        title: "Bio Generated!",
+        description: "BrightMatter AI has created a new bio for you.",
+      });
+    } catch (error) {
+      triggerHaptic("error");
+      toast({
+        title: "Generation Failed",
+        description: "Failed to generate bio. Please try again.",
+        variant: "destructive",
+      });
+    }
+    setIsGeneratingBio(false);
+  };
+
+  const addContentLink = () => {
+    const newContent = { platform: "youtube", title: "", url: "" };
+    setProfileData(prev => ({
+      ...prev,
+      topContent: [...prev.topContent, newContent]
+    }));
+  };
+
+  const updateContentLink = (index: number, field: string, value: string) => {
+    setProfileData(prev => ({
+      ...prev,
+      topContent: prev.topContent.map((content, i) => 
+        i === index ? { ...content, [field]: value } : content
+      )
+    }));
+  };
+
+  const removeContentLink = (index: number) => {
+    setProfileData(prev => ({
+      ...prev,
+      topContent: prev.topContent.filter((_, i) => i !== index)
+    }));
+  };
+
   const veriScore = userData?.veriScore || 85;
   const tier = getTierInfo(veriScore);
   const totalFollowers = socialConnections?.reduce((sum: number, conn: SocialConnection) => sum + (conn.followers || 0), 0) || 12500;
+  const userRank = leaderboardData?.user?.rank || 1;
+  const connectedSocials = socialConnections?.filter((conn: SocialConnection) => conn.isConnected) || [];
+  const incompleteConnections = socialConnections?.length !== 7; // Assuming 7 major platforms
   
   // Mock content data (replace with real data)
   const featuredContent: ContentItem[] = [
@@ -408,22 +481,246 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
                   </div>
                 </div>
 
-                
-              </div>
-
-              {/* Save Button */}
-              <div className="mt-6 flex justify-end">
-                <Button 
-                  onClick={handleSaveProfile}
-                  disabled={updateProfileMutation.isPending}
-                  className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg shadow-emerald-500/25"
-                >
-                  <Save className="w-4 h-4 mr-2" />
-                  {updateProfileMutation.isPending ? "Saving..." : "Save Profile"}
-                </Button>
+                {/* AI Bio Generation */}
+                <div className="mt-4 p-4 bg-slate-800/30 rounded-lg border border-slate-600">
+                  <div className="flex items-center justify-between mb-2">
+                    <Label className="text-emerald-100 flex items-center gap-2">
+                      <Zap className="w-4 h-4 text-yellow-400" />
+                      BrightMatter AI Bio Generator
+                    </Label>
+                    <Button
+                      onClick={handleGenerateAIBio}
+                      disabled={isGeneratingBio}
+                      size="sm"
+                      className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white"
+                    >
+                      {isGeneratingBio ? "Generating..." : "Generate Bio"}
+                    </Button>
+                  </div>
+                  <p className="text-sm text-slate-400">
+                    Let our AI create a professional, engaging bio tailored to your gaming content and audience.
+                  </p>
+                </div>
               </div>
             </CardContent>
           </Card>
+
+          {/* VeriScore Card Section */}
+          <Card className="bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl border-white/10">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                  <Trophy className="w-5 h-5 text-emerald-400" />
+                  VeriScore & Performance
+                </h3>
+                <label className="flex items-center gap-2 text-sm text-slate-300">
+                  <input
+                    type="checkbox"
+                    checked={showVeriScore}
+                    onChange={(e) => setShowVeriScore(e.target.checked)}
+                    className="rounded border-slate-600 bg-slate-800 text-emerald-500 focus:ring-emerald-500"
+                  />
+                  Show on profile
+                </label>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-emerald-400">{veriScore}</div>
+                    <div className="text-sm text-slate-400">VeriScore</div>
+                    <Badge className={`mt-2 bg-gradient-to-r ${tier.color} text-white`}>
+                      {tier.icon} {tier.name}
+                    </Badge>
+                  </div>
+                </div>
+                
+                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-blue-400">#{userRank}</div>
+                    <div className="text-sm text-slate-400">Global Rank</div>
+                    <label className="flex items-center gap-2 text-xs text-slate-300 mt-2 justify-center">
+                      <input
+                        type="checkbox"
+                        checked={showRank}
+                        onChange={(e) => setShowRank(e.target.checked)}
+                        className="rounded border-slate-600 bg-slate-800 text-emerald-500 focus:ring-emerald-500"
+                      />
+                      Display rank
+                    </label>
+                  </div>
+                </div>
+                
+                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-purple-400">{totalFollowers.toLocaleString()}</div>
+                    <div className="text-sm text-slate-400">Total Followers</div>
+                    <div className="text-xs text-slate-500 mt-1">Across all platforms</div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Social Connections Section */}
+          <Card className="bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl border-white/10">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                  <Users className="w-5 h-5 text-emerald-400" />
+                  Social Connections
+                </h3>
+                <label className="flex items-center gap-2 text-sm text-slate-300">
+                  <input
+                    type="checkbox"
+                    checked={showSocialIcons}
+                    onChange={(e) => setShowSocialIcons(e.target.checked)}
+                    className="rounded border-slate-600 bg-slate-800 text-emerald-500 focus:ring-emerald-500"
+                  />
+                  Show on profile
+                </label>
+              </div>
+
+              {incompleteConnections && (
+                <div className="mb-4 p-3 bg-amber-900/20 border border-amber-600/30 rounded-lg">
+                  <div className="flex items-center gap-2 text-amber-300 mb-2">
+                    <Settings className="w-4 h-4" />
+                    <span className="font-medium">Complete Your Social Connections</span>
+                  </div>
+                  <p className="text-sm text-amber-200 mb-3">
+                    Connect more platforms to maximize your profile visibility and attract brand partnerships.
+                  </p>
+                  <Button
+                    size="sm"
+                    className="bg-amber-600 hover:bg-amber-700 text-white"
+                  >
+                    Connect More Platforms
+                  </Button>
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {connectedSocials.slice(0, 6).map((connection: SocialConnection) => {
+                  const Icon = PLATFORM_ICONS[connection.platform.toLowerCase()];
+                  return (
+                    <div key={connection.id} className="flex items-center gap-2 p-3 bg-slate-800/50 rounded-lg border border-slate-600">
+                      {Icon && <Icon className="w-5 h-5 text-emerald-400" />}
+                      <div>
+                        <p className="text-xs font-medium capitalize text-slate-200">{connection.platform}</p>
+                        <p className="text-xs text-slate-400">{connection.followers?.toLocaleString()} followers</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Top Performing Content Section */}
+          <Card className="bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl border-white/10">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-emerald-400" />
+                  Top Performing Content
+                </h3>
+                <Button
+                  onClick={addContentLink}
+                  size="sm"
+                  variant="outline"
+                  className="border-emerald-600 text-emerald-400 hover:bg-emerald-600 hover:text-white"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Content
+                </Button>
+              </div>
+              
+              <p className="text-sm text-slate-400 mb-4">
+                Showcase your best content to attract brand partnerships and demonstrate your reach.
+              </p>
+
+              <div className="space-y-3">
+                {profileData.topContent.map((content, index) => (
+                  <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-3 p-3 bg-slate-800/50 rounded-lg border border-slate-600">
+                    <div className="md:col-span-2">
+                      <select
+                        value={content.platform}
+                        onChange={(e) => updateContentLink(index, 'platform', e.target.value)}
+                        className="w-full bg-slate-700 border-slate-600 text-white rounded px-2 py-1 text-sm"
+                      >
+                        <option value="youtube">YouTube</option>
+                        <option value="twitch">Twitch</option>
+                        <option value="twitter">Twitter</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="tiktok">TikTok</option>
+                      </select>
+                    </div>
+                    <div className="md:col-span-5">
+                      <Input
+                        value={content.title}
+                        onChange={(e) => updateContentLink(index, 'title', e.target.value)}
+                        placeholder="Content title"
+                        className="bg-slate-700 border-slate-600 text-white text-sm"
+                      />
+                    </div>
+                    <div className="md:col-span-4">
+                      <Input
+                        value={content.url}
+                        onChange={(e) => updateContentLink(index, 'url', e.target.value)}
+                        placeholder="Content URL"
+                        className="bg-slate-700 border-slate-600 text-white text-sm"
+                      />
+                    </div>
+                    <div className="md:col-span-1">
+                      <Button
+                        onClick={() => removeContentLink(index)}
+                        size="sm"
+                        variant="ghost"
+                        className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Profile Display Preferences */}
+          <Card className="bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl border-white/10">
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
+                <Eye className="w-5 h-5 text-emerald-400" />
+                Profile Display Preferences
+              </h3>
+              
+              <div className="space-y-3">
+                <label className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg border border-slate-600">
+                  <div>
+                    <div className="text-white font-medium">Verification Badge</div>
+                    <div className="text-sm text-slate-400">Show Veri verification checkmark next to username</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {profileData.verified && <Shield className="w-4 h-4 text-emerald-400" />}
+                    <span className="text-sm text-emerald-400">Verified by Veri</span>
+                  </div>
+                </label>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Save Button */}
+          <div className="mt-6 flex justify-end">
+            <Button 
+              onClick={handleSaveProfile}
+              disabled={updateProfileMutation.isPending}
+              className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg shadow-emerald-500/25"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              {updateProfileMutation.isPending ? "Saving..." : "Save Profile"}
+            </Button>
+          </div>
         </TabsContent>
 
         <TabsContent value="preview" className="space-y-6">
@@ -472,7 +769,7 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
               {/* Profile Info */}
               <div className="space-y-3">
                 <div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <h1 className="text-xl font-bold text-white">{profileData.name}</h1>
                     {profileData.verified && (
                       <Shield className="w-5 h-5 text-emerald-400 fill-current" />
@@ -480,6 +777,11 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
                     <Badge className={`bg-gradient-to-r ${tier.color} text-white`}>
                       {tier.icon} {tier.name}
                     </Badge>
+                    {showRank && (
+                      <Badge className="bg-blue-600 text-white">
+                        #{userRank} Global
+                      </Badge>
+                    )}
                   </div>
                   <p className="text-slate-400">@{profileData.customUsername}</p>
                 </div>
@@ -507,6 +809,25 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
                   </div>
                 </div>
 
+                {/* VeriScore Display */}
+                {showVeriScore && (
+                  <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-600">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
+                          <Trophy className="w-5 h-5 text-emerald-400" />
+                          <span className="text-white font-medium">VeriScore</span>
+                        </div>
+                        <div className="text-2xl font-bold text-emerald-400">{veriScore}/100</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-purple-400 font-medium">{totalFollowers.toLocaleString()}</div>
+                        <div className="text-xs text-slate-400">Total Reach</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Follower Stats */}
                 <div className="flex gap-6 text-sm">
                   <div>
@@ -520,11 +841,11 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
                 </div>
 
                 {/* Social Connections */}
-                {socialConnections && socialConnections.length > 0 && (
+                {showSocialIcons && connectedSocials && connectedSocials.length > 0 && (
                   <div className="pt-4 border-t border-slate-600">
                     <h3 className="font-semibold mb-3 text-white">Connected Platforms</h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {socialConnections.slice(0, 6).map((connection: SocialConnection) => {
+                      {connectedSocials.slice(0, 6).map((connection: SocialConnection) => {
                         const Icon = PLATFORM_ICONS[connection.platform.toLowerCase()];
                         return (
                           <div key={connection.id} className="flex items-center gap-2 p-2 bg-slate-800/50 rounded-lg border border-slate-600">
@@ -540,34 +861,47 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
                   </div>
                 )}
 
-                {/* Featured Content */}
-                <div className="pt-4 border-t border-slate-600">
-                  <h3 className="font-semibold mb-3 text-white">Featured Content</h3>
-                  <div className="space-y-3">
-                    {featuredContent.map((content) => {
-                      const Icon = PLATFORM_ICONS[content.platform];
-                      return (
-                        <div key={content.id} className="flex gap-3 p-3 border border-slate-600 rounded-lg hover:bg-slate-800/50 transition-colors">
-                          <div className={`w-10 h-10 rounded ${PLATFORM_COLORS[content.platform]} flex items-center justify-center text-white`}>
-                            {Icon && <Icon className="w-5 h-5" />}
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-medium text-sm text-slate-200">{content.title}</h4>
-                            <div className="flex items-center gap-4 text-xs text-slate-400 mt-1">
-                              <span>{content.views.toLocaleString()} views</span>
-                              <span>{content.likes.toLocaleString()} likes</span>
-                              <span>{content.date}</span>
+                {/* Top Performing Content */}
+                {profileData.topContent && profileData.topContent.length > 0 && (
+                  <div className="pt-4 border-t border-slate-600">
+                    <h3 className="font-semibold mb-3 text-white flex items-center gap-2">
+                      <TrendingUp className="w-4 h-4 text-emerald-400" />
+                      Top Performing Content
+                    </h3>
+                    <div className="space-y-3">
+                      {profileData.topContent.map((content, index) => {
+                        const Icon = PLATFORM_ICONS[content.platform.toLowerCase()];
+                        const platformColor = content.platform === 'youtube' ? 'bg-red-600' :
+                                             content.platform === 'twitch' ? 'bg-purple-600' :
+                                             content.platform === 'twitter' ? 'bg-blue-600' :
+                                             content.platform === 'instagram' ? 'bg-pink-600' :
+                                             content.platform === 'tiktok' ? 'bg-gray-800' : 'bg-emerald-600';
+                        
+                        return (
+                          <div key={index} className="flex gap-3 p-3 bg-slate-800/30 border border-slate-600 rounded-lg hover:bg-slate-800/50 transition-colors">
+                            <div className={`w-10 h-10 rounded ${platformColor} flex items-center justify-center text-white`}>
+                              {Icon && <Icon className="w-5 h-5" />}
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-medium text-sm text-slate-200 mb-1">{content.title}</h4>
+                              <div className="flex items-center gap-4 text-xs text-slate-400">
+                                <span className="capitalize">{content.platform}</span>
+                                {content.url && (
+                                  <a href={content.url} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">
+                                    View Content
+                                  </a>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex items-center">
+                              <ExternalLink className="w-4 h-4 text-slate-400" />
                             </div>
                           </div>
-                          <div className="flex items-center gap-1">
-                            <TrendingUp className="w-3 h-3 text-emerald-400" />
-                            <span className="text-xs text-emerald-400">{content.engagement}%</span>
-                          </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </CardContent>
           </Card>
