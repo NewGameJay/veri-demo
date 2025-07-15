@@ -374,9 +374,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const tier = req.query.tier as string;
       const country = req.query.country as string;
       const search = req.query.search as string;
+      const sort = req.query.sort as string || "highest";
       
       // Get cached global leaderboard
-      const allUsers = getCachedLeaderboard();
+      let allUsers = getCachedLeaderboard();
+      
+      // Apply sorting - reverse for lowest to highest
+      if (sort === "lowest") {
+        allUsers = [...allUsers].reverse();
+        // Update ranks to reflect the new order
+        allUsers = allUsers.map((user, index) => ({
+          ...user,
+          rank: index + 1
+        }));
+      }
       
       // Apply filters
       const filteredUsers = filterUsers(allUsers, {

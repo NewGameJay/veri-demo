@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Trophy, Crown, Medal, TrendingUp, Star, Search, ChevronDown, Users, MapPin, Filter, Loader2, ChevronRight } from 'lucide-react';
+import { Trophy, Crown, Medal, TrendingUp, Star, Search, ChevronDown, Users, MapPin, Filter, Loader2, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { Header } from "@/components/navigation/header";
 import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -46,6 +46,7 @@ export default function Leaderboard() {
   const [tierFilter, setTierFilter] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [jumpToRank, setJumpToRank] = useState("");
+  const [sortOrder, setSortOrder] = useState<"highest" | "lowest">("highest");
   
   const { user } = useAuth();
 
@@ -65,15 +66,16 @@ export default function Leaderboard() {
 
   // Fetch leaderboard data with pagination and filters
   const { data: leaderboardData, isLoading, refetch } = useQuery<LeaderboardResponse>({
-    queryKey: ['/api/leaderboard', currentPage, activeCategory, tierFilter, searchTerm],
+    queryKey: ['/api/leaderboard', currentPage, activeCategory, tierFilter, searchTerm, sortOrder],
     queryFn: async () => {
       const params = new URLSearchParams({
         page: currentPage.toString(),
         limit: getLimit(currentPage).toString(),
+        sort: sortOrder,
       });
       
       if (activeCategory !== "global") params.append('category', activeCategory);
-      if (tierFilter) params.append('tier', tierFilter);
+      if (tierFilter && tierFilter !== "all") params.append('tier', tierFilter);
       if (searchTerm) params.append('search', searchTerm);
       
       const response = await fetch(`/api/leaderboard?${params}`);
@@ -97,7 +99,7 @@ export default function Leaderboard() {
   // Reset page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeCategory, tierFilter, searchTerm]);
+  }, [activeCategory, tierFilter, searchTerm, sortOrder]);
 
   // Handle search with debouncing
   useEffect(() => {
@@ -194,6 +196,20 @@ export default function Leaderboard() {
               <Button
                 variant="outline"
                 size="sm"
+                onClick={() => setSortOrder(sortOrder === "highest" ? "lowest" : "highest")}
+                className="border-white/20 text-white hover:bg-white/10"
+                title={`Currently showing ${sortOrder === "highest" ? "highest to lowest" : "lowest to highest"} rankings`}
+              >
+                {sortOrder === "highest" ? (
+                  <ArrowDown className="w-4 h-4 mr-2" />
+                ) : (
+                  <ArrowUp className="w-4 h-4 mr-2" />
+                )}
+                {sortOrder === "highest" ? "High→Low" : "Low→High"}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => setShowFilters(!showFilters)}
                 className="border-white/20 text-white hover:bg-white/10"
               >
@@ -265,7 +281,7 @@ export default function Leaderboard() {
                           <SelectValue placeholder="All Tiers" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All Tiers</SelectItem>
+                          <SelectItem value="all">All Tiers</SelectItem>
                           <SelectItem value="Diamond">Diamond</SelectItem>
                           <SelectItem value="Platinum">Platinum</SelectItem>
                           <SelectItem value="Gold">Gold</SelectItem>
@@ -297,14 +313,15 @@ export default function Leaderboard() {
                       <Button
                         onClick={() => {
                           setSearchTerm("");
-                          setTierFilter("");
+                          setTierFilter("all");
                           setJumpToRank("");
+                          setSortOrder("highest");
                           setCurrentPage(1);
                         }}
                         variant="outline"
                         className="border-white/20 text-white hover:bg-white/10"
                       >
-                        Reset Filters
+                        Reset All
                       </Button>
                     </div>
                   </CardContent>
