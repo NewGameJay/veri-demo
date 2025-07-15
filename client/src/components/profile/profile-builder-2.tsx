@@ -122,10 +122,9 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
     location: "Los Angeles, CA",
     website: "https://veri.club/creator",
     customUsername: user?.username?.toLowerCase() || "creator",
-    bannerUrl: "https://images.unsplash.com/photo-1551808525-51a94da548ce?w=1200&h=400&fit=crop",
+    bannerUrl: "",
     avatarUrl: "",
     joinDate: "January 2024",
-    pronouns: "they/them",
     verified: true
   });
 
@@ -409,16 +408,7 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
                   </div>
                 </div>
 
-                <div>
-                  <Label htmlFor="pronouns" className="text-emerald-100">Pronouns (Optional)</Label>
-                  <Input
-                    id="pronouns"
-                    value={profileData.pronouns}
-                    onChange={(e) => setProfileData(prev => ({ ...prev, pronouns: e.target.value }))}
-                    placeholder="they/them, she/her, he/him"
-                    className="mt-1 bg-slate-800/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-500"
-                  />
-                </div>
+                
               </div>
 
               {/* Save Button */}
@@ -492,9 +482,6 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
                     </Badge>
                   </div>
                   <p className="text-slate-400">@{profileData.customUsername}</p>
-                  {profileData.pronouns && (
-                    <p className="text-slate-400 text-sm">{profileData.pronouns}</p>
-                  )}
                 </div>
 
                 <p className="text-slate-200 whitespace-pre-wrap">{profileData.bio}</p>
