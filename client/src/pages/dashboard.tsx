@@ -242,7 +242,7 @@ export default function Dashboard() {
                 {/* Left Column - Main Content */}
                 <div className="lg:col-span-8 space-y-6">
                   {/* Enhanced Analytics Dashboard */}
-                  <div className="glass-effect p-6 rounded-xl border border-white/20">
+                  <div className="glass-effect p-6 rounded-xl border border-white/20 bg-[#1b1d27]">
                     <div className="flex items-center justify-between mb-6">
                       <h3 className="text-xl font-semibold text-white">Analytics Dashboard</h3>
                       <div className="flex space-x-2">
