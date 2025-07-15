@@ -127,29 +127,41 @@ export function ProfileShowcase({ profileData, onEdit, isPreview = false }: Prof
               <Switch 
                 checked={privacySettings.showScore}
                 onCheckedChange={(checked) => setPrivacySettings(prev => ({ ...prev, showScore: checked }))}
+                className="data-[state=unchecked]:bg-gray-600/50 data-[state=unchecked]:border-gray-500"
               />
-              <Label className="text-white/70 text-sm">Show VeriScore</Label>
+              <Label className={`text-sm ${privacySettings.showScore ? 'text-white/70' : 'text-gray-400'}`}>
+                Show VeriScore {!privacySettings.showScore && '(Hidden)'}
+              </Label>
             </div>
             <div className="flex items-center space-x-2">
               <Switch 
                 checked={privacySettings.showRank}
                 onCheckedChange={(checked) => setPrivacySettings(prev => ({ ...prev, showRank: checked }))}
+                className="data-[state=unchecked]:bg-gray-600/50 data-[state=unchecked]:border-gray-500"
               />
-              <Label className="text-white/70 text-sm">Show Rank</Label>
+              <Label className={`text-sm ${privacySettings.showRank ? 'text-white/70' : 'text-gray-400'}`}>
+                Show Rank {!privacySettings.showRank && '(Hidden)'}
+              </Label>
             </div>
             <div className="flex items-center space-x-2">
               <Switch 
                 checked={privacySettings.showEarnings}
                 onCheckedChange={(checked) => setPrivacySettings(prev => ({ ...prev, showEarnings: checked }))}
+                className="data-[state=unchecked]:bg-gray-600/50 data-[state=unchecked]:border-gray-500"
               />
-              <Label className="text-white/70 text-sm">Show Earnings</Label>
+              <Label className={`text-sm ${privacySettings.showEarnings ? 'text-white/70' : 'text-gray-400'}`}>
+                Show Earnings {!privacySettings.showEarnings && '(Hidden)'}
+              </Label>
             </div>
             <div className="flex items-center space-x-2">
               <Switch 
                 checked={privacySettings.showTopContent}
                 onCheckedChange={(checked) => setPrivacySettings(prev => ({ ...prev, showTopContent: checked }))}
+                className="data-[state=unchecked]:bg-gray-600/50 data-[state=unchecked]:border-gray-500"
               />
-              <Label className="text-white/70 text-sm">Show Content</Label>
+              <Label className={`text-sm ${privacySettings.showTopContent ? 'text-white/70' : 'text-gray-400'}`}>
+                Show Content {!privacySettings.showTopContent && '(Hidden)'}
+              </Label>
             </div>
           </div>
         </Card>
@@ -359,9 +371,11 @@ export function ProfileShowcase({ profileData, onEdit, isPreview = false }: Prof
                   return (
                     <Card key={content.id} className="glass-subtle border-white/10 overflow-hidden hover:border-white/20 transition-all duration-300 group">
                       <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-900 relative overflow-hidden">
-                        {content.thumbnail && (
-                          <img src={content.thumbnail} alt={content.title} className="w-full h-full object-cover" />
-                        )}
+                        <img 
+                          src="/api/placeholder/400/225" 
+                          alt={content.title} 
+                          className="w-full h-full object-cover"
+                        />
                         <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
                         <div className="absolute top-2 left-2">
                           <Icon className={`w-4 h-4 ${colorClass}`} />

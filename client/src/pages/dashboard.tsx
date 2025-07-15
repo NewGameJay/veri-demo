@@ -22,7 +22,9 @@ import { FaTwitter, FaYoutube, FaInstagram, FaTiktok } from "react-icons/fa";
 
 // Profile Builder Tab Component
 function ProfileBuilderTab({ user }: { user: any }) {
-  const [mode, setMode] = useState<'showcase' | 'builder'>('showcase');
+  // Start with builder if user hasn't completed profile setup
+  const hasCompletedProfile = user?.profileType && user?.bio;
+  const [mode, setMode] = useState<'showcase' | 'builder'>(hasCompletedProfile ? 'showcase' : 'builder');
   
   const sampleProfileData = {
     name: user?.username || 'Creator',
