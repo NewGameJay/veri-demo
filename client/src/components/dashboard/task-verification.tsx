@@ -1374,14 +1374,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const displayedTasks = availableTasksFiltered.slice(0, tasksPerPage);
   const hasMoreTasks = availableTasksFiltered.length > tasksPerPage;
   
-  // Debug logging
-  console.log("Debug Task Pagination:", {
-    totalTasks: microTasks.length,
-    filteredTasks: availableTasksFiltered.length,
-    tasksPerPage,
-    displayedTasks: displayedTasks.length,
-    hasMoreTasks
-  });
+
   
   const handleLoadMore = () => {
     triggerHaptic("light");
@@ -1854,8 +1847,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                 })}
               </div>
             
-            {/* View More Tasks Button - Debug */}
-            {console.log("Rendering pagination buttons:", { hasMoreTasks, tasksPerPage, INITIAL_TASKS_PER_PAGE })}
+            {/* View More Tasks Button */}
             {hasMoreTasks && (
               <div className="flex justify-center mt-6">
                 <motion.div
@@ -1866,7 +1858,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                   <Button
                     onClick={handleLoadMore}
                     variant="outline"
-                    className="glass-subtle border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 hover-lift group"
+                    className="glass-subtle border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 hover-lift group px-6 py-3 font-medium"
                   >
                     View More Tasks ({availableTasksFiltered.length - tasksPerPage} remaining)
                     <ChevronDown className="ml-2 h-4 w-4 group-hover:translate-y-1 transition-transform duration-300" />

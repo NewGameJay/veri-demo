@@ -51,6 +51,11 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
 
   const steps = [
     {
+      id: 'profile-type',
+      title: 'Choose Your Profile',
+      description: 'Select what type of creator you are'
+    },
+    {
       id: 'basic-info',
       title: 'Basic Information',
       description: 'Tell us about yourself'
@@ -64,6 +69,49 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
       id: 'review',
       title: 'Review & Publish',
       description: 'Final review before going live'
+    }
+  ];
+
+  const profileTypes = [
+    {
+      id: 'gaming-creator',
+      title: 'Gaming Creator',
+      description: 'Stream, create content, and build a gaming community',
+      icon: '🎮',
+      userType: 'creator' as const,
+      profileType: 'individual' as const,
+      features: ['Gaming content tools', 'Stream integration', 'Community features', 'Gaming analytics'],
+      color: 'from-purple-500 to-blue-500'
+    },
+    {
+      id: 'content-creator',
+      title: 'Content Creator',
+      description: 'Create engaging content across multiple platforms',
+      icon: '📱',
+      userType: 'creator' as const,
+      profileType: 'individual' as const,
+      features: ['Multi-platform tools', 'Content scheduling', 'Analytics dashboard', 'Brand partnerships'],
+      color: 'from-green-500 to-emerald-500'
+    },
+    {
+      id: 'studio',
+      title: 'Studio / Agency',
+      description: 'Manage multiple creators and campaigns',
+      icon: '🏢',
+      userType: 'studio' as const,
+      profileType: 'business' as const,
+      features: ['Creator management', 'Campaign tools', 'Advanced analytics', 'Team collaboration'],
+      color: 'from-orange-500 to-red-500'
+    },
+    {
+      id: 'community',
+      title: 'Community Builder',
+      description: 'Build and grow engaged communities',
+      icon: '👥',
+      userType: 'community' as const,
+      profileType: 'individual' as const,
+      features: ['Community tools', 'Event management', 'Member analytics', 'Engagement tracking'],
+      color: 'from-indigo-500 to-purple-500'
     }
   ];
 
@@ -130,13 +178,27 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
       : [...array, item];
   };
 
+  const selectProfileType = (profileType: typeof profileTypes[0]) => {
+    setFormData(prev => ({
+      ...prev,
+      userType: profileType.userType,
+      profileType: profileType.profileType
+    }));
+    triggerHaptic("light");
+    setTimeout(() => {
+      setCurrentStep(1); // Move to basic info step
+    }, 300);
+  };
+
   const isStepValid = () => {
     switch (currentStep) {
       case 0:
-        return formData.name.trim() !== '' && formData.interests.length > 0;
+        return formData.userType !== 'creator' || formData.profileType !== 'individual'; // Profile type selected
       case 1:
-        return formData.bio.trim() !== '';
+        return formData.name.trim() !== '' && formData.interests.length > 0;
       case 2:
+        return formData.bio.trim() !== '';
+      case 3:
         return true;
       default:
         return false;
@@ -204,6 +266,44 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
               {currentStep === 0 && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {profileTypes.map((type) => (
+                      <motion.div
+                        key={type.id}
+                        whileHover={{ scale: 1.02, y: -4 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => selectProfileType(type)}
+                        className="cursor-pointer"
+                      >
+                        <Card className={`h-full glass-subtle border border-gray-200 dark:border-gray-700 hover:border-emerald-500 dark:hover:border-emerald-400 transition-all duration-300 overflow-hidden group relative`}>
+                          <div className={`absolute inset-0 bg-gradient-to-br ${type.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+                          
+                          <CardContent className="p-6 relative z-10">
+                            <div className="text-center mb-4">
+                              <div className="text-3xl mb-3">{type.icon}</div>
+                              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{type.title}</h3>
+                              <p className="text-gray-600 dark:text-gray-400 text-sm">{type.description}</p>
+                            </div>
+
+                            <div className="space-y-2">
+                              <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">Features included:</h4>
+                              {type.features.map((feature, index) => (
+                                <div key={index} className="flex items-center text-xs text-gray-600 dark:text-gray-400">
+                                  <div className="w-1 h-1 rounded-full bg-emerald-500 mr-2" />
+                                  {feature}
+                                </div>
+                              ))}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {currentStep === 1 && (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="name">Display Name</Label>
                       <Input
@@ -223,28 +323,6 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
                         placeholder="https://your-website.com"
                         className="mt-1"
                       />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label>User Type</Label>
-                    <div className="flex gap-2 mt-2">
-                      {[
-                        { value: 'creator', label: 'Creator', icon: User },
-                        { value: 'studio', label: 'Studio', icon: Briefcase },
-                        { value: 'community', label: 'Community', icon: Globe }
-                      ].map(({ value, label, icon: Icon }) => (
-                        <Button
-                          key={value}
-                          variant={formData.userType === value ? "default" : "outline"}
-                          onClick={() => updateFormData('userType', value)}
-                          className="flex-1"
-                          haptic="light"
-                        >
-                          <Icon className="w-4 h-4 mr-2" />
-                          {label}
-                        </Button>
-                      ))}
                     </div>
                   </div>
 
