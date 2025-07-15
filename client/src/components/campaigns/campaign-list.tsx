@@ -86,6 +86,26 @@ interface ApplicationFormData {
   availability: string;
 }
 
+// Campaign visual thumbnails mapping
+const CAMPAIGN_THUMBNAILS = {
+  content_creation: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=200&fit=crop",
+  engagement: "https://images.unsplash.com/photo-1611262588024-d12430b98920?w=400&h=200&fit=crop", 
+  review: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=200&fit=crop",
+  social_post: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=200&fit=crop",
+};
+
+// Top paying brands data
+const TOP_BRANDS = [
+  { name: "Nike", logo: "N", range: "$200-$5000", color: "bg-black" },
+  { name: "Samsung", logo: "S", range: "$150-$4500", color: "bg-blue-600" },
+  { name: "Apple", logo: "A", range: "$300-$6000", color: "bg-gray-900" },
+  { name: "Sephora", logo: "S", range: "$100-$3000", color: "bg-black" },
+  { name: "Zara", logo: "Z", range: "$75-$2500", color: "bg-black" },
+  { name: "H&M", logo: "H", range: "$50-$2000", color: "bg-red-600" },
+  { name: "Adidas", logo: "A", range: "$150-$4000", color: "bg-black" },
+  { name: "Coca Cola", logo: "C", range: "$200-$5500", color: "bg-red-600" },
+];
+
 export function CampaignList() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -344,327 +364,154 @@ export function CampaignList() {
           </div>
         </Card>
       ) : (
-        <div className="grid gap-4">
-          {campaigns?.sort((a, b) => {
-            const aUrgent = isUrgent(a);
-            const bUrgent = isUrgent(b);
-            if (aUrgent && !bUrgent) return -1;
-            if (!aUrgent && bUrgent) return 1;
-            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-          }).map((campaign: Campaign) => (
-          <Card key={campaign.id} className="hover:shadow-md transition-shadow">
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <CardTitle className="text-lg">{campaign.title}</CardTitle>
-                    <Badge className={STATUS_COLORS[campaign.status as keyof typeof STATUS_COLORS]}>
-                      {campaign.status}
-                    </Badge>
-                    {isUrgent(campaign) && (
-                      <Badge className={`${getUrgencyColor(parseRequirements(campaign.requirements)?.urgency || "")} flex items-center gap-1`}>
-                        <AlertCircle className="h-3 w-3" />
-                        {parseRequirements(campaign.requirements)?.urgency?.includes("URGENT") ? "URGENT" : "ENDING SOON"}
-                      </Badge>
+        <>
+          {/* Visual Campaign Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {campaigns?.sort((a, b) => {
+              const aUrgent = isUrgent(a);
+              const bUrgent = isUrgent(b);
+              if (aUrgent && !bUrgent) return -1;
+              if (!aUrgent && bUrgent) return 1;
+              return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+            }).map((campaign: Campaign) => {
+              const urgent = isUrgent(campaign);
+              const requirements = parseRequirements(campaign.requirements);
+              const urgencyText = requirements?.urgency || "";
+              const thumbnail = CAMPAIGN_THUMBNAILS[campaign.campaignType as keyof typeof CAMPAIGN_THUMBNAILS] || CAMPAIGN_THUMBNAILS.content_creation;
+              
+              return (
+                <Card key={campaign.id} className="group hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer overflow-hidden bg-white">
+                  {/* Campaign Thumbnail */}
+                  <div className="relative h-40 bg-gradient-to-br from-purple-400 to-pink-400 overflow-hidden">
+                    <div 
+                      className="absolute inset-0 bg-cover bg-center opacity-80"
+                      style={{ 
+                        backgroundImage: `url(${thumbnail})`,
+                        filter: 'brightness(0.9) contrast(1.1)'
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    
+                    {/* Budget Badge */}
+                    <div className="absolute top-3 left-3">
+                      <div className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
+                        <DollarSign className="w-3 h-3" />
+                        Budget {formatCurrency(campaign.budget)}
+                      </div>
+                    </div>
+                    
+                    {/* Urgency Badge */}
+                    {urgent && (
+                      <div className="absolute top-3 right-3">
+                        <Badge className={`text-xs font-medium border ${getUrgencyColor(urgencyText)}`}>
+                          {urgencyText.includes("URGENT") ? "URGENT" : 
+                           urgencyText.includes("ENDING SOON") ? "ENDING SOON" : 
+                           "LIMITED TIME"}
+                        </Badge>
+                      </div>
                     )}
-                  </div>
-                  <CardDescription className="text-sm">
-                    {campaign.description}
-                  </CardDescription>
-                  {isUrgent(campaign) && (
-                    <div className="flex items-center gap-1 mt-2 text-sm font-medium text-orange-600">
-                      <Clock className="h-4 w-4" />
-                      {parseRequirements(campaign.requirements)?.urgency}
+                    
+                    {/* Creator Count */}
+                    <div className="absolute bottom-3 left-3 flex items-center gap-1 text-white/90 text-sm">
+                      <Users className="w-4 h-4" />
+                      <span>{campaign.currentParticipants} creators</span>
                     </div>
-                  )}
-                </div>
-                <div className="flex flex-col items-end gap-1">
-                  <div className="flex items-center gap-1 text-sm font-medium text-green-600">
-                    <DollarSign className="h-4 w-4" />
-                    {formatCurrency(campaign.rewardPerAction)}
+                    
+                    {/* Brand Verification Badge */}
+                    <div className="absolute bottom-3 right-3">
+                      <div className="bg-white/20 backdrop-blur-sm rounded-full p-1">
+                        <CheckCircle className="w-4 h-4 text-white" />
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-xs text-muted-foreground">
-                    per action
-                  </div>
+                  
+                  {/* Campaign Content */}
+                  <CardContent className="p-4">
+                    <div className="space-y-3">
+                      {/* Brand Name */}
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 bg-gray-900 rounded text-white text-xs flex items-center justify-center font-bold">
+                          {campaign.title.charAt(0)}
+                        </div>
+                        <span className="text-sm font-medium text-gray-600">
+                          {campaign.title.includes("Hyve") ? "Hyve Gaming" : 
+                           campaign.title.includes("Luster") ? "Luster Labs" : 
+                           "Verified Brand"}
+                        </span>
+                        <CheckCircle className="w-3 h-3 text-blue-500" />
+                      </div>
+                      
+                      {/* Campaign Title */}
+                      <h3 className="font-semibold text-gray-900 line-clamp-2 leading-tight">
+                        {campaign.title}
+                      </h3>
+                      
+                      {/* Campaign Description */}
+                      <p className="text-sm text-gray-600 line-clamp-2">
+                        {campaign.description}
+                      </p>
+                      
+                      {/* Campaign Type & Platforms */}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <Badge variant="secondary" className="text-xs">
+                          {CAMPAIGN_TYPE_LABELS[campaign.campaignType as keyof typeof CAMPAIGN_TYPE_LABELS]}
+                        </Badge>
+                        {parsePlatforms(campaign.platforms).slice(0, 2).map((platform: string) => (
+                          <Badge key={platform} variant="outline" className="text-xs">
+                            {platform}
+                          </Badge>
+                        ))}
+                      </div>
+                      
+                      {/* Action Button */}
+                      <Button 
+                        className="w-full mt-2 bg-purple-600 hover:bg-purple-700 text-white"
+                        onClick={() => triggerHaptic("light")}
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        View Details
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+            
+            {/* Top Paying Brands Section */}
+            <div className="mt-8 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-bold">Top Paying Brands</h3>
+                  <p className="text-muted-foreground text-sm">Explore verified brands with the highest campaign budgets</p>
                 </div>
+                <Button variant="outline" size="sm">
+                  View All Brands
+                  <ExternalLink className="w-3 h-3 ml-1" />
+                </Button>
               </div>
-            </CardHeader>
-
-            <CardContent className="space-y-4">
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="outline">
-                  {CAMPAIGN_TYPE_LABELS[campaign.campaignType as keyof typeof CAMPAIGN_TYPE_LABELS]}
-                </Badge>
-                
-                {parsePlatforms(campaign.platforms).map((platform: string) => (
-                  <Badge key={platform} variant="secondary">
-                    {platform}
-                  </Badge>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {TOP_BRANDS.map((brand, index) => (
+                  <Card key={brand.name} className="p-4 hover:shadow-md transition-all duration-200 cursor-pointer group">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 ${brand.color} rounded-lg flex items-center justify-center text-white font-bold text-sm group-hover:scale-110 transition-transform`}>
+                        {brand.logo}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1">
+                          <h4 className="font-semibold text-sm truncate">{brand.name}</h4>
+                          <CheckCircle className="w-3 h-3 text-blue-500 flex-shrink-0" />
+                        </div>
+                        <p className="text-xs text-muted-foreground">{brand.range}</p>
+                      </div>
+                    </div>
+                  </Card>
                 ))}
-                
-                {parseTags(campaign.tags).slice(0, 3).map((tag: string) => (
-                  <Badge key={tag} variant="outline" className="text-xs">
-                    #{tag}
-                  </Badge>
-                ))}
-                
-                {parseTags(campaign.tags).length > 3 && (
-                  <Badge variant="outline" className="text-xs">
-                    +{parseTags(campaign.tags).length - 3} more
-                  </Badge>
-                )}
               </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                <div className="flex items-center gap-1">
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-medium">{formatCurrency(campaign.budget)}</span>
-                  <span className="text-muted-foreground">budget</span>
-                </div>
-                
-                <div className="flex items-center gap-1">
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-medium">{campaign.currentParticipants}</span>
-                  <span className="text-muted-foreground">
-                    / {campaign.maxParticipants || "∞"}
-                  </span>
-                </div>
-                
-                <div className="flex items-center gap-1">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">
-                    {formatDistanceToNow(new Date(campaign.createdAt), { addSuffix: true })}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-1">
-                  <Target className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">
-                    {campaign.verificationRequired ? "Verified" : "Auto-approve"}
-                  </span>
-                </div>
-              </div>
-
-              {campaign.targetAudience && (
-                <div className="text-sm">
-                  <span className="font-medium">Target Audience:</span>
-                  <span className="ml-2 text-muted-foreground">{campaign.targetAudience}</span>
-                </div>
-              )}
-
-              {campaign.requirements && (
-                <div className="text-sm">
-                  <span className="font-medium">Requirements:</span>
-                  <pre className="mt-1 text-muted-foreground whitespace-pre-wrap font-sans">{formatRequirements(campaign.requirements)}</pre>
-                </div>
-              )}
-
-              <div className="flex justify-end gap-2">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" size="sm">
-                      <Eye className="h-4 w-4 mr-1" />
-                      View Details
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl">
-                    <DialogHeader>
-                      <DialogTitle>{campaign.title}</DialogTitle>
-                      <DialogDescription>
-                        Campaign Details and Requirements
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                      <div>
-                        <h4 className="font-semibold mb-2">Description</h4>
-                        <p className="text-sm text-muted-foreground">{campaign.description}</p>
-                      </div>
-                      
-                      {campaign.requirements && (
-                        <div>
-                          <h4 className="font-semibold mb-2">Requirements</h4>
-                          <pre className="text-sm text-muted-foreground whitespace-pre-wrap font-sans">{formatRequirements(campaign.requirements)}</pre>
-                        </div>
-                      )}
-                      
-                      {parseRequirements(campaign.requirements)?.contentExamples && (
-                        <div>
-                          <h4 className="font-semibold mb-2 flex items-center gap-2">
-                            <Zap className="h-4 w-4" />
-                            Content Examples
-                          </h4>
-                          <div className="space-y-2">
-                            {parseRequirements(campaign.requirements)?.contentExamples.map((example: string, index: number) => (
-                              <div key={index} className="bg-muted p-3 rounded-lg">
-                                <p className="text-sm text-muted-foreground font-mono">{example}</p>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                      
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <span className="font-medium">Budget:</span>
-                          <span className="ml-2">{formatCurrency(campaign.budget)}</span>
-                        </div>
-                        <div>
-                          <span className="font-medium">Reward per Action:</span>
-                          <span className="ml-2">{formatCurrency(campaign.rewardPerAction)}</span>
-                        </div>
-                        <div>
-                          <span className="font-medium">Max Participants:</span>
-                          <span className="ml-2">{campaign.maxParticipants || "Unlimited"}</span>
-                        </div>
-                        <div>
-                          <span className="font-medium">Current Participants:</span>
-                          <span className="ml-2">{campaign.currentParticipants}</span>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <h4 className="font-semibold">Platforms</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {parsePlatforms(campaign.platforms).map((platform: string) => (
-                            <Badge key={platform} variant="secondary">
-                              {platform}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <h4 className="font-semibold">Tags</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {parseTags(campaign.tags).map((tag: string) => (
-                            <Badge key={tag} variant="outline">
-                              #{tag}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button 
-                      size="sm" 
-                      onClick={() => setSelectedCampaign(campaign)}
-                      disabled={campaign.status !== "active"}
-                    >
-                      <Send className="h-4 w-4 mr-1" />
-                      Apply
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle>Apply to Campaign</DialogTitle>
-                      <DialogDescription>
-                        Complete your application with detailed information about your experience and approach
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-6">
-                      {/* Campaign Interest Statement */}
-                      <div>
-                        <Label htmlFor="interestStatement">Why are you interested in this campaign? *</Label>
-                        <Textarea
-                          id="interestStatement"
-                          placeholder="Share what excites you about this campaign and why you're the perfect fit (3-5 lines minimum)..."
-                          value={applicationForm.interestStatement}
-                          onChange={(e) => updateApplicationForm('interestStatement', e.target.value)}
-                          className="min-h-[100px] mt-2"
-                        />
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {applicationForm.interestStatement.length}/500 characters
-                        </p>
-                      </div>
-
-                      {/* Relevant Experience */}
-                      <div>
-                        <Label htmlFor="relevantExperience">Share relevant content creation experience</Label>
-                        <Textarea
-                          id="relevantExperience"
-                          placeholder="Describe your experience with similar campaigns, audience engagement, content creation, etc. Include links to previous work if relevant..."
-                          value={applicationForm.relevantExperience}
-                          onChange={(e) => updateApplicationForm('relevantExperience', e.target.value)}
-                          className="min-h-[100px] mt-2"
-                        />
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {applicationForm.relevantExperience.length}/1000 characters
-                        </p>
-                      </div>
-
-                      {/* Content Approach */}
-                      <div>
-                        <Label htmlFor="contentApproach">How would you approach this campaign?</Label>
-                        <Textarea
-                          id="contentApproach"
-                          placeholder="Outline your creative strategy, content ideas, execution plan, and how you'll engage your audience..."
-                          value={applicationForm.contentApproach}
-                          onChange={(e) => updateApplicationForm('contentApproach', e.target.value)}
-                          className="min-h-[100px] mt-2"
-                        />
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {applicationForm.contentApproach.length}/1000 characters
-                        </p>
-                      </div>
-
-                      {/* Portfolio Links */}
-                      <div>
-                        <Label htmlFor="portfolioLinks">Portfolio Links</Label>
-                        <Textarea
-                          id="portfolioLinks"
-                          placeholder="Share your portfolio links (one per line):&#10;YouTube: https://youtube.com/@yourhandle&#10;Twitch: https://twitch.tv/yourhandle&#10;Social profiles: https://...&#10;Previous brand work: https://..."
-                          value={applicationForm.portfolioLinks}
-                          onChange={(e) => updateApplicationForm('portfolioLinks', e.target.value)}
-                          className="min-h-[120px] mt-2 font-mono text-sm"
-                        />
-                        <p className="text-sm text-muted-foreground mt-1">
-                          One link per line. Include platform name for clarity.
-                        </p>
-                      </div>
-
-                      {/* Availability */}
-                      <div>
-                        <Label htmlFor="availability">Availability</Label>
-                        <Select
-                          value={applicationForm.availability}
-                          onValueChange={(value) => updateApplicationForm('availability', value)}
-                        >
-                          <SelectTrigger className="mt-2">
-                            <SelectValue placeholder="Select your availability" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="immediate">Immediate start</SelectItem>
-                            <SelectItem value="within_1_week">Within 1 week</SelectItem>
-                            <SelectItem value="within_2_weeks">Within 2 weeks</SelectItem>
-                            <SelectItem value="flexible">Flexible timeline</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div className="flex justify-end gap-2 pt-4 border-t">
-                        <Button variant="outline" onClick={() => { setSelectedCampaign(null); resetApplicationForm(); }}>
-                          Cancel
-                        </Button>
-                        <Button 
-                          onClick={handleApply}
-                          disabled={!applicationForm.interestStatement.trim() || applyToCampaignMutation.isPending}
-                        >
-                          {applyToCampaignMutation.isPending ? "Applying..." : "Submit Application"}
-                        </Button>
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-        </div>
-      )}
-    </div>
-  );
-}
+            </div>
+          </>
+        )}
+      </div>
+    );
+  }

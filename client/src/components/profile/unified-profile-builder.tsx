@@ -12,6 +12,25 @@ import { useAuth } from "@/contexts/auth-context";
 import { motion, AnimatePresence } from "framer-motion";
 import { triggerHaptic } from "@/lib/haptic";
 import { apiRequest } from "@/lib/queryClient";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import {
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { 
   Edit3, 
   Eye, 
@@ -32,7 +51,9 @@ import {
   Crown,
   X,
   Globe,
-  Save
+  Save,
+  GripVertical,
+  Move
 } from "lucide-react";
 import { 
   FaTwitter, 
@@ -74,6 +95,14 @@ interface ContentPiece {
   url: string;
 }
 
+interface ProfileSection {
+  id: string;
+  type: 'profile-header' | 'veriscore' | 'rank' | 'social-connections' | 'featured-content';
+  title: string;
+  enabled: boolean;
+  order: number;
+}
+
 const platformIcons = {
   twitter: FaTwitter,
   youtube: FaYoutube,
@@ -92,6 +121,44 @@ const platformColors = {
   linkedin: "#0077B5",
 };
 
+// Sortable Profile Section Component
+function SortableProfileSection({ id, children, isDragging }: { 
+  id: string; 
+  children: React.ReactNode; 
+  isDragging?: boolean;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging: isSortableDragging,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isSortableDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className="relative group">
+      {/* Drag Handle */}
+      <div 
+        {...attributes} 
+        {...listeners}
+        className="absolute -left-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing z-10"
+      >
+        <div className="bg-white/10 hover:bg-white/20 rounded-md p-1">
+          <GripVertical className="w-4 h-4 text-white/60" />
+        </div>
+      </div>
+      {children}
+    </div>
+  );
+}
+
 export function UnifiedProfileBuilder({ isOpen, onClose }: UnifiedProfileBuilderProps) {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -106,6 +173,19 @@ export function UnifiedProfileBuilder({ isOpen, onClose }: UnifiedProfileBuilder
     customUsername: user?.customUsername || user?.username?.toLowerCase().replace(/\s+/g, '') || "",
     showcaseContent: []
   });
+
+  const [profileSections, setProfileSections] = useState<ProfileSection[]>([
+    { id: 'profile-header', type: 'profile-header', title: 'Profile Header', enabled: true, order: 0 },
+    { id: 'veriscore', type: 'veriscore', title: 'VeriScore Card', enabled: true, order: 1 },
+    { id: 'rank', type: 'rank', title: 'Global Rank', enabled: true, order: 2 },
+  ]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   // Get user's social connections
   const { data: socialConnections = [] } = useQuery({
@@ -171,6 +251,29 @@ export function UnifiedProfileBuilder({ isOpen, onClose }: UnifiedProfileBuilder
     
     window.open(urls[platform as keyof typeof urls], '_blank');
     triggerHaptic("light");
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      setProfileSections((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over?.id);
+        const newOrder = arrayMove(items, oldIndex, newIndex);
+        
+        // Update order numbers
+        const updatedOrder = newOrder.map((item, index) => ({
+          ...item,
+          order: index
+        }));
+        
+        // Trigger haptic feedback
+        triggerHaptic("light");
+        
+        return updatedOrder;
+      });
+    }
   };
 
   const getTierBadge = (tier: string) => {
@@ -244,116 +347,134 @@ export function UnifiedProfileBuilder({ isOpen, onClose }: UnifiedProfileBuilder
           <div className="flex h-[calc(100%-80px)]">
             {/* Left Panel - Profile Preview */}
             <div className="w-1/2 p-6 border-r border-white/10 overflow-y-auto">
-              <div className="space-y-6">
-                {/* Profile Header */}
-                <motion.div
-                  layout
-                  className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6"
+              <DndContext 
+                sensors={sensors} 
+                collisionDetection={closestCenter} 
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext 
+                  items={profileSections.map(section => section.id)} 
+                  strategy={verticalListSortingStrategy}
                 >
-                  <div className="flex items-start gap-4">
-                    {/* Avatar */}
-                    <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center border-2 border-emerald-500/30">
-                      <span className="text-2xl text-emerald-400">
-                        {profileData.name.charAt(0).toUpperCase()}
-                      </span>
-                    </div>
-                    
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-xl font-bold text-white">{profileData.name}</h3>
-                        {profileData.isVerified && (
-                          <Shield className="w-5 h-5 text-emerald-400" />
-                        )}
-                      </div>
-                      <p className="text-white/60 mb-1">@{profileData.customUsername}</p>
-                      <Badge variant="outline" className="border-emerald-500/30 text-emerald-400">
-                        Creator & Influencer
-                      </Badge>
-                    </div>
-                  </div>
-                  
-                  {profileData.bio && (
-                    <p className="text-white/80 mt-4 leading-relaxed">{profileData.bio}</p>
-                  )}
-                  
-                  {profileData.website && (
-                    <a
-                      href={profileData.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-emerald-400 hover:text-emerald-300 mt-3 text-sm"
-                    >
-                      <Globe className="w-3 h-3" />
-                      {profileData.website}
-                    </a>
-                  )}
-
-                  {/* Social Icons */}
-                  {connectedPlatforms.length > 0 && (
-                    <div className="flex gap-3 mt-4">
-                      {connectedPlatforms.slice(0, 4).map((platform) => {
-                        const PlatformIcon = platformIcons[platform.platform as keyof typeof platformIcons];
-                        const platformColor = platformColors[platform.platform as keyof typeof platformColors];
-                        
-                        return (
+                  <div className="space-y-6 pl-6">
+                    {profileSections.map((section) => (
+                      <SortableProfileSection key={section.id} id={section.id}>
+                        {section.type === 'profile-header' && (
                           <motion.div
-                            key={platform.platform}
-                            whileHover={{ scale: 1.1 }}
-                            className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all cursor-pointer"
-                            title={`${platform.followerCount?.toLocaleString()} followers`}
+                            layout
+                            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6"
                           >
-                            <PlatformIcon className="w-4 h-4" style={{ color: platformColor }} />
+                            <div className="flex items-start gap-4">
+                              {/* Avatar */}
+                              <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center border-2 border-emerald-500/30">
+                                <span className="text-2xl text-emerald-400">
+                                  {profileData.name.charAt(0).toUpperCase()}
+                                </span>
+                              </div>
+                              
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <h3 className="text-xl font-bold text-white">{profileData.name}</h3>
+                                  {profileData.isVerified && (
+                                    <Shield className="w-5 h-5 text-emerald-400" />
+                                  )}
+                                </div>
+                                <p className="text-white/60 mb-1">@{profileData.customUsername}</p>
+                                <Badge variant="outline" className="border-emerald-500/30 text-emerald-400">
+                                  Creator & Influencer
+                                </Badge>
+                              </div>
+                            </div>
+                            
+                            {profileData.bio && (
+                              <p className="text-white/80 mt-4 leading-relaxed">{profileData.bio}</p>
+                            )}
+                            
+                            {profileData.website && (
+                              <a
+                                href={profileData.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 text-emerald-400 hover:text-emerald-300 mt-3 text-sm"
+                              >
+                                <Globe className="w-3 h-3" />
+                                {profileData.website}
+                              </a>
+                            )}
+
+                            {/* Social Icons */}
+                            {connectedPlatforms.length > 0 && (
+                              <div className="flex gap-3 mt-4">
+                                {connectedPlatforms.slice(0, 4).map((platform) => {
+                                  const PlatformIcon = platformIcons[platform.platform as keyof typeof platformIcons];
+                                  const platformColor = platformColors[platform.platform as keyof typeof platformColors];
+                                  
+                                  return (
+                                    <motion.div
+                                      key={platform.platform}
+                                      whileHover={{ scale: 1.1 }}
+                                      className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all cursor-pointer"
+                                      title={`${platform.followerCount?.toLocaleString()} followers`}
+                                    >
+                                      <PlatformIcon className="w-4 h-4" style={{ color: platformColor }} />
+                                    </motion.div>
+                                  );
+                                })}
+                              </div>
+                            )}
                           </motion.div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </motion.div>
+                        )}
 
-                {/* VeriScore Card */}
-                <motion.div
-                  layout
-                  className="bg-gradient-to-br from-emerald-500/20 to-blue-500/20 backdrop-blur-sm border border-emerald-500/30 rounded-xl p-6"
-                >
-                  <div className="text-center space-y-2">
-                    <div className="w-12 h-12 mx-auto bg-emerald-500/20 rounded-lg flex items-center justify-center mb-3">
-                      <Trophy className="w-6 h-6 text-emerald-400" />
-                    </div>
-                    <h4 className="text-white font-semibold">VeriScore</h4>
-                    <div className="text-4xl font-bold text-emerald-400">{user?.veriScore || 99}</div>
-                    <div className="text-white/70 text-sm">Verified Creator Rating</div>
-                    
-                    <div className="mt-4 pt-4 border-t border-white/10">
-                      <div className="text-2xl font-bold text-white">{(user?.xpPoints || 2500).toLocaleString()}XP</div>
-                      <div className="text-white/70 text-sm">VeriPoints</div>
-                    </div>
-                    
-                    <div className="flex items-center justify-center gap-2 mt-3">
-                      <tierConfig.icon className="w-4 h-4 text-emerald-400" />
-                      <Badge className={`bg-gradient-to-r ${tierConfig.color} text-white border-0 text-xs`}>
-                        {userTier}
-                      </Badge>
-                    </div>
-                  </div>
-                </motion.div>
+                        {section.type === 'veriscore' && (
+                          <motion.div
+                            layout
+                            className="bg-gradient-to-br from-emerald-500/20 to-blue-500/20 backdrop-blur-sm border border-emerald-500/30 rounded-xl p-6"
+                          >
+                            <div className="text-center space-y-2">
+                              <div className="w-12 h-12 mx-auto bg-emerald-500/20 rounded-lg flex items-center justify-center mb-3">
+                                <Trophy className="w-6 h-6 text-emerald-400" />
+                              </div>
+                              <h4 className="text-white font-semibold">VeriScore</h4>
+                              <div className="text-4xl font-bold text-emerald-400">{user?.veriScore || 99}</div>
+                              <div className="text-white/70 text-sm">Verified Creator Rating</div>
+                              
+                              <div className="mt-4 pt-4 border-t border-white/10">
+                                <div className="text-2xl font-bold text-white">{(user?.xpPoints || 2500).toLocaleString()}XP</div>
+                                <div className="text-white/70 text-sm">VeriPoints</div>
+                              </div>
+                              
+                              <div className="flex items-center justify-center gap-2 mt-3">
+                                <tierConfig.icon className="w-4 h-4 text-emerald-400" />
+                                <Badge className={`bg-gradient-to-r ${tierConfig.color} text-white border-0 text-xs`}>
+                                  {userTier}
+                                </Badge>
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
 
-                {/* Rank Card */}
-                <motion.div
-                  layout
-                  className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6"
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-2xl font-bold text-white">#{leaderboardData?.user?.rank || 1}</div>
-                      <div className="text-white/70 text-sm">Global Rank</div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-white/70 text-sm">Creator & Influencer</div>
-                      <div className="text-emerald-400 text-sm font-medium">Top 1%</div>
-                    </div>
+                        {section.type === 'rank' && (
+                          <motion.div
+                            layout
+                            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <div className="text-2xl font-bold text-white">#{leaderboardData?.user?.rank || 1}</div>
+                                <div className="text-white/70 text-sm">Global Rank</div>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-white/70 text-sm">Creator & Influencer</div>
+                                <div className="text-emerald-400 text-sm font-medium">Top 1%</div>
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </SortableProfileSection>
+                    ))}
                   </div>
-                </motion.div>
-              </div>
+                </SortableContext>
+              </DndContext>
             </div>
 
             {/* Right Panel - Content Based on Active Tab */}
