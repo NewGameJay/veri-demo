@@ -61,7 +61,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-800 hero-gradient">
+    <div className="min-h-screen bg-gray-800 hero-gradient pb-12">
       <Header
         onDashboardToggle={handleDashboardToggle}
         onMobileMenuToggle={handleDashboardToggle}
