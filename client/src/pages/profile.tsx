@@ -10,7 +10,9 @@ import { Edit, Share2, Settings, Eye } from "lucide-react";
 
 export function ProfilePage() {
   const { user } = useAuth();
-  const [mode, setMode] = useState<'view' | 'edit' | 'builder'>('view');
+  // Start with builder if user hasn't completed profile setup
+  const hasCompletedProfile = user?.profileType && user?.bio;
+  const [mode, setMode] = useState<'showcase' | 'builder'>(hasCompletedProfile ? 'showcase' : 'builder');
   
   // Fetch user profile data
   const { data: profileData, isLoading } = useQuery({
@@ -85,16 +87,6 @@ export function ProfilePage() {
     }
   };
 
-  const handleProfileComplete = (data: any) => {
-    console.log('Profile completed:', data);
-    setMode('view');
-    // Here you would save the profile data to the backend
-  };
-
-  const handleEditProfile = () => {
-    setMode('builder');
-  };
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center">
@@ -104,72 +96,71 @@ export function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
-      <AnimatePresence mode="wait">
-        {mode === 'builder' && (
-          <motion.div
-            key="builder"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <EnhancedProfileBuilder 
-              onComplete={handleProfileComplete}
-              initialData={sampleProfileData}
-            />
-          </motion.div>
-        )}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 p-6">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-white mb-2">My Profile</h1>
+          <p className="text-white/70">Build and manage your creator profile</p>
+        </div>
 
-        {mode === 'view' && (
-          <motion.div
-            key="view"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="p-6"
+        {/* Mode Toggle */}
+        <div className="flex items-center space-x-4 mb-6">
+          <Button
+            onClick={() => setMode('showcase')}
+            variant={mode === 'showcase' ? 'default' : 'outline'}
+            className={mode === 'showcase' ? 'veri-gradient' : 'glass-subtle border-white/20 text-white'}
           >
-            {/* Header Actions */}
-            <div className="max-w-6xl mx-auto mb-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h1 className="text-3xl font-bold text-white mb-2">My Profile</h1>
-                  <p className="text-white/70">Manage your creator profile and showcase your achievements</p>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Button 
-                    onClick={() => setMode('view')} 
-                    variant="outline" 
-                    className="glass-subtle border-white/20 text-white"
-                  >
-                    <Eye className="w-4 h-4 mr-2" />
-                    Preview
-                  </Button>
-                  <Button 
-                    onClick={handleEditProfile}
-                    className="veri-gradient"
-                  >
-                    <Edit className="w-4 h-4 mr-2" />
-                    Edit Profile
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="glass-subtle border-white/20 text-white"
-                  >
-                    <Share2 className="w-4 h-4 mr-2" />
-                    Share
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <Eye className="w-4 h-4 mr-2" />
+            Showcase
+          </Button>
+          <Button
+            onClick={() => setMode('builder')}
+            variant={mode === 'builder' ? 'default' : 'outline'}
+            className={mode === 'builder' ? 'veri-gradient' : 'glass-subtle border-white/20 text-white'}
+          >
+            <Settings className="w-4 h-4 mr-2" />
+            Builder
+          </Button>
+        </div>
 
-            <ProfileShowcase 
-              profileData={sampleProfileData}
-              onEdit={handleEditProfile}
-              isPreview={false}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+        {/* Content */}
+        <AnimatePresence mode="wait">
+          {mode === 'showcase' && (
+            <motion.div
+              key="showcase"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ProfileShowcase 
+                profileData={sampleProfileData}
+                onEdit={() => setMode('builder')}
+                isPreview={false}
+              />
+            </motion.div>
+          )}
+
+          {mode === 'builder' && (
+            <motion.div
+              key="builder"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <EnhancedProfileBuilder 
+                onComplete={(data) => {
+                  console.log('Profile completed:', data);
+                  setMode('showcase');
+                }}
+                initialData={sampleProfileData}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
