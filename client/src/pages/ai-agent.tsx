@@ -4,11 +4,18 @@ import { Header } from "@/components/navigation/header";
 import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
 import { AIAgents } from "@/components/dashboard/ai-agents";
 import { useAuth } from "@/contexts/auth-context";
+import { useQuery } from "@tanstack/react-query";
 
 export default function AIAgent() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { user } = useAuth();
+
+  // Fetch real user data for points and streak
+  const { data: userData } = useQuery({
+    queryKey: ['/api/users', user?.id],
+    enabled: !!user?.id
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -33,8 +40,8 @@ export default function AIAgent() {
           </div>
           
           <AIAgents 
-            userPoints={1500} 
-            userStreak={7} 
+            userPoints={userData?.xpPoints || 0} 
+            userStreak={userData?.streak || 0} 
             onUseAgent={(agentId, cost) => {
               console.log(`Using agent ${agentId} for ${cost} points`);
             }} 

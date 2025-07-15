@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -152,7 +152,26 @@ export function AIAgents({ userPoints, userStreak, onUseAgent }: AIAgentsProps) 
   const [activeCategory, setActiveCategory] = useState("monetization");
   const [processingAgents, setProcessingAgents] = useState<Set<string>>(new Set());
   const [completedAgents, setCompletedAgents] = useState<Set<string>>(new Set());
+  const [showUnlockedCelebration, setShowUnlockedCelebration] = useState(false);
   const { toast } = useToast();
+
+  // Check if AI agents just became unlocked and show celebration
+  useEffect(() => {
+    if (userStreak >= 7 && !localStorage.getItem('ai-agents-unlocked-celebration-shown')) {
+      setShowUnlockedCelebration(true);
+      localStorage.setItem('ai-agents-unlocked-celebration-shown', 'true');
+      
+      toast({
+        title: "🎉 AI Agents Unlocked!",
+        description: "Congratulations! You've earned access to our powerful AI agent suite.",
+      });
+
+      // Hide celebration after 3 seconds
+      setTimeout(() => {
+        setShowUnlockedCelebration(false);
+      }, 3000);
+    }
+  }, [userStreak, toast]);
 
   const handleUseAgent = async (agentId: string, pointsCost: number) => {
     if (userPoints < pointsCost) {
@@ -195,10 +214,10 @@ export function AIAgents({ userPoints, userStreak, onUseAgent }: AIAgentsProps) 
     }
   };
 
-  const isAgentLocked = userStreak < 10;
+  const isAgentLocked = userStreak < 7;
 
   return (
-    <Card className="glass-medium border-white/20">
+    <Card className="glass-medium border-white/20 relative">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
@@ -232,17 +251,17 @@ export function AIAgents({ userPoints, userStreak, onUseAgent }: AIAgentsProps) 
             </motion.div>
             <h3 className="text-xl font-semibold text-white mb-3">AI Agents Locked</h3>
             <p className="text-white/60 mb-6 max-w-md mx-auto">
-              Build a 10-day streak to unlock access to our powerful AI agent suite. 
+              Build a 7-day streak to unlock access to our powerful AI agent suite. 
               These agents will help you optimize content, find trends, and maximize revenue.
             </p>
             <div className="space-y-3 max-w-xs mx-auto">
               <div className="flex justify-between text-sm">
                 <span className="text-white/60">Streak Progress</span>
-                <span className="text-white font-medium">{userStreak}/10 days</span>
+                <span className="text-white font-medium">{userStreak}/7 days</span>
               </div>
-              <Progress value={(userStreak / 10) * 100} className="h-2" />
+              <Progress value={(userStreak / 7) * 100} className="h-2" />
               <p className="text-sm text-white/40">
-                {10 - userStreak} more days to unlock
+                {7 - userStreak} more days to unlock
               </p>
             </div>
           </div>
@@ -398,6 +417,44 @@ export function AIAgents({ userPoints, userStreak, onUseAgent }: AIAgentsProps) 
           </div>
         </div>
       </CardContent>
+
+      {/* Celebration Overlay for Unlocked AI Agents */}
+      <AnimatePresence>
+        {showUnlockedCelebration && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm rounded-lg z-50"
+          >
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -20, opacity: 0 }}
+              className="text-center"
+            >
+              <motion.div
+                animate={{ 
+                  rotate: [0, 10, -10, 0],
+                  scale: [1, 1.1, 1]
+                }}
+                transition={{ 
+                  duration: 1,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }}
+                className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-teal-500 flex items-center justify-center mx-auto mb-4"
+              >
+                <Sparkles className="h-10 w-10 text-white" />
+              </motion.div>
+              <h3 className="text-2xl font-bold text-white mb-2">🎉 AI Agents Unlocked!</h3>
+              <p className="text-white/80">
+                Congratulations on your 7-day streak!
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Card>
   );
 }
