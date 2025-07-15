@@ -1854,7 +1854,8 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                 })}
               </div>
             
-            {/* View More Tasks Button */}
+            {/* View More Tasks Button - Debug */}
+            {console.log("Rendering pagination buttons:", { hasMoreTasks, tasksPerPage, INITIAL_TASKS_PER_PAGE })}
             {hasMoreTasks && (
               <div className="flex justify-center mt-6">
                 <motion.div
