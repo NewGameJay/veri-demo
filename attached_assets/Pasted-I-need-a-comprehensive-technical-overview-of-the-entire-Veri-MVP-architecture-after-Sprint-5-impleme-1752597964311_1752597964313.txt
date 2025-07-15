@@ -1,0 +1,130 @@
+I need a comprehensive technical overview of the entire Veri MVP architecture after Sprint 5 implementation. Please provide a detailed analysis covering ALL components - both the existing features from earlier sprints AND the new Signal Engine/Brightmatter architecture we just added.
+Please organize your response into these sections:
+1. Complete Architecture Map
+Show the full system architecture including:
+
+Frontend components and their relationships
+Backend services (active and dormant)
+Database layers (PostgreSQL, Redis, MongoDB, Vector Store)
+Event streaming infrastructure (Redpanda/Kafka)
+AI/ML components (Brightmatter, Signal Engine)
+External integrations (Social APIs, MCP connectors)
+
+2. Frontend State Analysis
+
+Current UI/UX components status
+Glass morphism design system implementation
+Dashboard functionality (what works vs what's placeholder)
+Authentication flow status
+Profile builder integration
+Settings pages including new Veri Connectors module
+
+3. Backend Infrastructure Status
+Break down by service:
+Active Services:
+
+PostgreSQL database (schema, tables, relationships)
+JWT authentication system
+API endpoints currently functional
+Web3 wallet integration status
+
+Dormant Services (Built but Disabled):
+
+Memorriz Memory Intelligence Layer
+Vector Store (ChromaDB) integration
+MCP Tools Framework (Google Drive, Slack, Notion, Custom)
+Enhanced Signal Engine components
+Event streaming (Redpanda/Kafka)
+Redis caching layer
+MongoDB for signal storage
+
+4. API Endpoints Inventory
+List all API routes with their status:
+
+/api/auth/* - Authentication endpoints
+/api/users/* - User management
+/api/tasks/* - Task system
+/api/campaigns/* - Campaign management
+/api/brightmatter/* - AI/Signal Engine endpoints
+/api/mcp/* - MCP connector endpoints
+Any other endpoints
+
+5. Signal Engine Architecture Details
+For each component, show:
+
+File location
+Purpose and functionality
+Dependencies
+Mock data vs real implementation status
+Required environment variables
+
+Components to cover:
+
+Memorriz Core (memory management)
+Context Manager (session handling)
+Semantic Index (vector search)
+Memory Pruning (optimization)
+Signal Processing (engagement, viral, safety)
+VeriScore Calculator (6-factor algorithm)
+AI Content Optimizer
+Analytics Engine
+
+6. Integration Points
+Map out all integration points:
+
+Social platforms (Twitter, YouTube, Instagram)
+AI services (OpenAI, Anthropic)
+Vector stores (Chroma, embeddings)
+MCP connectors (what each connects to)
+Blockchain/Web3 preparations
+
+7. Environment Configuration
+List ALL environment variables:
+
+Currently configured (with current values if not sensitive)
+Required but not set (with descriptions)
+Feature flags and their current states
+
+8. Docker Services
+Show docker-compose.yml services:
+
+Running services
+Optional services (with 'profiles: optional')
+Service dependencies
+Port mappings
+
+9. Development Tools & Scripts
+List all available scripts and tools:
+
+npm scripts for validation
+Test data generators
+Architecture checkers
+Integration testers
+Mock data systems
+
+10. Activation Readiness Checklist
+For each dormant service, specify:
+
+What's needed to activate it
+Dependencies that must be activated first
+API keys required
+Configuration steps
+Potential issues to watch for
+
+11. Technical Debt & Known Issues
+
+Authentication session persistence status
+Build timeout issues
+Any integration gaps
+Performance concerns
+Security considerations
+
+12. Next Steps Recommendations
+Based on current state:
+
+What should be activated first
+Critical fixes needed
+Performance optimizations available
+Security hardening required
+
+Please be extremely detailed and include file paths, code snippets where relevant, and clear indicators of what's real vs mock implementation. I need to understand exactly what we have built and what remains to be connected.
