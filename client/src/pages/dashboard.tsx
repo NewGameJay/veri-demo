@@ -17,7 +17,6 @@ import { useMilestoneTracker } from "@/hooks/use-milestone-tracker";
 import { useAuth } from "@/contexts/auth-context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfileBuilderOnboarding } from "@/components/onboarding/profile-builder-onboarding";
-import { VeriLogo } from "@/components/ui/veri-logo";
 import { TrendingUp, Users, DollarSign } from "lucide-react";
 import { FaTwitter, FaYoutube, FaInstagram, FaTiktok } from "react-icons/fa";
 
@@ -75,8 +74,8 @@ export default function Dashboard() {
         onPin={() => {}} // Removed pin functionality
         onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
       />
-      <main className="pt-20 px-4 lg:px-6 pb-20">
-        <div className="max-w-7xl mx-auto space-y-6">
+      <main className="pt-20 px-4 lg:px-6">
+        <div className="max-w-7xl mx-auto">
           {/* Streamlined Welcome Header with Compact Streak */}
           <div className="mb-6 animate-fade-in">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 p-6">
@@ -157,19 +156,6 @@ export default function Dashboard() {
                     userXP={userXP}
                     showFilters={true}
                   />
-                  
-                  {/* Getting Started Section */}
-                  <div className="glass-effect p-6 rounded-xl border border-white/20 bg-[#1b1d27]">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-8 h-8 veri-gradient rounded-lg flex items-center justify-center">
-                        <TrendingUp className="w-4 h-4 text-white" />
-                      </div>
-                      <h3 className="text-lg font-termina text-white">Getting Started</h3>
-                    </div>
-                    <div className="text-white/70 font-inter text-sm leading-relaxed">
-                      Complete tasks to earn VeriPoints and increase your VeriScore. Higher scores unlock premium features and better brand partnership opportunities.
-                    </div>
-                  </div>
                 </div>
 
                 {/* Right Column - Sidebar Content */}
@@ -452,52 +438,6 @@ export default function Dashboard() {
               </div>
             </TabsContent>
           </Tabs>
-          
-          {/* Dashboard Footer */}
-          <footer className="mt-12 pt-8 border-t border-white/10 animate-fade-in">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              {/* Left Column - FAQ */}
-              <div className="lg:col-span-8">
-                <div className="glass-effect p-6 rounded-xl border border-white/20 bg-[#1b1d27]">
-                  <h3 className="text-lg font-termina text-white mb-4">Frequently Asked Questions</h3>
-                  <div className="space-y-4">
-                    <div className="border-b border-white/10 pb-3 last:border-0">
-                      <h4 className="text-white font-medium mb-2 font-inter">How do I earn VeriPoints?</h4>
-                      <p className="text-white/70 text-sm">Complete tasks, connect social platforms, and participate in campaigns to earn VeriPoints and increase your VeriScore.</p>
-                    </div>
-                    <div className="border-b border-white/10 pb-3 last:border-0">
-                      <h4 className="text-white font-medium mb-2 font-inter">What is VeriScore?</h4>
-                      <p className="text-white/70 text-sm">VeriScore is your creator reputation metric calculated weekly based on engagement, authenticity, and platform performance.</p>
-                    </div>
-                    <div className="border-b border-white/10 pb-3 last:border-0">
-                      <h4 className="text-white font-medium mb-2 font-inter">How do I unlock AI Agent features?</h4>
-                      <p className="text-white/70 text-sm">Complete a 7-day task streak to unlock AI Agent features for content optimization and analytics insights.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Right Column - Veri Branding */}
-              <div className="lg:col-span-4">
-                <div className="glass-effect p-6 rounded-xl border border-white/20 bg-[#1b1d27] text-center">
-                  <div className="flex flex-col items-center space-y-4">
-                    <div className="w-16 h-16 veri-gradient rounded-2xl flex items-center justify-center shadow-lg">
-                      <VeriLogo size="lg" showText={false} clickable={false} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-termina text-white mb-2">Veri</h3>
-                      <p className="text-white/70 text-sm font-inter leading-relaxed">
-                        Empowering creators with verified social connections and authentic brand partnerships.
-                      </p>
-                    </div>
-                    <div className="text-xs text-white/50 font-inter">
-                      © 2025 Veri. All rights reserved.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </footer>
         </div>
       </main>
       {/* Milestone Celebration Modal */}
