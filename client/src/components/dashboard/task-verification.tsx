@@ -87,7 +87,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const [showFloatingPoints, setShowFloatingPoints] = useState(false);
   const [floatingPoints, setFloatingPoints] = useState(0);
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
 
   const toggleTaskExpansion = (taskId: number) => {
     setExpandedTasks(prev => {
@@ -1527,6 +1527,9 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
             queryClient.invalidateQueries({ queryKey: [`/api/tasks/${userId}`] });
             queryClient.invalidateQueries({ queryKey: ['/api/users', userId] });
+            
+            // Refresh user data in auth context for real-time updates
+            await refreshUser();
             
             const isSpecialTask = selectedTask.id === 0;
             const message = isSpecialTask 
