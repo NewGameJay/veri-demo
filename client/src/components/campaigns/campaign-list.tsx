@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -77,6 +78,14 @@ const STATUS_COLORS = {
   draft: "bg-gray-100 text-gray-800",
 };
 
+interface ApplicationFormData {
+  interestStatement: string;
+  relevantExperience: string;
+  contentApproach: string;
+  portfolioLinks: string;
+  availability: string;
+}
+
 export function CampaignList() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -84,6 +93,27 @@ export function CampaignList() {
   const [applicationData, setApplicationData] = useState("");
   const [submissionUrl, setSubmissionUrl] = useState("");
   const [submissionData, setSubmissionData] = useState("");
+  const [applicationForm, setApplicationForm] = useState<ApplicationFormData>({
+    interestStatement: "",
+    relevantExperience: "",
+    contentApproach: "",
+    portfolioLinks: "",
+    availability: "immediate"
+  });
+
+  const updateApplicationForm = (field: keyof ApplicationFormData, value: string) => {
+    setApplicationForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  const resetApplicationForm = () => {
+    setApplicationForm({
+      interestStatement: "",
+      relevantExperience: "",
+      contentApproach: "",
+      portfolioLinks: "",
+      availability: "immediate"
+    });
+  };
 
   const { data: campaigns, isLoading, error } = useQuery({
     queryKey: ["/api/campaigns"],
@@ -113,6 +143,7 @@ export function CampaignList() {
       });
       queryClient.invalidateQueries({ queryKey: ["/api/campaigns"] });
       setApplicationData("");
+      resetApplicationForm();
       setSelectedCampaign(null);
     },
     onError: (error) => {
@@ -154,11 +185,20 @@ export function CampaignList() {
   });
 
   const handleApply = () => {
-    if (!selectedCampaign || !applicationData.trim()) return;
+    if (!selectedCampaign || !applicationForm.interestStatement.trim()) return;
+    
+    // Combine all form fields into structured application data
+    const structuredApplicationData = {
+      interestStatement: applicationForm.interestStatement.trim(),
+      relevantExperience: applicationForm.relevantExperience.trim(),
+      contentApproach: applicationForm.contentApproach.trim(),
+      portfolioLinks: applicationForm.portfolioLinks.trim(),
+      availability: applicationForm.availability
+    };
     
     applyToCampaignMutation.mutate({
       campaignId: selectedCampaign.id,
-      applicationData: applicationData.trim(),
+      applicationData: JSON.stringify(structuredApplicationData),
     });
   };
 
@@ -204,6 +244,24 @@ export function CampaignList() {
     } catch {
       return null;
     }
+  };
+
+  const formatRequirements = (requirements?: string) => {
+    const parsed = parseRequirements(requirements);
+    if (!parsed) return requirements;
+    
+    // If it's an array, format as bullet points
+    if (Array.isArray(parsed)) {
+      return parsed.map(req => `• ${req}`).join('\n');
+    }
+    
+    // If it's an object with deliverables array, format those
+    if (parsed.deliverables && Array.isArray(parsed.deliverables)) {
+      return parsed.deliverables.map((req: string) => `• ${req}`).join('\n');
+    }
+    
+    // Return original if not an array format we can improve
+    return requirements;
   };
 
   const isUrgent = (campaign: Campaign) => {
@@ -397,7 +455,7 @@ export function CampaignList() {
               {campaign.requirements && (
                 <div className="text-sm">
                   <span className="font-medium">Requirements:</span>
-                  <p className="mt-1 text-muted-foreground">{campaign.requirements}</p>
+                  <pre className="mt-1 text-muted-foreground whitespace-pre-wrap font-sans">{formatRequirements(campaign.requirements)}</pre>
                 </div>
               )}
 
@@ -425,7 +483,7 @@ export function CampaignList() {
                       {campaign.requirements && (
                         <div>
                           <h4 className="font-semibold mb-2">Requirements</h4>
-                          <p className="text-sm text-muted-foreground">{campaign.requirements}</p>
+                          <pre className="text-sm text-muted-foreground whitespace-pre-wrap font-sans">{formatRequirements(campaign.requirements)}</pre>
                         </div>
                       )}
                       
@@ -500,32 +558,100 @@ export function CampaignList() {
                       Apply
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
                     <DialogHeader>
                       <DialogTitle>Apply to Campaign</DialogTitle>
                       <DialogDescription>
-                        Tell us why you're perfect for this campaign
+                        Complete your application with detailed information about your experience and approach
                       </DialogDescription>
                     </DialogHeader>
-                    <div className="space-y-4">
+                    <div className="space-y-6">
+                      {/* Campaign Interest Statement */}
                       <div>
-                        <Label htmlFor="application">Application Message</Label>
+                        <Label htmlFor="interestStatement">Why are you interested in this campaign? *</Label>
                         <Textarea
-                          id="application"
-                          placeholder="Describe your relevant experience, audience, and how you plan to complete this campaign..."
-                          value={applicationData}
-                          onChange={(e) => setApplicationData(e.target.value)}
-                          className="min-h-[100px]"
+                          id="interestStatement"
+                          placeholder="Share what excites you about this campaign and why you're the perfect fit (3-5 lines minimum)..."
+                          value={applicationForm.interestStatement}
+                          onChange={(e) => updateApplicationForm('interestStatement', e.target.value)}
+                          className="min-h-[100px] mt-2"
                         />
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {applicationForm.interestStatement.length}/500 characters
+                        </p>
+                      </div>
+
+                      {/* Relevant Experience */}
+                      <div>
+                        <Label htmlFor="relevantExperience">Share relevant content creation experience</Label>
+                        <Textarea
+                          id="relevantExperience"
+                          placeholder="Describe your experience with similar campaigns, audience engagement, content creation, etc. Include links to previous work if relevant..."
+                          value={applicationForm.relevantExperience}
+                          onChange={(e) => updateApplicationForm('relevantExperience', e.target.value)}
+                          className="min-h-[100px] mt-2"
+                        />
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {applicationForm.relevantExperience.length}/1000 characters
+                        </p>
+                      </div>
+
+                      {/* Content Approach */}
+                      <div>
+                        <Label htmlFor="contentApproach">How would you approach this campaign?</Label>
+                        <Textarea
+                          id="contentApproach"
+                          placeholder="Outline your creative strategy, content ideas, execution plan, and how you'll engage your audience..."
+                          value={applicationForm.contentApproach}
+                          onChange={(e) => updateApplicationForm('contentApproach', e.target.value)}
+                          className="min-h-[100px] mt-2"
+                        />
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {applicationForm.contentApproach.length}/1000 characters
+                        </p>
+                      </div>
+
+                      {/* Portfolio Links */}
+                      <div>
+                        <Label htmlFor="portfolioLinks">Portfolio Links</Label>
+                        <Textarea
+                          id="portfolioLinks"
+                          placeholder="Share your portfolio links (one per line):&#10;YouTube: https://youtube.com/@yourhandle&#10;Twitch: https://twitch.tv/yourhandle&#10;Social profiles: https://...&#10;Previous brand work: https://..."
+                          value={applicationForm.portfolioLinks}
+                          onChange={(e) => updateApplicationForm('portfolioLinks', e.target.value)}
+                          className="min-h-[120px] mt-2 font-mono text-sm"
+                        />
+                        <p className="text-sm text-muted-foreground mt-1">
+                          One link per line. Include platform name for clarity.
+                        </p>
+                      </div>
+
+                      {/* Availability */}
+                      <div>
+                        <Label htmlFor="availability">Availability</Label>
+                        <Select
+                          value={applicationForm.availability}
+                          onValueChange={(value) => updateApplicationForm('availability', value)}
+                        >
+                          <SelectTrigger className="mt-2">
+                            <SelectValue placeholder="Select your availability" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="immediate">Immediate start</SelectItem>
+                            <SelectItem value="within_1_week">Within 1 week</SelectItem>
+                            <SelectItem value="within_2_weeks">Within 2 weeks</SelectItem>
+                            <SelectItem value="flexible">Flexible timeline</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                       
-                      <div className="flex justify-end gap-2">
-                        <Button variant="outline" onClick={() => setSelectedCampaign(null)}>
+                      <div className="flex justify-end gap-2 pt-4 border-t">
+                        <Button variant="outline" onClick={() => { setSelectedCampaign(null); resetApplicationForm(); }}>
                           Cancel
                         </Button>
                         <Button 
                           onClick={handleApply}
-                          disabled={!applicationData.trim() || applyToCampaignMutation.isPending}
+                          disabled={!applicationForm.interestStatement.trim() || applyToCampaignMutation.isPending}
                         >
                           {applyToCampaignMutation.isPending ? "Applying..." : "Submit Application"}
                         </Button>

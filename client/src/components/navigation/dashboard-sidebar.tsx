@@ -41,6 +41,25 @@ export function DashboardSidebar({
   const { user, logout } = useAuth();
   const [activeItem, setActiveItem] = useState("dashboard");
 
+  const menuItems = [
+    { id: "dashboard", label: "Dashboard", icon: Home, path: "/dashboard" },
+    { id: "profile", label: "Profile", icon: User, path: "/profile" },
+    { id: "analytics", label: "Analytics", icon: BarChart, path: "/analytics" },
+    { id: "leaderboard", label: "Leaderboard", icon: Trophy, path: "/leaderboard" },
+    { id: "campaigns", label: "Campaigns", icon: Target, path: "/campaigns" },
+    { id: "ai-agent", label: "AI Agent", icon: Bot, path: "/ai-agent" },
+    { id: "settings", label: "Settings", icon: Settings, path: "/settings" },
+  ];
+
+  // Update active item based on current location
+  useEffect(() => {
+    const currentPath = location;
+    const activeMenuItem = menuItems.find(item => item.path === currentPath);
+    if (activeMenuItem) {
+      setActiveItem(activeMenuItem.id);
+    }
+  }, [location]);
+
   // Keyboard navigation support
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -63,16 +82,6 @@ export function DashboardSidebar({
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
-
-  const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: Home, path: "/dashboard" },
-    { id: "profile", label: "Profile", icon: User, path: "/profile" },
-    { id: "analytics", label: "Analytics", icon: BarChart, path: "/analytics" },
-    { id: "leaderboard", label: "Leaderboard", icon: Trophy, path: "/leaderboard" },
-    { id: "campaigns", label: "Campaigns", icon: Target, path: "/campaigns" },
-    { id: "ai-agent", label: "AI Agent", icon: Bot, path: "/ai-agent" },
-    { id: "settings", label: "Settings", icon: Settings, path: "/settings" },
-  ];
 
   const handleNavigation = (item: typeof menuItems[0]) => {
     triggerHaptic("light");

@@ -34,6 +34,36 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Share2 } from 'lucide-react';
 import { Twitch } from 'lucide-react';
 
+// Floating Points Animation Component
+function FloatingPointsAnimation({ points, onComplete }: { points: number; onComplete: () => void }) {
+  return (
+    <motion.div
+      className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onAnimationComplete={onComplete}
+    >
+      <motion.div
+        className="bg-emerald-500 text-white px-6 py-3 rounded-full font-bold text-lg shadow-2xl"
+        initial={{ scale: 0, y: 20 }}
+        animate={{ 
+          scale: [0, 1.2, 1], 
+          y: [20, 0, -50], 
+          opacity: [0, 1, 0] 
+        }}
+        transition={{ 
+          duration: 2,
+          times: [0, 0.3, 1],
+          ease: "easeOut"
+        }}
+      >
+        +{points} XP
+      </motion.div>
+    </motion.div>
+  );
+}
+
 interface TaskVerificationProps {
   userId: number;
   userStreak: number;
@@ -54,6 +84,8 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const LOAD_MORE_INCREMENT = 6;
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareTaskData, setShareTaskData] = useState<any>(null);
+  const [showFloatingPoints, setShowFloatingPoints] = useState(false);
+  const [floatingPoints, setFloatingPoints] = useState(0);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -1486,15 +1518,28 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           const result = await response.json();
           if (result.success) {
             triggerHaptic("success");
+            
+            // Show floating points animation immediately
+            setFloatingPoints(selectedTask.points);
+            setShowFloatingPoints(true);
+            
+            // Invalidate queries immediately for real-time updates
+            queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+            queryClient.invalidateQueries({ queryKey: [`/api/tasks/${userId}`] });
+            queryClient.invalidateQueries({ queryKey: ['/api/users', userId] });
+            
             const isSpecialTask = selectedTask.id === 0;
             const message = isSpecialTask 
               ? `Amazing! You've earned ${selectedTask.points} XP points and ${selectedTask.streakBonus || 1} day streak! AI Agent tooling is now unlocked.`
               : `Great work! You've earned ${selectedTask.points} XP points.`;
             
-            toast({
-              title: "Task verified!",
-              description: message,
-            });
+            // Delayed toast to appear after floating animation starts
+            setTimeout(() => {
+              toast({
+                title: "Task verified!",
+                description: message,
+              });
+            }, 800);
 
             // Prepare share data and show social sharing modal
             setShareTaskData({
@@ -1510,17 +1555,11 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             setSelectedTask(null);
             setVerificationUrl("");
             setActiveTab("completed");
-            
-            // Invalidate and refetch user data to trigger VeriScore animation
-            await queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
-            await queryClient.invalidateQueries({ queryKey: [`/api/tasks/${userId}`] });
-            // Force immediate refresh to trigger animation
-            await queryClient.refetchQueries({ queryKey: ['/api/auth/me'] });
 
-            // Show social sharing modal after a brief delay for the success animation
+            // Show social sharing modal after floating animation completes
             setTimeout(() => {
               setShowShareModal(true);
-            }, 1500);
+            }, 2500);
           } else {
             throw new Error("Backend verification failed");
           }
@@ -2088,6 +2127,14 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           </TabsContent>
         </Tabs>
       </CardContent>
+
+      {/* Floating Points Animation */}
+      {showFloatingPoints && (
+        <FloatingPointsAnimation 
+          points={floatingPoints} 
+          onComplete={() => setShowFloatingPoints(false)} 
+        />
+      )}
 
       {/* Social Share Modal */}
       {showShareModal && shareTaskData && user && (
