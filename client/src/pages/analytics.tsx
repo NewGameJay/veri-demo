@@ -23,9 +23,26 @@ import { motion } from "framer-motion";
 // Realistic data generation functions
 const generateRealisticData = (timeRange: string) => {
   const now = new Date();
-  const baseEngagement = 2500;
-  const baseViews = 15000;
-  const baseRevenue = 150;
+  
+  // Scale base values based on time range
+  let baseEngagement, baseViews, baseRevenue;
+  
+  if (timeRange === "7d") {
+    // Smaller numbers for 7 days (weekly totals)
+    baseEngagement = 800;
+    baseViews = 5000;
+    baseRevenue = 50;
+  } else if (timeRange === "30d") {
+    // Medium numbers for 30 days (monthly totals)
+    baseEngagement = 2500;
+    baseViews = 15000;
+    baseRevenue = 150;
+  } else { // 90d
+    // 3x larger numbers for 90 days (quarterly totals)
+    baseEngagement = 7500;
+    baseViews = 45000;
+    baseRevenue = 450;
+  }
   
   let dataPoints: Array<{
     date: string;
@@ -36,34 +53,28 @@ const generateRealisticData = (timeRange: string) => {
   }> = [];
 
   if (timeRange === "7d") {
-    // 7 days: Show hourly fluctuations (168 data points)
-    for (let i = 168; i >= 0; i--) {
-      const date = new Date(now.getTime() - i * 60 * 60 * 1000);
-      const hour = date.getHours();
-      
-      // Evening peaks (6-10pm)
-      const timeMultiplier = hour >= 18 && hour <= 22 ? 1.8 : 
-                            hour >= 12 && hour <= 17 ? 1.3 :
-                            hour >= 8 && hour <= 11 ? 1.1 : 0.6;
+    // 7 days: Show daily totals (7 data points) - smaller numbers
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
       
       // Weekend spikes
       const weekendMultiplier = date.getDay() === 0 || date.getDay() === 6 ? 1.4 : 1.0;
       
-      // Random variance ±25%
-      const variance = 0.75 + Math.random() * 0.5;
+      // Random variance ±20%
+      const variance = 0.8 + Math.random() * 0.4;
       
-      // Gradual growth trend
-      const trendMultiplier = 1 + ((168 - i) / 1680); // 10% growth over week
+      // Gradual growth trend (5% over week)
+      const trendMultiplier = 1 + ((6 - i) / 120);
       
-      // Occasional viral spikes (2% chance)
-      const viralMultiplier = Math.random() < 0.02 ? 3.5 : 1.0;
+      // Occasional viral spikes (15% chance, smaller)
+      const viralMultiplier = Math.random() < 0.15 ? 1.8 : 1.0;
       
-      const engagement = Math.round(baseEngagement * timeMultiplier * weekendMultiplier * variance * trendMultiplier * viralMultiplier);
-      const views = Math.round(baseViews * timeMultiplier * weekendMultiplier * variance * trendMultiplier * viralMultiplier * 1.2);
-      const revenue = Math.round(baseRevenue * timeMultiplier * weekendMultiplier * variance * trendMultiplier * viralMultiplier * 0.8);
+      const engagement = Math.round(baseEngagement * weekendMultiplier * variance * trendMultiplier * viralMultiplier);
+      const views = Math.round(baseViews * weekendMultiplier * variance * trendMultiplier * viralMultiplier);
+      const revenue = Math.round(baseRevenue * weekendMultiplier * variance * trendMultiplier * viralMultiplier);
       
       dataPoints.push({
-        date: date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+        date: date.toLocaleDateString('en-US', { weekday: 'short' }),
         engagement,
         views,
         revenue,
@@ -71,20 +82,19 @@ const generateRealisticData = (timeRange: string) => {
       });
     }
   } else if (timeRange === "30d") {
-    // 30 days: Show daily trends (30 data points)
-    for (let i = 30; i >= 0; i--) {
-      const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-      const weekendMultiplier = date.getDay() === 0 || date.getDay() === 6 ? 1.5 : 1.0;
-      const variance = 0.8 + Math.random() * 0.4;
-      const trendMultiplier = 1 + ((30 - i) / 150); // 20% growth over month
-      const viralMultiplier = Math.random() < 0.05 ? 2.8 : 1.0;
+    // 30 days: Show weekly trends (4 data points) - medium numbers
+    for (let i = 3; i >= 0; i--) {
+      const date = new Date(now.getTime() - i * 7 * 24 * 60 * 60 * 1000);
+      const variance = 0.85 + Math.random() * 0.3;
+      const trendMultiplier = 1 + ((3 - i) / 30); // 10% growth over month
+      const viralMultiplier = Math.random() < 0.1 ? 2.2 : 1.0;
       
-      const engagement = Math.round(baseEngagement * weekendMultiplier * variance * trendMultiplier * viralMultiplier);
-      const views = Math.round(baseViews * weekendMultiplier * variance * trendMultiplier * viralMultiplier * 1.1);
-      const revenue = Math.round(baseRevenue * weekendMultiplier * variance * trendMultiplier * viralMultiplier * 0.9);
+      const engagement = Math.round(baseEngagement * variance * trendMultiplier * viralMultiplier);
+      const views = Math.round(baseViews * variance * trendMultiplier * viralMultiplier);
+      const revenue = Math.round(baseRevenue * variance * trendMultiplier * viralMultiplier);
       
       dataPoints.push({
-        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        date: `Week ${4 - i}`,
         engagement,
         views,
         revenue,
@@ -92,19 +102,19 @@ const generateRealisticData = (timeRange: string) => {
       });
     }
   } else { // 90d
-    // 90 days: Show weekly patterns (13 data points)
-    for (let i = 12; i >= 0; i--) {
-      const date = new Date(now.getTime() - i * 7 * 24 * 60 * 60 * 1000);
-      const variance = 0.85 + Math.random() * 0.3;
-      const trendMultiplier = 1 + ((12 - i) / 40); // 30% growth over 3 months
-      const viralMultiplier = Math.random() < 0.08 ? 2.2 : 1.0;
+    // 90 days: Show monthly patterns (3 data points) - 3x larger numbers
+    for (let i = 2; i >= 0; i--) {
+      const date = new Date(now.getTime() - i * 30 * 24 * 60 * 60 * 1000);
+      const variance = 0.9 + Math.random() * 0.2;
+      const trendMultiplier = 1 + ((2 - i) / 10); // 20% growth over quarter
+      const viralMultiplier = Math.random() < 0.2 ? 1.8 : 1.0;
       
-      const engagement = Math.round(baseEngagement * 1.2 * variance * trendMultiplier * viralMultiplier);
-      const views = Math.round(baseViews * 1.2 * variance * trendMultiplier * viralMultiplier);
-      const revenue = Math.round(baseRevenue * 1.2 * variance * trendMultiplier * viralMultiplier);
+      const engagement = Math.round(baseEngagement * variance * trendMultiplier * viralMultiplier);
+      const views = Math.round(baseViews * variance * trendMultiplier * viralMultiplier);
+      const revenue = Math.round(baseRevenue * variance * trendMultiplier * viralMultiplier);
       
       dataPoints.push({
-        date: `Week ${13 - i}`,
+        date: `Month ${3 - i}`,
         engagement,
         views,
         revenue,
