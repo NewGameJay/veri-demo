@@ -435,8 +435,8 @@ export function EnhancedProfileBuilder({ onComplete, initialData }: ProfileBuild
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 p-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="w-full bg-transparent p-4">
+      <div className="max-w-5xl mx-auto">
         {/* Progress Steps */}
         <div className="flex items-center justify-center mb-8">
           <div className="flex items-center space-x-4">

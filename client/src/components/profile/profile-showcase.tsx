@@ -111,7 +111,7 @@ export function ProfileShowcase({ profileData, onEdit, isPreview = false }: Prof
   const tier = getTierBadge(profileData.veriScore);
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-6">
+    <div className="w-full space-y-6">
       {/* Privacy Controls */}
       {!isPreview && (
         <Card className="glass-subtle p-4 border-white/10">

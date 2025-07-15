@@ -5,7 +5,8 @@ import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
 import { VeriScoreCard } from "@/components/dashboard/veri-score-card";
 import { TaskVerification } from "@/components/dashboard/task-verification";
 import { CampaignExplore } from "@/components/dashboard/campaign-explore";
-import { ProfileBuilder } from "@/components/dashboard/profile-builder";
+import { EnhancedProfileBuilder } from "@/components/profile/enhanced-profile-builder";
+import { ProfileShowcase } from "@/components/profile/profile-showcase";
 import { SocialConnections } from "@/components/dashboard/social-connections";
 import { Leaderboard } from "@/components/dashboard/leaderboard";
 import { FAQ } from "@/components/dashboard/faq";
@@ -18,6 +19,100 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfileBuilderOnboarding } from "@/components/onboarding/profile-builder-onboarding";
 import { Eye, TrendingUp, Users, DollarSign } from "lucide-react";
 import { FaTwitter, FaYoutube, FaInstagram, FaTiktok } from "react-icons/fa";
+
+// Profile Builder Tab Component
+function ProfileBuilderTab({ user }: { user: any }) {
+  const [mode, setMode] = useState<'showcase' | 'builder'>('showcase');
+  
+  const sampleProfileData = {
+    name: user?.username || 'Creator',
+    username: user?.email?.split('@')[0] || 'creator',
+    bio: 'Web3 Gaming Creator • Content Creator • Digital Avatar Designer • From the intersection of technology and creativity',
+    avatar: '/api/placeholder/100/100',
+    banner: '',
+    veriScore: user?.veriScore || 99,
+    xpPoints: user?.xpPoints || 2500,
+    followers: 8700,
+    following: 1250,
+    rank: 2,
+    totalUsers: 50000,
+    isVerified: true,
+    joinDate: 'Jan 2024',
+    socialConnections: {
+      twitter: { followers: 12500, verified: true },
+      instagram: { followers: 8900, verified: false },
+      youtube: { subscribers: 15600, verified: true },
+      twitch: { followers: 3200, verified: false }
+    },
+    topContent: [
+      {
+        id: '1',
+        platform: 'twitter' as const,
+        title: 'Just launched my new course on content creation',
+        views: 15600,
+        likes: 847,
+        shares: 203,
+        revenue: 125,
+        thumbnail: '/api/placeholder/400/200',
+        date: '4 days ago',
+        engagement: 8.2
+      }
+    ],
+    privacySettings: {
+      showScore: true,
+      showRank: true,
+      showEarnings: false,
+      showTopContent: true,
+    }
+  };
+
+  const handleProfileComplete = (data: any) => {
+    setMode('showcase');
+  };
+
+  const handleEditProfile = () => {
+    setMode('builder');
+  };
+
+  if (mode === 'builder') {
+    return (
+      <div className="min-h-[600px]">
+        <EnhancedProfileBuilder 
+          onComplete={handleProfileComplete}
+          initialData={sampleProfileData}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Left Column - Main Content */}
+      <div className="lg:col-span-8 space-y-6">
+        <ProfileShowcase 
+          profileData={sampleProfileData}
+          onEdit={handleEditProfile}
+          isPreview={false}
+        />
+      </div>
+
+      {/* Right Column - Sidebar Content */}
+      <div className="lg:col-span-4 space-y-6">
+        {/* Vertical VeriScore Card */}
+        <VeriScoreCard />
+        
+        {/* Social Connections */}
+        <SocialConnections />
+
+        {/* Leaderboard */}
+        <Leaderboard />
+
+        {/* FAQ Section - Expandable */}
+        <FAQ />
+      </div>
+    </div>
+  );
+}
 
 export default function Dashboard() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
@@ -179,30 +274,7 @@ export default function Dashboard() {
             </TabsContent>
 
             <TabsContent value="profile" className="mt-6">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                {/* Left Column - Main Content */}
-                <div className="lg:col-span-8 space-y-6">
-                  <ProfileBuilder 
-                    user={user} 
-                    profileType="creator"
-                  />
-                </div>
-
-                {/* Right Column - Sidebar Content */}
-                <div className="lg:col-span-4 space-y-6">
-                  {/* Vertical VeriScore Card */}
-                  <VeriScoreCard />
-                  
-                  {/* Social Connections */}
-                  <SocialConnections />
-
-                  {/* Leaderboard */}
-                  <Leaderboard />
-
-                  {/* FAQ Section - Expandable */}
-                  <FAQ />
-                </div>
-              </div>
+              <ProfileBuilderTab user={user} />
             </TabsContent>
 
             <TabsContent value="ai-agent" className="mt-6">
