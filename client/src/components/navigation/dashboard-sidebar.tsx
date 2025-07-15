@@ -46,7 +46,7 @@ export function DashboardSidebar({
     { id: "profile", label: "Profile", icon: User, path: "/profile" },
     { id: "analytics", label: "Analytics", icon: BarChart, path: "/analytics" },
     { id: "leaderboard", label: "Leaderboard", icon: Trophy, path: "/leaderboard" },
-    { id: "campaigns", label: "Campaigns", icon: Target, path: "/campaigns" },
+    { id: "campaigns", label: "Campaign Offers", icon: Target, path: "/campaigns" },
     { id: "ai-agent", label: "AI Agent", icon: Bot, path: "/ai-agent" },
     { id: "settings", label: "Settings", icon: Settings, path: "/settings" },
   ];
