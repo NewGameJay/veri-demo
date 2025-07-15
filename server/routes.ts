@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { insertUserSchema, insertSocialConnectionSchema, insertTaskSchema, insertCampaignSchema, insertCampaignParticipantSchema, insertProfileSchema } from "@shared/schema";
 import "./types";
 import healthRoutes from "./routes/health";
+import brightmatterRoutes from "./routes/brightmatter";
 import { requestTiming, errorTracking } from "./middleware/monitoring";
 import { authMiddleware, optionalAuthMiddleware, generateTokens, setAuthCookies, clearAuthCookies, type AuthenticatedRequest } from "./auth";
 import { initiateTwitterLogin, handleTwitterCallback, disconnectTwitter } from "./oauth";
@@ -15,6 +16,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Health check routes
   app.use('/api', healthRoutes);
+  
+  // Brightmatter AI routes
+  app.use('/api/brightmatter', brightmatterRoutes);
   
   // Authentication routes
   app.post("/api/auth/signup", async (req, res) => {
