@@ -121,7 +121,7 @@ export function DashboardSidebar({
             variant="ghost"
             size="icon"
             onClick={onToggleCollapse}
-            className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 hover-scale touch-manipulation"
+            className="p-2 hover:bg-white/10 rounded-xl transition-colors touch-manipulation"
             title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             haptic="light"
@@ -138,7 +138,7 @@ export function DashboardSidebar({
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 hover-scale touch-manipulation"
+              className="p-2 hover:bg-white/10 rounded-xl transition-colors touch-manipulation"
               title="Close sidebar"
               aria-label="Close sidebar"
               haptic="light"
@@ -162,13 +162,11 @@ export function DashboardSidebar({
                 variant="ghost"
                 onClick={() => handleNavigation(item)}
                 className={cn(
-                  "w-full p-3 glass-subtle rounded-xl transition-all duration-300 hover-scale font-inter touch-manipulation",
+                  "w-full p-3 glass-subtle rounded-xl transition-colors font-inter touch-manipulation",
                   isCollapsed ? "justify-center" : "justify-start gap-3",
                   location === item.path && "veri-gradient text-white shadow-lg",
-                  "animate-slide-in",
                   "focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
                 )}
-                style={{ animationDelay: `${index * 100}ms` }}
                 title={isCollapsed ? `${item.label} (Alt+${index + 1})` : `Alt+${index + 1}`}
                 aria-label={`Navigate to ${item.label}`}
                 aria-current={location === item.path ? "page" : undefined}
@@ -190,7 +188,7 @@ export function DashboardSidebar({
             variant="ghost"
             onClick={handleLogout}
             className={cn(
-              "w-full p-3 glass-subtle rounded-xl transition-all duration-300 hover-scale font-inter text-red-400 hover:text-red-300 touch-manipulation",
+              "w-full p-3 glass-subtle rounded-xl transition-colors font-inter text-red-400 hover:text-red-300 touch-manipulation",
               isCollapsed ? "justify-center" : "justify-start gap-3",
               "focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2"
             )}
@@ -205,7 +203,7 @@ export function DashboardSidebar({
 
         {/* Enhanced Leaderboard Preview - hidden when collapsed */}
         {!isCollapsed && (
-          <div className="veri-gradient-card rounded-xl p-6 hover-scale animate-fade-in">
+          <div className="veri-gradient-card rounded-xl p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 veri-gradient rounded-lg flex items-center justify-center">
                 <Trophy className="w-4 h-4 text-white" />
