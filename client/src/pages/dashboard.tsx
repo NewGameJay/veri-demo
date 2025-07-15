@@ -6,6 +6,7 @@ import { VeriScoreCard } from "@/components/dashboard/veri-score-card";
 import { TaskVerification } from "@/components/dashboard/task-verification";
 import { CampaignExplore } from "@/components/dashboard/campaign-explore";
 import { ProfileBuilder } from "@/components/dashboard/profile-builder";
+import { UnifiedProfileBuilder } from "@/components/profile/unified-profile-builder";
 import { SocialConnections } from "@/components/dashboard/social-connections";
 import { Leaderboard } from "@/components/dashboard/leaderboard";
 import { FAQ } from "@/components/dashboard/faq";
@@ -16,13 +17,14 @@ import { useMilestoneTracker } from "@/hooks/use-milestone-tracker";
 import { useAuth } from "@/contexts/auth-context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfileBuilderOnboarding } from "@/components/onboarding/profile-builder-onboarding";
-import { Eye, TrendingUp, Users, DollarSign } from "lucide-react";
+import { Eye, TrendingUp, Users, DollarSign, Edit3 } from "lucide-react";
 import { FaTwitter, FaYoutube, FaInstagram, FaTiktok } from "react-icons/fa";
 
 export default function Dashboard() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showProfileBuilder, setShowProfileBuilder] = useState(false);
+  const [showUnifiedProfileBuilder, setShowUnifiedProfileBuilder] = useState(false);
   const { user, needsOnboarding, completeOnboarding } = useAuth();
   const { newMilestones, clearNewMilestones } = useMilestoneTracker();
 
@@ -182,6 +184,44 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* Left Column - Main Content */}
                 <div className="lg:col-span-8 space-y-6">
+                  {/* Unified Profile Builder Launch Card */}
+                  <div className="glass-effect p-6 rounded-xl border border-white/20">
+                    <div className="text-center space-y-4">
+                      <h2 className="text-2xl font-semibold text-white">VeriProfile Builder</h2>
+                      <p className="text-white/70">Create, edit, and share your professional gaming creator profile</p>
+                      
+                      <button
+                        onClick={() => setShowUnifiedProfileBuilder(true)}
+                        className="w-full max-w-md mx-auto p-6 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/30 transition-all group relative overflow-hidden"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div className="relative flex items-center justify-center gap-3">
+                          <Edit3 className="w-6 h-6 text-emerald-400 group-hover:scale-110 transition-transform" />
+                          <span className="text-white font-semibold">Open Profile Builder</span>
+                        </div>
+                      </button>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                        <div className="text-center">
+                          <Eye className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
+                          <h4 className="text-white font-medium">Preview</h4>
+                          <p className="text-white/60 text-sm">See how your profile looks to brands</p>
+                        </div>
+                        <div className="text-center">
+                          <Edit3 className="w-8 h-8 text-blue-400 mx-auto mb-2" />
+                          <h4 className="text-white font-medium">Visual Editor</h4>
+                          <p className="text-white/60 text-sm">Edit your profile with live preview</p>
+                        </div>
+                        <div className="text-center">
+                          <TrendingUp className="w-8 h-8 text-purple-400 mx-auto mb-2" />
+                          <h4 className="text-white font-medium">Share</h4>
+                          <p className="text-white/60 text-sm">Get your custom veri.club link</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Legacy Profile Builder for reference */}
                   <ProfileBuilder 
                     user={user} 
                     profileType="creator"
@@ -447,6 +487,12 @@ export default function Dashboard() {
           onClose={() => clearNewMilestones()}
         />
       )}
+
+      {/* Unified Profile Builder Modal */}
+      <UnifiedProfileBuilder 
+        isOpen={showUnifiedProfileBuilder}
+        onClose={() => setShowUnifiedProfileBuilder(false)}
+      />
     </div>
   );
 }

@@ -20,6 +20,9 @@ export const users = pgTable("users", {
   streak: integer("streak").default(0),
   hasCompletedOnboarding: boolean("has_completed_onboarding").default(false),
   profileCompleted: boolean("profile_completed").default(false),
+  customUsername: text("custom_username").unique(), // Custom username for public profile
+  website: text("website"), // Personal website URL
+  showcaseContent: text("showcase_content"), // JSON string for featured content pieces
   // Web3 Wallet Fields
   veriAccountId: text("veri_account_id").unique(), // Unique identifier for Veri account
   walletAddress: text("wallet_address").unique(), // Public wallet address

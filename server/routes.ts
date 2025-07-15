@@ -471,6 +471,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update user profile
+  app.patch("/api/users/:id/profile", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = parseInt(req.params.id);
+      const updateData = req.body;
+      
+      // Validate user owns this profile or is admin
+      if (req.session?.userId !== userId) {
+        return res.status(403).json({ error: "Unauthorized" });
+      }
+
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Update profile fields
+      const updatedUser = {
+        ...user,
+        bio: updateData.bio || user.bio,
+        website: updateData.website || user.website,
+        customUsername: updateData.customUsername || user.customUsername || user.username?.toLowerCase().replace(/\s+/g, ''),
+        showcaseContent: updateData.showcaseContent || user.showcaseContent || "[]",
+        updatedAt: new Date().toISOString()
+      };
+
+      await storage.updateUser(userId, updatedUser);
+      
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+      res.status(500).json({ error: "Failed to update profile" });
+    }
+  });
+
+  // Get public profile by custom username
+  app.get("/api/public-profile/:username", async (req, res) => {
+    try {
+      const username = req.params.username.toLowerCase();
+      
+      // Find user by custom username
+      const users = await storage.getUsers();
+      const user = users.find(u => 
+        u.customUsername?.toLowerCase() === username || 
+        u.username?.toLowerCase().replace(/\s+/g, '') === username
+      );
+      
+      if (!user) {
+        return res.status(404).json({ error: "Profile not found" });
+      }
+
+      // Get user's social connections
+      const connections = await storage.getSocialConnections(user.id);
+      const connectedPlatforms = connections.filter(conn => conn.isConnected);
+
+      // Get user's leaderboard position
+      const { getCachedLeaderboard } = await import("./leaderboard-generator");
+      const allUsers = getCachedLeaderboard();
+      
+      // Find user's position
+      const userScore = user.xpPoints || 0;
+      const userPosition = allUsers.findIndex(u => u.score <= userScore) + 1;
+      const userTier = userScore >= 2500 ? "Diamond" : userScore >= 1800 ? "Platinum" : userScore >= 1200 ? "Gold" : userScore >= 600 ? "Silver" : "Bronze";
+
+      // Create public profile data (remove sensitive info)
+      const publicProfile = {
+        name: user.username,
+        bio: user.bio,
+        website: user.website,
+        customUsername: user.customUsername || user.username?.toLowerCase().replace(/\s+/g, ''),
+        isVerified: user.isVerified || false,
+        veriScore: user.veriScore || 0,
+        xpPoints: user.xpPoints || 0,
+        rank: userPosition || 999,
+        tier: userTier,
+        connectedPlatforms: connectedPlatforms.map(conn => ({
+          platform: conn.platform,
+          followers: conn.followerCount || 0
+        })),
+        showcaseContent: user.showcaseContent ? JSON.parse(user.showcaseContent) : [],
+        joinedAt: user.createdAt
+      };
+      
+      res.json(publicProfile);
+    } catch (error) {
+      console.error("Error fetching public profile:", error);
+      res.status(500).json({ error: "Failed to fetch profile" });
+    }
+  });
+
   // Task routes
   app.get("/api/tasks/:userId", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {

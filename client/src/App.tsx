@@ -16,6 +16,7 @@ import Settings from "@/pages/settings";
 import Campaigns from "@/pages/campaigns";
 import OAuthDemo from "@/pages/oauth-demo";
 import { DemoOAuth } from "@/components/demo/demo-oauth";
+import PublicProfile from "@/pages/public-profile";
 
 function Router() {
   const { user, isLoading } = useAuth();
@@ -42,6 +43,8 @@ function Router() {
       <Route path="/settings" component={Settings} />
       <Route path="/oauth-demo" component={OAuthDemo} />
       <Route path="/demo-oauth" component={DemoOAuth} />
+      <Route path="/veri.club/:username" component={PublicProfile} />
+      <Route path="/profile/:username" component={PublicProfile} />
       <Route component={NotFound} />
     </Switch>
   );
