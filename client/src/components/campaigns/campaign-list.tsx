@@ -108,6 +108,77 @@ const TOP_BRANDS = [
   { name: "Coca Cola", logo: "C", range: "$200-$5500", color: "bg-red-600" },
 ];
 
+// Helper functions
+const formatCurrency = (cents: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(cents / 100);
+};
+
+const parsePlatforms = (platforms?: string) => {
+  if (!platforms) return [];
+  try {
+    return JSON.parse(platforms);
+  } catch {
+    return [];
+  }
+};
+
+const parseTags = (tags?: string) => {
+  if (!tags) return [];
+  try {
+    return JSON.parse(tags);
+  } catch {
+    return [];
+  }
+};
+
+const parseRequirements = (requirements?: string) => {
+  if (!requirements) return null;
+  try {
+    return JSON.parse(requirements);
+  } catch {
+    return null;
+  }
+};
+
+const formatRequirements = (requirements?: string) => {
+  const parsed = parseRequirements(requirements);
+  if (!parsed) return requirements;
+  
+  // If it's an array, format as bullet points
+  if (Array.isArray(parsed)) {
+    return parsed.map(req => `• ${req}`).join('\n');
+  }
+  
+  // If it's an object with deliverables array, format those
+  if (parsed.deliverables && Array.isArray(parsed.deliverables)) {
+    return parsed.deliverables.map((req: string) => `• ${req}`).join('\n');
+  }
+  
+  // Return original if not an array format we can improve
+  return requirements;
+};
+
+const isUrgent = (campaign: Campaign) => {
+  const requirements = parseRequirements(campaign.requirements);
+  if (!requirements) return false;
+  
+  const urgencyText = requirements.urgency || "";
+  return urgencyText.includes("URGENT") || urgencyText.includes("ENDING SOON") || urgencyText.includes("days");
+};
+
+const getUrgencyColor = (urgencyText: string) => {
+  if (urgencyText.includes("URGENT") || urgencyText.includes("2 days")) {
+    return "bg-red-100 text-red-800 border-red-200";
+  } else if (urgencyText.includes("ENDING SOON")) {
+    return "bg-orange-100 text-orange-800 border-orange-200";
+  } else {
+    return "bg-yellow-100 text-yellow-800 border-yellow-200";
+  }
+};
+
 // Campaign Brief Modal Component
 function CampaignBriefModal({ campaign }: { campaign: Campaign }) {
   const [applicationData, setApplicationData] = useState<ApplicationFormData>({
@@ -562,75 +633,7 @@ export function CampaignList() {
     });
   };
 
-  const formatCurrency = (cents: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(cents / 100);
-  };
 
-  const parsePlatforms = (platforms?: string) => {
-    if (!platforms) return [];
-    try {
-      return JSON.parse(platforms);
-    } catch {
-      return [];
-    }
-  };
-
-  const parseTags = (tags?: string) => {
-    if (!tags) return [];
-    try {
-      return JSON.parse(tags);
-    } catch {
-      return [];
-    }
-  };
-
-  const parseRequirements = (requirements?: string) => {
-    if (!requirements) return null;
-    try {
-      return JSON.parse(requirements);
-    } catch {
-      return null;
-    }
-  };
-
-  const formatRequirements = (requirements?: string) => {
-    const parsed = parseRequirements(requirements);
-    if (!parsed) return requirements;
-    
-    // If it's an array, format as bullet points
-    if (Array.isArray(parsed)) {
-      return parsed.map(req => `• ${req}`).join('\n');
-    }
-    
-    // If it's an object with deliverables array, format those
-    if (parsed.deliverables && Array.isArray(parsed.deliverables)) {
-      return parsed.deliverables.map((req: string) => `• ${req}`).join('\n');
-    }
-    
-    // Return original if not an array format we can improve
-    return requirements;
-  };
-
-  const isUrgent = (campaign: Campaign) => {
-    const requirements = parseRequirements(campaign.requirements);
-    if (!requirements) return false;
-    
-    const urgencyText = requirements.urgency || "";
-    return urgencyText.includes("URGENT") || urgencyText.includes("ENDING SOON") || urgencyText.includes("days");
-  };
-
-  const getUrgencyColor = (urgencyText: string) => {
-    if (urgencyText.includes("URGENT") || urgencyText.includes("2 days")) {
-      return "bg-red-100 text-red-800 border-red-200";
-    } else if (urgencyText.includes("ENDING SOON")) {
-      return "bg-orange-100 text-orange-800 border-orange-200";
-    } else {
-      return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    }
-  };
 
   if (isLoading) {
     return (
