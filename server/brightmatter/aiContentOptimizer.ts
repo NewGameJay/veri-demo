@@ -6,6 +6,7 @@
 import { signalEngine, ContentSignals, SignalAnalysis } from './signalEngine';
 import { veriScoreCalculator, VeriScoreBreakdown } from './veriScoreCalculator';
 import { embeddingManager, EmbeddingRequest } from '../vectorstore/embeddingManager';
+import { ApiCostTracker } from '../services/apiCostTracker';
 
 export interface ContentOptimizationRequest {
   content: {
@@ -80,6 +81,7 @@ export class AIContentOptimizer {
   private optimizationCache: Map<string, ContentOptimizationResult>;
   private trendCache: Map<string, TrendAnalysis>;
   private cacheTimeout: number;
+  private costTracker: ApiCostTracker;
 
   constructor(options: {
     enabled?: boolean;
@@ -89,6 +91,7 @@ export class AIContentOptimizer {
     this.optimizationCache = new Map();
     this.trendCache = new Map();
     this.cacheTimeout = options.cacheTimeout || 3600000; // 1 hour
+    this.costTracker = ApiCostTracker.getInstance();
     
     if (!this.enabled) {
       console.log('AI Content Optimizer disabled - using mock mode');
@@ -153,10 +156,21 @@ export class AIContentOptimizer {
         return this.generateMockViralAnalysis(content, platform);
       }
 
+      // Track embedding usage
+      const startTime = Date.now();
+      
       // Generate embedding for content
       const embedding = await embeddingManager.generateEmbedding({
         text: content,
         metadata: { platform, type: 'viral_analysis' }
+      });
+
+      // Track vector store usage
+      await this.costTracker.trackUsage({
+        service: 'chroma',
+        endpoint: 'embedding_generation',
+        tokensUsed: content.length / 4, // Rough token estimate
+        estimatedCost: content.length * 0.0000001 // Rough cost estimate
       });
 
       // Analyze viral factors
@@ -229,6 +243,9 @@ export class AIContentOptimizer {
         return this.generateMockContentSuggestions(platform, contentType);
       }
 
+      // Track AI API usage for cost control
+      const startTime = Date.now();
+      
       // Get user's VeriScore breakdown for personalization
       // TODO: Fetch actual user data
       const userProfile = await this.getUserProfile(userId);
@@ -244,6 +261,15 @@ export class AIContentOptimizer {
       
       // Get optimal timing
       const timing = await this.getOptimalTiming(platform, userProfile);
+
+      // Track the AI usage
+      await this.trackAIUsage({
+        userId: userId.toString(),
+        endpoint: 'content_suggestions',
+        service: 'openai',
+        tokensUsed: platform.length + contentType.length + 100, // Rough estimate
+        duration: Date.now() - startTime
+      });
 
       return {
         suggestions,
@@ -281,10 +307,62 @@ export class AIContentOptimizer {
       return this.generateMockOptimizedContent(request.content.text);
     }
 
-    // TODO: Implement actual AI content optimization
-    // This would use OpenAI or similar API for content enhancement
+    // Track AI API usage for cost control
+    const startTime = Date.now();
     
-    return this.generateMockOptimizedContent(request.content.text);
+    try {
+      // TODO: Implement actual AI content optimization
+      // This would use OpenAI or similar API for content enhancement
+      
+      // Mock usage tracking for demonstration
+      await this.trackAIUsage({
+        userId: request.userId.toString(),
+        endpoint: 'content_optimization',
+        service: 'openai',
+        tokensUsed: request.content.text.length / 4, // Rough token estimate
+        duration: Date.now() - startTime
+      });
+      
+      return this.generateMockOptimizedContent(request.content.text);
+    } catch (error) {
+      console.error('AI optimization failed:', error);
+      return this.generateMockOptimizedContent(request.content.text);
+    }
+  }
+
+  private async trackAIUsage(params: {
+    userId: string;
+    endpoint: string;
+    service: 'openai' | 'anthropic';
+    tokensUsed: number;
+    duration: number;
+  }) {
+    const cost = this.calculateAICost(params.service, params.tokensUsed);
+    
+    await this.costTracker.trackUsage({
+      userId: params.userId,
+      service: params.service,
+      endpoint: params.endpoint,
+      tokensUsed: params.tokensUsed,
+      estimatedCost: cost
+    });
+  }
+
+  private calculateAICost(service: 'openai' | 'anthropic', tokensUsed: number): number {
+    if (service === 'openai') {
+      // GPT-3.5-turbo pricing: $0.0015 per 1K input tokens, $0.002 per 1K output tokens
+      // Assume 50/50 split for estimation
+      const inputCost = (tokensUsed * 0.5) * 0.0000015;
+      const outputCost = (tokensUsed * 0.5) * 0.000002;
+      return inputCost + outputCost;
+    } else if (service === 'anthropic') {
+      // Claude 3 pricing: $0.015 per 1K input tokens, $0.075 per 1K output tokens
+      // Assume 50/50 split for estimation
+      const inputCost = (tokensUsed * 0.5) * 0.000015;
+      const outputCost = (tokensUsed * 0.5) * 0.000075;
+      return inputCost + outputCost;
+    }
+    return 0;
   }
 
   private identifyImprovements(original: string, optimized: string): ContentImprovement[] {

@@ -6,6 +6,8 @@ import "./types";
 import healthRoutes from "./routes/health";
 import brightmatterRoutes from "./routes/brightmatter";
 import { requestTiming, errorTracking } from "./middleware/monitoring";
+import { rateLimitMiddleware } from "./middleware/rateLimiter";
+import adminRoutes from "./routes/admin";
 import { authMiddleware, optionalAuthMiddleware, generateTokens, setAuthCookies, clearAuthCookies, type AuthenticatedRequest } from "./auth";
 import { initiateTwitterLogin, handleTwitterCallback, disconnectTwitter } from "./oauth";
 import { demoTwitterLogin, demoTwitterCallback, demoTwitterDisconnect } from "./oauth-demo";
@@ -14,11 +16,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Apply monitoring middleware
   app.use(requestTiming);
   
+  // Apply rate limiting middleware (dormant unless enabled)
+  app.use(rateLimitMiddleware);
+  
   // Health check routes
   app.use('/api', healthRoutes);
   
   // Brightmatter AI routes
   app.use('/api/brightmatter', brightmatterRoutes);
+  
+  // Admin routes (internal use only)
+  app.use(adminRoutes);
   
   // Authentication routes
   app.post("/api/auth/signup", async (req, res) => {

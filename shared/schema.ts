@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, decimal, varchar, index } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -128,6 +128,20 @@ export const profiles = pgTable("profiles", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// API Usage table for cost tracking (Sprint 5)
+export const apiUsage = pgTable("api_usage", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id", { length: 255 }),
+  service: varchar("service", { length: 50 }).notNull(),
+  endpoint: varchar("endpoint", { length: 255 }).notNull(),
+  tokensUsed: integer("tokens_used"),
+  estimatedCost: decimal("estimated_cost", { precision: 10, scale: 4 }).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+}, (table) => ({
+  serviceCreatedAtIdx: index("idx_api_usage_service_date").on(table.service, table.createdAt),
+  userIdIdx: index("idx_api_usage_user").on(table.userId),
+}));
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   email: true,
@@ -200,6 +214,14 @@ export const insertProfileSchema = createInsertSchema(profiles).pick({
   customizations: true,
 });
 
+export const insertApiUsageSchema = createInsertSchema(apiUsage).pick({
+  userId: true,
+  service: true,
+  endpoint: true,
+  tokensUsed: true,
+  estimatedCost: true,
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type SocialConnection = typeof socialConnections.$inferSelect;
@@ -214,3 +236,5 @@ export type CampaignParticipant = typeof campaignParticipants.$inferSelect;
 export type InsertCampaignParticipant = z.infer<typeof insertCampaignParticipantSchema>;
 export type Profile = typeof profiles.$inferSelect;
 export type InsertProfile = z.infer<typeof insertProfileSchema>;
+export type ApiUsage = typeof apiUsage.$inferSelect;
+export type InsertApiUsage = z.infer<typeof insertApiUsageSchema>;
