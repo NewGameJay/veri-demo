@@ -29,6 +29,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const user = await storage.createUser(userData);
       
+      // Create wallet for new user
+      try {
+        const { createWalletForUser } = await import("./wallet");
+        await createWalletForUser(user.id);
+      } catch (walletError) {
+        console.error('Failed to create wallet for new user:', walletError);
+        // Continue with user creation even if wallet creation fails
+      }
+      
       // Generate JWT tokens
       const { accessToken, refreshToken } = generateTokens(user.id, user.email);
       
@@ -578,6 +587,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(participations);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch user campaigns" });
+    }
+  });
+
+  // Wallet routes
+  app.post("/api/wallet/create", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { createWalletForUser } = await import("./wallet");
+      const result = await createWalletForUser(req.userId!);
+      
+      if (result.success) {
+        res.status(201).json({
+          veriAccountId: result.veriAccountId,
+          walletAddress: result.walletAddress,
+          success: true
+        });
+      } else {
+        res.status(500).json({ message: result.error || "Failed to create wallet" });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Failed to create wallet" });
+    }
+  });
+
+  app.get("/api/wallet/info", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { getUserWalletInfo } = await import("./wallet");
+      const walletInfo = await getUserWalletInfo(req.userId!);
+      res.json(walletInfo);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch wallet info" });
+    }
+  });
+
+  app.get("/api/wallet/balance/:address", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { getWalletBalance } = await import("./wallet");
+      const balance = await getWalletBalance(req.params.address);
+      res.json(balance);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch wallet balance" });
     }
   });
 

@@ -20,6 +20,12 @@ export const users = pgTable("users", {
   streak: integer("streak").default(0),
   hasCompletedOnboarding: boolean("has_completed_onboarding").default(false),
   profileCompleted: boolean("profile_completed").default(false),
+  // Web3 Wallet Fields
+  veriAccountId: text("veri_account_id").unique(), // Unique identifier for Veri account
+  walletAddress: text("wallet_address").unique(), // Public wallet address
+  encryptedPrivateKey: text("encrypted_private_key"), // Encrypted private key (server-side only)
+  walletCreatedAt: timestamp("wallet_created_at"), // When wallet was created
+  chainId: integer("chain_id").default(137), // Default to Polygon (137)
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useTheme } from "@/contexts/theme-context";
+import { WalletDisplay } from "@/components/wallet/wallet-display";
 
 export default function Settings() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(true);
@@ -238,6 +239,9 @@ export default function Settings() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Wallet */}
+            <WalletDisplay />
 
             {/* Subscription */}
             <Card className="glass-medium border-white/20">
