@@ -1,0 +1,387 @@
+# Veri Signal Engine Architecture Sprint 5 - Executive Summary & Implementation Guide
+
+## Executive Summary
+
+### Current State
+The Veri MVP has a solid foundation with working authentication, PostgreSQL database, and UI/UX. However, the intelligent backend layer (Brightmatter/Signal Engine) exists only as scaffolding. Infrastructure for Redis, Redpanda, and MongoDB is configured but disabled. AI endpoints are placeholders without actual implementation.
+
+### Sprint Objective
+Build out the complete Signal Engine architecture WITHOUT enabling any features. This sprint focuses on creating all necessary infrastructure, services, and connections so that when API keys are added and flags are enabled, everything works seamlessly. Think of this as "wiring the house before turning on the electricity."
+
+### Why This Approach
+1. **Risk Mitigation**: Test architecture without incurring API costs
+2. **Clean Handoff**: Developer receives fully architected system
+3. **Modular Activation**: Enable features progressively as needed
+4. **Security**: No active API keys in development environment
+
+---
+
+## Architecture Overview
+
+```
+┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│  Frontend Events │────▶│ Event Processing │────▶│ Signal Engine   │
+└─────────────────┘     └──────────────────┘     └─────────────────┘
+                               │                          │
+                               ▼                          ▼
+                        ┌──────────────┐          ┌──────────────┐
+                        │ Redis Cache  │          │ Vector Store │
+                        └──────────────┘          └──────────────┘
+                               │                          │
+                               ▼                          ▼
+                        ┌──────────────┐          ┌──────────────┐
+                        │  PostgreSQL  │          │ Memory Layer │
+                        └──────────────┘          └──────────────┘
+```
+
+---
+
+## Sprint Prompts for Replit
+
+### Prompt 1: Memorriz Memory Intelligence Layer
+
+```
+I need you to implement the Memorriz memory architecture for our Veri platform. This is an intelligence layer that provides long-term memory and context management for creator interactions.
+
+IMPORTANT: Do NOT enable any feature flags or activate any services. We're building the architecture only.
+
+Create the following structure in server/intelligence/:
+
+1. memorizzCore.ts - Core memory management system that:
+   - Stores creator interaction history
+   - Manages conversation contexts
+   - Implements memory chunking and compression
+   - Provides memory retrieval interfaces
+
+2. contextManager.ts - Session and long-term context handling:
+   - Track user sessions with sliding windows
+   - Merge short-term and long-term memories
+   - Handle context switching between creators
+   - Implement context relevance scoring
+
+3. semanticIndex.ts - Vector search interface that:
+   - Prepares for Chroma integration (but doesn't connect)
+   - Defines embedding interfaces
+   - Creates search query builders
+   - Implements similarity scoring logic
+
+4. memoryPruning.ts - Intelligent forgetting system:
+   - Define retention policies
+   - Implement relevance decay algorithms
+   - Create pruning schedules
+   - Handle memory optimization
+
+Each file should have:
+- Full TypeScript interfaces
+- Placeholder implementations that return mock data
+- TODO comments where external services will connect
+- Comprehensive error handling
+- Unit test stubs
+
+The system should be ready to activate with just environment variables and feature flags.
+```
+
+### Prompt 2: Vector Store Integration Layer
+
+```
+Implement a vector store abstraction layer that supports multiple providers (Chroma, Pinecone, OpenAI embeddings) but doesn't connect to any of them yet.
+
+Create server/vectorstore/:
+
+1. vectorInterface.ts - Abstract interface that defines:
+   - Store, retrieve, update, delete operations
+   - Batch operations for efficiency
+   - Search with metadata filtering
+   - Collection management
+
+2. providers/chroma.ts - Chroma-specific implementation:
+   - Connection configuration (disabled)
+   - Collection creation logic
+   - Embedding storage preparation
+   - Search query optimization
+   - Note: Use environment variable CHROMA_URL (default: http://localhost:8000)
+
+3. providers/openai.ts - OpenAI embeddings wrapper:
+   - Text-to-embedding conversion (returns mock vectors for now)
+   - Batch embedding logic
+   - Token counting and chunking
+   - Cost estimation helpers
+
+4. embeddingManager.ts - Orchestrates embedding operations:
+   - Text preprocessing
+   - Chunking strategies
+   - Caching layer (uses Redis when enabled)
+   - Fallback to mock embeddings
+
+Add to docker-compose.yml:
+```yaml
+chroma:
+  image: chromadb/chroma
+  ports:
+    - "8000:8000"
+  volumes:
+    - ./chroma-data:/chroma/chroma
+  profiles:
+    - optional  # Won't start by default
+```
+
+Remember: Everything should work with mock data when flags are disabled.
+```
+
+### Prompt 3: MCP (Model Context Protocol) Tools Framework
+
+```
+Build the MCP tools connector framework for integrating external services into the Veri platform. This will live in the creator settings and allow data flow from various sources.
+
+Create server/mcp/:
+
+1. mcpServer.ts - Core MCP server implementation:
+   - WebSocket server setup (disabled by default)
+   - Tool registration system
+   - Message routing
+   - Authentication middleware
+   - Rate limiting preparation
+
+2. toolRegistry.ts - Dynamic tool management:
+   - Tool discovery mechanism
+   - Capability declarations
+   - Permission management
+   - Tool versioning support
+
+3. connectors/ directory with these files:
+   - googleDrive.ts: Document access (mock responses)
+   - slack.ts: Communication data (mock responses)
+   - notion.ts: Knowledge base access (mock responses)
+   - custom.ts: User-defined tool template
+
+4. settings/mcpConfig.ts - Configuration management:
+   - Settings schema definition
+   - UI configuration generator
+   - OAuth flow templates
+   - Connection status tracking
+
+Create the settings UI component in client/src/components/settings/VeriConnectors.tsx:
+   - Add as a new module called "Veri Connectors" under the Veri Wallet section
+   - List available connectors with icons:
+     * Google Drive (Documents)
+     * Slack (Communications)
+     * Notion (Knowledge Base)
+     * Custom (User-defined)
+   - Show connection status badges (all showing "Not Connected")
+   - OAuth initiation buttons (disabled with "Coming Soon" tooltip)
+   - Tool permission toggles (disabled)
+   - Test connection buttons (disabled)
+   - Use the same glass morphism design as other settings modules
+
+The MCP system should support these patterns:
+- Lazy loading of connectors
+- Graceful degradation when unavailable
+- Mock data responses when not connected
+- Comprehensive logging for debugging
+```
+
+### Prompt 4: Enhanced Signal Engine & Brightmatter AI
+
+```
+Enhance the existing Brightmatter infrastructure to support real AI operations (currently it's just scaffolding).
+
+Update server/brightmatter/:
+
+1. signalEngine.ts - Core signal processing:
+   - Define signal types (engagement, viral, safety, quality)
+   - Create signal aggregation logic
+   - Implement weighted scoring
+   - Add temporal decay functions
+   - Mock signal generation for testing
+
+2. veriScoreCalculator.ts - Dynamic VeriScore algorithm:
+   - Multi-factor scoring system
+   - Real-time score updates (using mock data)
+   - Historical trend analysis
+   - Percentile ranking logic
+   - Score explanation generator
+
+3. aiContentGenerator.ts - AI content generation hub:
+   - Template system for different content types
+   - Prompt engineering helpers
+   - Multiple AI provider support (OpenAI, Anthropic)
+   - Streaming response handlers
+   - Mock content generation when disabled
+
+4. analyticsEngine.ts - Advanced analytics:
+   - Engagement prediction models
+   - Revenue forecasting logic
+   - Audience insights generator
+   - Campaign performance analyzer
+   - Returns synthetic data when not connected
+
+5. moderationEngine.ts - Content moderation:
+   - Multi-tier safety checks
+   - Brand safety scoring
+   - Toxicity detection preparation
+   - Custom moderation rules
+   - Mock moderation scores
+
+Update the Python consumer service (services/consumer/src/):
+- Add requirements.txt with all needed packages
+- Enhance processors to handle real data formats
+- Add comprehensive logging
+- Create health check endpoints
+- Ensure graceful shutdown handling
+```
+
+### Prompt 5: Infrastructure Orchestration Layer
+
+```
+Create an orchestration layer that manages all the services and ensures they work together seamlessly when activated.
+
+Create server/orchestration/:
+
+1. serviceManager.ts - Central service orchestrator:
+   - Service health monitoring
+   - Dependency management
+   - Graceful startup/shutdown
+   - Circuit breaker patterns
+   - Service discovery
+
+2. eventBus.ts - Internal event system:
+   - Event publishing/subscription
+   - Event replay capabilities
+   - Dead letter queues
+   - Event transformation
+   - Works with or without Redpanda
+
+3. configManager.ts - Centralized configuration:
+   - Feature flag management
+   - Environment variable validation
+   - Configuration hot-reloading
+   - Service-specific configs
+   - Default configurations
+
+4. monitoring.ts - Comprehensive monitoring:
+   - Metrics collection (ready for Prometheus)
+   - Custom business metrics
+   - Performance tracking
+   - Error aggregation
+   - Alert preparation
+
+Update server/index.ts to use the orchestration layer:
+```typescript
+// Add feature flags (all false by default)
+const features = {
+  useRedis: process.env.USE_REDIS === 'true',
+  useRedpanda: process.env.USE_REDPANDA === 'true',
+  useMongo: process.env.USE_MONGO === 'true',
+  useChroma: process.env.USE_CHROMA === 'true',
+  useMCP: process.env.USE_MCP === 'true',
+  useAI: process.env.USE_AI === 'true'
+};
+
+// Initialize orchestration
+const orchestrator = new ServiceOrchestrator(features);
+await orchestrator.initialize();
+```
+
+Create a comprehensive .env.example file with ALL required variables (commented out).
+```
+
+### Prompt 6: Testing & Development Tools
+
+```
+Create comprehensive testing and development tools to ensure everything works correctly when activated.
+
+Create server/devtools/:
+
+1. mockDataGenerator.ts - Realistic test data:
+   - User profiles with social connections
+   - Campaign data with various states
+   - Task completion histories
+   - Analytics time series data
+   - Engagement patterns
+
+2. serviceSimulator.ts - Simulate external services:
+   - Twitter API responses
+   - YouTube Analytics data
+   - AI model responses
+   - Vector search results
+   - MCP tool outputs
+
+3. integrationTester.ts - End-to-end testing:
+   - Service activation tests
+   - Data flow validation
+   - Performance benchmarks
+   - Error scenario testing
+   - Integration health checks
+
+Create scripts/ directory with:
+- check-architecture.ts: Validates all components are in place
+- generate-test-data.ts: Populates database with test data
+- test-integrations.ts: Tests each integration in isolation
+- validate-env.ts: Checks all required environment variables
+
+Add to package.json:
+```json
+"scripts": {
+  "check:arch": "ts-node scripts/check-architecture.ts",
+  "test:integration": "ts-node scripts/test-integrations.ts",
+  "validate:env": "ts-node scripts/validate-env.ts",
+  "generate:testdata": "ts-node scripts/generate-test-data.ts"
+}
+```
+
+Create a comprehensive README.md in server/ that documents:
+- Architecture overview
+- Service dependencies
+- Activation guide
+- API key requirements
+- Troubleshooting guide
+```
+
+---
+
+## Post-Sprint Validation
+
+After implementing all prompts, run these checks:
+
+1. **Architecture Validation**: `npm run check:arch`
+2. **Environment Check**: `npm run validate:env`
+3. **Mock Data Test**: `npm run generate:testdata`
+4. **Integration Test**: `npm run test:integration`
+
+## Handoff Checklist
+
+- [ ] All services architected but not activated
+- [ ] Comprehensive .env.example with all variables
+- [ ] Docker-compose.yml with optional service profiles
+- [ ] Mock data generators for testing
+- [ ] Service health endpoints
+- [ ] Detailed activation documentation
+- [ ] No hardcoded API keys or credentials
+- [ ] All TypeScript interfaces defined
+- [ ] Error handling for missing services
+- [ ] Logging infrastructure ready
+
+## Activation Guide (For Developer)
+
+When ready to activate:
+
+1. Copy `.env.example` to `.env`
+2. Add all API keys
+3. Set feature flags to `true` as needed
+4. Run `docker-compose --profile optional up`
+5. Monitor logs for successful connections
+6. Run integration tests
+7. Enable features progressively
+
+---
+
+## Success Criteria
+
+The sprint is complete when:
+- All architecture is in place
+- System runs without any external dependencies
+- Mock data flows through entire pipeline
+- Simple flag changes activate real services
+- No errors when services are disabled
+- Comprehensive documentation exists
+- Developer can activate features independently
