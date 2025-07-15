@@ -1,0 +1,71 @@
+I need a comprehensive technical audit of the actual backend implementation for the Brightmatter/Signal Engine architecture in our Veri MVP. Please provide a detailed analysis of what backend systems, APIs, and integrations are currently installed and functional (not just UI mockups or planned features).
+Specifically, I need to know:
+1. Authentication & Session Management
+
+What authentication system is actually implemented? (Firebase Auth vs in-memory vs other)
+Are session tokens properly persisted across page refreshes?
+What OAuth providers are fully integrated (not just UI)?
+Are the following Firebase events actually firing: accountCreation, userSignIn, socialConnect?
+
+2. Database Layer
+
+Is PostgreSQL actually connected or are we still using MemStorage?
+What database schema is deployed and accessible?
+Are Drizzle ORM migrations applied?
+Is the RDS Postgres instance configured as shown in the architecture diagram?
+
+3. Event Streaming & Processing
+
+Is Redpanda actually installed and configured?
+What event topics are created and operational?
+Are there any consumer processes running?
+Is event encryption implemented?
+
+4. Brightmatter AI Engine
+
+What AI/ML endpoints are actually accessible?
+Is VeriScore calculation implemented beyond static mockups?
+Are the following Brightmatter triggers working: getAnalytics, generateClip, generateContent?
+Is there any actual AI analysis happening or just placeholders?
+
+5. External API Integrations
+
+Which social platform APIs have valid credentials configured?
+Twitter/X API v2: Is OAuth flow complete? Can we fetch real user data?
+YouTube Data API: Is it configured? What quota is available?
+Are API rate limiters implemented?
+
+6. Backend Workers & Services
+
+What backend worker processes are running?
+Are there any cron jobs or scheduled tasks?
+Is there a consumer process for Redpanda events?
+Are background jobs processing?
+
+7. Points & Reputation System
+
+Is the Matera-compatible points system implemented?
+Can points actually be transferred between users?
+Is the staking layer functional or planned?
+Are tokenized reputation mechanics in place?
+
+8. Current Backend File Structure
+Please list all backend-related files including:
+
+API route handlers
+Database configuration files
+Event processing scripts
+AI integration modules
+Authentication middleware
+Any Brightmatter-specific code
+
+9. Environment Variables & Configuration
+What environment variables are required but missing?
+What services need API keys that aren't configured?
+10. Working vs Non-Working Features
+Create two lists:
+
+WORKING: Backend features that are fully functional
+NOT WORKING: Features that are UI-only or have broken backends
+
+Please focus only on what's actually implemented in code vs what's shown in the UI or mentioned in documentation. I need to understand the real state of our backend infrastructure to plan the next sprint effectively.
