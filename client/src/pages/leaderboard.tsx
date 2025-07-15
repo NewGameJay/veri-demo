@@ -1,20 +1,53 @@
-import { useState } from "react";
-import { Trophy } from 'lucide-react';
-import { Crown } from 'lucide-react';
-import { Medal } from 'lucide-react';
-import { TrendingUp } from 'lucide-react';
-import { Star } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Trophy, Crown, Medal, TrendingUp, Star, Search, ChevronDown, Users, MapPin, Filter, Loader2, ChevronRight } from 'lucide-react';
 import { Header } from "@/components/navigation/header";
 import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/contexts/auth-context";
+
+interface LeaderboardUser {
+  id: number;
+  rank: number;
+  name: string;
+  username: string;
+  score: number;
+  change: string;
+  avatar: string;
+  tier: string;
+  country: string;
+  category: string;
+}
+
+interface LeaderboardResponse {
+  users: LeaderboardUser[];
+  totalPages: number;
+  currentPage: number;
+  hasMore: boolean;
+  totalUsers: number;
+}
+
+interface UserPositionResponse {
+  user: LeaderboardUser;
+  totalUsers: number;
+}
 
 export default function Leaderboard() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeCategory, setActiveCategory] = useState("global");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [tierFilter, setTierFilter] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [jumpToRank, setJumpToRank] = useState("");
+  
+  const { user } = useAuth();
 
   const categories = [
     { id: "global", label: "Global", icon: Trophy },
@@ -23,22 +56,46 @@ export default function Leaderboard() {
     { id: "tech", label: "Tech", icon: TrendingUp },
   ];
 
-  const leaderboardData = [
-    { rank: 1, name: "Alex Chen", username: "@alexchen", score: 2847, change: "+12", avatar: "AC", tier: "Diamond" },
-    { rank: 2, name: "Sarah Johnson", username: "@sarahj", score: 2654, change: "+8", avatar: "SJ", tier: "Diamond" },
-    { rank: 3, name: "Mike Wilson", username: "@mikew", score: 2432, change: "+15", avatar: "MW", tier: "Platinum" },
-    { rank: 4, name: "Emma Davis", username: "@emmad", score: 2198, change: "-3", avatar: "ED", tier: "Platinum" },
-    { rank: 5, name: "John Smith", username: "@johns", score: 2087, change: "+5", avatar: "JS", tier: "Platinum" },
-    { rank: 6, name: "Lisa Brown", username: "@lisab", score: 1965, change: "+22", avatar: "LB", tier: "Gold" },
-    { rank: 7, name: "Tom Garcia", username: "@tomg", score: 1843, change: "-7", avatar: "TG", tier: "Gold" },
-    { rank: 8, name: "Amy Lee", username: "@amyl", score: 1721, change: "+11", avatar: "AL", tier: "Gold" },
-  ];
+  // Fetch leaderboard data with pagination and filters
+  const { data: leaderboardData, isLoading, refetch } = useQuery<LeaderboardResponse>({
+    queryKey: ['/api/leaderboard', {
+      page: currentPage,
+      category: activeCategory,
+      tier: tierFilter,
+      search: searchTerm,
+      limit: 100
+    }],
+    refetchInterval: 30000, // Refresh every 30 seconds
+  });
+
+  // Fetch user's position in leaderboard
+  const { data: userPosition } = useQuery<UserPositionResponse>({
+    queryKey: ['/api/leaderboard/user', user?.id],
+    enabled: !!user?.id,
+  });
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeCategory, tierFilter, searchTerm]);
+
+  // Handle search with debouncing
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchTerm !== "") {
+        refetch();
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm, refetch]);
 
   const getTierColor = (tier: string) => {
     switch (tier) {
       case "Diamond": return "bg-blue-500/20 text-blue-400 border-blue-400/20";
       case "Platinum": return "bg-purple-500/20 text-purple-400 border-purple-400/20";
       case "Gold": return "bg-yellow-500/20 text-yellow-400 border-yellow-400/20";
+      case "Silver": return "bg-gray-500/20 text-gray-400 border-gray-400/20";
+      case "Bronze": return "bg-orange-500/20 text-orange-400 border-orange-400/20";
       default: return "bg-gray-500/20 text-gray-400 border-gray-400/20";
     }
   };
@@ -49,6 +106,30 @@ export default function Leaderboard() {
       case 2: return "bg-gray-400 text-black";
       case 3: return "bg-orange-600 text-white";
       default: return "bg-white/10 text-white";
+    }
+  };
+
+  const getCountryFlag = (countryCode: string) => {
+    // Simplified country flag mapping
+    const flags: { [key: string]: string } = {
+      'US': '🇺🇸', 'CA': '🇨🇦', 'UK': '🇬🇧', 'DE': '🇩🇪', 'FR': '🇫🇷',
+      'JP': '🇯🇵', 'KR': '🇰🇷', 'AU': '🇦🇺', 'BR': '🇧🇷', 'MX': '🇲🇽'
+    };
+    return flags[countryCode] || '🌍';
+  };
+
+  const handleJumpToRank = () => {
+    const rank = parseInt(jumpToRank);
+    if (rank > 0) {
+      const page = Math.ceil(rank / 100);
+      setCurrentPage(page);
+      setJumpToRank("");
+    }
+  };
+
+  const handleLoadMore = () => {
+    if (leaderboardData?.hasMore) {
+      setCurrentPage(prev => prev + 1);
     }
   };
 
@@ -69,15 +150,142 @@ export default function Leaderboard() {
       
       <main className={`pt-20 transition-all duration-300 ${isDashboardOpen ? (isCollapsed ? 'lg:ml-20' : 'lg:ml-80') : ''}`}>
         <div className="max-w-7xl mx-auto px-4 lg:px-6 py-8">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-              <Trophy className="w-8 h-8 text-yellow-400" />
-              Leaderboard
-            </h1>
-            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-400/20">
-              Updated Live
-            </Badge>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+                <Trophy className="w-8 h-8 text-yellow-400" />
+                Global Leaderboard
+              </h1>
+              <p className="text-white/60 mt-2">
+                {leaderboardData?.totalUsers ? 
+                  `Compete with ${leaderboardData.totalUsers.toLocaleString()} creators worldwide` :
+                  "Loading global rankings..."
+                }
+              </p>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowFilters(!showFilters)}
+                className="border-white/20 text-white hover:bg-white/10"
+              >
+                <Filter className="w-4 h-4 mr-2" />
+                Filters
+              </Button>
+            </div>
           </div>
+
+          {/* User Position Banner */}
+          {userPosition && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6"
+            >
+              <Card className="glass-medium border-emerald-500/30 bg-emerald-500/10">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                        <span className="text-emerald-400 font-bold">{userPosition.user.avatar}</span>
+                      </div>
+                      <div>
+                        <div className="text-white font-medium">Your Position</div>
+                        <div className="text-emerald-400 text-sm">
+                          Ranked #{userPosition.user.rank.toLocaleString()} of {userPosition.totalUsers.toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-white font-bold text-lg">{userPosition.user.score} XP</div>
+                      <Badge className={getTierColor(userPosition.user.tier)}>
+                        {userPosition.user.tier}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+
+          {/* Filters Panel */}
+          <AnimatePresence>
+            {showFilters && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mb-6"
+              >
+                <Card className="glass-medium border-white/20">
+                  <CardContent className="p-4">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      {/* Search */}
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/40" />
+                        <Input
+                          placeholder="Search users..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="pl-10 bg-white/5 border-white/20 text-white placeholder:text-white/40"
+                        />
+                      </div>
+
+                      {/* Tier Filter */}
+                      <Select value={tierFilter} onValueChange={setTierFilter}>
+                        <SelectTrigger className="bg-white/5 border-white/20 text-white">
+                          <SelectValue placeholder="All Tiers" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">All Tiers</SelectItem>
+                          <SelectItem value="Diamond">Diamond</SelectItem>
+                          <SelectItem value="Platinum">Platinum</SelectItem>
+                          <SelectItem value="Gold">Gold</SelectItem>
+                          <SelectItem value="Silver">Silver</SelectItem>
+                          <SelectItem value="Bronze">Bronze</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      {/* Jump to Rank */}
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="Jump to rank..."
+                          value={jumpToRank}
+                          onChange={(e) => setJumpToRank(e.target.value)}
+                          className="bg-white/5 border-white/20 text-white placeholder:text-white/40"
+                          type="number"
+                        />
+                        <Button
+                          onClick={handleJumpToRank}
+                          variant="outline"
+                          size="sm"
+                          className="border-white/20 text-white hover:bg-white/10"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </Button>
+                      </div>
+
+                      {/* Reset */}
+                      <Button
+                        onClick={() => {
+                          setSearchTerm("");
+                          setTierFilter("");
+                          setJumpToRank("");
+                          setCurrentPage(1);
+                        }}
+                        variant="outline"
+                        className="border-white/20 text-white hover:bg-white/10"
+                      >
+                        Reset Filters
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Category Tabs */}
           <div className="flex gap-2 mb-8 overflow-x-auto" role="tablist" aria-label="Leaderboard categories">
@@ -92,7 +300,6 @@ export default function Leaderboard() {
                   role="tab"
                   aria-selected={activeCategory === category.id}
                   aria-controls={`${category.id}-leaderboard`}
-                  haptic="light"
                 >
                   <Icon className="w-4 h-4 mr-2" />
                   {category.label}
@@ -101,100 +308,148 @@ export default function Leaderboard() {
             })}
           </div>
 
-          {/* Top 3 Showcase */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {leaderboardData.slice(0, 3).map((user, index) => (
-              <motion.div
-                key={user.rank}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className={`glass-medium border-white/20 relative overflow-hidden ${index === 0 ? 'md:scale-105' : ''}`}>
-                  <div className="absolute top-0 right-0 p-4">
-                    {index === 0 && <Crown className="w-8 h-8 text-yellow-400" />}
-                    {index === 1 && <Medal className="w-6 h-6 text-gray-400" />}
-                    {index === 2 && <Medal className="w-6 h-6 text-orange-600" />}
-                  </div>
-                  <CardContent className="p-6 text-center">
-                    <div className={`w-20 h-20 ${getRankColor(user.rank)} rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4`}>
-                      {user.avatar}
-                    </div>
-                    <h3 className="text-lg font-bold text-white">{user.name}</h3>
-                    <p className="text-sm text-white/60 mb-2">{user.username}</p>
-                    <div className="text-3xl font-bold text-emerald-400 mb-2">{user.score}</div>
-                    <Badge className={getTierColor(user.tier)}>{user.tier}</Badge>
-                    <div className={`text-sm mt-2 ${user.change.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
-                      {user.change} points today
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+          {/* Loading State */}
+          {isLoading && (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-white/60" />
+              <span className="ml-3 text-white/60">Loading global leaderboard...</span>
+            </div>
+          )}
 
-          {/* Full Leaderboard */}
-          <Card className="glass-medium border-white/20">
-            <CardHeader>
-              <CardTitle className="text-white">Full Rankings</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {leaderboardData.map((user, index) => (
-                  <motion.div
-                    key={user.rank}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="flex items-center justify-between p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={`w-10 h-10 ${getRankColor(user.rank)} rounded-full flex items-center justify-center font-bold`}>
-                        {user.rank}
-                      </div>
-                      <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
-                        {user.avatar}
-                      </div>
-                      <div>
-                        <p className="font-medium text-white">{user.name}</p>
-                        <p className="text-sm text-white/60">{user.username}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <Badge className={getTierColor(user.tier)}>{user.tier}</Badge>
-                      <div className="text-right">
-                        <div className="text-xl font-bold text-white">{user.score}</div>
-                        <div className={`text-sm ${user.change.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
-                          {user.change}
+          {/* Leaderboard Data */}
+          {!isLoading && leaderboardData && (
+            <>
+              {/* Top 3 Showcase */}
+              {leaderboardData.users.slice(0, 3).length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                  {leaderboardData.users.slice(0, 3).map((user, index) => (
+                    <motion.div
+                      key={user.rank}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Card className={`glass-medium border-white/20 relative overflow-hidden ${index === 0 ? 'md:scale-105' : ''}`}>
+                        <div className="absolute top-0 right-0 p-4">
+                          {index === 0 && <Crown className="w-8 h-8 text-yellow-400" />}
+                          {index === 1 && <Medal className="w-6 h-6 text-gray-400" />}
+                          {index === 2 && <Medal className="w-6 h-6 text-orange-600" />}
                         </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                        <CardContent className="p-6 text-center">
+                          <div className={`w-20 h-20 ${getRankColor(user.rank)} rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4`}>
+                            {user.avatar}
+                          </div>
+                          <h3 className="text-lg font-bold text-white">{user.name}</h3>
+                          <p className="text-sm text-white/60 mb-2">{user.username}</p>
+                          <div className="text-3xl font-bold text-emerald-400 mb-2">{user.score}</div>
+                          <Badge className={getTierColor(user.tier)}>{user.tier}</Badge>
+                          <div className={`text-sm mt-2 flex items-center justify-center gap-1 ${user.change.startsWith('+') ? 'text-green-400' : user.change.startsWith('-') ? 'text-red-400' : 'text-white/60'}`}>
+                            <span>{getCountryFlag(user.country)}</span>
+                            <span>{user.change}</span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
 
-          {/* Your Position */}
-          <Card className="glass-medium border-white/20 mt-8">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white font-bold">
-                    42
+              {/* Full Leaderboard Table */}
+              <Card className="glass-medium border-white/20">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-white flex items-center gap-2">
+                      <Users className="w-5 h-5" />
+                      Full Rankings
+                    </CardTitle>
+                    <div className="text-sm text-white/60">
+                      Page {leaderboardData.currentPage} of {leaderboardData.totalPages}
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-bold text-white text-lg">Your Position</p>
-                    <p className="text-white/60">Keep pushing to reach the top!</p>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {leaderboardData.users.map((user, index) => (
+                      <motion.div
+                        key={user.rank}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.02 }}
+                        className="flex items-center justify-between p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className={`w-10 h-10 ${getRankColor(user.rank)} rounded-full flex items-center justify-center font-bold text-sm`}>
+                            {user.rank}
+                          </div>
+                          <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+                            {user.avatar}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <p className="font-medium text-white">{user.name}</p>
+                              <span className="text-lg">{getCountryFlag(user.country)}</span>
+                            </div>
+                            <p className="text-sm text-white/60">{user.username}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            <div className="text-white font-bold">{user.score.toLocaleString()}</div>
+                            <div className={`text-sm ${user.change.startsWith('+') ? 'text-green-400' : user.change.startsWith('-') ? 'text-red-400' : 'text-white/60'}`}>
+                              {user.change}
+                            </div>
+                          </div>
+                          <Badge className={getTierColor(user.tier)}>
+                            {user.tier}
+                          </Badge>
+                        </div>
+                      </motion.div>
+                    ))}
                   </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold text-emerald-400">1,234</div>
-                  <div className="text-sm text-green-400">+18 today</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+
+                  {/* Pagination Controls */}
+                  {leaderboardData.hasMore && (
+                    <div className="flex justify-center mt-8">
+                      <Button
+                        onClick={handleLoadMore}
+                        variant="outline"
+                        className="border-white/20 text-white hover:bg-white/10"
+                      >
+                        <ChevronDown className="w-4 h-4 mr-2" />
+                        Load More Rankings
+                      </Button>
+                    </div>
+                  )}
+
+                  {/* Statistics */}
+                  <div className="mt-6 pt-6 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <div>
+                      <div className="text-2xl font-bold text-white">{leaderboardData.totalUsers.toLocaleString()}</div>
+                      <div className="text-sm text-white/60">Total Creators</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-blue-400">
+                        {leaderboardData.users.filter(u => u.tier === "Diamond").length}
+                      </div>
+                      <div className="text-sm text-white/60">Diamond Tier</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-purple-400">
+                        {leaderboardData.users.filter(u => u.tier === "Platinum").length}
+                      </div>
+                      <div className="text-sm text-white/60">Platinum Tier</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-yellow-400">
+                        {leaderboardData.users.filter(u => u.tier === "Gold").length}
+                      </div>
+                      <div className="text-sm text-white/60">Gold Tier</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
+          )}
         </div>
       </main>
     </div>

@@ -363,14 +363,99 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Leaderboard routes
+  // Enhanced Global Leaderboard routes
   app.get("/api/leaderboard", async (req, res) => {
     try {
-      const category = req.query.category as string || "global";
-      const limit = parseInt(req.query.limit as string) || 10;
-      const leaderboard = await storage.getLeaderboard(category, limit);
-      res.json(leaderboard);
+      const { getCachedLeaderboard, filterUsers, paginateUsers } = await import("./leaderboard-generator");
+      
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 100;
+      const category = req.query.category as string;
+      const tier = req.query.tier as string;
+      const country = req.query.country as string;
+      const search = req.query.search as string;
+      
+      // Get cached global leaderboard
+      const allUsers = getCachedLeaderboard();
+      
+      // Apply filters
+      const filteredUsers = filterUsers(allUsers, {
+        category: category !== "global" ? category : undefined,
+        tier,
+        country,
+        search
+      });
+      
+      // Paginate results
+      const paginatedResult = paginateUsers(filteredUsers, page, limit);
+      
+      res.json(paginatedResult);
     } catch (error) {
+      console.error("Leaderboard error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Get user position in global leaderboard
+  app.get("/api/leaderboard/user/:userId", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { getCachedLeaderboard, findUserPosition } = await import("./leaderboard-generator");
+      const userId = parseInt(req.params.userId);
+      
+      // Get user info to find their position
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const allUsers = getCachedLeaderboard();
+      
+      // For now, simulate user position based on their XP
+      const userScore = user.xpPoints || 0;
+      const userPosition = allUsers.findIndex(u => u.score <= userScore) + 1;
+      
+      const userLeaderboardEntry = {
+        rank: userPosition || allUsers.length + 1,
+        name: user.username,
+        username: `@${user.username.toLowerCase()}`,
+        score: userScore,
+        change: "+1",
+        avatar: user.username.slice(0, 2).toUpperCase(),
+        tier: userScore >= 2500 ? "Diamond" : userScore >= 1800 ? "Platinum" : userScore >= 1200 ? "Gold" : userScore >= 600 ? "Silver" : "Bronze",
+        country: "US",
+        category: "global"
+      };
+      
+      res.json({
+        user: userLeaderboardEntry,
+        totalUsers: allUsers.length
+      });
+    } catch (error) {
+      console.error("User position error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Search users in leaderboard
+  app.get("/api/leaderboard/search", async (req, res) => {
+    try {
+      const { getCachedLeaderboard, findUserPosition } = await import("./leaderboard-generator");
+      const searchTerm = req.query.q as string;
+      
+      if (!searchTerm) {
+        return res.status(400).json({ message: "Search term required" });
+      }
+      
+      const allUsers = getCachedLeaderboard();
+      const foundUser = findUserPosition(allUsers, searchTerm);
+      
+      if (foundUser) {
+        res.json({ user: foundUser, found: true });
+      } else {
+        res.json({ user: null, found: false });
+      }
+    } catch (error) {
+      console.error("Search error:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
