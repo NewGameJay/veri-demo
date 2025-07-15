@@ -23,7 +23,8 @@ import {
   TrendingUp,
   AlertCircle,
   Zap,
-  Trophy
+  Trophy,
+  Building2
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -106,6 +107,334 @@ const TOP_BRANDS = [
   { name: "Adidas", logo: "A", range: "$150-$4000", color: "bg-black" },
   { name: "Coca Cola", logo: "C", range: "$200-$5500", color: "bg-red-600" },
 ];
+
+// Campaign Brief Modal Component
+function CampaignBriefModal({ campaign }: { campaign: Campaign }) {
+  const [applicationData, setApplicationData] = useState<ApplicationFormData>({
+    interestStatement: "",
+    relevantExperience: "",
+    contentApproach: "",
+    portfolioLinks: "",
+    availability: ""
+  });
+  
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
+  const applyMutation = useMutation({
+    mutationFn: async (data: ApplicationFormData) => {
+      return apiRequest(`/api/campaigns/${campaign.id}/apply`, {
+        method: "POST",
+        body: { applicationData: JSON.stringify(data) }
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Application Submitted!",
+        description: "Your campaign application has been sent to the brand.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/campaigns"] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Application Failed",
+        description: error.message || "Failed to submit application",
+        variant: "destructive"
+      });
+    }
+  });
+
+  const requirements = parseRequirements(campaign.requirements);
+  const contentExamples = requirements?.contentExamples || [];
+  
+  // Calculate engagement metrics
+  const budgetProgress = (campaign.currentParticipants / (campaign.maxParticipants || 100)) * 100;
+  const daysRemaining = Math.floor(Math.random() * 14) + 1;
+  
+  return (
+    <div className="flex flex-col lg:flex-row min-h-[80vh]">
+      {/* Left Side - Campaign Details */}
+      <div className="flex-1 p-6 space-y-6">
+        {/* Header */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+              <Building2 className="w-4 h-4 text-white" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-purple-600">
+                  {campaign.title.includes("Hyve") ? "Hyve Gaming" : 
+                   campaign.title.includes("Luster") ? "Luster Labs" : 
+                   campaign.title.includes("Solana") ? "Solana Foundation" : "Gaming Studio"}
+                </span>
+                <Badge variant="secondary" className="text-xs">Verified</Badge>
+              </div>
+              <div className="text-xs text-gray-500">#{campaign.id.toString().padStart(6, '0')}</div>
+            </div>
+          </div>
+          
+          <h1 className="text-2xl font-bold text-gray-900 leading-tight">
+            {campaign.title}
+          </h1>
+          
+          <p className="text-gray-600 leading-relaxed">
+            {campaign.description} Get ready to dive into the fast-paced world of gaming in this 
+            campaign, we're inviting creators to record and share their most intense, creative, 
+            or jaw-dropping gameplay moments.
+          </p>
+          
+          {/* Budget and Bonus */}
+          <div className="flex flex-wrap gap-6">
+            <div>
+              <div className="text-2xl font-bold text-gray-900">{formatCurrency(campaign.budget)}</div>
+              <div className="text-sm text-gray-500">Budget</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-purple-600">{Math.floor(campaign.budget / 1000)} VERI</div>
+              <div className="text-sm text-gray-500">Bonus</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-gray-900">{daysRemaining}th - {daysRemaining + 14}th {new Date().toLocaleDateString('en-US', { month: 'long' })}</div>
+              <div className="text-sm text-gray-500">Campaign closes</div>
+            </div>
+          </div>
+          
+          {/* Join Campaign Button */}
+          <div className="flex items-center gap-4">
+            <Button 
+              className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-xl font-semibold"
+              onClick={() => {
+                if (applicationData.interestStatement.trim()) {
+                  applyMutation.mutate(applicationData);
+                  triggerHaptic("success");
+                } else {
+                  toast({
+                    title: "Application Required",
+                    description: "Please fill out the application form below.",
+                    variant: "destructive"
+                  });
+                }
+              }}
+              disabled={applyMutation.isPending}
+            >
+              {applyMutation.isPending ? "Submitting..." : "Join this campaign"} →
+            </Button>
+            <span className="text-sm text-gray-500">{campaign.currentParticipants} Creators joined</span>
+          </div>
+        </div>
+        
+        {/* Campaign Stats */}
+        <div className="grid grid-cols-3 gap-4 py-4 border-y border-gray-200">
+          <div className="text-center">
+            <div className="font-semibold text-gray-900">Video</div>
+            <div className="text-sm text-gray-500">Content type</div>
+          </div>
+          <div className="text-center">
+            <div className="font-semibold text-gray-900">3 minutes</div>
+            <div className="text-sm text-gray-500">Minimum length</div>
+          </div>
+          <div className="text-center flex justify-center gap-2">
+            <div className="w-5 h-5 bg-red-500 rounded flex items-center justify-center text-white text-xs">Y</div>
+            <div className="w-5 h-5 bg-purple-500 rounded flex items-center justify-center text-white text-xs">T</div>
+            <div className="w-5 h-5 bg-blue-500 rounded flex items-center justify-center text-white text-xs">I</div>
+            <div className="text-sm text-gray-500 ml-2">Social platforms</div>
+          </div>
+        </div>
+        
+        {/* Budget Progress */}
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h3 className="font-semibold text-gray-900">Budget</h3>
+            <span className="text-sm text-gray-500">{budgetProgress.toFixed(0)}% allocated</span>
+          </div>
+          <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-orange-400 to-purple-500 rounded-full transition-all duration-500"
+              style={{ width: `${Math.min(budgetProgress, 100)}%` }}
+            />
+          </div>
+        </div>
+        
+        {/* Requirements */}
+        <div className="space-y-4">
+          <h3 className="font-semibold text-gray-900">What You Need to Do:</h3>
+          <div className="space-y-3">
+            <div className="flex items-start gap-3">
+              <div className="w-2 h-2 bg-gray-400 rounded-full mt-2 flex-shrink-0" />
+              <div className="text-sm text-gray-700">
+                Record a gameplay video highlighting exciting mechanics, unique visuals, or intense moments
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-2 h-2 bg-gray-400 rounded-full mt-2 flex-shrink-0" />
+              <div className="text-sm text-gray-700">
+                Mention the game name at least four times in a positive and natural way
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-2 h-2 bg-gray-400 rounded-full mt-2 flex-shrink-0" />
+              <div className="text-sm text-gray-700">
+                Focus on why you enjoy it - what makes it fun, addictive, or different
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-2 h-2 bg-gray-400 rounded-full mt-2 flex-shrink-0" />
+              <div className="text-sm text-gray-700">
+                Share it publicly on YouTube, TikTok, or Instagram Reels with campaign hashtag
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Engagement Scoring */}
+        <div className="space-y-4 bg-purple-50 p-4 rounded-lg">
+          <h3 className="font-semibold text-purple-900">Engagement Scoring Bonus:</h3>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm">
+              <CheckCircle className="w-4 h-4 text-green-500" />
+              <span className="text-purple-800">Higher reach and more engagement = more VERI Points</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <CheckCircle className="w-4 h-4 text-green-500" />
+              <span className="text-purple-800">Clear call-to-action like "Download" or "Try it for free" = extra bonus points</span>
+            </div>
+          </div>
+        </div>
+        
+        {/* Application Form */}
+        <div className="space-y-4 border-t pt-6">
+          <h3 className="font-semibold text-gray-900">Application Form</h3>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="interest">Why are you interested in this campaign? *</Label>
+              <Textarea
+                id="interest"
+                value={applicationData.interestStatement}
+                onChange={(e) => setApplicationData({...applicationData, interestStatement: e.target.value})}
+                placeholder="Share your enthusiasm for this gaming campaign..."
+                className="mt-1"
+                rows={3}
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="experience">Relevant Experience</Label>
+              <Textarea
+                id="experience"
+                value={applicationData.relevantExperience}
+                onChange={(e) => setApplicationData({...applicationData, relevantExperience: e.target.value})}
+                placeholder="Describe your gaming content creation experience..."
+                className="mt-1"
+                rows={2}
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="approach">Content Approach</Label>
+              <Textarea
+                id="approach"
+                value={applicationData.contentApproach}
+                onChange={(e) => setApplicationData({...applicationData, contentApproach: e.target.value})}
+                placeholder="How will you showcase this game uniquely?"
+                className="mt-1"
+                rows={2}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Right Side - Published Content Examples */}
+      <div className="lg:w-80 bg-gray-50 p-6 space-y-6">
+        <h3 className="font-semibold text-gray-900">Published Content</h3>
+        
+        {/* Content Examples */}
+        <div className="space-y-4">
+          {contentExamples.slice(0, 3).map((example, index) => (
+            <div key={index} className="bg-white rounded-lg overflow-hidden shadow-sm">
+              <div className="aspect-video bg-gradient-to-br from-purple-400 to-pink-500 relative">
+                <div className="absolute inset-0 bg-black/20" />
+                <div className="absolute top-2 right-2">
+                  <div className="w-8 h-8 bg-black/30 rounded-full flex items-center justify-center">
+                    <div className="w-3 h-3 border-l-2 border-t-2 border-white transform rotate-45" />
+                  </div>
+                </div>
+                <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-1 rounded">
+                  {Math.floor(Math.random() * 5) + 1}:{Math.floor(Math.random() * 60).toString().padStart(2, '0')}
+                </div>
+              </div>
+              <div className="p-3 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 bg-gray-300 rounded-full" />
+                  <span className="text-sm font-medium">Creator {index + 1}</span>
+                  <CheckCircle className="w-3 h-3 text-blue-500" />
+                </div>
+                <p className="text-sm text-gray-600 line-clamp-2">
+                  {example.slice(0, 60)}...
+                </p>
+                <div className="text-xs text-gray-500">
+                  {Math.floor(Math.random() * 50) + 10}K views
+                </div>
+              </div>
+            </div>
+          ))}
+          
+          {/* Fallback content examples if none exist */}
+          {contentExamples.length === 0 && (
+            <>
+              <div className="bg-white rounded-lg overflow-hidden shadow-sm">
+                <div className="aspect-video bg-gradient-to-br from-purple-400 to-pink-500 relative">
+                  <div className="absolute inset-0 bg-black/20" />
+                  <div className="absolute top-2 right-2">
+                    <div className="w-8 h-8 bg-black/30 rounded-full flex items-center justify-center">
+                      <div className="w-3 h-3 border-l-2 border-t-2 border-white transform rotate-45" />
+                    </div>
+                  </div>
+                  <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-1 rounded">3:42</div>
+                </div>
+                <div className="p-3 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 bg-gray-300 rounded-full" />
+                    <span className="text-sm font-medium">Gaming Creator</span>
+                    <CheckCircle className="w-3 h-3 text-blue-500" />
+                  </div>
+                  <p className="text-sm text-gray-600 line-clamp-2">
+                    Epic gameplay highlights and review content
+                  </p>
+                  <div className="text-xs text-gray-500">42K views</div>
+                </div>
+              </div>
+              
+              <div className="bg-white rounded-lg overflow-hidden shadow-sm">
+                <div className="aspect-video bg-gradient-to-br from-blue-400 to-green-500 relative">
+                  <div className="absolute inset-0 bg-black/20" />
+                  <div className="absolute top-2 right-2">
+                    <div className="w-8 h-8 bg-black/30 rounded-full flex items-center justify-center">
+                      <div className="w-3 h-3 border-l-2 border-t-2 border-white transform rotate-45" />
+                    </div>
+                  </div>
+                  <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-1 rounded">5:22</div>
+                </div>
+                <div className="p-3 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 bg-gray-300 rounded-full" />
+                    <span className="text-sm font-medium">Pro Gamer</span>
+                    <CheckCircle className="w-3 h-3 text-blue-500" />
+                  </div>
+                  <p className="text-sm text-gray-600 line-clamp-2">
+                    Professional gameplay analysis and tips
+                  </p>
+                  <div className="text-xs text-gray-500">128K views</div>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function CampaignList() {
   const { toast } = useToast();
@@ -459,13 +788,23 @@ export function CampaignList() {
                       </div>
                     </div>
                     
-                    {/* Apply Now Button */}
-                    <Button 
-                      className="w-full mt-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg h-10"
-                      onClick={() => triggerHaptic("light")}
-                    >
-                      Apply Now
-                    </Button>
+                    {/* View Brief Button */}
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button 
+                          className="w-full mt-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg h-10"
+                          onClick={() => {
+                            triggerHaptic("light");
+                            setSelectedCampaign(campaign);
+                          }}
+                        >
+                          View Brief
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
+                        <CampaignBriefModal campaign={campaign} />
+                      </DialogContent>
+                    </Dialog>
                   </CardContent>
                 </Card>
               );
