@@ -1,0 +1,383 @@
+# Sprint 5 Additional Requirements: Backend API Rate Limiting & Cost Control
+
+## Context
+Sprint 5 focuses on backend architecture only - NO UI CHANGES. We need to add API rate limiting and cost tracking to the dormant architecture without affecting the current user interface at all.
+
+## Implementation Requirements (Backend Only)
+
+### 1. Rate Limiting Middleware
+Create `server/middleware/rateLimiter.ts`:
+
+```typescript
+import { Request, Response, NextFunction } from 'express';
+import { RateLimiterMemory } from 'rate-limiter-flexible';
+
+// Create rate limiters for different tiers
+const globalLimiter = new RateLimiterMemory({
+  points: 1000, // requests
+  duration: 3600, // per hour
+});
+
+const aiEndpointLimiter = new RateLimiterMemory({
+  points: 100,
+  duration: 3600,
+});
+
+export const rateLimitMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // Check if rate limiting is enabled via feature flag
+    if (!process.env.RATE_LIMIT_ENABLED || process.env.RATE_LIMIT_ENABLED !== 'true') {
+      return next();
+    }
+    
+    const key = req.user?.id || req.ip;
+    
+    // Apply different limits based on endpoint
+    if (req.path.includes('/brightmatter/') || req.path.includes('/ai/')) {
+      await aiEndpointLimiter.consume(key);
+    } else {
+      await globalLimiter.consume(key);
+    }
+    
+    next();
+  } catch (rejRes) {
+    res.status(429).json({
+      error: 'Too many requests',
+      retryAfter: Math.round(rejRes.msBeforeNext / 1000) || 60
+    });
+  }
+};
+```
+
+### 2. Cost Tracking Service
+Create `server/services/apiCostTracker.ts`:
+
+```typescript
+import { db } from '../db';
+import { apiUsageTable } from '../schema';
+import { and, eq, gte, sql } from 'drizzle-orm';
+
+interface ApiUsage {
+  userId?: string;
+  service: 'openai' | 'anthropic' | 'twitter' | 'chroma';
+  endpoint: string;
+  tokensUsed?: number;
+  estimatedCost: number;
+}
+
+export class ApiCostTracker {
+  private static instance: ApiCostTracker;
+  private dailyBudgets = {
+    openai: parseFloat(process.env.OPENAI_DAILY_LIMIT_USD || '20'),
+    anthropic: parseFloat(process.env.ANTHROPIC_DAILY_LIMIT_USD || '20'),
+    chroma: parseFloat(process.env.VECTOR_STORE_DAILY_LIMIT_USD || '5'),
+  };
+
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new ApiCostTracker();
+    }
+    return this.instance;
+  }
+
+  async trackUsage(usage: ApiUsage) {
+    // Only track if cost tracking is enabled
+    if (!process.env.API_COST_TRACKING_ENABLED || process.env.API_COST_TRACKING_ENABLED !== 'true') {
+      return;
+    }
+    
+    // Store in database
+    await db.insert(apiUsageTable).values({
+      userId: usage.userId,
+      service: usage.service,
+      endpoint: usage.endpoint,
+      tokensUsed: usage.tokensUsed,
+      estimatedCost: usage.estimatedCost,
+      createdAt: new Date(),
+    });
+
+    // Check budget limits
+    const todaysCost = await this.getTodaysCost(usage.service);
+    if (todaysCost >= this.dailyBudgets[usage.service]) {
+      // Log alert but don't throw - let the service decide what to do
+      console.error(`Daily budget exceeded for ${usage.service}: $${todaysCost}`);
+    }
+  }
+
+  async getTodaysCost(service: string): Promise<number> {
+    // Query today's usage and sum costs
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    
+    const result = await db.select({
+      total: sql`SUM(estimated_cost)`
+    })
+    .from(apiUsageTable)
+    .where(and(
+      eq(apiUsageTable.service, service),
+      gte(apiUsageTable.createdAt, startOfDay)
+    ));
+    
+    return result[0]?.total || 0;
+  }
+
+  async getUserUsage(userId: string, days: number = 30) {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+    
+    return await db.select({
+      service: apiUsageTable.service,
+      totalCost: sql`SUM(estimated_cost)`,
+      totalTokens: sql`SUM(tokens_used)`,
+      requestCount: sql`COUNT(*)`
+    })
+    .from(apiUsageTable)
+    .where(and(
+      eq(apiUsageTable.userId, userId),
+      gte(apiUsageTable.createdAt, startDate)
+    ))
+    .groupBy(apiUsageTable.service);
+  }
+}
+```
+
+### 3. Update Brightmatter Service
+Modify existing `server/brightmatter/brightmatterCore.ts` to include cost tracking:
+
+```typescript
+// Add to existing imports
+import { ApiCostTracker } from '../services/apiCostTracker';
+
+// Wrap existing AI calls with cost tracking
+export async function analyzeContent(content: string, userId?: string) {
+  const tracker = ApiCostTracker.getInstance();
+  
+  // Check if AI is enabled
+  if (!process.env.USE_AI || process.env.USE_AI !== 'true') {
+    return mockAnalysisResult(); // Return mock data
+  }
+  
+  try {
+    // Existing analysis logic...
+    const result = await openai.createCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content }],
+      max_tokens: 500
+    });
+    
+    // Track the usage
+    await tracker.trackUsage({
+      userId,
+      service: 'openai',
+      endpoint: 'completion',
+      tokensUsed: result.usage?.total_tokens,
+      estimatedCost: calculateOpenAICost(result.usage),
+    });
+    
+    return result;
+  } catch (error) {
+    console.error('AI analysis failed:', error);
+    return mockAnalysisResult();
+  }
+}
+
+function calculateOpenAICost(usage: any): number {
+  // Simple cost calculation based on current OpenAI pricing
+  // GPT-3.5-turbo: $0.0015 per 1K input tokens, $0.002 per 1K output tokens
+  const inputCost = (usage?.prompt_tokens || 0) * 0.0000015;
+  const outputCost = (usage?.completion_tokens || 0) * 0.000002;
+  return inputCost + outputCost;
+}
+
+function calculateAnthropicCost(usage: any): number {
+  // Claude 3 pricing: $0.015 per 1K input tokens, $0.075 per 1K output tokens
+  const inputCost = (usage?.input_tokens || 0) * 0.000015;
+  const outputCost = (usage?.output_tokens || 0) * 0.000075;
+  return inputCost + outputCost;
+}
+```
+
+### 4. Add Admin API Endpoints (Internal Use Only)
+Create `server/routes/admin.ts`:
+
+```typescript
+import { Router } from 'express';
+import { ApiCostTracker } from '../services/apiCostTracker';
+import { requireAuth, requireAdmin } from '../middleware/auth';
+
+const router = Router();
+const tracker = ApiCostTracker.getInstance();
+
+// These endpoints are for internal monitoring only - NO UI
+router.get('/api/admin/usage/summary', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const services = ['openai', 'anthropic', 'chroma'];
+    const summary = {};
+    
+    for (const service of services) {
+      summary[service] = await tracker.getTodaysCost(service);
+    }
+    
+    res.json({ success: true, data: summary });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get usage summary' });
+  }
+});
+
+router.get('/api/admin/usage/user/:userId', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { days = 30 } = req.query;
+    
+    const usage = await tracker.getUserUsage(userId, Number(days));
+    res.json({ success: true, data: usage });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get user usage' });
+  }
+});
+
+export default router;
+```
+
+### 5. Database Schema Addition
+Add to `server/schema.ts`:
+
+```typescript
+// Add to existing schema file
+export const apiUsageTable = pgTable('api_usage', {
+  id: serial('id').primaryKey(),
+  userId: varchar('user_id', { length: 255 }),
+  service: varchar('service', { length: 50 }).notNull(),
+  endpoint: varchar('endpoint', { length: 255 }).notNull(),
+  tokensUsed: integer('tokens_used'),
+  estimatedCost: decimal('estimated_cost', { precision: 10, scale: 4 }).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// Add indexes for performance
+export const apiUsageIndexes = [
+  index('idx_api_usage_service_date').on(apiUsageTable.service, apiUsageTable.createdAt),
+  index('idx_api_usage_user').on(apiUsageTable.userId),
+];
+```
+
+### 6. Update Environment Variables
+Add to `.env.example`:
+
+```env
+# ===========================================
+# RATE LIMITING & COST CONTROL (Sprint 5)
+# ===========================================
+# All disabled by default - activate when ready
+
+# Rate Limiting (Dormant by default)
+RATE_LIMIT_ENABLED=false
+RATE_LIMIT_WINDOW_MS=3600000  # 1 hour in milliseconds
+RATE_LIMIT_MAX_REQUESTS=1000
+AI_ENDPOINT_RATE_LIMIT=100
+
+# Cost Tracking (Dormant by default)
+API_COST_TRACKING_ENABLED=false
+DAILY_API_BUDGET_USD=50
+MONTHLY_API_BUDGET_USD=1000
+COST_ALERT_THRESHOLD=0.8  # Alert at 80% of budget
+
+# Per-Service Daily Limits
+OPENAI_DAILY_LIMIT_USD=20
+ANTHROPIC_DAILY_LIMIT_USD=20
+VECTOR_STORE_DAILY_LIMIT_USD=5
+SOCIAL_API_DAILY_LIMIT_USD=10
+```
+
+### 7. Integration with Existing Routes
+Update `server/routes.ts` to include rate limiting:
+
+```typescript
+// Import at top
+import { rateLimitMiddleware } from './middleware/rateLimiter';
+import adminRoutes from './routes/admin';
+
+// Apply rate limiting to all routes (dormant unless enabled)
+app.use(rateLimitMiddleware);
+
+// Add admin routes (internal use only)
+app.use(adminRoutes);
+
+// All existing routes remain completely unchanged...
+```
+
+### 8. Add NPM Dependencies
+Update `package.json`:
+
+```json
+{
+  "dependencies": {
+    // ... existing dependencies ...
+    "rate-limiter-flexible": "^3.0.0"
+  }
+}
+```
+
+## Testing Checklist
+Add these tests without affecting any UI:
+
+```typescript
+// server/__tests__/rateLimiter.test.ts
+describe('Rate Limiter', () => {
+  it('should not limit when disabled', async () => {
+    process.env.RATE_LIMIT_ENABLED = 'false';
+    // Test passes through without limiting
+  });
+  
+  it('should limit when enabled and threshold reached', async () => {
+    process.env.RATE_LIMIT_ENABLED = 'true';
+    // Test returns 429 after limit
+  });
+});
+
+// server/__tests__/costTracker.test.ts
+describe('Cost Tracker', () => {
+  it('should not track when disabled', async () => {
+    process.env.API_COST_TRACKING_ENABLED = 'false';
+    // Verify no database writes
+  });
+  
+  it('should calculate costs correctly', async () => {
+    // Test cost calculations for each service
+  });
+});
+```
+
+## Key Implementation Notes
+
+### ✅ NO UI CHANGES
+- Everything is backend only
+- No new UI components, pages, or user-facing features
+- Admin endpoints are for internal monitoring only
+
+### ✅ Dormant by Default
+- All features disabled via environment variables
+- Zero performance impact when disabled
+- Follows Sprint 5 architecture pattern
+
+### ✅ Integration Points
+- Seamlessly integrates with existing Brightmatter AI services
+- Uses existing database connection
+- Leverages existing auth middleware
+- No changes to existing API contracts
+
+### ✅ Activation Ready
+- Can be enabled alongside AI features in Phase 2
+- Progressive activation supported (enable rate limiting before cost tracking)
+- Budget alerts ready for production use
+
+## Success Criteria
+- [ ] Rate limiting middleware created and integrated
+- [ ] Cost tracking service implemented
+- [ ] Database schema updated with new tables
+- [ ] Environment variables documented
+- [ ] Admin monitoring endpoints available
+- [ ] All features dormant by default
+- [ ] No changes to any UI components
+- [ ] Tests verify dormant behavior
+- [ ] Ready for Phase 2 AI activation
