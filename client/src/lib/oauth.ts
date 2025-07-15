@@ -22,13 +22,22 @@ export interface SocialConnection {
   updatedAt: string;
 }
 
-// Demo Twitter OAuth Functions
+// Real Twitter OAuth Functions
 export async function initiateTwitterLogin(): Promise<string> {
   try {
-    // Demo mode - simulate OAuth flow
-    const demoAuthUrl = `/demo-oauth?platform=twitter&redirect=${encodeURIComponent(window.location.origin)}/dashboard`;
-    console.log('Demo Twitter OAuth URL:', demoAuthUrl);
-    return demoAuthUrl;
+    // Make API request to get real Twitter OAuth URL
+    const response = await fetch('/api/auth/twitter/login', {
+      method: 'GET',
+      credentials: 'include',
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data: OAuthResponse = await response.json();
+    console.log('Real Twitter OAuth URL:', data.authUrl);
+    return data.authUrl;
   } catch (error) {
     console.error('Failed to initiate Twitter login:', error);
     throw new Error('Failed to initiate Twitter login');
@@ -37,14 +46,13 @@ export async function initiateTwitterLogin(): Promise<string> {
 
 export async function disconnectTwitter(): Promise<void> {
   try {
-    // Demo mode - simulate disconnect
-    const response = await fetch('/api/social-connections/disconnect', {
+    // Real Twitter OAuth disconnect
+    const response = await fetch('/api/auth/twitter/disconnect', {
       method: 'POST',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ platform: 'twitter' }),
     });
     
     if (!response.ok) {
@@ -69,8 +77,8 @@ export async function handleOAuthConnection(platform: string) {
         throw new Error(`Unsupported platform: ${platform}`);
     }
     
-    // Navigate to demo OAuth page
-    console.log('Navigating to demo OAuth page:', authUrl);
+    // Navigate to real OAuth page
+    console.log('Navigating to real OAuth page:', authUrl);
     window.location.href = authUrl;
   } catch (error) {
     console.error(`Failed to connect ${platform}:`, error);
