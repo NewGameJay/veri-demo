@@ -116,7 +116,7 @@ function ProfileBuilderTab({ user }: { user: any }) {
   );
 }
 
-export default function Dashboard() {
+export default function Dashboard({ defaultTab = "tasks" }: { defaultTab?: string }) {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showProfileBuilder, setShowProfileBuilder] = useState(false);
@@ -209,7 +209,7 @@ export default function Dashboard() {
           </div>
 
           {/* Enhanced Dashboard Tabs with Glass Effect - Sticky Navigation */}
-          <Tabs defaultValue="tasks" className="w-full animate-slide-in mb-6">
+          <Tabs defaultValue={defaultTab} className="w-full animate-slide-in mb-6">
             <div className="sticky top-20 z-20 sticky-tabs rounded-lg mb-6 p-1">
               <TabsList className="grid w-full grid-cols-5 bg-transparent border-0">
                 <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
