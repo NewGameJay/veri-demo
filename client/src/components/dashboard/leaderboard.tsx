@@ -122,26 +122,20 @@ export function Leaderboard() {
           {categories.map((category) => {
             const Icon = category.icon;
             return (
-              <motion.div
+              <Button
                 key={category.id}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 300, damping: 10 }}
+                variant={selectedCategory === category.id ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedCategory(category.id)}
+                className={`flex items-center gap-2 ${
+                  selectedCategory === category.id 
+                    ? "veri-gradient text-white" 
+                    : "border-white/20 text-white/70 hover:text-white hover:bg-white/5"
+                }`}
               >
-                <Button
-                  variant={selectedCategory === category.id ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`flex items-center gap-2 hover-lift-subtle ${
-                    selectedCategory === category.id 
-                      ? "veri-gradient text-white hover-glow" 
-                      : "border-white/20 text-white/70 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {category.name}
-                </Button>
-              </motion.div>
+                <Icon className="w-4 h-4" />
+                {category.name}
+              </Button>
             );
           })}
         </div>
@@ -153,21 +147,15 @@ export function Leaderboard() {
             const BadgeIcon = badgeInfo.icon;
             
             return (
-              <motion.div
+              <div
                 key={entry.id}
                 role="listitem"
-                className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-500 hover-lift touch-manipulation ${
+                className={`flex items-center gap-3 p-3 rounded-xl transition-colors touch-manipulation ${
                   isCurrentUser 
                     ? 'bg-green-500/20 border border-green-500/30' 
                     : 'bg-white/5'
                 }`}
-                style={{
-                  animationDelay: `${index * 100}ms`,
-                  animation: 'slideIn 0.6s ease-out forwards'
-                }}
                 aria-label={`${user?.name} ranked ${entry.rank} with ${entry.score} points${isCurrentUser ? ' (You)' : ''}`}
-                whileHover={{ scale: 1.02, x: 5 }}
-                transition={{ type: "spring", stiffness: 300, damping: 10 }}
               >
                 <div 
                   className={`w-8 h-8 ${getRankColor(entry.rank)} rounded-full flex items-center justify-center font-bold text-sm text-white`}
