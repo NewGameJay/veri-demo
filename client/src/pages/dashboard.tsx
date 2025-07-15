@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { Header } from "@/components/navigation/header";
 import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
 import { VeriScoreCard } from "@/components/dashboard/veri-score-card";
 import { TaskVerification } from "@/components/dashboard/task-verification";
 import { CampaignExplore } from "@/components/dashboard/campaign-explore";
 import { ProfileBuilder } from "@/components/dashboard/profile-builder";
-import { UnifiedProfileBuilder } from "@/components/profile/unified-profile-builder";
+
 import { SocialConnections } from "@/components/dashboard/social-connections";
 import { Leaderboard } from "@/components/dashboard/leaderboard";
 import { FAQ } from "@/components/dashboard/faq";
@@ -24,9 +25,10 @@ export default function Dashboard() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showProfileBuilder, setShowProfileBuilder] = useState(false);
-  const [showUnifiedProfileBuilder, setShowUnifiedProfileBuilder] = useState(false);
+
   const { user, needsOnboarding, completeOnboarding } = useAuth();
   const { newMilestones, clearNewMilestones } = useMilestoneTracker();
+  const [, setLocation] = useLocation();
 
   const { data: connections } = useQuery({
     queryKey: ["/api/social-connections", user?.id],
@@ -191,7 +193,7 @@ export default function Dashboard() {
                       <p className="text-white/70">Create, edit, and share your professional gaming creator profile</p>
                       
                       <button
-                        onClick={() => setShowUnifiedProfileBuilder(true)}
+                        onClick={() => setLocation('/profile')}
                         className="w-full max-w-md mx-auto p-6 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/30 transition-all group relative overflow-hidden"
                       >
                         <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -488,11 +490,54 @@ export default function Dashboard() {
         />
       )}
 
-      {/* Unified Profile Builder Modal */}
-      <UnifiedProfileBuilder 
-        isOpen={showUnifiedProfileBuilder}
-        onClose={() => setShowUnifiedProfileBuilder(false)}
-      />
+      {/* Footer Section */}
+      <footer className="mt-12 px-4 lg:px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-black rounded-2xl px-8 py-6 shadow-lg">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+              <div className="space-y-4">
+                <div className="h-8 w-26 text-white flex items-center">
+                  <VeriLogo size="lg" showText={true} />
+                </div>
+                <p className="text-sm font-medium text-white/70 leading-6">
+                  Veri is DeFi for the Creator economy
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="text-lg font-semibold text-white">Product</h4>
+                <div className="space-y-3">
+                  <div className="text-sm font-medium text-white/70 hover:text-white/90 transition-colors cursor-pointer">VeriScore Analytics</div>
+                  <div className="text-sm font-medium text-white/70 hover:text-white/90 transition-colors cursor-pointer">AI Agent</div>
+                  <div className="text-sm font-medium text-white/70 hover:text-white/90 transition-colors cursor-pointer">Creator Tools</div>
+                  <div className="text-sm font-medium text-white/70 hover:text-white/90 transition-colors cursor-pointer">Leaderboard</div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="text-lg font-semibold text-white">Company</h4>
+                <div className="space-y-3">
+                  <div className="text-sm font-medium text-white/70 hover:text-white/90 transition-colors cursor-pointer">About</div>
+                  <div className="text-sm font-medium text-white/70 hover:text-white/90 transition-colors cursor-pointer">Blog</div>
+                  <div className="text-sm font-medium text-white/70 hover:text-white/90 transition-colors cursor-pointer">Careers</div>
+                  <div className="text-sm font-medium text-white/70 hover:text-white/90 transition-colors cursor-pointer">Contact</div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="border-t border-white/10 pt-6">
+              <div className="flex flex-col md:flex-row justify-between items-center">
+                <p className="text-sm text-white/60">© 2025 Veri. All rights reserved.</p>
+                <div className="flex space-x-6 mt-4 md:mt-0">
+                  <div className="text-sm text-white/60 hover:text-white/80 transition-colors cursor-pointer">Privacy Policy</div>
+                  <div className="text-sm text-white/60 hover:text-white/80 transition-colors cursor-pointer">Terms of Service</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+
     </div>
   );
 }
