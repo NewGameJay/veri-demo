@@ -276,7 +276,13 @@ export default function Dashboard({ defaultTab = "tasks" }: { defaultTab?: strin
             </TabsContent>
 
             <TabsContent value="profile" className="mt-6">
-              <ProfileBuilderTab user={user} />
+              <div className="min-h-[600px] p-6">
+                <div className="text-center mb-8">
+                  <h2 className="text-3xl font-bold text-white mb-3">Profile Builder</h2>
+                  <p className="text-white/70">Build and customize your creator profile</p>
+                </div>
+                <ProfileBuilderTab user={user} />
+              </div>
             </TabsContent>
 
             <TabsContent value="ai-agent" className="mt-6">
