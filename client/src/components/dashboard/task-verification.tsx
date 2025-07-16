@@ -125,7 +125,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
     {
       id: 0,
       title: "MVP Demo Test Task",
-      description: "Complete this test task to unlock AI Agent tooling - Perfect for demos and testing!",
+      description: "Complete this test task to unlock features",
       platform: "demo",
       icon: Trophy,
       color: "text-green-400",
@@ -1802,7 +1802,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                       
                       {/* Description */}
                       <p className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300 line-clamp-2">
-                        Complete this test task to unlock features
+                        {task.description}
                       </p>
                     </div>
                     
