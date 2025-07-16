@@ -1802,7 +1802,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                       
                       {/* Description */}
                       <p className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300 line-clamp-2">
-                        {task.description}
+                        Complete this test task to unlock features
                       </p>
                     </div>
                     
