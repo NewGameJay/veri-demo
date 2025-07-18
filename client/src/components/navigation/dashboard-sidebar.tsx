@@ -138,7 +138,7 @@ export function DashboardSidebar({
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="p-2 hover:bg-white/10 hover:shadow-md hover:shadow-emerald-500/20 rounded-xl transition-all duration-300 touch-manipulation"
+              className="p-2 hover:bg-gray-800/80 hover:shadow-md hover:shadow-emerald-500/20 rounded-xl transition-all duration-300 touch-manipulation"
               title="Close sidebar"
               aria-label="Close sidebar"
               haptic="light"
@@ -163,7 +163,7 @@ export function DashboardSidebar({
                 onClick={() => handleNavigation(item)}
                 className={cn(
                   "w-full p-3 glass-subtle rounded-xl transition-all duration-300 font-inter touch-manipulation",
-                  "hover:bg-emerald-500/10 hover:border-emerald-400/30 hover:shadow-lg hover:shadow-emerald-500/25",
+                  "hover:bg-gray-800/80 hover:border-emerald-400/30 hover:shadow-lg hover:shadow-emerald-500/25",
                   isCollapsed ? "justify-center" : "justify-start gap-3",
                   location === item.path && "veri-gradient text-white shadow-lg shadow-emerald-500/50",
                   "focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
@@ -190,7 +190,7 @@ export function DashboardSidebar({
             onClick={handleLogout}
             className={cn(
               "w-full p-3 glass-subtle rounded-xl transition-all duration-300 font-inter text-red-400 hover:text-red-300 touch-manipulation",
-              "hover:bg-red-500/10 hover:border-red-400/30 hover:shadow-lg hover:shadow-red-500/25",
+              "hover:bg-gray-800/80 hover:border-red-400/30 hover:shadow-lg hover:shadow-red-500/25",
               isCollapsed ? "justify-center" : "justify-start gap-3",
               "focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2"
             )}
