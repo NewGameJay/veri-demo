@@ -99,7 +99,14 @@ export default function CampaignsPage() {
   const isCreator = user?.userType === "creator" || user?.profileType === "creator";
 
   return (
-    <div className="min-h-screen bg-gray-900 hero-gradient text-white">
+    <div className="min-h-screen bg-gray-900 hero-gradient text-white"
+         style={{
+           background: `
+             radial-gradient(ellipse at top, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+             radial-gradient(ellipse at bottom, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+             linear-gradient(to bottom, #111827, #0f172a)
+           `
+         }}>
       <Header 
         onDashboardToggle={handleDashboardToggle}
         onMobileMenuToggle={() => setIsMobileNavOpen(!isMobileNavOpen)}

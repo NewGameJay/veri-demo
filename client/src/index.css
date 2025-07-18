@@ -526,41 +526,7 @@
   }
   
   .hero-gradient {
-    background: 
-      /* Black to teal moving gradient */
-      linear-gradient(180deg, 
-        rgba(0, 0, 0, 0.2) 0%, 
-        rgba(20, 184, 166, 0.15) 50%, 
-        rgba(6, 78, 59, 0.18) 100%
-      ),
-      /* Base dark foundation */
-      linear-gradient(135deg, 
-        #0a0f1c 0%, 
-        #111827 100%
-      );
-    
-    background-size: 
-      100% 200%, 
-      100% 100%;
-    
-    background-position: 
-      0% 0%, 
-      0% 0%;
-    
-    animation: subtle-gradient-flow 20s ease-in-out infinite;
-  }
-
-  @keyframes subtle-gradient-flow {
-    0%, 100% {
-      background-position: 
-        0% 0%, 
-        0% 0%;
-    }
-    50% {
-      background-position: 
-        0% 100%, 
-        0% 0%;
-    }
+    background: linear-gradient(135deg, hsl(var(--veri-neutral-800)) 0%, hsl(var(--veri-neutral-700)) 50%, hsl(var(--veri-primary-500)) 100%);
   }
   
   /* Apple-like Animations */
