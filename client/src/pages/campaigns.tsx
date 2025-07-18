@@ -22,8 +22,8 @@ import {
 
 export default function CampaignsPage() {
   const [activeTab, setActiveTab] = useState("browse");
-  const [isDashboardOpen, setIsDashboardOpen] = useState(false);
-  const [isDashboardPinned, setIsDashboardPinned] = useState(false);
+  const [isDashboardOpen, setIsDashboardOpen] = useState(true);
+  const [isDashboardPinned, setIsDashboardPinned] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const { user, isLoading } = useAuth();
@@ -63,7 +63,14 @@ export default function CampaignsPage() {
   const isCreator = user?.userType === "creator" || user?.profileType === "creator";
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-gray-900 hero-gradient text-white"
+         style={{
+           background: `
+             radial-gradient(ellipse at top, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+             radial-gradient(ellipse at bottom, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+             linear-gradient(to bottom, #111827, #0f172a)
+           `
+         }}>
       <Header 
         onDashboardToggle={() => setIsDashboardOpen(!isDashboardOpen)}
         onMobileMenuToggle={() => setIsMobileNavOpen(!isMobileNavOpen)}
@@ -83,7 +90,11 @@ export default function CampaignsPage() {
         onClose={() => setIsMobileNavOpen(false)}
       />
       
-      <main className="pt-20 px-4 lg:px-6">
+      <main className={`pt-20 px-4 lg:px-6 transition-all duration-300 ${
+        isDashboardPinned && !isCollapsed ? 'lg:ml-80' : 
+        isDashboardPinned && isCollapsed ? 'lg:ml-20' : 
+        ''
+      }`}>
         <div className="max-w-7xl mx-auto space-y-6">
           {/* Header */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -120,7 +131,7 @@ export default function CampaignsPage() {
 
           {/* Quick Stats */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
+        <Card className="glass-subtle border-white/10 bg-gray-800/50">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               <Target className="h-5 w-5 text-emerald-500" />
@@ -132,7 +143,7 @@ export default function CampaignsPage() {
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="glass-subtle border-white/10 bg-gray-800/50">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               <DollarSign className="h-5 w-5 text-green-500" />
@@ -144,7 +155,7 @@ export default function CampaignsPage() {
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="glass-subtle border-white/10 bg-gray-800/50">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5 text-blue-500" />
@@ -156,7 +167,7 @@ export default function CampaignsPage() {
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="glass-subtle border-white/10 bg-gray-800/50">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5 text-purple-500" />
@@ -171,7 +182,7 @@ export default function CampaignsPage() {
 
           {/* Main Content */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className={`grid w-full ${isBrand ? 'grid-cols-3' : 'grid-cols-2'}`}>
+        <TabsList className={`grid w-full glass-secondary ${isBrand ? 'grid-cols-3' : 'grid-cols-2'}`}>
           <TabsTrigger value="browse" className="flex items-center gap-2">
             <Target className="h-4 w-4" />
             Browse Campaigns
@@ -200,7 +211,7 @@ export default function CampaignsPage() {
 
             <TabsContent value="analytics" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
+            <Card className="glass-subtle border-white/10 bg-gray-800/50">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <BarChart3 className="h-5 w-5" />
@@ -236,7 +247,7 @@ export default function CampaignsPage() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="glass-subtle border-white/10 bg-gray-800/50">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <DollarSign className="h-5 w-5" />
@@ -272,7 +283,7 @@ export default function CampaignsPage() {
               </CardContent>
             </Card>
 
-            <Card className="md:col-span-2">
+            <Card className="md:col-span-2 glass-subtle border-white/10 bg-gray-800/50">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Calendar className="h-5 w-5" />
@@ -310,7 +321,7 @@ export default function CampaignsPage() {
                       status: "paid"
                     }
                   ].map((activity, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div key={index} className="flex items-center justify-between p-3 glass-subtle border-white/5 rounded-lg">
                       <div className="flex-1">
                         <p className="font-medium">{activity.title}</p>
                         <p className="text-sm text-muted-foreground">{activity.action}</p>
