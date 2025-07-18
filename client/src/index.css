@@ -526,26 +526,28 @@
   }
   
   .hero-gradient {
-    background: linear-gradient(135deg, 
-      #0a0f1c 0%, 
-      #1a2332 25%, 
-      #2a3441 45%, 
-      #1a2632 65%, 
-      #0f1419 100%
-    );
-    background-size: 400% 400%;
-    animation: subtleGradientShift 25s ease-in-out infinite;
+    background: 
+      radial-gradient(ellipse at top, 
+        #0d1421 0%, 
+        #1a2332 35%, 
+        #0f1419 70%, 
+        #000000 100%
+      ),
+      linear-gradient(180deg, 
+        #0d1421 0%, 
+        #0a0f1c 50%, 
+        #000000 100%
+      );
+    background-size: 100% 200%, 100% 100%;
+    animation: slowRadialShift 45s ease-in-out infinite;
   }
 
-  @keyframes subtleGradientShift {
+  @keyframes slowRadialShift {
     0%, 100% {
-      background-position: 0% 50%;
+      background-position: 0% 0%, 0% 0%;
     }
-    33% {
-      background-position: 100% 0%;
-    }
-    66% {
-      background-position: 100% 100%;
+    50% {
+      background-position: 0% 100%, 0% 0%;
     }
   }
   
