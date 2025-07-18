@@ -44,7 +44,7 @@ export function Header({ onDashboardToggle, onMobileMenuToggle, onSignIn }: Head
   const userXP = user?.xpPoints || 0;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 lg:px-6 py-4 glass-header animate-slide-in">
+    <header className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 lg:px-6 py-4 glass-header">
       {/* Header content wrapper to ensure proper layering over liquid effects */}
       <div className="relative z-10 flex items-center justify-between w-full">
       <div className="flex items-center gap-4">
