@@ -526,7 +526,27 @@
   }
   
   .hero-gradient {
-    background: linear-gradient(135deg, hsl(var(--veri-neutral-800)) 0%, hsl(var(--veri-neutral-700)) 50%, hsl(var(--veri-primary-500)) 100%);
+    background: linear-gradient(135deg, 
+      #0a0f1c 0%, 
+      #1a2332 25%, 
+      #2a3441 45%, 
+      #1a2632 65%, 
+      #0f1419 100%
+    );
+    background-size: 400% 400%;
+    animation: subtleGradientShift 25s ease-in-out infinite;
+  }
+
+  @keyframes subtleGradientShift {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    33% {
+      background-position: 100% 0%;
+    }
+    66% {
+      background-position: 100% 100%;
+    }
   }
   
   /* Apple-like Animations */
