@@ -21,7 +21,7 @@ const Card = React.forwardRef<
   
   const interactionClasses = cn(
     hover && "hover-lift cursor-pointer",
-    interactive && "interactive-focus hover-glow"
+    interactive && "interactive-focus"
   );
   
   return (

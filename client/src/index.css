@@ -181,13 +181,10 @@
   }
   
   .glass-interactive:hover {
-    @apply bg-white/[0.2] border-white/[0.4];
     transform: translateY(-2px);
     box-shadow: 
       0 16px 48px 0 rgba(0, 0, 0, 0.15),
-      0 6px 24px 0 rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+      0 6px 24px 0 rgba(0, 0, 0, 0.1);
   }
   
   /* Legacy variants for backward compatibility */
@@ -286,12 +283,10 @@
   }
   
   .glass-effect-hover:hover {
-    @apply bg-white/[0.12] border-white/25;
     transform: translateY(-1px);
     box-shadow: 
       0 12px 32px 0 rgba(0, 0, 0, 0.1),
-      0 2px 8px 0 rgba(0, 211, 162, 0.05),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      0 2px 8px 0 rgba(0, 211, 162, 0.05);
   }
   
   /* Legacy glass-effect for backward compatibility */
