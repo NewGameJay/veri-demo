@@ -138,61 +138,72 @@
 @layer components {
   /* Sprint 5 Glass Morphism Design System - Enhanced Foundation */
   
-  /* Primary Glass Effect - Core Navigation & High Priority Elements */
+  /* Ultra-Premium Glass Effect - PDF Specification Match */
   .glass-primary {
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    @apply bg-white/[0.1] border border-white/[0.2] transform-gpu;
+    backdrop-filter: blur(32px) saturate(250%) contrast(120%);
+    -webkit-backdrop-filter: blur(32px) saturate(250%) contrast(120%);
+    @apply bg-white/[0.18] border border-white/[0.35] transform-gpu;
     box-shadow: 
-      0 8px 32px 0 rgba(0, 0, 0, 0.1),
-      0 2px 16px 0 rgba(0, 0, 0, 0.06),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+      0 24px 56px 0 rgba(0, 0, 0, 0.25),
+      0 8px 24px 0 rgba(0, 0, 0, 0.15),
+      inset 0 2px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+      0 0 0 1px rgba(255, 255, 255, 0.15);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform, opacity, background-color, box-shadow;
   }
   
-  /* Secondary Glass Effect - Cards & Content Areas */
+  /* Enhanced Secondary Glass - Dramatic Depth */
   .glass-secondary {
-    backdrop-filter: blur(15px) saturate(160%);
-    -webkit-backdrop-filter: blur(15px) saturate(160%);
-    @apply bg-white/[0.05] border border-white/[0.1] transform-gpu;
+    backdrop-filter: blur(24px) saturate(200%) contrast(110%);
+    -webkit-backdrop-filter: blur(24px) saturate(200%) contrast(110%);
+    @apply bg-white/[0.14] border border-white/[0.25] transform-gpu;
     box-shadow: 
-      0 4px 16px 0 rgba(0, 0, 0, 0.05),
-      0 1px 8px 0 rgba(0, 0, 0, 0.03),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+      0 16px 40px 0 rgba(0, 0, 0, 0.18),
+      0 4px 16px 0 rgba(0, 0, 0, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.12);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform, opacity, background-color, box-shadow;
   }
   
-  /* Interactive Glass Effect - Buttons & Hover States */
+  /* Premium Interactive Glass - Maximum Impact */
   .glass-interactive {
-    backdrop-filter: blur(25px) saturate(200%);
-    -webkit-backdrop-filter: blur(25px) saturate(200%);
-    @apply bg-white/[0.15] border border-white/[0.3] transform-gpu;
+    backdrop-filter: blur(28px) saturate(220%) contrast(115%);
+    -webkit-backdrop-filter: blur(28px) saturate(220%) contrast(115%);
+    @apply bg-white/[0.16] border border-white/[0.32] transform-gpu;
     box-shadow: 
-      0 12px 40px 0 rgba(0, 0, 0, 0.12),
-      0 4px 20px 0 rgba(0, 0, 0, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.04);
+      0 20px 48px 0 rgba(0, 0, 0, 0.2),
+      0 6px 20px 0 rgba(0, 0, 0, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.45),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.15),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform, opacity, background-color, box-shadow;
   }
   
   .glass-interactive:hover {
-    @apply bg-white/[0.2] border-white/[0.4];
-    transform: translateY(-2px);
+    @apply bg-white/[0.25] border-white/[0.45];
+    transform: translateY(-3px) scale(1.02);
     box-shadow: 
-      0 16px 48px 0 rgba(0, 0, 0, 0.15),
-      0 6px 24px 0 rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+      0 28px 64px 0 rgba(0, 0, 0, 0.25),
+      0 12px 32px 0 rgba(0, 0, 0, 0.15),
+      0 4px 16px 0 rgba(0, 214, 162, 0.2),
+      inset 0 2px 0 rgba(255, 255, 255, 0.6),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+      0 0 0 1px rgba(0, 214, 162, 0.3);
   }
   
   /* Legacy variants for backward compatibility */
   .glass-subtle {
-    @apply glass-secondary;
+    backdrop-filter: blur(20px) saturate(160%) contrast(105%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%) contrast(105%);
+    @apply bg-white/[0.1] border border-white/[0.18] transform-gpu;
+    box-shadow: 
+      0 12px 32px 0 rgba(0, 0, 0, 0.12),
+      0 2px 8px 0 rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .glass-medium {
@@ -218,11 +229,11 @@
       inset 0 -1px 0 rgba(0, 0, 0, 0.02);
   }
   
-  /* Glass Navigation Header - Specific for Header Component */
+  /* Glass Navigation Header - Ultra Premium Header Treatment */
   .glass-header {
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    @apply bg-black/[0.4] border-b border-white/[0.1] transform-gpu;
+    backdrop-filter: blur(36px) saturate(280%) contrast(125%);
+    -webkit-backdrop-filter: blur(36px) saturate(280%) contrast(125%);
+    @apply bg-black/[0.3] border-b border-white/[0.2] transform-gpu;
     box-shadow: 
       0 4px 16px 0 rgba(0, 0, 0, 0.1),
       0 1px 4px 0 rgba(0, 0, 0, 0.06),
@@ -299,12 +310,14 @@
 
 /* Enhanced Glass Form States & Tooltips */
   .glass-tooltip {
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    @apply bg-black/[0.8] border border-white/[0.2] transform-gpu;
+    backdrop-filter: blur(20px) saturate(200%) contrast(110%);
+    -webkit-backdrop-filter: blur(20px) saturate(200%) contrast(110%);
+    @apply bg-black/[0.85] border border-white/[0.3] transform-gpu;
     box-shadow: 
-      0 8px 24px 0 rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      0 12px 32px 0 rgba(0, 0, 0, 0.3),
+      0 4px 16px 0 rgba(0, 0, 0, 0.2),
+      inset 0 2px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.1);
   }
   
   /* Glass Loading States */

@@ -22,7 +22,7 @@ const buttonVariants = cva(
         veri: "veri-gradient text-white hover:scale-105 hover:shadow-glow transition-all duration-300 transform-gpu",
         glass: "glass-interactive transform-gpu",
         glassSecondary: "glass-secondary hover:glass-primary transform-gpu",
-        glassPrimary: "glass-primary hover:glass-interactive transform-gpu",
+        glassPrimary: "glass-primary hover:glass-interactive transform-gpu hover:scale-105 active:scale-95 transition-all duration-300",
         creator: "bg-gradient-to-r from-violet-500 to-emerald-500 hover:from-violet-600 hover:to-emerald-600 text-white transition-all duration-300 transform-gpu",
       },
       size: {
