@@ -140,9 +140,9 @@ The application is designed to scale from MVP to full marketplace functionality,
 ## Recent Updates (July 18, 2025)
 
 ### Sprint 5 Glass Morphism Enhancement (July 18, 2025)
-- ✅ **Subtle Moving Gradient Background**: Implemented lightweight blue-to-teal gradient inspired by user's color reference
-  - Vertical linear gradient (180deg) with blue (rgba(59, 130, 246, 0.08)) to teal (rgba(20, 184, 166, 0.06)) to dark teal (rgba(6, 78, 59, 0.08))
-  - Minimal opacity (0.06-0.08) for subtle, non-distracting effect that showcases glassmorphism
+- ✅ **Subtle Moving Gradient Background**: Implemented lightweight black-to-teal gradient for refined visual appeal
+  - Vertical linear gradient (180deg) with black (rgba(0, 0, 0, 0.2)) to teal (rgba(20, 184, 166, 0.15)) to dark teal (rgba(6, 78, 59, 0.18))
+  - Enhanced visibility with 0.15-0.18 opacity for clear gradient movement
   - 20-second gentle animation with 200% background size for smooth vertical flow
   - Single-layer approach for optimal performance and reduced complexity
   - Applied consistently across all hero-gradient sections (dashboard, campaigns, etc.)

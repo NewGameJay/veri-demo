@@ -527,11 +527,11 @@
   
   .hero-gradient {
     background: 
-      /* Subtle moving blue-teal gradient inspired by attached reference */
+      /* Black to teal moving gradient */
       linear-gradient(180deg, 
-        rgba(59, 130, 246, 0.15) 0%, 
-        rgba(20, 184, 166, 0.12) 50%, 
-        rgba(6, 78, 59, 0.15) 100%
+        rgba(0, 0, 0, 0.2) 0%, 
+        rgba(20, 184, 166, 0.15) 50%, 
+        rgba(6, 78, 59, 0.18) 100%
       ),
       /* Base dark foundation */
       linear-gradient(135deg, 
