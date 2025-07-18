@@ -529,9 +529,9 @@
     background: 
       /* Subtle moving blue-teal gradient inspired by attached reference */
       linear-gradient(180deg, 
-        rgba(59, 130, 246, 0.08) 0%, 
-        rgba(20, 184, 166, 0.06) 50%, 
-        rgba(6, 78, 59, 0.08) 100%
+        rgba(59, 130, 246, 0.15) 0%, 
+        rgba(20, 184, 166, 0.12) 50%, 
+        rgba(6, 78, 59, 0.15) 100%
       ),
       /* Base dark foundation */
       linear-gradient(135deg, 
