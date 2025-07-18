@@ -121,7 +121,7 @@ export function DashboardSidebar({
             variant="ghost"
             size="icon"
             onClick={onToggleCollapse}
-            className="p-2 hover:bg-gray-800/90 hover:shadow-[0_0_15px_rgba(16,185,129,0.1)] rounded-xl transition-all duration-300 touch-manipulation"
+            className="p-2 hover:bg-gray-950/95 hover:shadow-[0_0_15px_rgba(16,185,129,0.1)] rounded-xl transition-all duration-300 touch-manipulation"
             title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             haptic="light"
@@ -138,7 +138,7 @@ export function DashboardSidebar({
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="p-2 hover:bg-gray-800/90 hover:shadow-[0_0_15px_rgba(16,185,129,0.1)] rounded-xl transition-all duration-300 touch-manipulation"
+              className="p-2 hover:bg-gray-950/95 hover:shadow-[0_0_15px_rgba(16,185,129,0.1)] rounded-xl transition-all duration-300 touch-manipulation"
               title="Close sidebar"
               aria-label="Close sidebar"
               haptic="light"
@@ -163,7 +163,7 @@ export function DashboardSidebar({
                 onClick={() => handleNavigation(item)}
                 className={cn(
                   "w-full p-3 glass-subtle rounded-xl transition-all duration-300 font-inter touch-manipulation relative",
-                  "hover:bg-gray-800/90 hover:border-emerald-400/20 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]",
+                  "hover:bg-gray-950/95 hover:border-emerald-400/20 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]",
                   isCollapsed ? "justify-center" : "justify-start gap-3",
                   location === item.path && "veri-gradient text-white shadow-lg shadow-emerald-500/50",
                   "focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
@@ -190,7 +190,7 @@ export function DashboardSidebar({
             onClick={handleLogout}
             className={cn(
               "w-full p-3 glass-subtle rounded-xl transition-all duration-300 font-inter text-red-400 hover:text-red-300 touch-manipulation relative",
-              "hover:bg-gray-800/90 hover:border-red-400/20 hover:shadow-[0_0_20px_rgba(239,68,68,0.15)]",
+              "hover:bg-gray-950/95 hover:border-red-400/20 hover:shadow-[0_0_20px_rgba(239,68,68,0.15)]",
               isCollapsed ? "justify-center" : "justify-start gap-3",
               "focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2"
             )}
