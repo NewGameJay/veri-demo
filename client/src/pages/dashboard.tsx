@@ -139,37 +139,27 @@ export default function Dashboard() {
 
           {/* Enhanced Dashboard Tabs with Glass Effect - Sticky Navigation */}
           <Tabs defaultValue="tasks" className="w-full animate-slide-in mb-6">
-            <div className={`sticky top-20 z-20 glass-primary rounded-lg mb-6 transition-all duration-300 ${
-              isTabsCollapsed ? 'p-1 scale-90 opacity-80' : 'p-1 pl-[0px] pr-[0px] pt-[0px] pb-[0px]'
+            <div className={`sticky top-20 z-20 transition-all duration-300 ${
+              isTabsCollapsed ? 'h-0 opacity-0 pointer-events-none' : 'glass-primary rounded-lg mb-6 p-1 pl-[0px] pr-[0px] pt-[0px] pb-[0px]'
             }`}>
-              <TabsList className={`grid w-full grid-cols-5 bg-transparent border-0 transition-all duration-300 ${
-                isTabsCollapsed ? 'h-10' : 'h-auto'
-              }`}>
-                <TabsTrigger value="tasks" className={`text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300 ${
-                  isTabsCollapsed ? 'text-sm px-2 py-1' : ''
-                }`}>
-                  {isTabsCollapsed ? 'T' : 'Tasks'}
+              <TabsList className="grid w-full grid-cols-5 bg-transparent border-0">
+                <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
+                  Tasks
                 </TabsTrigger>
-                <TabsTrigger value="campaigns" className={`text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300 ${
-                  isTabsCollapsed ? 'text-sm px-2 py-1' : ''
-                }`}>
-                  {isTabsCollapsed ? 'C' : 'Campaigns'}
+                <TabsTrigger value="campaigns" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
+                  Campaigns
                 </TabsTrigger>
-                <TabsTrigger value="profile" className={`text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300 ${
-                  isTabsCollapsed ? 'text-sm px-2 py-1' : ''
-                }`}>
-                  {isTabsCollapsed ? 'P' : 'Profile'}
+                <TabsTrigger value="profile" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
+                  Profile
                 </TabsTrigger>
                 <TabsTrigger 
                   value="ai-agent" 
-                  className={`text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300 relative group ${
-                    isTabsCollapsed ? 'text-sm px-2 py-1' : ''
-                  }`}
+                  className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300 relative group"
                   disabled={!isMemorizzUnlocked}
                   title={!isMemorizzUnlocked ? "Complete 10 Day Task Streak to Unlock your Veri AI Agent" : ""}
                 >
-                  {isTabsCollapsed ? 'AI' : `AI Agent ${!isMemorizzUnlocked ? '🔒' : ''}`}
-                  {!isMemorizzUnlocked && !isTabsCollapsed && (
+                  AI Agent {!isMemorizzUnlocked && "🔒"}
+                  {!isMemorizzUnlocked && (
                     <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 px-4 py-3 glass-effect bg-black/95 backdrop-blur-xl text-white text-sm rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap z-50 border border-emerald-400/30 shadow-xl shadow-emerald-500/20">
                       <div className="text-emerald-400 font-medium mb-1">🔒 AI Agent Locked</div>
                       <div className="text-white/90">Complete 10 Day Task Streak to Unlock your Veri AI Agent Studio</div>
@@ -177,10 +167,8 @@ export default function Dashboard() {
                     </div>
                   )}
                 </TabsTrigger>
-                <TabsTrigger value="analytics" className={`text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300 ${
-                  isTabsCollapsed ? 'text-sm px-2 py-1' : ''
-                }`}>
-                  {isTabsCollapsed ? 'A' : 'Analytics'}
+                <TabsTrigger value="analytics" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
+                  Analytics
                 </TabsTrigger>
               </TabsList>
             </div>
