@@ -138,7 +138,7 @@ export function DashboardSidebar({
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="p-2 hover:bg-gray-900/95 hover:shadow-[0_2px_8px_rgba(16,185,129,0.15),0_0_4px_rgba(16,185,129,0.1)] rounded-xl button-3d press-animation ripple-effect transition-all duration-300 touch-manipulation"
+              className="p-2 hover:bg-gray-900/95 hover:shadow-[0_2px_8px_rgba(156,163,175,0.15),0_0_4px_rgba(156,163,175,0.1)] rounded-xl button-3d press-animation ripple-effect transition-all duration-300 touch-manipulation"
               title="Close sidebar"
               aria-label="Close sidebar"
               haptic="light"
@@ -164,11 +164,11 @@ export function DashboardSidebar({
                 className={cn(
                   "w-full p-3 glass-subtle rounded-xl font-inter touch-manipulation relative",
                   "button-3d depth-shadow press-animation ripple-effect",
-                  "hover:bg-gray-900/95 hover:border-emerald-400/30 hover:shadow-[0_4px_16px_rgba(16,185,129,0.2),0_0_8px_rgba(16,185,129,0.1)] hover:text-emerald-100",
+                  "hover:bg-gray-900/95 hover:border-gray-400/30 hover:shadow-[0_4px_16px_rgba(156,163,175,0.2),0_0_8px_rgba(156,163,175,0.1)] hover:text-gray-100",
                   "transition-all duration-300 ease-out",
                   isCollapsed ? "justify-center" : "justify-start gap-3",
-                  location === item.path && "veri-gradient text-white shadow-lg shadow-emerald-500/50 transform translateY(-1px)",
-                  "focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
+                  location === item.path && "bg-gray-700/80 text-white shadow-lg shadow-gray-500/30 transform translateY(-1px)",
+                  "focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2"
                 )}
                 title={isCollapsed ? `${item.label} (Alt+${index + 1})` : `Alt+${index + 1}`}
                 aria-label={`Navigate to ${item.label}`}
@@ -209,14 +209,14 @@ export function DashboardSidebar({
 
         {/* Enhanced Leaderboard Preview - hidden when collapsed */}
         {!isCollapsed && (
-          <div className="veri-gradient-card rounded-xl p-6">
+          <div className="glass-subtle bg-gray-800/50 rounded-xl p-6">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 veri-gradient rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gray-700 rounded-lg flex items-center justify-center">
                 <Trophy className="w-4 h-4 text-white" />
               </div>
               <h3 className="text-lg font-termina text-white">Leaderboard</h3>
             </div>
-            <div className="text-sm text-green-400 font-inter mb-2">Top VeriScore Rankings</div>
+            <div className="text-sm text-gray-400 font-inter mb-2">Top VeriScore Rankings</div>
             
             {/* Sample leaderboard entries with animations */}
             <div className="space-y-3">
