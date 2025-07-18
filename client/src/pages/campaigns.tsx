@@ -65,10 +65,8 @@ export default function CampaignsPage() {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <Header 
-        onToggleDashboard={() => setIsDashboardOpen(!isDashboardOpen)}
-        onToggleMobileNav={() => setIsMobileNavOpen(!isMobileNavOpen)}
-        isDashboardPinned={isDashboardPinned}
-        isDashboardOpen={isDashboardOpen}
+        onDashboardToggle={() => setIsDashboardOpen(!isDashboardOpen)}
+        onMobileMenuToggle={() => setIsMobileNavOpen(!isMobileNavOpen)}
       />
       
       <DashboardSidebar 
@@ -85,8 +83,8 @@ export default function CampaignsPage() {
         onClose={() => setIsMobileNavOpen(false)}
       />
       
-      <div className={`transition-all duration-300 ${isDashboardPinned && !isCollapsed ? 'ml-64' : isDashboardPinned && isCollapsed ? 'ml-16' : 'ml-0'}`}>
-        <div className="container mx-auto p-6 space-y-6 pt-20">
+      <main className="pt-20 px-4 lg:px-6">
+        <div className="max-w-7xl mx-auto space-y-6">
           {/* Header */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
@@ -334,7 +332,7 @@ export default function CampaignsPage() {
             </TabsContent>
           </Tabs>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
