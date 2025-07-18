@@ -61,20 +61,28 @@ export default function Dashboard() {
     setIsDashboardOpen(!isDashboardOpen);
   };
 
-  // Handle scroll-triggered tabs collapse
+  // Handle scroll-triggered tabs collapse with throttling
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const threshold = 200; // Collapse tabs after scrolling 200px down
-      
-      if (scrollY > threshold && !isTabsCollapsed) {
-        setIsTabsCollapsed(true);
-      } else if (scrollY <= threshold && isTabsCollapsed) {
-        setIsTabsCollapsed(false);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          const threshold = 150; // Collapse tabs after scrolling 150px down
+          
+          if (scrollY > threshold && !isTabsCollapsed) {
+            setIsTabsCollapsed(true);
+          } else if (scrollY <= threshold && isTabsCollapsed) {
+            setIsTabsCollapsed(false);
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isTabsCollapsed]);
 
@@ -139,10 +147,12 @@ export default function Dashboard() {
 
           {/* Enhanced Dashboard Tabs with Glass Effect - Sticky Navigation */}
           <Tabs defaultValue="tasks" className="w-full animate-slide-in mb-6">
-            <div className={`sticky top-20 z-20 transition-all duration-300 ${
-              isTabsCollapsed ? 'h-0 opacity-0 pointer-events-none' : 'glass-primary rounded-lg mb-6 p-1 pl-[0px] pr-[0px] pt-[0px] pb-[0px]'
+            <div className={`sticky top-20 z-20 overflow-hidden transition-all duration-500 ease-in-out ${
+              isTabsCollapsed 
+                ? 'h-0 opacity-0 pointer-events-none transform scale-95 -translate-y-2' 
+                : 'glass-primary rounded-lg mb-6 p-1 pl-[0px] pr-[0px] pt-[0px] pb-[0px] transform scale-100 translate-y-0'
             }`}>
-              <TabsList className="grid w-full grid-cols-5 bg-transparent border-0">
+              <TabsList className="grid w-full grid-cols-5 bg-transparent border-0 transition-all duration-500 ease-in-out">
                 <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
                   Tasks
                 </TabsTrigger>
