@@ -22,10 +22,36 @@ import {
 
 export default function CampaignsPage() {
   const [activeTab, setActiveTab] = useState("browse");
-  const [isDashboardOpen, setIsDashboardOpen] = useState(true);
+  const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [isDashboardPinned, setIsDashboardPinned] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+
+  // Sync with localStorage for persistent sidebar state
+  useEffect(() => {
+    const savedPinned = localStorage.getItem('sidebar-pinned');
+    const savedCollapsed = localStorage.getItem('sidebar-collapsed');
+    
+    if (savedPinned !== null) {
+      setIsDashboardPinned(JSON.parse(savedPinned));
+    }
+    if (savedCollapsed !== null) {
+      setIsCollapsed(JSON.parse(savedCollapsed));
+    }
+  }, []);
+
+  // Update localStorage when sidebar state changes
+  const handleToggleCollapse = () => {
+    const newCollapsed = !isCollapsed;
+    setIsCollapsed(newCollapsed);
+    localStorage.setItem('sidebar-collapsed', JSON.stringify(newCollapsed));
+  };
+
+  const handlePin = () => {
+    const newPinned = !isDashboardPinned;
+    setIsDashboardPinned(newPinned);
+    localStorage.setItem('sidebar-pinned', JSON.stringify(newPinned));
+  };
   const { user, isLoading } = useAuth();
   const { toast } = useToast();
 
@@ -81,8 +107,8 @@ export default function CampaignsPage() {
         isPinned={isDashboardPinned}
         isCollapsed={isCollapsed}
         onClose={() => setIsDashboardOpen(false)}
-        onPin={() => setIsDashboardPinned(!isDashboardPinned)}
-        onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
+        onPin={handlePin}
+        onToggleCollapse={handleToggleCollapse}
       />
       
       <MobileNav 
@@ -90,19 +116,20 @@ export default function CampaignsPage() {
         onClose={() => setIsMobileNavOpen(false)}
       />
       
-      <main className={`pt-20 px-4 lg:px-6 transition-all duration-300 ease-in-out ${
-        isDashboardPinned && !isCollapsed ? 'lg:ml-80' : 
-        isDashboardPinned && isCollapsed ? 'lg:ml-20' : 
+      <main className={`pt-20 px-4 lg:px-6 transition-all duration-500 ease-in-out ${
+        isDashboardPinned && isDashboardOpen && !isCollapsed ? 'lg:ml-80' : 
+        isDashboardPinned && isDashboardOpen && isCollapsed ? 'lg:ml-20' : 
         ''
       }`}>
-        <div className={`mx-auto space-y-6 transition-all duration-300 ease-in-out ${
-          isDashboardPinned && !isCollapsed ? 'max-w-6xl' : 
-          isDashboardPinned && isCollapsed ? 'max-w-7xl' : 
+        <div className={`mx-auto space-y-6 transition-all duration-500 ease-in-out ${
+          isDashboardPinned && isDashboardOpen && !isCollapsed ? 'max-w-5xl' : 
+          isDashboardPinned && isDashboardOpen && isCollapsed ? 'max-w-6xl' : 
           'max-w-7xl'
         }`}>
           {/* Header */}
-          <div className={`flex flex-col justify-between items-start gap-4 transition-all duration-300 ease-in-out ${
-            isDashboardPinned && !isCollapsed ? 'lg:flex-row lg:items-center' : 
+          <div className={`flex flex-col justify-between items-start gap-4 transition-all duration-500 ease-in-out ${
+            isDashboardPinned && isDashboardOpen && !isCollapsed ? 'xl:flex-row xl:items-center' : 
+            isDashboardPinned && isDashboardOpen && isCollapsed ? 'lg:flex-row lg:items-center' : 
             'md:flex-row md:items-center'
           }`}>
             <div>
@@ -139,9 +166,10 @@ export default function CampaignsPage() {
           </div>
 
           {/* Quick Stats */}
-          <div className={`grid gap-4 transition-all duration-300 ease-in-out ${
-            isDashboardPinned && !isCollapsed ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-4' : 
-            'grid-cols-1 md:grid-cols-4'
+          <div className={`grid gap-4 transition-all duration-500 ease-in-out ${
+            isDashboardPinned && isDashboardOpen && !isCollapsed ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4' : 
+            isDashboardPinned && isDashboardOpen && isCollapsed ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4' : 
+            'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'
           }`}>
         <Card className="glass-subtle border-white/10 bg-gray-800/50">
           <CardContent className="p-4">
@@ -222,8 +250,9 @@ export default function CampaignsPage() {
             )}
 
             <TabsContent value="analytics" className="space-y-6">
-          <div className={`grid gap-6 transition-all duration-300 ease-in-out ${
-            isDashboardPinned && !isCollapsed ? 'grid-cols-1 xl:grid-cols-2' : 
+          <div className={`grid gap-6 transition-all duration-500 ease-in-out ${
+            isDashboardPinned && isDashboardOpen && !isCollapsed ? 'grid-cols-1 xl:grid-cols-2' : 
+            isDashboardPinned && isDashboardOpen && isCollapsed ? 'grid-cols-1 lg:grid-cols-2' : 
             'grid-cols-1 md:grid-cols-2'
           }`}>
             <Card className="glass-subtle border-white/10 bg-gray-800/50">
