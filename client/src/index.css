@@ -113,6 +113,109 @@
     will-change: transform;
   }
 
+  /* 3D Button Micro-interactions */
+  .button-3d {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .button-3d:hover {
+    transform: translateY(-2px) translateZ(10px);
+  }
+
+  .button-3d:active {
+    transform: translateY(0px) translateZ(5px);
+    transition-duration: 0.1s;
+  }
+
+  /* Enhanced depth shadows for 3D effect */
+  .depth-shadow {
+    box-shadow: 
+      0 2px 4px rgba(0, 0, 0, 0.1),
+      0 4px 8px rgba(0, 0, 0, 0.06),
+      0 8px 16px rgba(0, 0, 0, 0.04);
+  }
+
+  .depth-shadow:hover {
+    box-shadow: 
+      0 4px 8px rgba(0, 0, 0, 0.12),
+      0 8px 16px rgba(0, 0, 0, 0.08),
+      0 16px 32px rgba(0, 0, 0, 0.06),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  /* Subtle press animation */
+  .press-animation {
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .press-animation:active {
+    transform: scale(0.98);
+  }
+
+  /* Icon micro-animations */
+  .icon-float {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .icon-float:hover {
+    transform: translateY(-1px);
+  }
+
+  /* Ripple effect for button feedback */
+  .ripple-effect {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ripple-effect::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease-out, height 0.6s ease-out;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .ripple-effect:active::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  /* Enhanced button focus states for accessibility */
+  .button-3d:focus-visible {
+    outline: 2px solid rgba(16, 185, 129, 0.6);
+    outline-offset: 2px;
+    box-shadow: 
+      0 0 0 3px rgba(16, 185, 129, 0.2),
+      0 4px 8px rgba(0, 0, 0, 0.12),
+      0 8px 16px rgba(0, 0, 0, 0.08),
+      0 16px 32px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Staggered animation for lists */
+  .stagger-animation {
+    animation-delay: calc(var(--stagger-delay, 0) * 0.1s);
+  }
+
+  /* Glass card hover effects */
+  .glass-card-interactive {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glass-card-interactive:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.12),
+      0 16px 48px rgba(16, 185, 129, 0.1);
+  }
+
   * {
     @apply border-border;
   }

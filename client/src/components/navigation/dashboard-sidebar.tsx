@@ -121,15 +121,15 @@ export function DashboardSidebar({
             variant="ghost"
             size="icon"
             onClick={onToggleCollapse}
-            className="p-2 hover:bg-gray-900/95 hover:shadow-[0_4px_16px_rgba(16,185,129,0.3),0_0_8px_rgba(16,185,129,0.2)] rounded-xl transition-all duration-300 touch-manipulation"
+            className="p-2 hover:bg-gray-900/95 hover:shadow-[0_4px_16px_rgba(16,185,129,0.3),0_0_8px_rgba(16,185,129,0.2)] rounded-xl button-3d press-animation ripple-effect transition-all duration-300 touch-manipulation"
             title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             haptic="light"
           >
             {isCollapsed ? (
-              <ChevronRight className="w-4 h-4 text-white/60" />
+              <ChevronRight className="w-4 h-4 text-white/60 icon-float" />
             ) : (
-              <ChevronLeft className="w-4 h-4 text-white/60" />
+              <ChevronLeft className="w-4 h-4 text-white/60 icon-float" />
             )}
           </Button>
           
@@ -138,12 +138,12 @@ export function DashboardSidebar({
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="p-2 hover:bg-gray-900/95 hover:shadow-[0_4px_16px_rgba(16,185,129,0.3),0_0_8px_rgba(16,185,129,0.2)] rounded-xl transition-all duration-300 touch-manipulation"
+              className="p-2 hover:bg-gray-900/95 hover:shadow-[0_4px_16px_rgba(16,185,129,0.3),0_0_8px_rgba(16,185,129,0.2)] rounded-xl button-3d press-animation ripple-effect transition-all duration-300 touch-manipulation"
               title="Close sidebar"
               aria-label="Close sidebar"
               haptic="light"
             >
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5 icon-float" />
             </Button>
           )}
         </div>
@@ -162,10 +162,12 @@ export function DashboardSidebar({
                 variant="ghost"
                 onClick={() => handleNavigation(item)}
                 className={cn(
-                  "w-full p-3 glass-subtle rounded-xl transition-all duration-300 font-inter touch-manipulation relative",
+                  "w-full p-3 glass-subtle rounded-xl font-inter touch-manipulation relative",
+                  "button-3d depth-shadow press-animation ripple-effect",
                   "hover:bg-gray-900/95 hover:border-emerald-400/40 hover:shadow-[0_8px_32px_rgba(16,185,129,0.4),0_0_16px_rgba(16,185,129,0.2)] hover:text-emerald-100",
+                  "transition-all duration-300 ease-out",
                   isCollapsed ? "justify-center" : "justify-start gap-3",
-                  location === item.path && "veri-gradient text-white shadow-lg shadow-emerald-500/50",
+                  location === item.path && "veri-gradient text-white shadow-lg shadow-emerald-500/50 transform translateY(-1px)",
                   "focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
                 )}
                 title={isCollapsed ? `${item.label} (Alt+${index + 1})` : `Alt+${index + 1}`}
@@ -173,7 +175,7 @@ export function DashboardSidebar({
                 aria-current={location === item.path ? "page" : undefined}
                 haptic="light"
               >
-                <Icon className="w-5 h-5" />
+                <Icon className={cn("w-5 h-5 icon-float", location === item.path && "transform translateY(-0.5px)")} />
                 {!isCollapsed && <span className="font-medium">{item.label}</span>}
                 {!isCollapsed && (
                   <span className="sr-only">Press Alt+{index + 1} for keyboard shortcut</span>
@@ -189,8 +191,10 @@ export function DashboardSidebar({
             variant="ghost"
             onClick={handleLogout}
             className={cn(
-              "w-full p-3 glass-subtle rounded-xl transition-all duration-300 font-inter text-red-400 hover:text-red-300 touch-manipulation relative",
+              "w-full p-3 glass-subtle rounded-xl font-inter text-red-400 hover:text-red-300 touch-manipulation relative",
+              "button-3d depth-shadow press-animation ripple-effect",
               "hover:bg-gray-900/95 hover:border-red-400/40 hover:shadow-[0_8px_32px_rgba(239,68,68,0.4),0_0_16px_rgba(239,68,68,0.2)]",
+              "transition-all duration-300 ease-out",
               isCollapsed ? "justify-center" : "justify-start gap-3",
               "focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2"
             )}
@@ -198,7 +202,7 @@ export function DashboardSidebar({
             aria-label="Log out of your account"
             haptic="warning"
           >
-            <LogOut className="w-5 h-5" />
+            <LogOut className="w-5 h-5 icon-float" />
             {!isCollapsed && <span className="font-medium">Log out</span>}
           </Button>
         </div>

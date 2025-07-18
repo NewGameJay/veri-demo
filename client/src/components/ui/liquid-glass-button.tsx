@@ -20,6 +20,7 @@ export function LiquidGlassButton({
     relative overflow-hidden rounded-full font-medium
     transform-gpu backdrop-blur-xl
     border border-white/20 shadow-lg
+    button-3d depth-shadow press-animation ripple-effect
     transition-all duration-500 ease-out
     hover:scale-[1.02] hover:-translate-y-1 active:scale-95
     before:content-[''] before:absolute before:inset-0 before:rounded-full before:opacity-0
