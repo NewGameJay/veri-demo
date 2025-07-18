@@ -18,6 +18,7 @@ export default function Home() {
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "signup">("signup");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useAuth();
 
   const handleGetStarted = () => {
@@ -41,9 +42,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-black via-gray-900 to-emerald-950/50">
-      {/* Custom Header for Landing Page */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-8 py-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-3 items-center">
+      {/* Custom Glass Header for Landing Page */}
+      <header className="fixed top-0 left-0 right-0 z-50 px-8 py-6 glass-header">
+        <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-3 items-center">
           {/* Left - Logo */}
           <div className="justify-self-start">
             <VeriLogo />
@@ -51,29 +52,102 @@ export default function Home() {
           
           {/* Center - Navigation */}
           <nav className="hidden md:flex items-center justify-center gap-8">
-            <a href="#features" className="text-white/70 hover:text-white transition-colors">Features</a>
-            <a href="#creators" className="text-white/70 hover:text-white transition-colors">For Creators</a>
-            <a href="#brands" className="text-white/70 hover:text-white transition-colors">For Brands</a>
-            <a href="#about" className="text-white/70 hover:text-white transition-colors">About</a>
+            <a href="#features" className="text-white/80 hover:text-white transition-all duration-300 hover:scale-105 hover:drop-shadow-lg">Features</a>
+            <a href="#creators" className="text-white/80 hover:text-white transition-all duration-300 hover:scale-105 hover:drop-shadow-lg">For Creators</a>
+            <a href="#brands" className="text-white/80 hover:text-white transition-all duration-300 hover:scale-105 hover:drop-shadow-lg">For Brands</a>
+            <a href="#about" className="text-white/80 hover:text-white transition-all duration-300 hover:scale-105 hover:drop-shadow-lg">About</a>
           </nav>
 
           {/* Right - Auth Buttons */}
           <div className="justify-self-end flex items-center gap-4">
             <button 
               onClick={handleSignIn}
-              className="text-white/70 hover:text-white transition-colors"
+              className="text-white/80 hover:text-white transition-all duration-300 hover:scale-105 hover:drop-shadow-lg"
             >
               Sign In
             </button>
             <Button
               onClick={handleGetStarted}
-              className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 rounded-full"
+              className="glass hover:glass-primary text-white px-6 py-2 rounded-full transition-all duration-300 hover:scale-105 shadow-glow"
             >
               Get Started
             </Button>
           </div>
+          
+          {/* Mobile Menu Button */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden justify-self-end text-white/80 hover:text-white transition-all duration-300 hover:scale-105"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+            </svg>
+          </button>
         </div>
       </header>
+
+      {/* Mobile Navigation Overlay */}
+      {isMobileMenuOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="fixed top-24 left-0 right-0 z-40 md:hidden glass-secondary mx-4 rounded-2xl shadow-2xl"
+        >
+          <nav className="flex flex-col p-6 space-y-4">
+            <a 
+              href="#features" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-white/80 hover:text-white transition-all duration-300 py-3 px-4 rounded-xl hover:glass-primary"
+            >
+              Features
+            </a>
+            <a 
+              href="#creators" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-white/80 hover:text-white transition-all duration-300 py-3 px-4 rounded-xl hover:glass-primary"
+            >
+              For Creators
+            </a>
+            <a 
+              href="#brands" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-white/80 hover:text-white transition-all duration-300 py-3 px-4 rounded-xl hover:glass-primary"
+            >
+              For Brands
+            </a>
+            <a 
+              href="#about" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-white/80 hover:text-white transition-all duration-300 py-3 px-4 rounded-xl hover:glass-primary"
+            >
+              About
+            </a>
+            <div className="flex flex-col gap-3 pt-4 border-t border-white/20">
+              <button 
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  handleSignIn();
+                }}
+                className="text-white/80 hover:text-white transition-all duration-300 py-3 px-4 rounded-xl hover:glass-primary text-left"
+              >
+                Sign In
+              </button>
+              <Button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  handleGetStarted();
+                }}
+                className="glass hover:glass-primary text-white px-4 py-3 rounded-xl transition-all duration-300"
+              >
+                Get Started
+              </Button>
+            </div>
+          </nav>
+        </motion.div>
+      )}
+
       <DashboardSidebar
         isOpen={isDashboardOpen}
         isPinned={false}
