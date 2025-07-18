@@ -88,13 +88,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-900 hero-gradient pb-12 relative">
-      {/* Enhanced background pattern for glass showcase */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-emerald-500/30 to-blue-500/30 rounded-full blur-xl"></div>
-        <div className="absolute top-40 right-20 w-48 h-48 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-40 left-1/4 w-40 h-40 bg-gradient-to-r from-blue-500/25 to-cyan-500/25 rounded-full blur-xl"></div>
-        <div className="absolute top-1/3 right-1/3 w-24 h-24 bg-gradient-to-r from-emerald-400/30 to-teal-400/30 rounded-full blur-lg"></div>
-      </div>
       <Header
         onDashboardToggle={handleDashboardToggle}
         onMobileMenuToggle={handleDashboardToggle}
