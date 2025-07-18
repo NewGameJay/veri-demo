@@ -22,7 +22,7 @@ import {
 
 export default function CampaignsPage() {
   const [activeTab, setActiveTab] = useState("browse");
-  const [isDashboardOpen, setIsDashboardOpen] = useState(false);
+  const [isDashboardOpen, setIsDashboardOpen] = useState(true);
   const [isDashboardPinned, setIsDashboardPinned] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
@@ -31,12 +31,16 @@ export default function CampaignsPage() {
   useEffect(() => {
     const savedPinned = localStorage.getItem('sidebar-pinned');
     const savedCollapsed = localStorage.getItem('sidebar-collapsed');
+    const savedOpen = localStorage.getItem('sidebar-open');
     
     if (savedPinned !== null) {
       setIsDashboardPinned(JSON.parse(savedPinned));
     }
     if (savedCollapsed !== null) {
       setIsCollapsed(JSON.parse(savedCollapsed));
+    }
+    if (savedOpen !== null) {
+      setIsDashboardOpen(JSON.parse(savedOpen));
     }
   }, []);
 
@@ -51,6 +55,12 @@ export default function CampaignsPage() {
     const newPinned = !isDashboardPinned;
     setIsDashboardPinned(newPinned);
     localStorage.setItem('sidebar-pinned', JSON.stringify(newPinned));
+  };
+
+  const handleDashboardToggle = () => {
+    const newOpen = !isDashboardOpen;
+    setIsDashboardOpen(newOpen);
+    localStorage.setItem('sidebar-open', JSON.stringify(newOpen));
   };
   const { user, isLoading } = useAuth();
   const { toast } = useToast();
@@ -98,7 +108,7 @@ export default function CampaignsPage() {
            `
          }}>
       <Header 
-        onDashboardToggle={() => setIsDashboardOpen(!isDashboardOpen)}
+        onDashboardToggle={handleDashboardToggle}
         onMobileMenuToggle={() => setIsMobileNavOpen(!isMobileNavOpen)}
       />
       
@@ -106,7 +116,10 @@ export default function CampaignsPage() {
         isOpen={isDashboardOpen}
         isPinned={isDashboardPinned}
         isCollapsed={isCollapsed}
-        onClose={() => setIsDashboardOpen(false)}
+        onClose={() => {
+          setIsDashboardOpen(false);
+          localStorage.setItem('sidebar-open', JSON.stringify(false));
+        }}
         onPin={handlePin}
         onToggleCollapse={handleToggleCollapse}
       />
