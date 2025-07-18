@@ -61,26 +61,14 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-800 pb-12 relative overflow-hidden">
-      {/* Dramatic Background Pattern for Glass Showcase - PDF Specification */}
-      <div className="absolute inset-0 opacity-40">
-        {/* Large gradient orbs for depth */}
-        <div className="absolute -top-20 -left-20 w-96 h-96 bg-gradient-to-r from-emerald-500/50 to-blue-500/40 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-1/4 -right-32 w-80 h-80 bg-gradient-to-r from-purple-500/40 to-pink-500/30 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 left-1/4 w-72 h-72 bg-gradient-to-r from-blue-500/45 to-cyan-500/35 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 right-1/4 w-64 h-64 bg-gradient-to-r from-emerald-400/40 to-teal-400/30 rounded-full blur-2xl"></div>
-        
-        {/* Medium accent patterns */}
-        <div className="absolute top-32 left-1/3 w-48 h-48 bg-gradient-to-r from-violet-500/25 to-indigo-500/20 rounded-full blur-xl"></div>
-        <div className="absolute bottom-32 right-1/3 w-40 h-40 bg-gradient-to-r from-rose-500/25 to-orange-500/20 rounded-full blur-xl"></div>
-        
-        {/* Small detail elements */}
-        <div className="absolute top-20 right-20 w-24 h-24 bg-gradient-to-r from-cyan-400/30 to-blue-400/25 rounded-full blur-lg"></div>
-        <div className="absolute bottom-40 left-20 w-32 h-32 bg-gradient-to-r from-pink-400/25 to-purple-400/20 rounded-full blur-lg"></div>
+    <div className="min-h-screen bg-gray-900 hero-gradient pb-12 relative">
+      {/* Enhanced background pattern for glass showcase */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-emerald-500/30 to-blue-500/30 rounded-full blur-xl"></div>
+        <div className="absolute top-40 right-20 w-48 h-48 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-40 left-1/4 w-40 h-40 bg-gradient-to-r from-blue-500/25 to-cyan-500/25 rounded-full blur-xl"></div>
+        <div className="absolute top-1/3 right-1/3 w-24 h-24 bg-gradient-to-r from-emerald-400/30 to-teal-400/30 rounded-full blur-lg"></div>
       </div>
-      
-      {/* Additional texture overlay for glass contrast */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10"></div>
       <Header
         onDashboardToggle={handleDashboardToggle}
         onMobileMenuToggle={handleDashboardToggle}
@@ -133,7 +121,7 @@ export default function Dashboard() {
 
           {/* Enhanced Dashboard Tabs with Glass Effect - Sticky Navigation */}
           <Tabs defaultValue="tasks" className="w-full animate-slide-in mb-6">
-            <div className="sticky top-20 z-20 glass-interactive rounded-lg mb-6 p-1 shadow-2xl">
+            <div className="sticky top-20 z-20 glass-primary rounded-lg mb-6 p-1">
               <TabsList className="grid w-full grid-cols-5 bg-transparent border-0">
                 <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
                   Tasks
