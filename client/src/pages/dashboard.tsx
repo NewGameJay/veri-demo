@@ -61,7 +61,14 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-800 hero-gradient pb-12">
+    <div className="min-h-screen bg-gray-900 hero-gradient pb-12 relative">
+      {/* Enhanced background pattern for glass showcase */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-emerald-500/30 to-blue-500/30 rounded-full blur-xl"></div>
+        <div className="absolute top-40 right-20 w-48 h-48 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-40 left-1/4 w-40 h-40 bg-gradient-to-r from-blue-500/25 to-cyan-500/25 rounded-full blur-xl"></div>
+        <div className="absolute top-1/3 right-1/3 w-24 h-24 bg-gradient-to-r from-emerald-400/30 to-teal-400/30 rounded-full blur-lg"></div>
+      </div>
       <Header
         onDashboardToggle={handleDashboardToggle}
         onMobileMenuToggle={handleDashboardToggle}
@@ -91,7 +98,7 @@ export default function Dashboard() {
 
               {/* Compact Streak Display */}
               <div className="flex items-center gap-4">
-                <div className="glass-effect px-4 py-3 rounded-xl border border-white/20 bg-gradient-to-r from-emerald-500/10 to-blue-500/10">
+                <div className="glass-primary px-4 py-3 rounded-xl">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-r from-emerald-500 to-blue-500 flex items-center justify-center">
                       <span className="text-lg font-termina text-white">{userStreak}</span>
@@ -114,7 +121,7 @@ export default function Dashboard() {
 
           {/* Enhanced Dashboard Tabs with Glass Effect - Sticky Navigation */}
           <Tabs defaultValue="tasks" className="w-full animate-slide-in mb-6">
-            <div className="sticky top-20 z-20 sticky-tabs rounded-lg mb-6 p-1">
+            <div className="sticky top-20 z-20 glass-primary rounded-lg mb-6 p-1">
               <TabsList className="grid w-full grid-cols-5 bg-transparent border-0">
                 <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
                   Tasks

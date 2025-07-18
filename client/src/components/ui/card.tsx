@@ -14,9 +14,9 @@ const Card = React.forwardRef<
   
   const variantClasses = {
     default: "border-border",
-    glass: "glass-subtle border-white/10",
-    elevated: "shadow-depth-2 border-white/5",
-    minimal: "border-transparent shadow-none"
+    glass: "glass-secondary",
+    elevated: "glass-primary",
+    minimal: "border-transparent shadow-none bg-transparent"
   };
   
   const interactionClasses = cn(
