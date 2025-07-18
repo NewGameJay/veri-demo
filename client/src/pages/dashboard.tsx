@@ -121,7 +121,7 @@ export default function Dashboard() {
 
           {/* Enhanced Dashboard Tabs with Glass Effect - Sticky Navigation */}
           <Tabs defaultValue="tasks" className="w-full animate-slide-in mb-6">
-            <div className="sticky top-20 z-20 glass-primary rounded-lg mb-6 p-1">
+            <div className="sticky top-20 z-20 glass-primary rounded-lg mb-6 p-1 pl-[0px] pr-[0px] pt-[0px] pb-[0px]">
               <TabsList className="grid w-full grid-cols-5 bg-transparent border-0">
                 <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter transition-all duration-300">
                   Tasks
