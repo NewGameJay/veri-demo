@@ -1,33 +1,33 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Simplified emoji mappings using only ✅ ⚡🏁 🏆⭐
+// Simplified emoji mappings using only ✅ ⚡🏁 🏆⭐💎
 const contextualEmojis = {
   taskComplete: {
-    gaming: ["✅", "⚡", "🏁", "🏆", "⭐"],
-    social: ["✅", "⭐", "⚡", "🏆", "🏁"],
-    achievement: ["🏆", "⭐", "✅", "⚡", "🏁"],
-    streak: ["⚡", "🏁", "⭐", "✅", "🏆"],
-    xpGain: ["⭐", "⚡", "🏆", "✅", "🏁"]
+    gaming: ["✅", "⚡", "🏁", "🏆", "⭐", "💎"],
+    social: ["✅", "⭐", "⚡", "🏆", "🏁", "💎"],
+    achievement: ["🏆", "⭐", "✅", "⚡", "🏁", "💎"],
+    streak: ["⚡", "🏁", "⭐", "✅", "🏆", "💎"],
+    xpGain: ["⭐", "⚡", "🏆", "✅", "🏁", "💎"]
   },
   socialConnect: {
-    twitter: ["✅", "⭐", "⚡", "🏆", "🏁"],
-    instagram: ["✅", "⭐", "⚡", "🏆", "🏁"],
-    youtube: ["✅", "⭐", "⚡", "🏆", "🏁"],
-    twitch: ["✅", "⭐", "⚡", "🏆", "🏁"],
-    general: ["✅", "⭐", "⚡", "🏆", "🏁"]
+    twitter: ["✅", "⭐", "⚡", "🏆", "🏁", "💎"],
+    instagram: ["✅", "⭐", "⚡", "🏆", "🏁", "💎"],
+    youtube: ["✅", "⭐", "⚡", "🏆", "🏁", "💎"],
+    twitch: ["✅", "⭐", "⚡", "🏆", "🏁", "💎"],
+    general: ["✅", "⭐", "⚡", "🏆", "🏁", "💎"]
   },
   milestone: {
-    levelUp: ["⭐", "⚡", "🏆", "✅", "🏁"],
-    rankUp: ["🏆", "⭐", "⚡", "✅", "🏁"],
-    firstTime: ["✅", "⭐", "⚡", "🏆", "🏁"],
-    perfect: ["🏆", "⭐", "⚡", "✅", "🏁"]
+    levelUp: ["⭐", "⚡", "🏆", "✅", "🏁", "💎"],
+    rankUp: ["🏆", "⭐", "⚡", "✅", "🏁", "💎"],
+    firstTime: ["✅", "⭐", "⚡", "🏆", "🏁", "💎"],
+    perfect: ["🏆", "⭐", "⚡", "✅", "🏁", "💎"]
   },
   engagement: {
-    like: ["⭐", "⚡", "✅", "🏆", "🏁"],
-    share: ["⚡", "⭐", "🏆", "✅", "🏁"],
-    comment: ["⭐", "✅", "⚡", "🏆", "🏁"],
-    follow: ["✅", "⭐", "⚡", "🏆", "🏁"]
+    like: ["⭐", "⚡", "✅", "🏆", "🏁", "💎"],
+    share: ["⚡", "⭐", "🏆", "✅", "🏁", "💎"],
+    comment: ["⭐", "✅", "⚡", "🏆", "🏁", "💎"],
+    follow: ["✅", "⭐", "⚡", "🏆", "🏁", "💎"]
   }
 };
 
@@ -67,7 +67,7 @@ export function EmojiReaction({
   const getContextualEmojis = () => {
     const categoryEmojis = contextualEmojis[type]?.[category as keyof typeof contextualEmojis[typeof type]] || 
                           contextualEmojis[type]?.['general' as keyof typeof contextualEmojis[typeof type]] ||
-                          ['✅', '⚡', '🏁', '🏆', '⭐'];
+                          ['✅', '⚡', '🏁', '🏆', '⭐', '💎'];
     
     // Shuffle and pick random emojis
     const shuffled = [...categoryEmojis].sort(() => Math.random() - 0.5);
