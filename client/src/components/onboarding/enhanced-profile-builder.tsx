@@ -6,12 +6,19 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight, Sparkles, User, Globe, Briefcase, CheckCircle, Shield, X, Loader2, Camera, Share2, Twitter, Copy, Users, TrendingUp, Star, Trophy } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
+import { User } from 'lucide-react';
+import { Globe } from 'lucide-react';
+import { Briefcase } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
+import { Shield } from 'lucide-react';
+import { X } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useAuth } from "@/contexts/auth-context";
 import { motion, AnimatePresence } from "framer-motion";
 import { triggerHaptic } from "@/lib/haptic";
-import { EmojiReaction, useEmojiReaction } from "@/components/ui/emoji-reaction";
-import { SocialShare } from "@/components/social/social-share";
 
 interface EnhancedProfileBuilderProps {
   onComplete: () => void;
@@ -26,16 +33,12 @@ interface ProfileFormData {
   profileType: 'individual' | 'business';
   interests: string[];
   goals: string[];
-  profilePicture: string;
 }
 
 export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileBuilderProps) {
   const { user, completeProfile } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [isAIGenerating, setIsAIGenerating] = useState(false);
-  const [hasSharedProfile, setHasSharedProfile] = useState(false);
-  const [isCompleting, setIsCompleting] = useState(false);
-  const { triggerReaction } = useEmojiReaction();
   const [formData, setFormData] = useState<ProfileFormData>({
     name: user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : '',
     bio: '',
@@ -43,8 +46,7 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
     userType: 'creator',
     profileType: 'individual',
     interests: [],
-    goals: [],
-    profilePicture: ''
+    goals: []
   });
 
   const steps = [
@@ -64,9 +66,9 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
       description: 'Let AI optimize your profile'
     },
     {
-      id: 'profile-preview',
-      title: 'Profile Preview',
-      description: 'Preview your complete Veri profile'
+      id: 'review',
+      title: 'Review & Publish',
+      description: 'Final review before going live'
     }
   ];
 
@@ -166,64 +168,6 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
     }
   };
 
-  const handleProfilePictureUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        updateFormData('profilePicture', e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleShareProfile = (platform: string) => {
-    setHasSharedProfile(true);
-    triggerHaptic('light');
-    
-    // Trigger emoji reaction for sharing
-    triggerReaction({
-      type: 'socialConnect',
-      category: platform,
-      style: 'cascade',
-      count: 6,
-      size: 'md',
-      duration: 3000
-    });
-  };
-
-  const handleCompleteProfile = async () => {
-    setIsCompleting(true);
-    triggerHaptic('success');
-    
-    try {
-      // Trigger diamond celebration animation
-      triggerReaction({
-        type: 'milestone',
-        category: 'perfect',
-        style: 'burst',
-        count: 10,
-        size: 'lg',
-        duration: 4000
-      });
-
-      // Complete profile with form data
-      await completeProfile();
-      
-      // Give bonus XP if profile was shared
-      if (hasSharedProfile) {
-        console.log('Profile shared! +50 XP bonus awarded');
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      onComplete();
-    } catch (error) {
-      console.error('Profile completion failed:', error);
-    } finally {
-      setIsCompleting(false);
-    }
-  };
-
   const updateFormData = (field: keyof ProfileFormData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
@@ -255,7 +199,7 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
       case 2:
         return formData.bio.trim() !== '';
       case 3:
-        return formData.name.trim() !== '' && formData.bio.trim() !== '';
+        return true;
       default:
         return false;
     }
@@ -384,7 +328,7 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
 
                   <div>
                     <Label>Interests (select up to 5)</Label>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2 max-h-40 overflow-y-auto p-2 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
                       {interests.map((interest) => (
                         <Button
                           key={interest}
@@ -406,7 +350,7 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
 
                   <div>
                     <Label>Goals (select up to 3)</Label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2 max-h-32 overflow-y-auto p-2 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
                       {goals.map((goal) => (
                         <Button
                           key={goal}
@@ -499,214 +443,67 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
 
               {currentStep === 2 && (
                 <div className="space-y-6">
-                  {/* Profile Picture Upload */}
-                  <Card className="glass-medium border-white/20">
+                  <Card className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border-emerald-200 dark:border-emerald-800">
                     <CardContent className="p-6">
-                      <div className="text-center">
-                        <h3 className="font-bold text-gray-900 dark:text-white mb-4">Profile Picture</h3>
-                        <div className="relative mx-auto w-32 h-32 mb-4">
-                          {formData.profilePicture ? (
-                            <img 
-                              src={formData.profilePicture} 
-                              alt="Profile" 
-                              className="w-full h-full rounded-full object-cover border-4 border-emerald-500"
-                            />
-                          ) : (
-                            <div className="w-full h-full rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center border-4 border-emerald-500">
-                              <User className="w-16 h-16 text-white" />
-                            </div>
-                          )}
-                          <label htmlFor="profile-picture" className="absolute bottom-0 right-0 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-2 cursor-pointer transition-colors">
-                            <Camera className="w-4 h-4" />
-                          </label>
-                          <input
-                            id="profile-picture"
-                            type="file"
-                            accept="image/*"
-                            onChange={handleProfilePictureUpload}
-                            className="hidden"
-                          />
-                        </div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          Click the camera icon to upload your profile picture
-                        </p>
+                      <div className="flex items-center gap-3 mb-4">
+                        <CheckCircle className="w-6 h-6 text-emerald-600" />
+                        <h3 className="font-bold text-emerald-900 dark:text-emerald-100">
+                          Profile Complete!
+                        </h3>
                       </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Full Veri Profile Preview */}
-                  <Card className="glass-medium border-emerald-200/50 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20">
-                    <CardHeader className="text-center pb-4">
-                      <div className="flex items-center justify-center gap-2 mb-2">
-                        <Shield className="w-6 h-6 text-emerald-600" />
-                        <CardTitle className="text-emerald-900 dark:text-emerald-100">Your Veri Profile Preview</CardTitle>
-                      </div>
-                      <p className="text-emerald-700 dark:text-emerald-200 text-sm">
-                        This is how your profile will appear to other users and brands
+                      <p className="text-emerald-800 dark:text-emerald-200 mb-4">
+                        Your Veri profile is ready to go live. You'll now have access to all premium features.
                       </p>
-                    </CardHeader>
-                    <CardContent className="p-6 space-y-6">
-                      {/* Profile Header */}
-                      <div className="text-center">
-                        <div className="relative mx-auto w-24 h-24 mb-4">
-                          {formData.profilePicture ? (
-                            <img 
-                              src={formData.profilePicture} 
-                              alt="Profile" 
-                              className="w-full h-full rounded-full object-cover border-3 border-emerald-400"
-                            />
-                          ) : (
-                            <div className="w-full h-full rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
-                              <User className="w-12 h-12 text-white" />
-                            </div>
-                          )}
-                          <div className="absolute -bottom-1 -right-1 bg-emerald-600 text-white rounded-full w-8 h-8 flex items-center justify-center">
-                            <Shield className="w-4 h-4" />
-                          </div>
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-600" />
+                          <span className="text-sm text-emerald-800 dark:text-emerald-200">
+                            AI Agent tools unlocked
+                          </span>
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{formData.name}</h2>
-                        <Badge className="bg-emerald-100 text-emerald-700 border-emerald-300 capitalize mb-2">
-                          {formData.userType} Creator
-                        </Badge>
-                        <div className="flex items-center justify-center gap-4 text-sm text-gray-600 dark:text-gray-300">
-                          <div className="flex items-center gap-1">
-                            <Star className="w-4 h-4 text-yellow-500" />
-                            <span>VeriScore: --</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Trophy className="w-4 h-4 text-emerald-500" />
-                            <span>0 XP</span>
-                          </div>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-600" />
+                          <span className="text-sm text-emerald-800 dark:text-emerald-200">
+                            Engage & Earn tasks available
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-600" />
+                          <span className="text-sm text-emerald-800 dark:text-emerald-200">
+                            Premium creator features enabled
+                          </span>
                         </div>
                       </div>
+                    </CardContent>
+                  </Card>
 
-                      {/* Bio Section */}
-                      <div className="text-center">
-                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{formData.bio}</p>
-                        {formData.website && (
-                          <div className="mt-2">
-                            <a href={formData.website} className="text-emerald-600 hover:text-emerald-700 text-sm font-medium inline-flex items-center gap-1">
-                              <Globe className="w-4 h-4" />
-                              {formData.website}
-                            </a>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Interests & Goals */}
-                      <div className="space-y-4">
-                        <div>
-                          <h4 className="font-medium text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                            <Sparkles className="w-4 h-4 text-emerald-600" />
-                            Interests
-                          </h4>
-                          <div className="flex flex-wrap gap-2">
-                            {formData.interests.map((interest) => (
-                              <Badge key={interest} variant="secondary" className="bg-emerald-100 text-emerald-700 border-emerald-200">
-                                {interest}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                            <TrendingUp className="w-4 h-4 text-emerald-600" />
-                            Goals
-                          </h4>
-                          <div className="flex flex-wrap gap-2">
-                            {formData.goals.map((goal) => (
-                              <Badge key={goal} variant="outline" className="border-emerald-300 text-emerald-700">
-                                {goal}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Social Platform Connections */}
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-gray-900 dark:text-white">Profile Summary</h4>
+                    <div className="space-y-3">
                       <div>
-                        <h4 className="font-medium text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                          <Users className="w-4 h-4 text-emerald-600" />
-                          Connected Platforms
-                        </h4>
-                        <div className="text-center py-6 text-gray-500 dark:text-gray-400">
-                          <Users className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                          <p className="text-sm">Connect your social platforms to unlock full profile features</p>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">Name:</span>
+                        <p className="font-medium text-gray-900 dark:text-white">{formData.name}</p>
+                      </div>
+                      <div>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">Type:</span>
+                        <Badge className="ml-2 capitalize">{formData.userType}</Badge>
+                      </div>
+                      <div>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">Interests:</span>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {formData.interests.map((interest) => (
+                            <Badge key={interest} variant="secondary" className="text-xs">
+                              {interest}
+                            </Badge>
+                          ))}
                         </div>
                       </div>
-
-                      {/* Features Unlocked */}
-                      <div className="bg-emerald-50 dark:bg-emerald-900/30 rounded-lg p-4 border border-emerald-200 dark:border-emerald-800">
-                        <h4 className="font-medium text-emerald-900 dark:text-emerald-100 mb-3 flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4" />
-                          Premium Features Unlocked
-                        </h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                          <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-200">
-                            <CheckCircle className="w-3 h-3" />
-                            AI Agent tools
-                          </div>
-                          <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-200">
-                            <CheckCircle className="w-3 h-3" />
-                            Engage & Earn tasks
-                          </div>
-                          <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-200">
-                            <CheckCircle className="w-3 h-3" />
-                            Brand partnerships
-                          </div>
-                          <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-200">
-                            <CheckCircle className="w-3 h-3" />
-                            Analytics dashboard
-                          </div>
-                        </div>
+                      <div>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">Bio:</span>
+                        <p className="text-sm text-gray-900 dark:text-white mt-1">{formData.bio}</p>
                       </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Social Sharing for XP Bonus */}
-                  <Card className="glass-medium border-purple-200/50 bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20">
-                    <CardContent className="p-6">
-                      <div className="text-center">
-                        <div className="flex items-center justify-center gap-2 mb-3">
-                          <Share2 className="w-5 h-5 text-purple-600" />
-                          <h3 className="font-bold text-purple-900 dark:text-purple-100">Share & Earn Bonus XP</h3>
-                        </div>
-                        <p className="text-purple-700 dark:text-purple-200 text-sm mb-4">
-                          Share your new Veri profile and earn +50 XP bonus points!
-                        </p>
-                        
-                        {hasSharedProfile ? (
-                          <div className="bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-700 rounded-lg p-4">
-                            <div className="flex items-center justify-center gap-2 text-green-700 dark:text-green-300">
-                              <CheckCircle className="w-5 h-5" />
-                              <span className="font-medium">Profile shared! +50 XP bonus earned</span>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                            <Button
-                              onClick={() => handleShareProfile('twitter')}
-                              variant="outline"
-                              size="sm"
-                              className="border-purple-300 text-purple-700 hover:bg-purple-50"
-                            >
-                              <Twitter className="w-4 h-4 mr-2" />
-                              Share on Twitter
-                            </Button>
-                            <Button
-                              onClick={() => handleShareProfile('copy')}
-                              variant="outline"
-                              size="sm"
-                              className="border-purple-300 text-purple-700 hover:bg-purple-50"
-                            >
-                              <Copy className="w-4 h-4 mr-2" />
-                              Copy Link
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 </div>
               )}
             </motion.div>
@@ -727,41 +524,16 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
             </Button>
             
             <Button
-              onClick={currentStep === steps.length - 1 ? handleCompleteProfile : handleNext}
-              disabled={!isStepValid() || (currentStep === steps.length - 1 && isCompleting)}
+              onClick={handleNext}
+              disabled={!isStepValid()}
               className="bg-emerald-600 hover:bg-emerald-700"
               haptic="light"
             >
-              {currentStep === steps.length - 1 ? (
-                isCompleting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Completing...
-                  </>
-                ) : (
-                  <>
-                    <Trophy className="w-4 h-4 mr-2" />
-                    Complete Profile {hasSharedProfile ? '(+50 XP Bonus!)' : ''}
-                  </>
-                )
-              ) : (
-                <>
-                  Next
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </>
-              )}
+              {currentStep === steps.length - 1 ? 'Complete Profile' : 'Next'}
+              {currentStep < steps.length - 1 && <ArrowRight className="w-4 h-4 ml-2" />}
             </Button>
           </div>
         </div>
-
-        {/* Emoji Reactions Component */}
-        <EmojiReaction 
-          type="milestone"
-          category="perfect"
-          trigger={false}
-          position="center"
-          style="burst"
-        />
       </motion.div>
     </div>
   );
