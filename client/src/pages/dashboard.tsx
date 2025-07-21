@@ -246,13 +246,6 @@ export default function Dashboard() {
                 <div className="lg:col-span-4 space-y-6">
                   {/* Vertical VeriScore Card */}
                   <VeriScoreCard />
-                  
-                  {/* Recommended Campaigns */}
-                  <RecommendedCampaigns 
-                    userStreak={userStreak} 
-                    userXP={userXP} 
-                    onViewAllCampaigns={() => setActiveTab("campaigns")}
-                  />
 
                   {/* Social Connections */}
                   <SocialConnections />
