@@ -1825,133 +1825,145 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                   return (
                     <div 
                       key={task.id} 
-                      className="group glass-subtle rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 animate-fade-in relative overflow-hidden hover:scale-[1.02] hover:shadow-2xl"
+                      className="group rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in relative hover:scale-[1.02] hover:shadow-2xl"
                       style={{
                         animationDelay: `${task.id * 100}ms`
                       }}
                     >
-                      {/* Partner Brand Header - More Visual */}
-                      <div className="relative overflow-hidden">
-                        <div className={`h-40 relative ${getPartnerGradient(task.brand, task.id)}`}>
-                          {/* Overlay gradient for better text readability */}
-                          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/60"></div>
-                          
-                          {/* Partner Brand Badge - Top Left */}
-                          <div className="absolute top-3 left-3">
-                            <Badge variant="secondary" className="bg-black/30 backdrop-blur-sm text-white text-xs border border-white/20">
-                              {task.brand?.replace('.gg', '').replace('.xyz', '') || 'Partner'}
-                            </Badge>
-                          </div>
-                          
-                          {/* XP Points - Top Right */}
-                          <div className="absolute top-3 right-3">
-                            <Badge variant="secondary" className="bg-black/30 backdrop-blur-sm text-white font-semibold border border-white/20">
-                              {task.points} XP
-                            </Badge>
-                          </div>
-                          
-                          {/* Platform Icon - Center */}
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="text-center">
-                              <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center mb-2 border border-white/20">
-                                <task.icon className="h-6 w-6 text-white" />
+                      {/* Full Background with Partner Gradient */}
+                      <div className={`relative h-24 ${getPartnerGradient(task.brand, task.id)}`}>
+                        {/* Subtle overlay for depth */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/30"></div>
+                        
+                        {/* Top Row - Partner Badge and XP */}
+                        <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+                          <Badge variant="secondary" className="bg-white/90 text-black text-xs font-medium px-2 py-1 rounded-full backdrop-blur-sm">
+                            {task.brand?.replace('.gg', '').replace('.xyz', '') || 'Partner'}
+                          </Badge>
+                          <Badge variant="secondary" className="bg-white/90 text-black font-semibold text-xs px-2 py-1 rounded-full backdrop-blur-sm flex items-center">
+                            <span className="text-green-600 mr-1">▲</span>
+                            {task.points}
+                          </Badge>
+                        </div>
+                        
+                        {/* Bottom Glass Overlay with Content */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-black/40 backdrop-blur-md border-t border-white/10">
+                          <div className="p-3 flex items-center justify-between">
+                            {/* Left side - Platform icon and title */}
+                            <div className="flex items-center space-x-3 flex-1 min-w-0">
+                              <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 flex-shrink-0">
+                                <task.icon className="h-4 w-4 text-white" />
                               </div>
-                              <div className="text-white/90 font-medium text-sm">{task.platform.toUpperCase()}</div>
+                              <div className="flex-1 min-w-0">
+                                <h3 className="text-white font-semibold text-sm truncate group-hover:text-green-300 transition-colors">
+                                  {task.title}
+                                </h3>
+                                <div className="text-white/70 text-xs capitalize">
+                                  {task.platform} • {task.difficulty}
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                          
-                          {/* Difficulty Badge - Bottom Right */}
-                          <div className="absolute bottom-3 right-3">
-                            <Badge variant="secondary" className={`${getDifficultyColor(task.difficulty)} border border-white/20 backdrop-blur-sm text-xs`}>
-                              {task.difficulty}
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Content Section - Less Text Heavy */}
-                      <div className="p-4 space-y-3">
-                        {/* Title - More prominent */}
-                        <h3 className="text-lg font-bold text-white group-hover:text-green-300 transition-colors duration-300 leading-tight">
-                          {task.title}
-                        </h3>
-                        
-                        {/* Quick Stats Row */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3 text-sm text-white/70">
-                            <div className="flex items-center space-x-1">
-                              <Clock className="h-4 w-4" />
-                              <span>{task.estimatedTime}</span>
-                            </div>
-                          </div>
-                          
-                          <Button
-                            onClick={() => toggleTaskExpansion(task.id)}
-                            size="sm"
-                            variant="ghost"
-                            className="text-white/60 hover:text-white hover:bg-white/10 p-1 h-7 w-7"
-                          >
-                            {isExpanded ? (
-                              <ChevronUp className="h-4 w-4" />
-                            ) : (
-                              <ChevronDown className="h-4 w-4" />
-                            )}
-                          </Button>
-                        </div>
-                        
-                        {/* Expandable Requirements Section */}
-                        {isExpanded && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className="pt-3 border-t border-white/15 group-hover:border-white/25 transition-colors duration-300"
-                          >
-                            <h4 className="text-sm font-medium text-white mb-2 group-hover:text-green-300 transition-colors duration-300">Full Requirements:</h4>
-                            <ul className="space-y-2">
-                              {task.requirements.map((req, index) => (
-                                <li 
-                                  key={index} 
-                                  className="text-sm text-white/70 flex items-start space-x-2 group-hover:text-white/90 transition-all duration-300 group-hover:translate-x-1"
-                                  style={{
-                                    animationDelay: `${(task.id * 100) + (index * 50)}ms`
-                                  }}
+                            
+                            {/* Right side - Action button */}
+                            <div className="flex items-center space-x-2 flex-shrink-0">
+                              {!isExpanded && (
+                                <Button
+                                  onClick={() => handleStartTask(task)}
+                                  size="sm"
+                                  className="bg-white/90 hover:bg-white text-black hover:text-black text-xs px-3 py-1 h-7 rounded-full font-medium transition-all duration-300"
+                                  disabled={selectedTask?.id === task.id}
                                 >
-                                  <div className="w-1 h-1 rounded-full bg-white/50 group-hover:bg-green-300 group-hover:scale-150 transition-all duration-300 mt-2"></div>
-                                  <span className="group-hover:font-medium transition-all duration-300 flex-1">{req}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </motion.div>
-                        )}
-                        
-                        {/* Action Button */}
-                        <div className="pt-3">
-                          <Button
-                            onClick={() => handleStartTask(task)}
-                            size="sm"
-                            className="veri-gradient transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25 w-full"
-                            disabled={selectedTask?.id === task.id}
-                          >
-                            {selectedTask?.id === task.id ? (
-                              <>
-                                <CheckCircle2 className="mr-1 h-3 w-3" />
-                                Started
-                              </>
-                            ) : (
-                              <>
-                                Start Task
-                                <ArrowRight className="ml-1 h-3 w-3 transition-transform duration-300" />
-                              </>
-                            )}
-                          </Button>
+                                  {selectedTask?.id === task.id ? "Started" : "Start"}
+                                </Button>
+                              )}
+                              
+                              <Button
+                                onClick={() => toggleTaskExpansion(task.id)}
+                                size="sm"
+                                variant="ghost"
+                                className="text-white/80 hover:text-white hover:bg-white/10 p-1 h-6 w-6 rounded-full"
+                              >
+                                {isExpanded ? (
+                                  <ChevronUp className="h-3 w-3" />
+                                ) : (
+                                  <ChevronDown className="h-3 w-3" />
+                                )}
+                              </Button>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       
+                      {/* Expandable Content */}
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="bg-black/60 backdrop-blur-md border-t border-white/10"
+                        >
+                          <div className="p-4 space-y-3">
+                            {/* Description */}
+                            <p className="text-white/80 text-sm leading-relaxed">
+                              {task.description}
+                            </p>
+                            
+                            {/* Stats Row */}
+                            <div className="flex items-center space-x-4 text-xs text-white/70">
+                              <div className="flex items-center space-x-1">
+                                <Clock className="h-3 w-3" />
+                                <span>{task.estimatedTime}</span>
+                              </div>
+                              <div className="flex items-center space-x-1">
+                                <Hash className="h-3 w-3" />
+                                <span>{task.category.replace('_', ' ')}</span>
+                              </div>
+                            </div>
+                            
+                            {/* Requirements */}
+                            <div>
+                              <h4 className="text-white font-medium text-sm mb-2">Requirements:</h4>
+                              <ul className="space-y-1">
+                                {task.requirements.slice(0, 3).map((req, index) => (
+                                  <li key={index} className="text-white/70 text-xs flex items-start space-x-2">
+                                    <div className="w-1 h-1 rounded-full bg-green-400 mt-1.5 flex-shrink-0"></div>
+                                    <span>{req}</span>
+                                  </li>
+                                ))}
+                                {task.requirements.length > 3 && (
+                                  <li className="text-white/50 text-xs pl-3">
+                                    +{task.requirements.length - 3} more requirements
+                                  </li>
+                                )}
+                              </ul>
+                            </div>
+                            
+                            {/* Full width action button for expanded state */}
+                            <Button
+                              onClick={() => handleStartTask(task)}
+                              className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-medium py-2 rounded-lg transition-all duration-300"
+                              disabled={selectedTask?.id === task.id}
+                            >
+                              {selectedTask?.id === task.id ? (
+                                <>
+                                  <CheckCircle2 className="mr-2 h-4 w-4" />
+                                  Task Started
+                                </>
+                              ) : (
+                                <>
+                                  Start Task
+                                  <ArrowRight className="ml-2 h-4 w-4" />
+                                </>
+                              )}
+                            </Button>
+                          </div>
+                        </motion.div>
+                      )}
+                      
                       {/* Hover indicator */}
                       <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                        <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></div>
                       </div>
                   </div>
                 );
