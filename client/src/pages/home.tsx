@@ -57,10 +57,11 @@ export default function Home() {
   return (
     <div className="min-h-screen relative overflow-hidden animated-gradient">
       {/* Custom Glass Header for Landing Page */}
-      <header 
-        className="fixed top-0 left-0 right-0 z-50 px-8 py-6 glass-header transition-opacity duration-300"
-        style={{ opacity: headerOpacity }}
-      >
+      <header className="fixed top-0 left-0 right-0 z-50 px-8 py-6">
+        <div 
+          className="absolute inset-0 glass-header transition-opacity duration-300"
+          style={{ opacity: headerOpacity }}
+        ></div>
         <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-3 items-center">
           {/* Left - Logo */}
           <div className="justify-self-start">
