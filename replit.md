@@ -139,6 +139,13 @@ The application is designed to scale from MVP to full marketplace functionality,
 
 ## Recent Updates (July 21, 2025)
 
+### Homepage Background & Header Scroll Effect Enhancement (July 21, 2025)
+- ✅ **Background Enhancement**: Made background 25% darker and richer with deeper grays and emerald tones matching "Ready to Transform" section
+- ✅ **Static Background**: Removed gradient animation and set consistent dark background for better visual richness
+- ✅ **Header Scroll Effect**: Implemented scroll-based header opacity that starts at 0% and fades to glass state as users scroll
+- ✅ **Navigation Visibility**: Header nav remains visible while only background fades in for proper separation and usability
+- ✅ **Authentication Fix**: Verified signup process works correctly - backend successfully creates users with wallets and JWT authentication
+
 ### Dashboard Sidebar Cleanup (July 21, 2025)
 - ✅ **Removed FAQ Sections**: Cleaned up right sidebar by removing FAQ components from Analytics, AI Agent, and Profile sections
   - Streamlined sidebar content to focus on core engagement components (VeriScore, Social Connections, Leaderboard)  
