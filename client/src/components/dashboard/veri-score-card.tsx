@@ -49,24 +49,30 @@ export function VeriScoreCard() {
       setPreviousScore(veriScore);
       setPreviousXP(activeUser?.xpPoints || 0);
       isFirstMount.current = false;
-    } else if (!isFirstMount.current && veriScore !== previousScore && veriScore > 0) {
-      // Don't update previousScore immediately - let the animation complete first
-      // setPreviousScore will be called in onComplete
+      return; // Don't trigger animations on first mount
     }
     
-    // Handle XP changes separately - trigger particle animation immediately
-    if (!isFirstMount.current && activeUser?.xpPoints !== previousXP && activeUser?.xpPoints > 0) {
-      const currentXP = activeUser?.xpPoints || 0;
+    // Only trigger animations if we're not on first mount and values actually increased
+    if (!isFirstMount.current && activeUser?.xpPoints !== undefined) {
+      const currentXP = activeUser.xpPoints;
       const prevXP = previousXP || 0;
       
-      if (currentXP > prevXP) {
+      // Only animate if XP actually increased (not just different)
+      if (currentXP > prevXP && prevXP > 0) {
         // XP increased - show particle animation
         setShowXPParticles(true);
         setTimeout(() => setShowXPParticles(false), 1000);
-        setPreviousXP(currentXP);
       }
+      // Always update previousXP to current value to prevent repeated animations
+      setPreviousXP(currentXP);
     }
-  }, [veriScore, previousScore, activeUser?.xpPoints, previousXP]);
+    
+    // Handle VeriScore changes similarly
+    if (!isFirstMount.current && veriScore !== previousScore && veriScore > 0) {
+      // Don't update previousScore immediately - let the animation complete first
+      // setPreviousScore will be called in onComplete
+    }
+  }, [veriScore, activeUser?.xpPoints]);
   
   // Use the proper start value for animation
   const animationStart = previousScore === null ? veriScore : previousScore;
@@ -95,18 +101,10 @@ export function VeriScoreCard() {
   const animatedXP = useCounter({ 
     end: currentXP, 
     start: xpAnimationStart,
-    duration: previousXP === null ? 0 : 1500, // No animation on first mount
+    duration: (previousXP === null || currentXP <= previousXP) ? 0 : 1500, // No animation if XP didn't increase
     onComplete: () => {
-      if (previousXP !== null && currentXP > previousXP) {
-        // Show XP particles first
-        setShowXPParticles(true);
-        setTimeout(() => setShowXPParticles(false), 1000);
-        // Then update previousXP after particle animation
-        setTimeout(() => setPreviousXP(currentXP), 100);
-      } else if (previousXP === null || currentXP <= previousXP) {
-        // Update previousXP for non-particle cases
-        setPreviousXP(currentXP);
-      }
+      // Don't trigger particle animations in onComplete - they should only happen in useEffect
+      // when XP actually increases, not when animation completes
     }
   });
 
