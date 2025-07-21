@@ -108,12 +108,8 @@ export default function Dashboard() {
         onPin={() => {}} // Removed pin functionality
         onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
       />
-      <main className={`pt-20 px-4 lg:px-6 transition-all duration-300 ${
-        isDashboardOpen ? (isCollapsed ? 'lg:ml-20' : 'lg:ml-80') : ''
-      }`}>
-        <div className={`mx-auto transition-all duration-300 ${
-          isDashboardOpen ? (isCollapsed ? 'max-w-6xl' : 'max-w-5xl') : 'max-w-7xl'
-        }`}>
+      <main className="pt-20 px-4 lg:px-6">
+        <div className="max-w-7xl mx-auto">
           {/* Streamlined Welcome Header with Compact Streak */}
           <div className="mb-6 animate-fade-in">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 p-6">
