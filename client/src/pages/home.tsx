@@ -86,7 +86,6 @@ export default function Home() {
           </button>
         </div>
       </header>
-
       {/* Mobile Navigation Overlay */}
       {isMobileMenuOpen && (
         <motion.div
@@ -147,7 +146,6 @@ export default function Home() {
           </nav>
         </motion.div>
       )}
-
       <DashboardSidebar
         isOpen={isDashboardOpen}
         isPinned={false}
@@ -162,7 +160,7 @@ export default function Home() {
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-6xl md:text-7xl font-bold text-white leading-tight mt-[16px] mb-[16px]"
+            className="text-6xl md:text-7xl font-bold text-white leading-tight mt-[32px] mb-[32px]"
           >
             Create to Resonate.
             <br />
