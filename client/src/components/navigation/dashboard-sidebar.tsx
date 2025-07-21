@@ -107,7 +107,7 @@ export function DashboardSidebar({
   return (
     <div
       className={cn(
-        "dashboard-sidebar fixed top-0 left-0 h-full bg-slate-900/98 glass-effect z-30 p-6 transition-all duration-300",
+        "dashboard-sidebar fixed top-0 left-0 h-full bg-neutral-950/85 glass-effect z-30 p-6 transition-all duration-300",
         isCollapsed ? "w-20" : "w-80",
         isOpen ? "translate-x-0" : "-translate-x-full",
         className
@@ -121,7 +121,7 @@ export function DashboardSidebar({
             variant="ghost"
             size="icon"
             onClick={onToggleCollapse}
-            className="p-2 hover:bg-slate-800/90 hover:shadow-[0_2px_8px_rgba(16,185,129,0.15),0_0_4px_rgba(16,185,129,0.1)] rounded-xl button-3d press-animation ripple-effect transition-all duration-300 touch-manipulation"
+            className="p-2 hover:bg-neutral-900/80 hover:shadow-[0_2px_8px_rgba(16,185,129,0.15),0_0_4px_rgba(16,185,129,0.1)] rounded-xl button-3d press-animation ripple-effect transition-all duration-300 touch-manipulation"
             title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             haptic="light"
@@ -138,7 +138,7 @@ export function DashboardSidebar({
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="p-2 hover:bg-slate-800/90 hover:shadow-[0_2px_8px_rgba(16,185,129,0.15),0_0_4px_rgba(16,185,129,0.1)] rounded-xl button-3d press-animation ripple-effect transition-all duration-300 touch-manipulation"
+              className="p-2 hover:bg-neutral-900/80 hover:shadow-[0_2px_8px_rgba(16,185,129,0.15),0_0_4px_rgba(16,185,129,0.1)] rounded-xl button-3d press-animation ripple-effect transition-all duration-300 touch-manipulation"
               title="Close sidebar"
               aria-label="Close sidebar"
               haptic="light"
@@ -164,7 +164,7 @@ export function DashboardSidebar({
                 className={cn(
                   "w-full p-3 glass-subtle rounded-xl font-inter touch-manipulation relative",
                   "button-3d depth-shadow press-animation ripple-effect",
-                  "hover:bg-slate-800/90 hover:border-emerald-400/30 hover:shadow-[0_4px_16px_rgba(16,185,129,0.2),0_0_8px_rgba(16,185,129,0.1)] hover:text-emerald-100",
+                  "hover:bg-slate-900/75 hover:border-emerald-400/30 hover:shadow-[0_4px_16px_rgba(16,185,129,0.2),0_0_8px_rgba(16,185,129,0.1)] hover:text-emerald-100",
                   "transition-all duration-300 ease-out",
                   isCollapsed ? "justify-center" : "justify-start gap-3",
                   location === item.path && "veri-gradient text-white shadow-lg shadow-emerald-500/50 transform translateY(-1px)",
@@ -193,7 +193,7 @@ export function DashboardSidebar({
             className={cn(
               "w-full p-3 glass-subtle rounded-xl font-inter text-red-400 hover:text-red-300 touch-manipulation relative",
               "button-3d depth-shadow press-animation ripple-effect",
-              "hover:bg-slate-800/90 hover:border-red-400/30 hover:shadow-[0_4px_16px_rgba(239,68,68,0.2),0_0_8px_rgba(239,68,68,0.1)]",
+              "hover:bg-slate-900/75 hover:border-red-400/30 hover:shadow-[0_4px_16px_rgba(239,68,68,0.2),0_0_8px_rgba(239,68,68,0.1)]",
               "transition-all duration-300 ease-out",
               isCollapsed ? "justify-center" : "justify-start gap-3",
               "focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2"
