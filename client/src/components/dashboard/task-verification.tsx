@@ -1858,7 +1858,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           
           <TabsContent value="available" className="space-y-4">
               <div 
-                className={isGridExpanded ? "task-grid-fullscreen" : "grid gap-6 grid-cols-1 md:grid-cols-2"}
+                className={isGridExpanded ? "task-grid-fullscreen" : "grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"}
                 style={isGridExpanded ? {
                   display: 'grid',
                   gridTemplateColumns: 'repeat(3, 1fr)',
