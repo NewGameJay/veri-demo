@@ -1858,9 +1858,11 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           <TabsContent value="available" className="space-y-4">
               <div className={`grid gap-4 ${
                 isGridExpanded 
-                  ? "grid-cols-3" 
+                  ? "!grid-cols-3" 
                   : "grid-cols-1 md:grid-cols-2"
-              }`}>
+              }`}
+              style={isGridExpanded ? { gridTemplateColumns: 'repeat(3, 1fr)' } : {}}
+              >
                 {displayedTasks.map((task) => {
                   const isExpanded = expandedTasks.has(task.id);
                   return (
