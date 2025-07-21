@@ -88,6 +88,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const [showFloatingPoints, setShowFloatingPoints] = useState(false);
   const [floatingPoints, setFloatingPoints] = useState(0);
   const [filtersExpanded, setFiltersExpanded] = useState(false);
+  const [isGridExpanded, setIsGridExpanded] = useState(false);
   const { toast } = useToast();
   const { user, refreshUser } = useAuth();
 
@@ -1650,7 +1651,32 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             <Target className="h-5 w-5 text-green-400" />
             <CardTitle className="text-white">Partner Quests</CardTitle>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3">
+            {/* Grid Expansion Toggle */}
+            <Button
+              onClick={() => setIsGridExpanded(!isGridExpanded)}
+              size="sm"
+              variant="ghost"
+              className="text-white/70 hover:text-white hover:bg-white/10 p-2 h-8 w-8"
+            >
+              {isGridExpanded ? (
+                <div className="grid grid-cols-2 gap-0.5 w-3 h-3">
+                  <div className="bg-current w-1 h-1 rounded-sm"></div>
+                  <div className="bg-current w-1 h-1 rounded-sm"></div>
+                  <div className="bg-current w-1 h-1 rounded-sm"></div>
+                  <div className="bg-current w-1 h-1 rounded-sm"></div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-0.5 w-3 h-3">
+                  <div className="bg-current w-0.5 h-0.5 rounded-sm"></div>
+                  <div className="bg-current w-0.5 h-0.5 rounded-sm"></div>
+                  <div className="bg-current w-0.5 h-0.5 rounded-sm"></div>
+                  <div className="bg-current w-0.5 h-0.5 rounded-sm"></div>
+                  <div className="bg-current w-0.5 h-0.5 rounded-sm"></div>
+                  <div className="bg-current w-0.5 h-0.5 rounded-sm"></div>
+                </div>
+              )}
+            </Button>
             <Badge variant="secondary" className="bg-purple-500/20 text-purple-400">
               {userXP} XP
             </Badge>
@@ -1659,8 +1685,24 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             </Badge>
           </div>
         </div>
-        <CardDescription className="text-white/60">
-          Complete tasks to earn XP points and build your creator streak
+        <CardDescription className="text-white/60 space-y-3">
+          <div>Complete tasks to earn XP points and build your creator streak</div>
+          
+          {/* Streak Progress Bar */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-white/70">Daily Streak Progress</span>
+              <span className="text-orange-400 font-medium">{userStreak}/30 days</span>
+            </div>
+            <Progress 
+              value={(userStreak / 30) * 100} 
+              className="h-2 bg-white/10"
+            />
+            <div className="flex justify-between text-xs text-white/50">
+              <span>Start</span>
+              <span>Monthly Goal</span>
+            </div>
+          </div>
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -1819,7 +1861,11 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           )}
           
           <TabsContent value="available" className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className={`grid gap-4 ${
+                isGridExpanded 
+                  ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" 
+                  : "grid-cols-1 md:grid-cols-2"
+              }`}>
                 {displayedTasks.map((task) => {
                   const isExpanded = expandedTasks.has(task.id);
                   return (
