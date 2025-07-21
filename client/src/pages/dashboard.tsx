@@ -9,7 +9,6 @@ import { CampaignExplore } from "@/components/dashboard/campaign-explore";
 import { ProfileBuilder2 } from "@/components/profile/profile-builder-2";
 import { SocialConnections } from "@/components/dashboard/social-connections";
 import { Leaderboard } from "@/components/dashboard/leaderboard";
-import { RecommendedCampaigns } from "@/components/dashboard/recommended-campaigns";
 
 import { MemorizzIntegration } from "@/components/integrations/memorizz-integration";
 import { AIAgents } from "@/components/dashboard/ai-agents";
@@ -27,7 +26,6 @@ export default function Dashboard() {
   const [showProfileBuilder, setShowProfileBuilder] = useState(false);
   const [isTabsCollapsed, setIsTabsCollapsed] = useState(false);
   const [isTaskGridExpanded, setIsTaskGridExpanded] = useState(false);
-  const [activeTab, setActiveTab] = useState("tasks");
   const { user, needsOnboarding, completeOnboarding } = useAuth();
   const { newMilestones, clearNewMilestones } = useMilestoneTracker();
 
@@ -149,7 +147,7 @@ export default function Dashboard() {
           </div>
 
           {/* Enhanced Dashboard Tabs with Glass Effect - Sticky Navigation */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full animate-slide-in mb-6">
+          <Tabs defaultValue="tasks" className="w-full animate-slide-in mb-6">
             <div className={`sticky top-20 z-20 overflow-hidden transition-all duration-500 ease-in-out ${
               isTabsCollapsed 
                 ? 'h-0 opacity-0 pointer-events-none transform scale-95 -translate-y-2' 
@@ -220,11 +218,6 @@ export default function Dashboard() {
                   {/* Right Column - Sidebar Content */}
                   <div className="lg:col-span-4 space-y-6">
                     <VeriScoreCard />
-                    <RecommendedCampaigns 
-                      userStreak={userStreak} 
-                      userXP={userXP} 
-                      onViewAllCampaigns={() => setActiveTab("campaigns")}
-                    />
                     <SocialConnections />
                     <Leaderboard />
                   </div>
@@ -233,27 +226,10 @@ export default function Dashboard() {
             </TabsContent>
 
             <TabsContent value="campaigns" className="mt-6">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                {/* Left Column - Main Content */}
-                <div className="lg:col-span-8 space-y-6">
-                  <CampaignExplore 
-                    userStreak={userStreak}
-                    userXP={userXP}
-                  />
-                </div>
-
-                {/* Right Column - Sidebar Content */}
-                <div className="lg:col-span-4 space-y-6">
-                  {/* Vertical VeriScore Card */}
-                  <VeriScoreCard />
-
-                  {/* Social Connections */}
-                  <SocialConnections />
-
-                  {/* Leaderboard */}
-                  <Leaderboard />
-                </div>
-              </div>
+              <CampaignExplore 
+                userStreak={userStreak}
+                userXP={userXP}
+              />
             </TabsContent>
 
             <TabsContent value="profile" className="mt-6">
@@ -496,13 +472,6 @@ export default function Dashboard() {
                 <div className="lg:col-span-4 space-y-6">
                   {/* Vertical VeriScore Card */}
                   <VeriScoreCard />
-                  
-                  {/* Recommended Campaigns */}
-                  <RecommendedCampaigns 
-                    userStreak={userStreak} 
-                    userXP={userXP} 
-                    onViewAllCampaigns={() => setActiveTab("campaigns")}
-                  />
                   
                   {/* Social Connections */}
                   <SocialConnections />
