@@ -443,9 +443,24 @@
   animation: conic-spin 4s linear infinite;
 }
 
-/* Static Background Gradient - Consistent with Ready to Transform Section */
+/* Subtle Background Gradient Animation - Current Colors Only */
+@keyframes subtle-gradient-shift {
+  0% { 
+    background: linear-gradient(135deg, rgb(17, 24, 39) 0%, rgb(6, 12, 20) 40%, rgba(5, 46, 22, 0.8) 100%);
+  }
+  33% { 
+    background: linear-gradient(135deg, rgb(20, 27, 42) 0%, rgb(8, 14, 22) 40%, rgba(7, 48, 24, 0.85) 100%);
+  }
+  66% { 
+    background: linear-gradient(135deg, rgb(15, 22, 37) 0%, rgb(5, 11, 18) 40%, rgba(4, 44, 20, 0.75) 100%);
+  }
+  100% { 
+    background: linear-gradient(135deg, rgb(17, 24, 39) 0%, rgb(6, 12, 20) 40%, rgba(5, 46, 22, 0.8) 100%);
+  }
+}
+
 .animated-gradient {
-  background: linear-gradient(135deg, rgb(17, 24, 39) 0%, rgb(6, 12, 20) 40%, rgba(5, 46, 22, 0.8) 100%);
+  animation: subtle-gradient-shift 45s ease-in-out infinite;
 }
 
 /* Enhanced Glass Form States & Tooltips */

@@ -26,8 +26,8 @@ export default function Home() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      // Start fading in at 50px, fully visible at 200px
-      const opacity = Math.min(scrollY / 200, 1);
+      // Start fading in immediately, fully visible at 100px
+      const opacity = Math.min(scrollY / 100, 1);
       setHeaderOpacity(opacity);
     };
 
