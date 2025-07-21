@@ -524,6 +524,12 @@
     background: linear-gradient(135deg, rgba(0, 211, 162, 0.08) 0%, rgba(132, 86, 255, 0.08) 100%);
     @apply glass-medium glass-effect-hover;
   }
+
+  /* Force 3-column grid for fullscreen task view */
+  .task-grid-fullscreen {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
   
   .hero-gradient {
     background: 
@@ -656,7 +662,6 @@
     transform: translateX(0);
     box-shadow: 0 0 20px rgba(0, 214, 162, 0.2);
   }
-}
 
 @keyframes slideIn {
   from {
@@ -709,6 +714,7 @@
   50% {
     box-shadow: 0 0 20px rgba(0, 211, 162, 0.8);
   }
+}
 }
 
 @layer utilities {
@@ -866,5 +872,11 @@
 
   .bounce-back {
     animation: bounce-back 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Force 3-column grid for fullscreen task view */
+  .task-grid-fullscreen {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
   }
 }
