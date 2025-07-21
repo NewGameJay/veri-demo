@@ -1857,16 +1857,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           
           <TabsContent value="available" className="space-y-4">
               <div 
-                className={
-                  isGridExpanded 
-                    ? "grid gap-4" 
-                    : "grid gap-4 grid-cols-1 md:grid-cols-2"
-                }
-                style={isGridExpanded ? {
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(3, 1fr)',
-                  gap: '1rem'
-                } : {}}
+                className={isGridExpanded ? "task-grid-fullscreen gap-4" : "grid gap-4 grid-cols-1 md:grid-cols-2"}
               >
                 {displayedTasks.map((task) => {
                   const isExpanded = expandedTasks.has(task.id);
@@ -1899,7 +1890,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                           <div className="p-3 flex items-center justify-between">
                             {/* Left side - Platform icon and title */}
                             <div className="flex items-center space-x-3 flex-1 min-w-0">
-                              <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 flex-shrink-0">
+                              <div className="w-8 h-8 bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 flex-shrink-0 rounded-lg">
                                 <task.icon className="h-4 w-4 text-white" />
                               </div>
                               <div className="flex-1 min-w-0">
@@ -1916,9 +1907,18 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                             <div className="flex items-center space-x-2 flex-shrink-0">
                               {!isExpanded && (
                                 <Button
-                                  onClick={() => handleStartTask(task)}
+                                  onClick={() => {
+                                    // First expand the card, then start the task
+                                    if (!expandedTasks.has(task.id)) {
+                                      toggleTaskExpansion(task.id);
+                                      // Small delay to allow expansion animation
+                                      setTimeout(() => handleStartTask(task), 300);
+                                    } else {
+                                      handleStartTask(task);
+                                    }
+                                  }}
                                   size="sm"
-                                  className="bg-white/20 backdrop-blur-md hover:bg-white/30 text-white hover:text-white text-xs px-3 py-1 h-7 rounded-full font-medium transition-all duration-300 border-0"
+                                  className="veri-gradient text-white hover:text-white text-xs px-3 py-1 h-7 rounded-full font-medium transition-all duration-300 border-0"
                                   disabled={selectedTask?.id === task.id}
                                 >
                                   {selectedTask?.id === task.id ? "Started" : "Start"}
