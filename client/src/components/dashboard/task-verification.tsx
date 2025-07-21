@@ -84,8 +84,8 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
 
   const [brandFilter, setBrandFilter] = useState("all");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
-  const [tasksPerPage, setTasksPerPage] = useState(8);
-  const INITIAL_TASKS_PER_PAGE = 8;
+  const [tasksPerPage, setTasksPerPage] = useState(16);
+  const INITIAL_TASKS_PER_PAGE = 16;
   const LOAD_MORE_INCREMENT = 6;
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareTaskData, setShareTaskData] = useState<any>(null);
