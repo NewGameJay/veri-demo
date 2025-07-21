@@ -862,20 +862,40 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
                   </div>
                 </div>
 
-                {/* VeriScore Display */}
+                {/* VeriScore Card - Square Format */}
                 {showVeriScore && (
-                  <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-600">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2">
+                  <div className="bg-gradient-to-br from-emerald-900/20 via-teal-900/20 to-cyan-900/20 rounded-xl p-5 border border-emerald-500/30 backdrop-blur-sm">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center">
                           <Trophy className="w-5 h-5 text-emerald-400" />
-                          <span className="text-white font-medium">VeriScore</span>
                         </div>
-                        <div className="text-2xl font-bold text-emerald-400">{veriScore}/100</div>
+                        <span className="text-white font-semibold">VeriScore</span>
                       </div>
-                      <div className="text-right">
-                        <div className="text-purple-400 font-medium">{totalFollowers.toLocaleString()}</div>
-                        <div className="text-xs text-slate-400">Total Reach</div>
+                      <div className="text-2xl font-bold text-emerald-400">{veriScore}</div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div className="text-center">
+                        <div className="text-white font-semibold">{(user?.xpPoints || 0).toLocaleString()}</div>
+                        <div className="text-xs text-emerald-400">XP Points</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-white font-semibold">{user?.streak || 0}</div>
+                        <div className="text-xs text-orange-400">Day Streak</div>
+                      </div>
+                    </div>
+                    
+                    <div className="text-center">
+                      <div className="text-purple-400 font-semibold text-lg">{totalFollowers.toLocaleString()}</div>
+                      <div className="text-xs text-slate-400">Total Reach</div>
+                    </div>
+                    
+                    <div className="mt-4 pt-3 border-t border-emerald-500/20">
+                      <div className="flex justify-center">
+                        <div className="text-xs text-emerald-400 font-medium">
+                          Tier: <span className="text-white">{tier.name}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
