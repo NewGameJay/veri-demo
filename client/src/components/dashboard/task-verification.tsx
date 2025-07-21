@@ -1831,17 +1831,17 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                       }}
                     >
                       {/* Full Background with Partner Gradient */}
-                      <div className={`relative h-24 ${getPartnerGradient(task.brand, task.id)}`}>
+                      <div className={`relative h-48 ${getPartnerGradient(task.brand, task.id)}`}>
                         {/* Subtle overlay for depth */}
                         <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/30"></div>
                         
                         {/* Top Row - Partner Badge and XP */}
                         <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-                          <Badge variant="secondary" className="bg-white/90 text-black text-xs font-medium px-2 py-1 rounded-full backdrop-blur-sm">
+                          <Badge variant="secondary" className="bg-white/20 backdrop-blur-md text-white text-xs font-medium px-2 py-1 rounded-full border-0">
                             {task.brand?.replace('.gg', '').replace('.xyz', '') || 'Partner'}
                           </Badge>
-                          <Badge variant="secondary" className="bg-white/90 text-black font-semibold text-xs px-2 py-1 rounded-full backdrop-blur-sm flex items-center">
-                            <span className="text-green-600 mr-1">▲</span>
+                          <Badge variant="secondary" className="bg-white/20 backdrop-blur-md text-white font-semibold text-xs px-2 py-1 rounded-full border-0 flex items-center">
+                            <span className="text-green-400 mr-1">▲</span>
                             {task.points}
                           </Badge>
                         </div>
@@ -1870,7 +1870,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                                 <Button
                                   onClick={() => handleStartTask(task)}
                                   size="sm"
-                                  className="bg-white/90 hover:bg-white text-black hover:text-black text-xs px-3 py-1 h-7 rounded-full font-medium transition-all duration-300"
+                                  className="bg-white/20 backdrop-blur-md hover:bg-white/30 text-white hover:text-white text-xs px-3 py-1 h-7 rounded-full font-medium transition-all duration-300 border-0"
                                   disabled={selectedTask?.id === task.id}
                                 >
                                   {selectedTask?.id === task.id ? "Started" : "Start"}
