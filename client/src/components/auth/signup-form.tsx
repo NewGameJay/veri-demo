@@ -39,9 +39,17 @@ export function SignupForm({ onSwitchToLogin, onSuccess }: SignupFormProps) {
       });
       onSuccess?.();
     } catch (error) {
+      console.error("Signup error:", error);
+      let errorMessage = "Please check your information and try again.";
+      
+      // Try to get more specific error from response
+      if (error instanceof Error && error.message === "Signup failed") {
+        errorMessage = "Email or username already exists. Please try different credentials.";
+      }
+      
       toast({
         title: "Sign up failed",
-        description: "Please check your information and try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
