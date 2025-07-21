@@ -39,29 +39,6 @@ export default function Dashboard() {
     enabled: !!user?.id,
   });
 
-  if (!user) {
-    return null;
-  }
-
-  // Show onboarding for new users
-  if (needsOnboarding && !showProfileBuilder) {
-    return (
-      <ProfileBuilderOnboarding
-        onComplete={completeOnboarding}
-        onStartProfileBuilder={() => setShowProfileBuilder(true)}
-      />
-    );
-  }
-
-  const userStreak = user.streak || 0;
-  const userXP = user.xpPoints || 0;
-  const isMemorizzUnlocked = userStreak >= 10;
-
-  // Handle hamburger menu toggle
-  const handleDashboardToggle = () => {
-    setIsDashboardOpen(!isDashboardOpen);
-  };
-
   // Handle scroll-triggered tabs collapse with throttling
   useEffect(() => {
     let ticking = false;
@@ -86,6 +63,29 @@ export default function Dashboard() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isTabsCollapsed]);
+
+  // Handle hamburger menu toggle
+  const handleDashboardToggle = () => {
+    setIsDashboardOpen(!isDashboardOpen);
+  };
+
+  if (!user) {
+    return null;
+  }
+
+  // Show onboarding for new users
+  if (needsOnboarding && !showProfileBuilder) {
+    return (
+      <ProfileBuilderOnboarding
+        onComplete={completeOnboarding}
+        onStartProfileBuilder={() => setShowProfileBuilder(true)}
+      />
+    );
+  }
+
+  const userStreak = user.streak || 0;
+  const userXP = user.xpPoints || 0;
+  const isMemorizzUnlocked = userStreak >= 10;
 
   return (
     <div className="min-h-screen bg-gray-900 hero-gradient pb-12 relative">
