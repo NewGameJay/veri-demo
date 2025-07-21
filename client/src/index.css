@@ -872,7 +872,7 @@
   .task-grid-fullscreen {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 1rem !important;
+    gap: 1.5rem !important;
     width: 100% !important;
     grid-auto-rows: auto !important;
   }
@@ -880,6 +880,11 @@
   /* Ensure inline styles take precedence */
   [style*="grid-template-columns: repeat(3, 1fr)"] {
     grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  /* Prevent hover overlap with proper spacing */
+  .task-grid-fullscreen > div {
+    margin: 0.25rem;
   }
   
 

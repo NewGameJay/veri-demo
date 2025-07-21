@@ -1857,7 +1857,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           
           <TabsContent value="available" className="space-y-4">
               <div 
-                className={isGridExpanded ? "task-grid-fullscreen" : "grid gap-4 grid-cols-1 md:grid-cols-2"}
+                className={isGridExpanded ? "task-grid-fullscreen" : "grid gap-6 grid-cols-1 md:grid-cols-2"}
                 style={isGridExpanded ? {
                   display: 'grid',
                   gridTemplateColumns: 'repeat(3, 1fr)',
@@ -1870,9 +1870,10 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                   return (
                     <div 
                       key={task.id} 
-                      className="group rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in relative hover:scale-[1.03] hover:shadow-2xl hover:-translate-y-2 cursor-pointer transform-gpu"
+                      className="group rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in relative hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-1 cursor-pointer transform-gpu hover:z-10"
                       style={{
-                        animationDelay: `${task.id * 100}ms`
+                        animationDelay: `${task.id * 100}ms`,
+                        transformOrigin: 'center center'
                       }}
                       onClick={() => toggleTaskExpansion(task.id)}
                     >
