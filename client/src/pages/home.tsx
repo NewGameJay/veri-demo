@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowRight, Check, Star, User, BarChart3, Sparkles, ChevronRight, Twitter, Instagram, Youtube } from 'lucide-react';
 import { Header } from "@/components/navigation/header";
 import { MobileNav } from "@/components/navigation/mobile-nav";
@@ -19,7 +19,21 @@ export default function Home() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "signup">("signup");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [headerOpacity, setHeaderOpacity] = useState(0);
   const { user } = useAuth();
+
+  // Scroll effect for header opacity
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      // Start fading in at 50px, fully visible at 200px
+      const opacity = Math.min(scrollY / 200, 1);
+      setHeaderOpacity(opacity);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleGetStarted = () => {
     if (user) {
@@ -41,9 +55,12 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-gray-800 via-gray-900 to-emerald-950/50 animated-gradient">
+    <div className="min-h-screen relative overflow-hidden animated-gradient">
       {/* Custom Glass Header for Landing Page */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-8 py-6 glass-header">
+      <header 
+        className="fixed top-0 left-0 right-0 z-50 px-8 py-6 glass-header transition-opacity duration-300"
+        style={{ opacity: headerOpacity }}
+      >
         <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-3 items-center">
           {/* Left - Logo */}
           <div className="justify-self-start">
