@@ -301,10 +301,20 @@ export default function Analytics() {
             {/* Engagement Chart */}
             <Card className="glass-medium border-white/20">
               <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <BarChart className="w-5 h-5" />
-                  Engagement Overview ({timeRange})
-                </CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-white flex items-center gap-2">
+                    <BarChart className="w-5 h-5" />
+                    Engagement Overview ({timeRange})
+                  </CardTitle>
+                  <Button 
+                    onClick={() => window.location.href = '/dashboard?tab=ai-agents'}
+                    className="veri-gradient text-white hover:scale-105 transition-transform duration-200"
+                    size="sm"
+                  >
+                    <Eye className="w-4 h-4 mr-2" />
+                    View Insights
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 <motion.div 
@@ -368,29 +378,7 @@ export default function Analytics() {
                             fill="url(#engagementGradient)"
                           />
                           
-                          {/* Data points */}
-                          {chartData.map((point, index) => {
-                            const x = 40 + (index / (chartData.length - 1)) * 340;
-                            const maxEngagement = Math.max(...chartData.map(d => d.engagement));
-                            const y = 220 - (point.engagement / maxEngagement) * 200;
-                            
-                            return (
-                              <g key={index}>
-                                <circle
-                                  cx={x}
-                                  cy={y}
-                                  r="4"
-                                  fill="#00d6a2"
-                                  stroke="white"
-                                  strokeWidth="2"
-                                  className="hover:r-6 transition-all duration-200 cursor-pointer"
-                                />
-                                <title>
-                                  {point.date}: {point.engagement.toLocaleString()} engagement
-                                </title>
-                              </g>
-                            );
-                          })}
+                          {/* Data points removed for cleaner visualization */}
                         </>
                       )}
                       
@@ -497,7 +485,7 @@ export default function Analytics() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {topContent.map((content, index) => {
                   const Icon = content.icon;
                   return (
@@ -506,58 +494,93 @@ export default function Analytics() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300"
+                      className="group glass-subtle rounded-xl border border-white/10 overflow-hidden hover:border-white/20 transition-all duration-300 hover:scale-[1.02]"
                     >
-                      <div className="flex-shrink-0">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                          content.platform === 'twitter' ? 'bg-blue-500/20' :
-                          content.platform === 'instagram' ? 'bg-pink-500/20' :
-                          'bg-red-500/20'
-                        }`}>
-                          <Icon className={`w-6 h-6 ${
-                            content.platform === 'twitter' ? 'text-blue-400' :
-                            content.platform === 'instagram' ? 'text-pink-400' :
-                            'text-red-400'
-                          }`} />
-                        </div>
-                      </div>
-                      
-                      <div className="flex-1">
-                        <h3 className="font-medium text-white mb-1">{content.title}</h3>
-                        <div className="flex items-center gap-4 text-sm text-white/60">
-                          <span className="flex items-center gap-1">
-                            <Eye className="w-4 h-4" />
-                            {content.views.toLocaleString()}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <ThumbsUp className="w-4 h-4" />
-                            {content.likes.toLocaleString()}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Share2 className="w-4 h-4" />
-                            {content.shares}
-                          </span>
-                          <span className="text-white/40">•</span>
-                          <span>{content.date}</span>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-3">
-                        <div className="text-right">
-                          <div className="font-bold text-white">{content.revenue}</div>
-                          <div className="text-xs text-white/60">Revenue</div>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          {content.trend === 'up' ? (
-                            <TrendingUp className="w-4 h-4 text-green-400" />
-                          ) : (
-                            <TrendingDown className="w-4 h-4 text-red-400" />
-                          )}
-                          <span className={`text-sm font-medium ${
-                            content.trend === 'up' ? 'text-green-400' : 'text-red-400'
+                      {/* Content Preview */}
+                      <div className="relative h-48 bg-gradient-to-br from-gray-800 to-gray-900 overflow-hidden">
+                        {content.platform === 'youtube' ? (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center">
+                              <Icon className="w-8 h-8 text-white" />
+                            </div>
+                            <div className="absolute bottom-3 left-3 bg-black/80 px-2 py-1 rounded text-xs text-white">
+                              12:34
+                            </div>
+                          </div>
+                        ) : content.platform === 'twitter' ? (
+                          <div className="p-4 text-white text-sm leading-relaxed">
+                            <div className="mb-2">🚀 {content.title}</div>
+                            <div className="text-white/70">
+                              Share your thoughts below! 👇
+                              <div className="mt-2 text-blue-400">#GameDev #Web3 #CreatorEconomy</div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center">
+                            <Icon className="w-12 h-12 text-white" />
+                          </div>
+                        )}
+                        
+                        {/* Platform Badge */}
+                        <div className="absolute top-3 right-3">
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                            content.platform === 'twitter' ? 'bg-blue-500/20 backdrop-blur-sm' :
+                            content.platform === 'instagram' ? 'bg-pink-500/20 backdrop-blur-sm' :
+                            'bg-red-500/20 backdrop-blur-sm'
                           }`}>
-                            {content.change}
-                          </span>
+                            <Icon className={`w-4 h-4 ${
+                              content.platform === 'twitter' ? 'text-blue-400' :
+                              content.platform === 'instagram' ? 'text-pink-400' :
+                              'text-red-400'
+                            }`} />
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Content Info */}
+                      <div className="p-4 space-y-3">
+                        <div>
+                          <h3 className="font-medium text-white mb-1 group-hover:text-green-400 transition-colors duration-200">
+                            {content.title}
+                          </h3>
+                          <p className="text-xs text-white/60">{content.date}</p>
+                        </div>
+                        
+                        {/* Metrics Grid */}
+                        <div className="grid grid-cols-2 gap-3 text-sm">
+                          <div className="flex items-center gap-2 text-white/70">
+                            <Eye className="w-4 h-4" />
+                            <span>{content.views.toLocaleString()}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-white/70">
+                            <ThumbsUp className="w-4 h-4" />
+                            <span>{content.likes.toLocaleString()}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-white/70">
+                            <Share2 className="w-4 h-4" />
+                            <span>{content.shares}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <DollarSign className="w-4 h-4 text-green-400" />
+                            <span className="font-semibold text-white">{content.revenue}</span>
+                          </div>
+                        </div>
+                        
+                        {/* Performance Indicator */}
+                        <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                          <div className="text-xs text-white/60">Performance</div>
+                          <div className="flex items-center gap-1">
+                            {content.trend === 'up' ? (
+                              <TrendingUp className="w-4 h-4 text-green-400" />
+                            ) : (
+                              <TrendingDown className="w-4 h-4 text-red-400" />
+                            )}
+                            <span className={`text-sm font-medium ${
+                              content.trend === 'up' ? 'text-green-400' : 'text-red-400'
+                            }`}>
+                              {content.change}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </motion.div>
