@@ -1870,12 +1870,11 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                   return (
                     <div 
                       key={task.id} 
-                      className="group rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in relative hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-1 cursor-pointer transform-gpu hover:z-10"
+                      className="group rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in relative hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-1 transform-gpu hover:z-10"
                       style={{
                         animationDelay: `${task.id * 100}ms`,
                         transformOrigin: 'center center'
                       }}
-                      onClick={() => toggleTaskExpansion(task.id)}
                     >
                       {/* Full Background with Partner Gradient */}
                       <div className={`relative h-48 ${getPartnerGradient(task.brand, task.id)}`}>
@@ -1909,17 +1908,13 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                               </div>
                             </div>
                             
-                            {/* Right side - Expand button and explore message */}
-                            <div className="flex flex-col items-end space-y-1 flex-shrink-0">
-                              {/* Explore message above button */}
-                              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <div className="text-xs text-green-400 font-medium bg-black/50 rounded-full px-2 py-1 whitespace-nowrap">
-                                  Click to explore! 🎮
-                                </div>
-                              </div>
-                              
+                            {/* Right side - Expand button only */}
+                            <div className="flex items-center space-x-2 flex-shrink-0">
                               <Button
-                                onClick={() => toggleTaskExpansion(task.id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleTaskExpansion(task.id);
+                                }}
                                 size="sm"
                                 variant="ghost"
                                 className="text-white/80 hover:text-white hover:bg-white/10 p-1 h-6 w-6 rounded-full"
