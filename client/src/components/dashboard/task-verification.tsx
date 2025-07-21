@@ -1858,10 +1858,13 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           <TabsContent value="available" className="space-y-4">
               <div className={`grid gap-4 ${
                 isGridExpanded 
-                  ? "!grid-cols-3" 
+                  ? "grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 !important" 
                   : "grid-cols-1 md:grid-cols-2"
               }`}
-              style={isGridExpanded ? { gridTemplateColumns: 'repeat(3, 1fr)' } : {}}
+              style={isGridExpanded ? { 
+                gridTemplateColumns: 'repeat(3, 1fr) !important',
+                display: 'grid !important'
+              } : {}}
               >
                 {displayedTasks.map((task) => {
                   const isExpanded = expandedTasks.has(task.id);
@@ -1985,7 +1988,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                             {/* Full width action button for expanded state */}
                             <Button
                               onClick={() => handleStartTask(task)}
-                              className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-medium py-2 rounded-lg transition-all duration-300"
+                              className="w-full veri-gradient text-white font-medium py-2 rounded-lg transition-all duration-300"
                               disabled={selectedTask?.id === task.id}
                             >
                               {selectedTask?.id === task.id ? (
