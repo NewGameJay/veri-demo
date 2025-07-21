@@ -862,42 +862,20 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
                   </div>
                 </div>
 
-                {/* Square VeriScore Card */}
+                {/* VeriScore Display */}
                 {showVeriScore && (
-                  <div className="bg-gradient-to-br from-emerald-600/20 via-teal-600/20 to-cyan-600/20 backdrop-blur-xl border border-emerald-500/30 rounded-2xl p-6 shadow-lg shadow-emerald-500/25">
-                    {/* Header with Logo */}
-                    <div className="text-center mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mx-auto mb-3">
-                        <Trophy className="w-6 h-6 text-white" />
+                  <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-600">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
+                          <Trophy className="w-5 h-5 text-emerald-400" />
+                          <span className="text-white font-medium">VeriScore</span>
+                        </div>
+                        <div className="text-2xl font-bold text-emerald-400">{veriScore}/100</div>
                       </div>
-                      <h3 className="text-lg font-termina text-white">VeriScore</h3>
-                    </div>
-
-                    {/* Main Score */}
-                    <div className="text-center mb-4">
-                      <div className="text-4xl font-termina text-emerald-400 mb-2">
-                        {veriScore}
-                      </div>
-                      <div className="text-sm text-white/70">out of 100</div>
-                    </div>
-
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-2 gap-3 mb-4">
-                      <div className="bg-slate-800/50 rounded-lg p-3 text-center border border-slate-600/50">
-                        <div className="text-lg font-termina text-white">{Math.floor(totalFollowers / 1000)}K</div>
-                        <div className="text-xs text-white/70">Followers</div>
-                      </div>
-                      <div className="bg-slate-800/50 rounded-lg p-3 text-center border border-slate-600/50">
-                        <div className="text-lg font-termina text-white">{Math.floor(userData?.xpPoints / 100 || 12)}K</div>
-                        <div className="text-xs text-white/70">VeriPoints</div>
-                      </div>
-                    </div>
-
-                    {/* Tier Badge */}
-                    <div className="text-center">
-                      <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r ${tier.color} text-white`}>
-                        <span>{tier.icon}</span>
-                        <span>{tier.name}</span>
+                      <div className="text-right">
+                        <div className="text-purple-400 font-medium">{totalFollowers.toLocaleString()}</div>
+                        <div className="text-xs text-slate-400">Total Reach</div>
                       </div>
                     </div>
                   </div>
