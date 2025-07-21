@@ -869,26 +869,21 @@
   }
 
   /* Task grid fullscreen - force exactly 3 columns */
-  .task-grid-fullscreen {
-    display: grid !important;
+  .grid.task-grid-fullscreen {
     grid-template-columns: repeat(3, 1fr) !important;
   }
   
-  /* Override Tailwind responsive grid classes with maximum specificity */
-  .task-grid-fullscreen.grid-cols-1 {
+  /* Override specific Tailwind classes */
+  .grid.task-grid-fullscreen.grid-cols-1 {
     grid-template-columns: repeat(3, 1fr) !important;
   }
   
-  @media (min-width: 768px) {
-    .task-grid-fullscreen.md\:grid-cols-2 {
-      grid-template-columns: repeat(3, 1fr) !important;
-    }
+  .grid.task-grid-fullscreen.md\:grid-cols-2 {
+    grid-template-columns: repeat(3, 1fr) !important;
   }
   
-  /* Fallback for all screen sizes */
-  @media screen {
-    .task-grid-fullscreen {
-      grid-template-columns: repeat(3, 1fr) !important;
-    }
+  /* Maximum specificity override */
+  .grid.task-grid-fullscreen.gap-4 {
+    grid-template-columns: repeat(3, 1fr) !important;
   }
 }
