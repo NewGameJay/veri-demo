@@ -268,9 +268,6 @@ export default function Dashboard() {
 
                 {/* Right Column - Sidebar Content */}
                 <div className="lg:col-span-4 space-y-6">
-                  {/* Vertical VeriScore Card */}
-                  <VeriScoreCard />
-                  
                   {/* Social Connections */}
                   <SocialConnections />
 
@@ -466,9 +463,6 @@ export default function Dashboard() {
 
                 {/* Right Column - Sidebar Content */}
                 <div className="lg:col-span-4 space-y-6">
-                  {/* Vertical VeriScore Card */}
-                  <VeriScoreCard />
-                  
                   {/* Social Connections */}
                   <SocialConnections />
 
