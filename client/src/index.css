@@ -443,39 +443,23 @@
   animation: conic-spin 4s linear infinite;
 }
 
-/* Ultra Smooth Background Gradient Animation */
-@keyframes subtle-gradient-shift {
-  0% { 
-    background: linear-gradient(135deg, rgb(17, 24, 39) 0%, rgb(6, 12, 20) 40%, rgba(5, 46, 22, 0.8) 100%);
+/* Smooth Position-Based Gradient Animation */
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
   }
-  12.5% { 
-    background: linear-gradient(135deg, rgb(18, 25, 40) 0%, rgb(7, 13, 21) 40%, rgba(6, 47, 23, 0.805) 100%);
+  50% {
+    background-position: 100% 50%;
   }
-  25% { 
-    background: linear-gradient(135deg, rgb(19, 26, 41) 0%, rgb(8, 14, 22) 40%, rgba(7, 48, 24, 0.81) 100%);
-  }
-  37.5% { 
-    background: linear-gradient(135deg, rgb(20, 27, 42) 0%, rgb(9, 15, 23) 40%, rgba(8, 49, 25, 0.815) 100%);
-  }
-  50% { 
-    background: linear-gradient(135deg, rgb(21, 28, 43) 0%, rgb(10, 16, 24) 40%, rgba(9, 50, 26, 0.82) 100%);
-  }
-  62.5% { 
-    background: linear-gradient(135deg, rgb(20, 27, 42) 0%, rgb(9, 15, 23) 40%, rgba(8, 49, 25, 0.815) 100%);
-  }
-  75% { 
-    background: linear-gradient(135deg, rgb(19, 26, 41) 0%, rgb(8, 14, 22) 40%, rgba(7, 48, 24, 0.81) 100%);
-  }
-  87.5% { 
-    background: linear-gradient(135deg, rgb(18, 25, 40) 0%, rgb(7, 13, 21) 40%, rgba(6, 47, 23, 0.805) 100%);
-  }
-  100% { 
-    background: linear-gradient(135deg, rgb(17, 24, 39) 0%, rgb(6, 12, 20) 40%, rgba(5, 46, 22, 0.8) 100%);
+  100% {
+    background-position: 0% 50%;
   }
 }
 
 .animated-gradient {
-  animation: subtle-gradient-shift 60s linear infinite;
+  background: linear-gradient(-45deg, #111827, #0c1420, #172033, #052e16);
+  background-size: 400% 400%;
+  animation: gradient 30s ease infinite;
 }
 
 /* Enhanced Glass Form States & Tooltips */
