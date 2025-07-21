@@ -107,7 +107,7 @@ export function DashboardSidebar({
   return (
     <div
       className={cn(
-        "dashboard-sidebar fixed top-0 left-0 h-full bg-neutral-950/85 glass-effect z-30 p-6 transition-all duration-300",
+        "dashboard-sidebar fixed top-0 left-0 h-full glass-primary z-30 p-6 transition-all duration-300",
         isCollapsed ? "w-20" : "w-80",
         isOpen ? "translate-x-0" : "-translate-x-full",
         className
@@ -121,7 +121,7 @@ export function DashboardSidebar({
             variant="ghost"
             size="icon"
             onClick={onToggleCollapse}
-            className="p-2 hover:bg-neutral-900/80 hover:shadow-[0_2px_8px_rgba(16,185,129,0.15),0_0_4px_rgba(16,185,129,0.1)] rounded-xl button-3d press-animation ripple-effect transition-all duration-300 touch-manipulation"
+            className="p-2 glass-secondary hover:glass-interactive rounded-xl button-3d press-animation ripple-effect transition-all duration-300 touch-manipulation"
             title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             haptic="light"
@@ -138,12 +138,12 @@ export function DashboardSidebar({
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="p-2 hover:bg-neutral-900/80 hover:shadow-[0_2px_8px_rgba(16,185,129,0.15),0_0_4px_rgba(16,185,129,0.1)] rounded-xl button-3d press-animation ripple-effect transition-all duration-300 touch-manipulation"
+              className="p-2 glass-secondary hover:glass-interactive rounded-xl button-3d press-animation ripple-effect transition-all duration-300 touch-manipulation"
               title="Close sidebar"
               aria-label="Close sidebar"
               haptic="light"
             >
-              <X className="w-5 h-5 icon-float" />
+              <X className="w-5 h-5 text-white/60 icon-float" />
             </Button>
           )}
         </div>
@@ -162,12 +162,12 @@ export function DashboardSidebar({
                 variant="ghost"
                 onClick={() => handleNavigation(item)}
                 className={cn(
-                  "w-full p-3 glass-subtle rounded-xl font-inter touch-manipulation relative",
+                  "w-full p-3 glass-secondary rounded-xl font-inter touch-manipulation relative",
                   "button-3d depth-shadow press-animation ripple-effect",
-                  "hover:bg-slate-900/75 hover:border-emerald-400/30 hover:shadow-[0_4px_16px_rgba(16,185,129,0.2),0_0_8px_rgba(16,185,129,0.1)] hover:text-emerald-100",
+                  "hover:glass-interactive hover:text-emerald-100",
                   "transition-all duration-300 ease-out",
                   isCollapsed ? "justify-center" : "justify-start gap-3",
-                  location === item.path && "veri-gradient text-white shadow-lg shadow-emerald-500/50 transform translateY(-1px)",
+                  location === item.path && "glass-interactive text-white shadow-lg shadow-emerald-500/50 transform translateY(-1px)",
                   "focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
                 )}
                 title={isCollapsed ? `${item.label} (Alt+${index + 1})` : `Alt+${index + 1}`}
@@ -191,9 +191,9 @@ export function DashboardSidebar({
             variant="ghost"
             onClick={handleLogout}
             className={cn(
-              "w-full p-3 glass-subtle rounded-xl font-inter text-red-400 hover:text-red-300 touch-manipulation relative",
+              "w-full p-3 glass-secondary rounded-xl font-inter text-red-400 hover:text-red-300 touch-manipulation relative",
               "button-3d depth-shadow press-animation ripple-effect",
-              "hover:bg-slate-900/75 hover:border-red-400/30 hover:shadow-[0_4px_16px_rgba(239,68,68,0.2),0_0_8px_rgba(239,68,68,0.1)]",
+              "hover:glass-interactive",
               "transition-all duration-300 ease-out",
               isCollapsed ? "justify-center" : "justify-start gap-3",
               "focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2"
@@ -209,7 +209,7 @@ export function DashboardSidebar({
 
         {/* Enhanced Leaderboard Preview - hidden when collapsed */}
         {!isCollapsed && (
-          <div className="veri-gradient-card rounded-xl p-6">
+          <div className="glass-secondary rounded-xl p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 veri-gradient rounded-lg flex items-center justify-center">
                 <Trophy className="w-4 h-4 text-white" />
