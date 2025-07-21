@@ -1909,19 +1909,18 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                               </div>
                             </div>
                             
-                            {/* Right side - Preview button only */}
+                            {/* Right side - Start button */}
                             <div className="flex items-center space-x-2 flex-shrink-0">
                               <Button
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  handleTaskPreview(task);
+                                  handleStartTask(task);
                                 }}
                                 size="sm"
-                                variant="ghost"
-                                className="text-white/80 hover:text-white hover:bg-white/10 p-1 h-6 w-6 rounded-full"
-                                title="Preview task details"
+                                className="bg-teal-500/20 backdrop-blur-md border-0 hover:bg-teal-400/30 text-teal-300 hover:text-teal-200 font-medium px-3 py-1 text-xs rounded-lg transition-all duration-300 hover:scale-105 shadow-lg"
+                                disabled={selectedTask?.id === task.id}
                               >
-                                <Eye className="h-3 w-3" />
+                                {selectedTask?.id === task.id ? "Started" : "Start"}
                               </Button>
                             </div>
                           </div>
