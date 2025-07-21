@@ -153,9 +153,7 @@ export default function Dashboard() {
                 : 'glass-primary rounded-lg mb-6 p-1 pl-[0px] pr-[0px] pt-[0px] pb-[0px] transform scale-100 translate-y-0'
             }`}>
               <TabsList className="grid w-full grid-cols-5 bg-transparent border-0 transition-all duration-500 ease-in-out">
-                <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">
-                  Tasks
-                </TabsTrigger>
+                <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">Quests</TabsTrigger>
                 <TabsTrigger value="campaigns" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">
                   Campaigns
                 </TabsTrigger>
