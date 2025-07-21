@@ -519,6 +519,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Award XP to user
+  app.post("/api/users/:id/award-xp", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = parseInt(req.params.id);
+      const { points, reason } = req.body;
+      
+      // Validate user owns this profile or is admin
+      if (req.session?.userId !== userId) {
+        return res.status(403).json({ error: "Unauthorized" });
+      }
+
+      if (!points || points <= 0) {
+        return res.status(400).json({ error: "Invalid points amount" });
+      }
+
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Award XP points to user
+      const updatedUser = await storage.updateUser(userId, {
+        xpPoints: (user.xpPoints || 0) + points,
+      });
+      
+      console.log(`Awarded ${points} XP to user ${userId} for: ${reason}`);
+      
+      res.json({
+        success: true,
+        newXP: updatedUser.xpPoints,
+        pointsAwarded: points,
+        reason: reason
+      });
+    } catch (error) {
+      console.error("Error awarding XP:", error);
+      res.status(500).json({ error: "Failed to award XP" });
+    }
+  });
+
   // Get public profile by custom username
   app.get("/api/public-profile/:username", async (req, res) => {
     try {

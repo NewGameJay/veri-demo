@@ -119,6 +119,7 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
   const [showVeriScore, setShowVeriScore] = useState(true);
   const [showRank, setShowRank] = useState(true);
   const [showSocialIcons, setShowSocialIcons] = useState(true);
+  const [hasSharedForXP, setHasSharedForXP] = useState(false);
   
   const [profileData, setProfileData] = useState({
     name: user?.username || "Creator",
@@ -158,10 +159,19 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
   // Update profile mutation
   const updateProfileMutation = useMutation({
     mutationFn: async (data: typeof profileData) => {
-      return apiRequest(`/api/users/${user?.id}/profile`, {
+      const response = await fetch(`/api/users/${user?.id}/profile`, {
         method: "PATCH",
-        body: data,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       });
+      
+      if (!response.ok) {
+        throw new Error("Failed to update profile");
+      }
+      
+      return response.json();
     },
     onSuccess: () => {
       triggerHaptic("success");
@@ -273,12 +283,55 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
     }));
   };
 
+  const handleShareForXP = async () => {
+    if (hasSharedForXP) return;
+    
+    try {
+      // Award 50 XP for sharing profile
+      const response = await fetch(`/api/users/${user?.id}/award-xp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ points: 50, reason: "Profile sharing reward" }),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to award XP");
+      }
+      
+      setHasSharedForXP(true);
+      triggerHaptic("success");
+      
+      toast({
+        title: "🎉 50 XP Earned!",
+        description: "Thank you for sharing your profile! Your XP has been updated.",
+      });
+      
+      // Invalidate user queries to refresh XP display
+      queryClient.invalidateQueries({ queryKey: [`/api/users/${user?.id}`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
+      
+    } catch (error) {
+      triggerHaptic("error");
+      toast({
+        title: "Error",
+        description: "Failed to award XP. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const veriScore = userData?.veriScore || 85;
   const tier = getTierInfo(veriScore);
-  const totalFollowers = socialConnections?.reduce((sum: number, conn: SocialConnection) => sum + (conn.followers || 0), 0) || 12500;
+  const totalFollowers = Array.isArray(socialConnections) 
+    ? socialConnections.reduce((sum: number, conn: SocialConnection) => sum + (conn.followers || 0), 0) 
+    : 12500;
   const userRank = leaderboardData?.user?.rank || 1;
-  const connectedSocials = socialConnections?.filter((conn: SocialConnection) => conn.isConnected) || [];
-  const incompleteConnections = socialConnections?.length !== 7; // Assuming 7 major platforms
+  const connectedSocials = Array.isArray(socialConnections) 
+    ? socialConnections.filter((conn: SocialConnection) => conn.isConnected) 
+    : [];
+  const incompleteConnections = Array.isArray(socialConnections) ? socialConnections.length !== 7 : true; // Assuming 7 major platforms
   
   // Mock content data (replace with real data)
   const featuredContent: ContentItem[] = [
@@ -930,6 +983,29 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
                     className="flex-shrink-0 border-slate-600 text-slate-300 hover:bg-slate-700"
                   >
                     {copiedUrl ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  </Button>
+                </div>
+              </div>
+
+              {/* Diamond XP Reward CTA */}
+              <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-emerald-500/20 via-blue-500/20 to-purple-500/20 border border-emerald-400/30 p-4 mb-6">
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-purple-500/10 animate-pulse"></div>
+                <div className="relative flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-emerald-500 to-blue-500 flex items-center justify-center animate-bounce">
+                      <span className="text-2xl">💎</span>
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-white text-lg">Earn 50 XP Instantly!</h3>
+                      <p className="text-emerald-300 text-sm">Share your profile and get rewarded</p>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={handleShareForXP}
+                    disabled={hasSharedForXP}
+                    className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-bold px-6 py-2 rounded-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  >
+                    {hasSharedForXP ? '✓ Claimed!' : '💎 Claim 50 XP'}
                   </Button>
                 </div>
               </div>
