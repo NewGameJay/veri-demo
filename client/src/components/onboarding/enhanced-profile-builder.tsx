@@ -328,7 +328,7 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
 
                   <div>
                     <Label>Interests (select up to 5)</Label>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2 max-h-40 overflow-y-auto p-2 border border-gray-200 dark:border-gray-700 rounded-lg">
                       {interests.map((interest) => (
                         <Button
                           key={interest}
@@ -350,7 +350,7 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
 
                   <div>
                     <Label>Goals (select up to 3)</Label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2 max-h-32 overflow-y-auto p-2 border border-gray-200 dark:border-gray-700 rounded-lg">
                       {goals.map((goal) => (
                         <Button
                           key={goal}
