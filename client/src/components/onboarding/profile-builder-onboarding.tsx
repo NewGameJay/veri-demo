@@ -117,25 +117,6 @@ export function ProfileBuilderOnboarding({ onComplete, onStartProfileBuilder }: 
           </p>
         </motion.div>
 
-        {/* Progress Indicator */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 }}
-          className="max-w-md mx-auto mb-8"
-        >
-          <div className="glass-medium rounded-xl p-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Profile Setup</span>
-              <span className="text-sm font-bold text-emerald-600">{profileProgress}%</span>
-            </div>
-            <Progress value={profileProgress} className="h-2" />
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              {connectedPlatforms.length} of 4 platforms connected
-            </p>
-          </div>
-        </motion.div>
-
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Social Connections & Profile Builder */}
           <motion.div 
@@ -328,12 +309,31 @@ export function ProfileBuilderOnboarding({ onComplete, onStartProfileBuilder }: 
           </motion.div>
         </div>
 
+        {/* Progress Indicator - Moved Below Main Content */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.6 }}
+          className="max-w-md mx-auto mt-8 mb-6"
+        >
+          <div className="glass-secondary rounded-xl p-3 border border-white/10">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Profile Setup Progress</span>
+              <span className="text-xs font-semibold text-emerald-600">{profileProgress}%</span>
+            </div>
+            <Progress value={profileProgress} className="h-1.5" />
+            <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+              {connectedPlatforms.length} of 4 platforms connected
+            </p>
+          </div>
+        </motion.div>
+
         {/* Skip for now option */}
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="text-center mt-8"
+          className="text-center mt-4"
         >
           <Button 
             onClick={onComplete}
