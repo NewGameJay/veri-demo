@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { VeriLogo } from "@/components/ui/veri-logo";
 import { Trophy, Star, Zap, Share2, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { triggerHaptic } from "@/lib/haptic";
@@ -35,11 +36,11 @@ export function MilestoneCelebration({ milestone, onClose }: MilestoneCelebratio
       case "streak":
         return <Star className="h-8 w-8 text-orange-400" />;
       case "score":
-        return <Trophy className="h-8 w-8 text-purple-400" />;
+        return <VeriLogo size="lg" showText={false} clickable={false} />;
       case "tasks":
-        return <Trophy className="h-8 w-8 text-green-400" />;
+        return <VeriLogo size="lg" showText={false} clickable={false} />;
       default:
-        return <Trophy className="h-8 w-8 text-blue-400" />;
+        return <VeriLogo size="lg" showText={false} clickable={false} />;
     }
   };
 
@@ -203,7 +204,7 @@ export function MilestoneCelebration({ milestone, onClose }: MilestoneCelebratio
                     variant="secondary" 
                     className={`bg-gradient-to-r ${getMilestoneColor()} text-white px-4 py-2 text-lg font-semibold`}
                   >
-                    <Trophy className="mr-2 h-4 w-4" />
+                    <VeriLogo size="sm" showText={false} clickable={false} />
                     {milestone.requirement} {milestone.type.toUpperCase()}
                   </Badge>
                 </motion.div>
