@@ -86,14 +86,11 @@ export function Leaderboard() {
             }`}
           >
             {/* Rank Badge */}
-            <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <div className="flex items-center justify-center mb-2 sm:mb-3">
               <div className="flex items-center gap-1 sm:gap-2">
                 {getRankIcon(creator.rank)}
                 <span className="text-xs sm:text-sm font-medium text-white/80">#{creator.rank}</span>
               </div>
-              <Badge variant="secondary" className={`bg-gradient-to-r ${getTierColor(creator.tier)} text-white text-xs px-1.5 py-0.5 sm:px-2 sm:py-1 whitespace-nowrap`}>
-                {creator.tier}
-              </Badge>
             </div>
 
             {/* Avatar */}
@@ -103,7 +100,10 @@ export function Leaderboard() {
 
             {/* Creator Info */}
             <div className="text-center">
-              <h4 className="font-semibold text-white mb-1 text-sm sm:text-base truncate">{creator.name}</h4>
+              <h4 className="font-semibold text-white mb-1 text-sm sm:text-base whitespace-nowrap overflow-hidden text-ellipsis">{creator.name}</h4>
+              <Badge variant="secondary" className={`bg-gradient-to-r ${getTierColor(creator.tier)} text-white text-xs px-2 py-1 mb-2 inline-block`}>
+                {creator.tier}
+              </Badge>
               <div className="text-lg sm:text-xl font-bold text-white mb-1">{creator.score.toLocaleString()}</div>
               <div className="flex items-center justify-center gap-1">
                 <TrendingUp className="w-3 h-3 text-green-400" />
@@ -131,7 +131,7 @@ export function Leaderboard() {
               {creator.avatar}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="font-medium text-white text-sm sm:text-base truncate">{creator.name}</div>
+              <div className="font-medium text-white text-sm sm:text-base whitespace-nowrap overflow-hidden text-ellipsis">{creator.name}</div>
               <div className="text-xs text-white/60">{creator.tier} Tier</div>
             </div>
             <div className="text-right flex-shrink-0">
