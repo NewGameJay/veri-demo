@@ -103,17 +103,48 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
     });
   };
 
-  const getTaskGradient = (platform: string, category: string) => {
-    if (platform === 'demo' || category === 'mvp_demo') {
-      return 'bg-gradient-to-br from-green-500/30 via-emerald-500/20 to-teal-500/30';
+  const getPartnerGradient = (brand: string, taskId: number) => {
+    // Create unique gradients for different partners and tasks
+    switch (brand) {
+      case 'Hyve.gg':
+        // Dynamic gradients inspired by the examples - orange to pink to black
+        const hyveGradients = [
+          'bg-gradient-to-br from-orange-400 via-pink-500 to-black',
+          'bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-600',
+          'bg-gradient-to-br from-orange-500 via-red-500 to-purple-900',
+          'bg-gradient-to-br from-amber-400 via-pink-500 to-violet-900'
+        ];
+        return hyveGradients[taskId % hyveGradients.length];
+      
+      case 'Lusterlabs.xyz':
+        // Blue to teal gradients
+        const lusterGradients = [
+          'bg-gradient-to-br from-blue-400 via-teal-500 to-green-600',
+          'bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600',
+          'bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-700',
+          'bg-gradient-to-br from-sky-400 via-indigo-500 to-purple-700'
+        ];
+        return lusterGradients[taskId % lusterGradients.length];
+      
+      case 'Veri Platform':
+        // Veri signature gradients
+        const veriGradients = [
+          'bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600',
+          'bg-gradient-to-br from-green-400 via-emerald-500 to-teal-700',
+          'bg-gradient-to-br from-lime-400 via-green-500 to-emerald-700'
+        ];
+        return veriGradients[taskId % veriGradients.length];
+      
+      default:
+        // Default dynamic gradients
+        const defaultGradients = [
+          'bg-gradient-to-br from-purple-400 via-pink-500 to-red-500',
+          'bg-gradient-to-br from-indigo-400 via-purple-500 to-pink-600',
+          'bg-gradient-to-br from-violet-400 via-purple-500 to-indigo-600',
+          'bg-gradient-to-br from-fuchsia-400 via-pink-500 to-rose-600'
+        ];
+        return defaultGradients[taskId % defaultGradients.length];
     }
-    if (platform === 'youtube' || platform === 'twitch' || category.includes('gaming')) {
-      return 'bg-gradient-to-br from-purple-500/30 via-blue-500/20 to-indigo-500/30';
-    }
-    if (platform === 'twitter' || platform === 'instagram' || platform === 'tiktok') {
-      return 'bg-gradient-to-br from-pink-500/30 via-purple-500/20 to-blue-500/30';
-    }
-    return 'bg-gradient-to-br from-purple-600/20 via-blue-600/20 to-teal-600/20';
   };
 
   // Fetch completed tasks from backend
@@ -1794,133 +1825,134 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                   return (
                     <div 
                       key={task.id} 
-                      className="group glass-subtle p-4 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300 animate-fade-in relative"
+                      className="group glass-subtle rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 animate-fade-in relative overflow-hidden hover:scale-[1.02] hover:shadow-2xl"
                       style={{
                         animationDelay: `${task.id * 100}ms`
                       }}
                     >
-                      {/* Task Image Header */}
-                    <div className="relative mb-3 overflow-hidden rounded-lg">
-                      <div className={`h-32 relative ${getTaskGradient(task.platform, task.category)}`}>
-                        <div className="absolute inset-0 bg-black/20"></div>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="text-center">
-                            <task.icon className={`h-8 w-8 ${task.color} mb-2 mx-auto`} />
-                            <div className="text-white/90 font-semibold text-sm">{task.platform.toUpperCase()}</div>
+                      {/* Partner Brand Header - More Visual */}
+                      <div className="relative overflow-hidden">
+                        <div className={`h-40 relative ${getPartnerGradient(task.brand, task.id)}`}>
+                          {/* Overlay gradient for better text readability */}
+                          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/60"></div>
+                          
+                          {/* Partner Brand Badge - Top Left */}
+                          <div className="absolute top-3 left-3">
+                            <Badge variant="secondary" className="bg-black/30 backdrop-blur-sm text-white text-xs border border-white/20">
+                              {task.brand?.replace('.gg', '').replace('.xyz', '') || 'Partner'}
+                            </Badge>
+                          </div>
+                          
+                          {/* XP Points - Top Right */}
+                          <div className="absolute top-3 right-3">
+                            <Badge variant="secondary" className="bg-black/30 backdrop-blur-sm text-white font-semibold border border-white/20">
+                              {task.points} XP
+                            </Badge>
+                          </div>
+                          
+                          {/* Platform Icon - Center */}
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="text-center">
+                              <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center mb-2 border border-white/20">
+                                <task.icon className="h-6 w-6 text-white" />
+                              </div>
+                              <div className="text-white/90 font-medium text-sm">{task.platform.toUpperCase()}</div>
+                            </div>
+                          </div>
+                          
+                          {/* Difficulty Badge - Bottom Right */}
+                          <div className="absolute bottom-3 right-3">
+                            <Badge variant="secondary" className={`${getDifficultyColor(task.difficulty)} border border-white/20 backdrop-blur-sm text-xs`}>
+                              {task.difficulty}
+                            </Badge>
                           </div>
                         </div>
-                        <div className="absolute top-2 right-2">
-                          <Badge variant="secondary" className="bg-black/50 text-white text-xs">
-                            {task.points} XP
-                          </Badge>
-                        </div>
                       </div>
-                    </div>
 
-                    <div className="mb-3">
-                      {/* Title */}
-                      <div className="mb-2">
-                        <h3 className="font-semibold text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
-                      </div>
-                      
-                      {/* Badges below title */}
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center space-x-2">
-                          <Badge variant="secondary" className={`${getDifficultyColor(task.difficulty)} transition-all duration-300`}>
-                            {task.difficulty}
-                          </Badge>
-                          {task.brand && (
-                            <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 text-xs">
-                              {task.brand.replace('.gg', '').replace('.xyz', '')}
-                            </Badge>
-                          )}
+                      {/* Content Section - Less Text Heavy */}
+                      <div className="p-4 space-y-3">
+                        {/* Title - More prominent */}
+                        <h3 className="text-lg font-bold text-white group-hover:text-green-300 transition-colors duration-300 leading-tight">
+                          {task.title}
+                        </h3>
+                        
+                        {/* Quick Stats Row */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3 text-sm text-white/70">
+                            <div className="flex items-center space-x-1">
+                              <Clock className="h-4 w-4" />
+                              <span>{task.estimatedTime}</span>
+                            </div>
+                          </div>
+                          
+                          <Button
+                            onClick={() => toggleTaskExpansion(task.id)}
+                            size="sm"
+                            variant="ghost"
+                            className="text-white/60 hover:text-white hover:bg-white/10 p-1 h-7 w-7"
+                          >
+                            {isExpanded ? (
+                              <ChevronUp className="h-4 w-4" />
+                            ) : (
+                              <ChevronDown className="h-4 w-4" />
+                            )}
+                          </Button>
                         </div>
-                      </div>
-                      
-                      {/* Description */}
-                      <p className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300 line-clamp-2">
-                        {task.description}
-                      </p>
-                    </div>
-                    
-                    <div className="flex items-center justify-between mb-3 transition-transform duration-300">
-                      <div className="flex items-center space-x-4 text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">
-                        <div className="flex items-center space-x-1 transition-transform duration-300">
-                          <Clock className="h-4 w-4 transition-colors duration-300" />
-                          <span>{task.estimatedTime}</span>
-                        </div>
-                        <div className="flex items-center space-x-1 transition-transform duration-300">
-                          <Hash className="h-4 w-4 transition-colors duration-300" />
-                          <span>{task.category.replace('_', ' ')}</span>
-                        </div>
-                      </div>
-                      
-                      <Button
-                        onClick={() => toggleTaskExpansion(task.id)}
-                        size="sm"
-                        variant="ghost"
-                        className="text-white/60 hover:text-white hover:bg-white/10 p-1 h-6 w-6"
-                      >
-                        {isExpanded ? (
-                          <ChevronUp className="h-4 w-4" />
-                        ) : (
-                          <ChevronDown className="h-4 w-4" />
+                        
+                        {/* Expandable Requirements Section */}
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="pt-3 border-t border-white/15 group-hover:border-white/25 transition-colors duration-300"
+                          >
+                            <h4 className="text-sm font-medium text-white mb-2 group-hover:text-green-300 transition-colors duration-300">Full Requirements:</h4>
+                            <ul className="space-y-2">
+                              {task.requirements.map((req, index) => (
+                                <li 
+                                  key={index} 
+                                  className="text-sm text-white/70 flex items-start space-x-2 group-hover:text-white/90 transition-all duration-300 group-hover:translate-x-1"
+                                  style={{
+                                    animationDelay: `${(task.id * 100) + (index * 50)}ms`
+                                  }}
+                                >
+                                  <div className="w-1 h-1 rounded-full bg-white/50 group-hover:bg-green-300 group-hover:scale-150 transition-all duration-300 mt-2"></div>
+                                  <span className="group-hover:font-medium transition-all duration-300 flex-1">{req}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </motion.div>
                         )}
-                      </Button>
-                    </div>
-                    
-                    {/* Expandable Requirements Section */}
-                    {isExpanded && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="mb-3 pt-3 border-t border-white/15 group-hover:border-white/25 transition-colors duration-300"
-                      >
-                        <h4 className="text-sm font-medium text-white mb-2 group-hover:text-green-300 transition-colors duration-300">Full Requirements:</h4>
-                        <ul className="space-y-2">
-                          {task.requirements.map((req, index) => (
-                            <li 
-                              key={index} 
-                              className="text-sm text-white/70 flex items-start space-x-2 group-hover:text-white/90 transition-all duration-300 group-hover:translate-x-1"
-                              style={{
-                                animationDelay: `${(task.id * 100) + (index * 50)}ms`
-                              }}
-                            >
-                              <div className="w-1 h-1 rounded-full bg-white/50 group-hover:bg-green-300 group-hover:scale-150 transition-all duration-300 mt-2"></div>
-                              <span className="group-hover:font-medium transition-all duration-300 flex-1">{req}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </motion.div>
-                    )}
-                    
-                    <div className="flex justify-center">
-                      <Button
-                        onClick={() => handleStartTask(task)}
-                        size="sm"
-                        className="veri-gradient transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25 w-full"
-                        disabled={selectedTask?.id === task.id}
-                      >
-                        {selectedTask?.id === task.id ? (
-                          <>
-                            <CheckCircle2 className="mr-1 h-3 w-3" />
-                            Started
-                          </>
-                        ) : (
-                          <>
-                            Start Task
-                            <ArrowRight className="ml-1 h-3 w-3 transition-transform duration-300" />
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                    
-                    {/* Hover indicator */}
-                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-                    </div>
+                        
+                        {/* Action Button */}
+                        <div className="pt-3">
+                          <Button
+                            onClick={() => handleStartTask(task)}
+                            size="sm"
+                            className="veri-gradient transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25 w-full"
+                            disabled={selectedTask?.id === task.id}
+                          >
+                            {selectedTask?.id === task.id ? (
+                              <>
+                                <CheckCircle2 className="mr-1 h-3 w-3" />
+                                Started
+                              </>
+                            ) : (
+                              <>
+                                Start Task
+                                <ArrowRight className="ml-1 h-3 w-3 transition-transform duration-300" />
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      {/* Hover indicator */}
+                      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                      </div>
                   </div>
                 );
                 })}
