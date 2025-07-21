@@ -1617,7 +1617,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Target className="h-5 w-5 text-green-400" />
-            <CardTitle className="text-white">Task Verification</CardTitle>
+            <CardTitle className="text-white">Partner Quests</CardTitle>
           </div>
           <div className="flex items-center space-x-2">
             <Badge variant="secondary" className="bg-purple-500/20 text-purple-400">
@@ -2167,7 +2167,6 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           </TabsContent>
         </Tabs>
       </CardContent>
-
       {/* Floating Points Animation */}
       {showFloatingPoints && (
         <FloatingPointsAnimation 
@@ -2175,7 +2174,6 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           onComplete={() => setShowFloatingPoints(false)} 
         />
       )}
-
       {/* Social Share Modal */}
       {showShareModal && shareTaskData && user && (
         <SocialShare
