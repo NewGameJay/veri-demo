@@ -1900,7 +1900,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                             <div className="flex items-center space-x-3 flex-1 min-w-0">
                               <task.icon className="h-5 w-5 text-white flex-shrink-0" />
                               <div className="flex-1 min-w-0">
-                                <h3 className="text-white font-semibold text-sm truncate group-hover:text-green-300 transition-colors group-hover:scale-105 transform">
+                                <h3 className="text-white font-semibold text-sm truncate group-hover:text-green-300 transition-colors">
                                   {task.title}
                                 </h3>
                                 <div className="text-white/70 text-xs capitalize">
@@ -1909,8 +1909,15 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                               </div>
                             </div>
                             
-                            {/* Right side - Expand button only */}
-                            <div className="flex items-center space-x-2 flex-shrink-0">
+                            {/* Right side - Expand button and explore message */}
+                            <div className="flex flex-col items-end space-y-1 flex-shrink-0">
+                              {/* Explore message above button */}
+                              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div className="text-xs text-green-400 font-medium bg-black/50 rounded-full px-2 py-1 whitespace-nowrap">
+                                  Click to explore! 🎮
+                                </div>
+                              </div>
+                              
                               <Button
                                 onClick={() => toggleTaskExpansion(task.id)}
                                 size="sm"
@@ -1995,20 +2002,9 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                         </motion.div>
                       )}
                       
-                      {/* Gamified hover effects */}
+                      {/* Single hover indicator */}
                       <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="flex items-center gap-1">
-                          <div className="w-2 h-2 rounded-full bg-green-400 animate-bounce"></div>
-                          <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                          <div className="w-1 h-1 rounded-full bg-green-400 animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                        </div>
-                      </div>
-                      
-                      {/* Progress indicator */}
-                      <div className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="text-xs text-green-400 font-medium bg-black/50 rounded-full px-2 py-1">
-                          Click to explore! 🎮
-                        </div>
+                        <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></div>
                       </div>
                   </div>
                 );
