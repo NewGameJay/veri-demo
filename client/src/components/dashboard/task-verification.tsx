@@ -91,6 +91,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const [shareTaskData, setShareTaskData] = useState<any>(null);
   const [showFloatingPoints, setShowFloatingPoints] = useState(false);
   const [floatingPoints, setFloatingPoints] = useState(0);
+  const [lastAnimatedTaskId, setLastAnimatedTaskId] = useState<number | null>(null);
   const [filtersExpanded, setFiltersExpanded] = useState(false);
   const [isGridExpanded, setIsGridExpanded] = useState(false);
   const [showTaskPreview, setShowTaskPreview] = useState(false);
@@ -1560,9 +1561,12 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           if (result.success) {
             triggerHaptic("success");
             
-            // Show floating points animation immediately
-            setFloatingPoints(selectedTask.points);
-            setShowFloatingPoints(true);
+            // Show floating points animation only if this task hasn't been animated before
+            if (lastAnimatedTaskId !== selectedTask.id) {
+              setFloatingPoints(selectedTask.points);
+              setShowFloatingPoints(true);
+              setLastAnimatedTaskId(selectedTask.id);
+            }
             
             // Invalidate queries immediately for real-time updates
             queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
