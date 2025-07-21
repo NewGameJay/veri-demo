@@ -25,7 +25,17 @@ export function Leaderboard() {
 
   const remainingCreators = [
     { id: 4, name: "Emma Davis", score: 2198, tier: "Platinum", rank: 4, avatar: "ED", change: "-3" },
-    { id: 5, name: "John Smith", score: 2087, tier: "Platinum", rank: 5, avatar: "JS", change: "+5" }
+    { id: 5, name: "John Smith", score: 2087, tier: "Platinum", rank: 5, avatar: "JS", change: "+5" },
+    { id: 6, name: "Lisa Brown", score: 1965, tier: "Gold", rank: 6, avatar: "LB", change: "+22" },
+    { id: 7, name: "Tom Garcia", score: 1843, tier: "Gold", rank: 7, avatar: "TG", change: "-7" },
+    { id: 8, name: "Amy Lee", score: 1721, tier: "Gold", rank: 8, avatar: "AL", change: "+11" },
+    { id: 9, name: "Chris Wang", score: 1654, tier: "Gold", rank: 9, avatar: "CW", change: "+3" },
+    { id: 10, name: "Sofia Martinez", score: 1598, tier: "Silver", rank: 10, avatar: "SM", change: "+8" },
+    { id: 11, name: "David Kim", score: 1532, tier: "Silver", rank: 11, avatar: "DK", change: "-2" },
+    { id: 12, name: "Rachel Green", score: 1487, tier: "Silver", rank: 12, avatar: "RG", change: "+6" },
+    { id: 13, name: "Marcus Johnson", score: 1421, tier: "Silver", rank: 13, avatar: "MJ", change: "+4" },
+    { id: 14, name: "Nina Patel", score: 1365, tier: "Silver", rank: 14, avatar: "NP", change: "-1" },
+    { id: 15, name: "Jake Morrison", score: 1298, tier: "Bronze", rank: 15, avatar: "JM", change: "+7" }
   ];
 
   const getTierColor = (tier: string) => {
@@ -62,39 +72,39 @@ export function Leaderboard() {
       </div>
 
       {/* Top 3 Creators Highlight */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
         {topCreators.map((creator, index) => (
           <motion.div
             key={creator.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className={`glass-effect p-4 rounded-xl relative ${
+            className={`glass-effect p-3 sm:p-4 rounded-xl relative ${
               creator.rank === 1 ? 'border-yellow-500/40 bg-yellow-500/5' : 
               creator.rank === 2 ? 'border-gray-400/40 bg-gray-400/5' :
               'border-orange-500/40 bg-orange-500/5'
             }`}
           >
             {/* Rank Badge */}
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between mb-2 sm:mb-3">
+              <div className="flex items-center gap-1 sm:gap-2">
                 {getRankIcon(creator.rank)}
-                <span className="text-sm font-medium text-white/80">#{creator.rank}</span>
+                <span className="text-xs sm:text-sm font-medium text-white/80">#{creator.rank}</span>
               </div>
-              <Badge variant="secondary" className={`bg-gradient-to-r ${getTierColor(creator.tier)} text-white text-xs px-2 py-1`}>
+              <Badge variant="secondary" className={`bg-gradient-to-r ${getTierColor(creator.tier)} text-white text-xs px-1.5 py-0.5 sm:px-2 sm:py-1 whitespace-nowrap`}>
                 {creator.tier}
               </Badge>
             </div>
 
             {/* Avatar */}
-            <div className={`w-12 h-12 bg-gradient-to-br ${getTierColor(creator.tier)} rounded-full flex items-center justify-center font-bold text-white mb-3 mx-auto`}>
+            <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br ${getTierColor(creator.tier)} rounded-full flex items-center justify-center font-bold text-white mb-2 sm:mb-3 mx-auto`}>
               {creator.avatar}
             </div>
 
             {/* Creator Info */}
             <div className="text-center">
-              <h4 className="font-semibold text-white mb-1">{creator.name}</h4>
-              <div className="text-xl font-bold text-white mb-1">{creator.score.toLocaleString()}</div>
+              <h4 className="font-semibold text-white mb-1 text-sm sm:text-base truncate">{creator.name}</h4>
+              <div className="text-lg sm:text-xl font-bold text-white mb-1">{creator.score.toLocaleString()}</div>
               <div className="flex items-center justify-center gap-1">
                 <TrendingUp className="w-3 h-3 text-green-400" />
                 <span className="text-xs text-green-400">{creator.change}</span>
@@ -104,29 +114,29 @@ export function Leaderboard() {
         ))}
       </div>
 
-      {/* Remaining Top Players */}
+      {/* Remaining Top Players (4-15) */}
       <div className="space-y-2 mb-4">
         {remainingCreators.map((creator, index) => (
           <motion.div
             key={creator.id}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: (index + 3) * 0.1 }}
-            className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+            transition={{ delay: (index + 3) * 0.05 }}
+            className="flex items-center gap-3 p-2.5 sm:p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
           >
-            <div className="w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gray-600 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
               {creator.rank}
             </div>
-            <div className={`w-8 h-8 bg-gradient-to-br ${getTierColor(creator.tier)} rounded-full flex items-center justify-center font-bold text-xs text-white`}>
+            <div className={`w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br ${getTierColor(creator.tier)} rounded-full flex items-center justify-center font-bold text-xs text-white flex-shrink-0`}>
               {creator.avatar}
             </div>
-            <div className="flex-1">
-              <div className="font-medium text-white">{creator.name}</div>
+            <div className="flex-1 min-w-0">
+              <div className="font-medium text-white text-sm sm:text-base truncate">{creator.name}</div>
               <div className="text-xs text-white/60">{creator.tier} Tier</div>
             </div>
-            <div className="text-right">
-              <div className="font-bold text-white">{creator.score.toLocaleString()}</div>
-              <div className="text-xs text-green-400 flex items-center gap-1">
+            <div className="text-right flex-shrink-0">
+              <div className="font-bold text-white text-sm sm:text-base">{creator.score.toLocaleString()}</div>
+              <div className="text-xs text-green-400 flex items-center justify-end gap-1">
                 <TrendingUp className="w-3 h-3" />
                 {creator.change}
               </div>
