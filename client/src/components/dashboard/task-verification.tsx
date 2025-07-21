@@ -33,6 +33,7 @@ import { ArrowRight } from 'lucide-react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Share2 } from 'lucide-react';
 import { Twitch } from 'lucide-react';
+import { Filter } from 'lucide-react';
 
 // Floating Points Animation Component
 function FloatingPointsAnimation({ points, onComplete }: { points: number; onComplete: () => void }) {
@@ -86,6 +87,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const [shareTaskData, setShareTaskData] = useState<any>(null);
   const [showFloatingPoints, setShowFloatingPoints] = useState(false);
   const [floatingPoints, setFloatingPoints] = useState(0);
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
   const { toast } = useToast();
   const { user, refreshUser } = useAuth();
 
@@ -1453,12 +1455,16 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
         icon: config.icon,
         color: config.color,
         points: task.points,
-        completedAt: task.updatedAt,
+        completedAt: task.completedAt,
         verificationUrl: verificationData.url || "",
         status: "verified"
       };
     })
-    .sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
+    .sort((a, b) => {
+      const dateA = a.completedAt ? new Date(a.completedAt).getTime() : 0;
+      const dateB = b.completedAt ? new Date(b.completedAt).getTime() : 0;
+      return dateB - dateA;
+    });
 
   const handleStartTask = (task: any) => {
     triggerHaptic("light");
@@ -1636,13 +1642,42 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             <TabsTrigger value="completed">Completed ({completedTasks.length})</TabsTrigger>
           </TabsList>
           
-          {/* Combined Filters - Show only when showFilters is true and on available tab */}
+          {/* Filter Toggle Button - Show only when showFilters is true and on available tab */}
           {showFilters && activeTab === "available" && (
-            <div className="mt-4 mb-4 p-4 glass-subtle rounded-lg border border-white/10">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                {/* Filter Label and Tags */}
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm font-medium text-white/80 mr-2">Filter By:</span>
+            <div className="mt-4 mb-4">
+              <Button
+                onClick={() => setFiltersExpanded(!filtersExpanded)}
+                variant="outline"
+                size="sm"
+                className="glass-subtle border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 mb-3"
+              >
+                <Filter className="h-4 w-4 mr-2" />
+                Filters
+                {filtersExpanded ? (
+                  <ChevronUp className="h-4 w-4 ml-2" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 ml-2" />
+                )}
+                {(brandFilter !== "all" || difficultyFilter !== "all") && (
+                  <Badge variant="secondary" className="ml-2 bg-emerald-500/20 text-emerald-400 text-xs">
+                    Active
+                  </Badge>
+                )}
+              </Button>
+              
+              {/* Collapsible Filters */}
+              {filtersExpanded && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="p-4 glass-subtle rounded-lg border border-white/10"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    {/* Filter Label and Tags */}
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-sm font-medium text-white/80 mr-2">Filter By:</span>
                   
                   {/* Brand Tags */}
                   <button
@@ -1732,21 +1767,23 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                   </button>
                 </div>
 
-                {/* Clear Filters */}
-                <div className="flex items-center gap-4">
-                  {(brandFilter !== "all" || difficultyFilter !== "all") && (
-                    <button
-                      onClick={() => {
-                        setBrandFilter("all");
-                        setDifficultyFilter("all");
-                      }}
-                      className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors duration-200"
-                    >
-                      Clear filters
-                    </button>
-                  )}
-                </div>
-              </div>
+                    {/* Clear Filters */}
+                    <div className="flex items-center gap-4">
+                      {(brandFilter !== "all" || difficultyFilter !== "all") && (
+                        <button
+                          onClick={() => {
+                            setBrandFilter("all");
+                            setDifficultyFilter("all");
+                          }}
+                          className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors duration-200"
+                        >
+                          Clear filters
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
             </div>
           )}
           
@@ -2066,7 +2103,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                         <div className="group-hover:translate-x-1 transition-transform duration-300">
                           <h3 className="font-medium text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
                           <p className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">
-                            Completed {new Date(task.completedAt).toLocaleDateString()}
+                            Completed {task.completedAt ? new Date(task.completedAt).toLocaleDateString() : 'Recently'}
                           </p>
                         </div>
                       </div>
