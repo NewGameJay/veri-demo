@@ -9,7 +9,7 @@ import { CampaignExplore } from "@/components/dashboard/campaign-explore";
 import { ProfileBuilder2 } from "@/components/profile/profile-builder-2";
 import { SocialConnections } from "@/components/dashboard/social-connections";
 import { Leaderboard } from "@/components/dashboard/leaderboard";
-import { FAQ } from "@/components/dashboard/faq";
+
 import { MemorizzIntegration } from "@/components/integrations/memorizz-integration";
 import { AIAgents } from "@/components/dashboard/ai-agents";
 import { MilestoneCelebration } from "@/components/milestones/milestone-celebration";
@@ -252,9 +252,6 @@ export default function Dashboard() {
 
                   {/* Leaderboard */}
                   <Leaderboard />
-
-                  {/* FAQ Section - Expandable */}
-                  <FAQ />
                 </div>
               </div>
             </TabsContent>
@@ -283,9 +280,6 @@ export default function Dashboard() {
 
                   {/* Leaderboard */}
                   <Leaderboard />
-
-                  {/* FAQ Section - Expandable */}
-                  <FAQ />
                 </div>
               </div>
             </TabsContent>
@@ -484,9 +478,6 @@ export default function Dashboard() {
 
                   {/* Leaderboard */}
                   <Leaderboard />
-
-                  {/* FAQ Section - Expandable */}
-                  <FAQ />
                 </div>
               </div>
             </TabsContent>
