@@ -443,23 +443,9 @@
   animation: conic-spin 4s linear infinite;
 }
 
-/* Smooth Position-Based Gradient Animation */
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
+/* Static Background Gradient - Consistent with Ready to Transform Section */
 .animated-gradient {
-  background: linear-gradient(-45deg, #111827, #0c1420, #172033, #052e16);
-  background-size: 400% 400%;
-  animation: gradient 30s ease infinite;
+  background: linear-gradient(135deg, rgb(17, 24, 39) 0%, rgb(6, 12, 20) 40%, rgba(5, 46, 22, 0.8) 100%);
 }
 
 /* Enhanced Glass Form States & Tooltips */
