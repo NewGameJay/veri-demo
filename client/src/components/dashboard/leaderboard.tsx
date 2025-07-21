@@ -30,12 +30,7 @@ export function Leaderboard() {
     { id: 7, name: "Tom Garcia", score: 1843, tier: "Gold", rank: 7, avatar: "TG", change: "-7" },
     { id: 8, name: "Amy Lee", score: 1721, tier: "Gold", rank: 8, avatar: "AL", change: "+11" },
     { id: 9, name: "Chris Wang", score: 1654, tier: "Gold", rank: 9, avatar: "CW", change: "+3" },
-    { id: 10, name: "Sofia Martinez", score: 1598, tier: "Silver", rank: 10, avatar: "SM", change: "+8" },
-    { id: 11, name: "David Kim", score: 1532, tier: "Silver", rank: 11, avatar: "DK", change: "-2" },
-    { id: 12, name: "Rachel Green", score: 1487, tier: "Silver", rank: 12, avatar: "RG", change: "+6" },
-    { id: 13, name: "Marcus Johnson", score: 1421, tier: "Silver", rank: 13, avatar: "MJ", change: "+4" },
-    { id: 14, name: "Nina Patel", score: 1365, tier: "Silver", rank: 14, avatar: "NP", change: "-1" },
-    { id: 15, name: "Jake Morrison", score: 1298, tier: "Bronze", rank: 15, avatar: "JM", change: "+7" }
+    { id: 10, name: "Sofia Martinez", score: 1598, tier: "Silver", rank: 10, avatar: "SM", change: "+8" }
   ];
 
   const getTierColor = (tier: string) => {
@@ -71,50 +66,55 @@ export function Leaderboard() {
         <div className="pulse-ring w-3 h-3 bg-green-500 rounded-full" aria-label="Live updates active"></div>
       </div>
 
-      {/* Top 3 Creators Highlight */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
+      {/* Top 3 Creators Highlight - Stacked */}
+      <div className="space-y-3 mb-6">
         {topCreators.map((creator, index) => (
           <motion.div
             key={creator.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className={`glass-effect p-3 sm:p-4 rounded-xl relative ${
+            className={`glass-effect p-4 rounded-xl relative flex items-center gap-4 ${
               creator.rank === 1 ? 'border-yellow-500/40 bg-yellow-500/5' : 
               creator.rank === 2 ? 'border-gray-400/40 bg-gray-400/5' :
               'border-orange-500/40 bg-orange-500/5'
             }`}
           >
             {/* Rank Badge */}
-            <div className="flex items-center justify-center mb-2 sm:mb-3">
-              <div className="flex items-center gap-1 sm:gap-2">
-                {getRankIcon(creator.rank)}
-                <span className="text-xs sm:text-sm font-medium text-white/80">#{creator.rank}</span>
-              </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              {getRankIcon(creator.rank)}
+              <span className="text-sm font-medium text-white/80">#{creator.rank}</span>
             </div>
 
             {/* Avatar */}
-            <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br ${getTierColor(creator.tier)} rounded-full flex items-center justify-center font-bold text-white mb-2 sm:mb-3 mx-auto`}>
+            <div className={`w-12 h-12 bg-gradient-to-br ${getTierColor(creator.tier)} rounded-full flex items-center justify-center font-bold text-white flex-shrink-0`}>
               {creator.avatar}
             </div>
 
             {/* Creator Info */}
-            <div className="text-center">
-              <h4 className="font-semibold text-white mb-1 text-sm sm:text-base whitespace-nowrap overflow-hidden text-ellipsis">{creator.name}</h4>
-              <Badge variant="secondary" className={`bg-gradient-to-r ${getTierColor(creator.tier)} text-white text-xs px-2 py-1 mb-2 inline-block`}>
-                {creator.tier}
-              </Badge>
-              <div className="text-lg sm:text-xl font-bold text-white mb-1">{creator.score.toLocaleString()}</div>
-              <div className="flex items-center justify-center gap-1">
-                <TrendingUp className="w-3 h-3 text-green-400" />
-                <span className="text-xs text-green-400">{creator.change}</span>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 mb-1">
+                <h4 className="font-semibold text-white text-base">{creator.name}</h4>
+                <Badge variant="secondary" className={`bg-gradient-to-r ${getTierColor(creator.tier)} text-white text-xs px-2 py-1`}>
+                  {creator.tier}
+                </Badge>
               </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-white/60">VeriScore:</span>
+                <span className="font-bold text-white">{creator.score.toLocaleString()}</span>
+              </div>
+            </div>
+
+            {/* Change Indicator */}
+            <div className="flex items-center gap-1 flex-shrink-0">
+              <TrendingUp className="w-4 h-4 text-green-400" />
+              <span className="text-sm text-green-400 font-medium">{creator.change}</span>
             </div>
           </motion.div>
         ))}
       </div>
 
-      {/* Remaining Top Players (4-15) */}
+      {/* Remaining Top Players (4-10) */}
       <div className="space-y-2 mb-4">
         {remainingCreators.map((creator, index) => (
           <motion.div
