@@ -1501,6 +1501,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
     triggerHaptic("light");
     setSelectedTask(task);
     setShowTaskPreview(false); // Close preview modal
+    setActiveTab("active"); // Switch to active tab to encourage task completion
     toast({
       title: "Task started!",
       description: `You've started "${task.title}". Complete it and submit for verification.`,
@@ -1966,17 +1967,29 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                               </div>
                             </div>
                             
-                            {/* Right side - Start button */}
+                            {/* Right side - Start/Finish button */}
                             <div className="flex items-center space-x-2 flex-shrink-0">
                               <Button
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  handleTaskPreview(task);
+                                  if (selectedTask?.id === task.id) {
+                                    // If task is already started, switch to active tab
+                                    setActiveTab("active");
+                                  } else {
+                                    // Preview task before starting
+                                    handleTaskPreview(task);
+                                  }
                                 }}
                                 size="sm"
-                                className="relative bg-transparent border border-teal-400/40 text-teal-300 hover:text-white font-bold px-4 py-1.5 text-xs rounded-lg transition-all duration-300 hover:scale-105 hover:border-teal-300 hover:shadow-[0_0_15px_rgba(20,184,166,0.6),0_0_30px_rgba(20,184,166,0.3)] hover:animate-pulse group"
+                                className={`relative font-bold px-4 py-1.5 text-xs rounded-lg transition-all duration-300 hover:scale-105 group ${
+                                  selectedTask?.id === task.id
+                                    ? "bg-gradient-to-r from-orange-500/80 to-red-500/80 border border-orange-400/60 text-white hover:from-orange-400 hover:to-red-400 hover:border-orange-300 hover:shadow-[0_0_15px_rgba(251,146,60,0.6),0_0_30px_rgba(251,146,60,0.3)]"
+                                    : "bg-transparent border border-teal-400/40 text-teal-300 hover:text-white hover:border-teal-300 hover:shadow-[0_0_15px_rgba(20,184,166,0.6),0_0_30px_rgba(20,184,166,0.3)] hover:animate-pulse"
+                                }`}
                               >
-                                <span className="relative z-10">Start</span>
+                                <span className="relative z-10">
+                                  {selectedTask?.id === task.id ? "Finish 🏁" : "Start"}
+                                </span>
                               </Button>
                             </div>
                           </div>
