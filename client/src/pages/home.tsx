@@ -160,7 +160,7 @@ export default function Home() {
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-6xl md:text-7xl font-bold text-white leading-tight mt-[32px] mb-[32px]"
+            className="text-6xl md:text-7xl font-bold text-white leading-tight mt-[22px] mb-[22px] pt-[0px] pb-[0px]"
           >
             Create to Resonate.
             <br />
