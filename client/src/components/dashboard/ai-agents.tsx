@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { VeriLogo } from "@/components/ui/veri-logo";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { Brain } from 'lucide-react';
@@ -30,6 +31,10 @@ import { Lightbulb } from 'lucide-react';
 import { Shield } from 'lucide-react';
 import { Gem } from 'lucide-react';
 import { Rocket } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
+import { Settings } from 'lucide-react';
+import { Play } from 'lucide-react';
+import { X } from 'lucide-react';
 
 interface AIAgentsProps {
   userPoints: number;
@@ -153,6 +158,8 @@ export function AIAgents({ userPoints, userStreak, onUseAgent }: AIAgentsProps) 
   const [processingAgents, setProcessingAgents] = useState<Set<string>>(new Set());
   const [completedAgents, setCompletedAgents] = useState<Set<string>>(new Set());
   const [showUnlockedCelebration, setShowUnlockedCelebration] = useState(false);
+  const [selectedEngine, setSelectedEngine] = useState("brightmatter-1.0");
+  const [showChatbot, setShowChatbot] = useState(false);
   const { toast } = useToast();
 
   // Check if AI agents just became unlocked and show celebration
@@ -173,17 +180,24 @@ export function AIAgents({ userPoints, userStreak, onUseAgent }: AIAgentsProps) 
     }
   }, [userStreak, toast]);
 
-  const handleUseAgent = async (agentId: string, pointsCost: number) => {
+  const handleLaunchAgent = async (agentId: string, pointsCost: number) => {
     if (userPoints < pointsCost) {
       toast({
         title: "Insufficient points",
-        description: `You need ${pointsCost - userPoints} more points to use this agent.`,
+        description: `You need ${pointsCost - userPoints} more points to launch this agent.`,
         variant: "destructive",
       });
       return;
     }
 
+    // Start the chatbot with the selected agent
+    setShowChatbot(true);
     setProcessingAgents(prev => new Set(prev).add(agentId));
+
+    toast({
+      title: "Agent launched!",
+      description: `${AGENT_CATEGORIES[activeCategory as keyof typeof AGENT_CATEGORIES].agents.find(a => a.id === agentId)?.name} is now running in the Veri AI Assistant.`,
+    });
 
     try {
       // Simulate agent processing
@@ -240,6 +254,78 @@ export function AIAgents({ userPoints, userStreak, onUseAgent }: AIAgentsProps) 
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {/* Veri Branded Chatbot with Engine Options */}
+        {!isAgentLocked && (
+          <div className="mb-6">
+            <Card className="glass-subtle border-emerald-500/30 bg-gradient-to-br from-emerald-900/20 via-teal-900/20 to-cyan-900/20">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 veri-gradient rounded-xl flex items-center justify-center">
+                      <VeriLogo size="md" showText={false} clickable={false} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-termina text-white">Veri AI Assistant</h3>
+                      <p className="text-sm text-emerald-400">Your personal AI agent orchestrator</p>
+                    </div>
+                  </div>
+                  <MessageCircle className="h-5 w-5 text-emerald-400" />
+                </div>
+
+                {/* Engine Options */}
+                <div className="mb-4">
+                  <label className="text-sm font-medium text-white/70 mb-2 block">Engine Options</label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button
+                      variant={selectedEngine === "brightmatter-1.0" ? "default" : "outline"}
+                      onClick={() => setSelectedEngine("brightmatter-1.0")}
+                      className={`justify-start ${
+                        selectedEngine === "brightmatter-1.0" 
+                          ? "veri-gradient text-white" 
+                          : "glass-subtle border-white/20 text-white hover:bg-white/10"
+                      }`}
+                    >
+                      <Sparkles className="mr-2 h-4 w-4" />
+                      Brightmatter 1.0
+                    </Button>
+                    <Button
+                      variant="outline"
+                      disabled
+                      className="justify-start glass-subtle border-white/10 text-white/40 cursor-not-allowed"
+                    >
+                      <Lock className="mr-2 h-4 w-4" />
+                      Brightmatter 1.5+
+                      <Badge variant="secondary" className="ml-2 bg-orange-500/20 text-orange-400 text-xs">
+                        Upgrade
+                      </Badge>
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Chat Interface Preview */}
+                <div className="bg-gray-800/50 rounded-lg p-4 mb-4">
+                  <div className="flex items-center space-x-2 mb-3">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                    <span className="text-sm text-emerald-400 font-medium">Ready to assist</span>
+                  </div>
+                  <p className="text-white/60 text-sm">
+                    Hi! I'm your Veri AI Assistant. I can help you launch agents, analyze performance, and optimize your content strategy. What would you like to work on today?
+                  </p>
+                </div>
+
+                {/* Start Chat Button */}
+                <Button 
+                  onClick={() => setShowChatbot(true)}
+                  className="w-full veri-gradient hover:opacity-90 transition-all duration-300"
+                >
+                  <Play className="mr-2 h-4 w-4" />
+                  Start AI Assistant Chat
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {isAgentLocked ? (
           <div className="text-center py-12">
             <motion.div
@@ -351,7 +437,7 @@ export function AIAgents({ userPoints, userStreak, onUseAgent }: AIAgentsProps) 
                             </div>
 
                             <Button
-                              onClick={() => handleUseAgent(agent.id, agent.pointsCost)}
+                              onClick={() => handleLaunchAgent(agent.id, agent.pointsCost)}
                               disabled={isProcessing || isCompleted || userPoints < agent.pointsCost}
                               className={`w-full ${
                                 isCompleted 
@@ -372,7 +458,7 @@ export function AIAgents({ userPoints, userStreak, onUseAgent }: AIAgentsProps) 
                               ) : (
                                 <>
                                   <Rocket className="mr-2 h-4 w-4" />
-                                  Use Agent ({agent.pointsCost} pts)
+                                  Launch Agent ({agent.pointsCost} pts)
                                 </>
                               )}
                             </Button>
@@ -451,6 +537,117 @@ export function AIAgents({ userPoints, userStreak, onUseAgent }: AIAgentsProps) 
               <p className="text-white/80">
                 Congratulations on your 7-day streak!
               </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Veri AI Assistant Chatbot Modal */}
+      <AnimatePresence>
+        {showChatbot && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowChatbot(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-900/95 backdrop-blur-xl border border-emerald-500/30 rounded-xl w-full max-w-2xl h-[600px] flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Chatbot Header */}
+              <div className="p-6 border-b border-white/10">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 veri-gradient rounded-xl flex items-center justify-center">
+                      <VeriLogo size="sm" showText={false} clickable={false} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-termina text-white">Veri AI Assistant</h3>
+                      <p className="text-sm text-emerald-400">Engine: {selectedEngine === "brightmatter-1.0" ? "Brightmatter 1.0" : "Brightmatter 1.5+"}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                    <span className="text-sm text-emerald-400">Active</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowChatbot(false)}
+                      className="text-white/60 hover:text-white hover:bg-white/10"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Chat Messages Area */}
+              <div className="flex-1 p-6 overflow-y-auto">
+                <div className="space-y-4">
+                  {/* AI Welcome Message */}
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 veri-gradient rounded-lg flex items-center justify-center flex-shrink-0">
+                      <VeriLogo size="sm" showText={false} clickable={false} />
+                    </div>
+                    <div className="bg-gray-800/50 rounded-lg p-4 max-w-md">
+                      <p className="text-white/90 text-sm">
+                        👋 Hi! I'm your Veri AI Assistant powered by {selectedEngine === "brightmatter-1.0" ? "Brightmatter 1.0" : "Brightmatter 1.5+"}. 
+                        I can help you launch and manage your AI agents, analyze performance data, and optimize your content strategy. 
+                        What would you like to work on today?
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Show active agents if any */}
+                  {processingAgents.size > 0 && (
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 veri-gradient rounded-lg flex items-center justify-center flex-shrink-0">
+                        <VeriLogo size="sm" showText={false} clickable={false} />
+                      </div>
+                      <div className="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 max-w-md">
+                        <p className="text-blue-300 text-sm font-medium mb-2">🚀 Active Agents</p>
+                        <div className="space-y-1">
+                          {Array.from(processingAgents).map(agentId => {
+                            const agent = Object.values(AGENT_CATEGORIES)
+                              .flatMap(cat => cat.agents)
+                              .find(a => a.id === agentId);
+                            return (
+                              <div key={agentId} className="flex items-center space-x-2">
+                                <RefreshCw className="h-3 w-3 animate-spin text-blue-300" />
+                                <span className="text-white/80 text-xs">{agent?.name}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Chat Input Area */}
+              <div className="p-6 border-t border-white/10">
+                <div className="flex space-x-3">
+                  <div className="flex-1">
+                    <input
+                      type="text"
+                      placeholder="Ask me to launch an agent, analyze your content, or optimize your strategy..."
+                      className="w-full bg-gray-800/50 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30"
+                    />
+                  </div>
+                  <Button className="veri-gradient hover:opacity-90 px-6">
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </div>
+                <p className="text-xs text-white/40 mt-2">
+                  Try: "Launch the thumbnail optimizer" or "Show me my performance analytics"
+                </p>
+              </div>
             </motion.div>
           </motion.div>
         )}
