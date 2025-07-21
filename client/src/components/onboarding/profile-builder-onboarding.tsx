@@ -99,8 +99,8 @@ export function ProfileBuilderOnboarding({ onComplete, onStartProfileBuilder }: 
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-teal-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="max-w-7xl mx-auto px-4 lg:px-6 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-teal-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 overflow-y-auto">
+      <div className="max-w-7xl mx-auto px-4 lg:px-6 py-8 min-h-full">
         {/* Header with Progress Indicator */}
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8">
           {/* Welcome Header */}
@@ -139,13 +139,13 @@ export function ProfileBuilderOnboarding({ onComplete, onStartProfileBuilder }: 
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {/* Social Connections & Profile Builder */}
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
-            className="lg:col-span-2 space-y-6"
+            className="lg:col-span-2 space-y-6 overflow-y-auto"
           >
             {/* Social Connections */}
             <Card className="glass-medium border-white/20">
@@ -251,7 +251,7 @@ export function ProfileBuilderOnboarding({ onComplete, onStartProfileBuilder }: 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4 }}
-            className="space-y-6"
+            className="space-y-6 overflow-y-auto sticky top-8"
           >
             {/* VeriScore Card */}
             <Card className="glass-medium border-white/20">
