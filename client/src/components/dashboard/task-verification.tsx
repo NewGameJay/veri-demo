@@ -34,6 +34,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Share2 } from 'lucide-react';
 import { Twitch } from 'lucide-react';
 import { Filter } from 'lucide-react';
+import { Expand, Minimize2 } from 'lucide-react';
 
 // Floating Points Animation Component
 function FloatingPointsAnimation({ points, onComplete }: { points: number; onComplete: () => void }) {
@@ -1653,7 +1654,13 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             <CardTitle className="text-white">Partner Quests</CardTitle>
           </div>
           <div className="flex items-center space-x-3">
-            {/* Grid Expansion Toggle */}
+            <Badge variant="secondary" className="bg-purple-500/20 text-purple-400">
+              {userXP} XP
+            </Badge>
+            <Badge variant="secondary" className="bg-orange-500/20 text-orange-400">
+              {userStreak} Day Streak
+            </Badge>
+            {/* Expansion Toggle - Moved to far right */}
             <Button
               onClick={() => {
                 const newExpanded = !isGridExpanded;
@@ -1663,31 +1670,14 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
               size="sm"
               variant="ghost"
               className="text-white/70 hover:text-white hover:bg-white/10 p-2 h-8 w-8"
+              title={isGridExpanded ? "Exit fullscreen view" : "Expand to fullscreen view"}
             >
               {isGridExpanded ? (
-                <div className="grid grid-cols-2 gap-0.5 w-3 h-3">
-                  <div className="bg-current w-1 h-1 rounded-sm"></div>
-                  <div className="bg-current w-1 h-1 rounded-sm"></div>
-                  <div className="bg-current w-1 h-1 rounded-sm"></div>
-                  <div className="bg-current w-1 h-1 rounded-sm"></div>
-                </div>
+                <Minimize2 className="h-4 w-4" />
               ) : (
-                <div className="grid grid-cols-3 gap-0.5 w-3 h-3">
-                  <div className="bg-current w-0.5 h-0.5 rounded-sm"></div>
-                  <div className="bg-current w-0.5 h-0.5 rounded-sm"></div>
-                  <div className="bg-current w-0.5 h-0.5 rounded-sm"></div>
-                  <div className="bg-current w-0.5 h-0.5 rounded-sm"></div>
-                  <div className="bg-current w-0.5 h-0.5 rounded-sm"></div>
-                  <div className="bg-current w-0.5 h-0.5 rounded-sm"></div>
-                </div>
+                <Expand className="h-4 w-4" />
               )}
             </Button>
-            <Badge variant="secondary" className="bg-purple-500/20 text-purple-400">
-              {userXP} XP
-            </Badge>
-            <Badge variant="secondary" className="bg-orange-500/20 text-orange-400">
-              {userStreak} Day Streak
-            </Badge>
           </div>
         </div>
         <CardDescription className="text-white/60 space-y-3">
