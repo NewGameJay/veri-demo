@@ -81,7 +81,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationUrl, setVerificationUrl] = useState("");
   const [selectedTask, setSelectedTask] = useState<any>(null);
-  const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set());
+
   const [brandFilter, setBrandFilter] = useState("all");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
   const [tasksPerPage, setTasksPerPage] = useState(8);
@@ -98,17 +98,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const { toast } = useToast();
   const { user, refreshUser } = useAuth();
 
-  const toggleTaskExpansion = (taskId: number) => {
-    setExpandedTasks(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(taskId)) {
-        newSet.delete(taskId);
-      } else {
-        newSet.add(taskId);
-      }
-      return newSet;
-    });
-  };
+
 
   const getPartnerGradient = (brand: string, taskId: number) => {
     // Create unique gradients for different partners and tasks
@@ -1877,7 +1867,6 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                 } : {}}
               >
                 {displayedTasks.map((task) => {
-                  const isExpanded = expandedTasks.has(task.id);
                   return (
                     <div 
                       key={task.id} 
@@ -1920,7 +1909,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                               </div>
                             </div>
                             
-                            {/* Right side - Preview and Expand buttons */}
+                            {/* Right side - Preview button only */}
                             <div className="flex items-center space-x-2 flex-shrink-0">
                               <Button
                                 onClick={(e) => {
@@ -1934,93 +1923,12 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                               >
                                 <Eye className="h-3 w-3" />
                               </Button>
-                              <Button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleTaskExpansion(task.id);
-                                }}
-                                size="sm"
-                                variant="ghost"
-                                className="text-white/80 hover:text-white hover:bg-white/10 p-1 h-6 w-6 rounded-full"
-                                title={isExpanded ? "Collapse details" : "Expand details"}
-                              >
-                                {isExpanded ? (
-                                  <ChevronUp className="h-3 w-3" />
-                                ) : (
-                                  <ChevronDown className="h-3 w-3" />
-                                )}
-                              </Button>
                             </div>
                           </div>
                         </div>
                       </div>
                       
-                      {/* Expandable Content */}
-                      {isExpanded && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="bg-black/60 backdrop-blur-md border-t border-white/10"
-                        >
-                          <div className="p-4 space-y-3">
-                            {/* Description */}
-                            <p className="text-white/80 text-sm leading-relaxed">
-                              {task.description}
-                            </p>
-                            
-                            {/* Stats Row */}
-                            <div className="flex items-center space-x-4 text-xs text-white/70">
-                              <div className="flex items-center space-x-1">
-                                <Clock className="h-3 w-3" />
-                                <span>{task.estimatedTime}</span>
-                              </div>
-                              <div className="flex items-center space-x-1">
-                                <Hash className="h-3 w-3" />
-                                <span>{task.category.replace('_', ' ')}</span>
-                              </div>
-                            </div>
-                            
-                            {/* Requirements */}
-                            <div>
-                              <h4 className="text-white font-medium text-sm mb-2">Requirements:</h4>
-                              <ul className="space-y-1">
-                                {task.requirements.slice(0, 3).map((req, index) => (
-                                  <li key={index} className="text-white/70 text-xs flex items-start space-x-2">
-                                    <div className="w-1 h-1 rounded-full bg-green-400 mt-1.5 flex-shrink-0"></div>
-                                    <span>{req}</span>
-                                  </li>
-                                ))}
-                                {task.requirements.length > 3 && (
-                                  <li className="text-white/50 text-xs pl-3">
-                                    +{task.requirements.length - 3} more requirements
-                                  </li>
-                                )}
-                              </ul>
-                            </div>
-                            
-                            {/* Full width action button for expanded state */}
-                            <Button
-                              onClick={() => handleStartTask(task)}
-                              className="w-full veri-gradient text-white font-medium py-2 rounded-lg transition-all duration-300"
-                              disabled={selectedTask?.id === task.id}
-                            >
-                              {selectedTask?.id === task.id ? (
-                                <>
-                                  <CheckCircle2 className="mr-2 h-4 w-4" />
-                                  Task Started
-                                </>
-                              ) : (
-                                <>
-                                  Start Task
-                                  <ArrowRight className="ml-2 h-4 w-4" />
-                                </>
-                              )}
-                            </Button>
-                          </div>
-                        </motion.div>
-                      )}
+
                       
 
                   </div>
