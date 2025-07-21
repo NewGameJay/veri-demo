@@ -2022,12 +2022,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                         </motion.div>
                       )}
                       
-                      {/* Click hint and hover indicator */}
-                      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                        <div className="flex items-center space-x-1 bg-black/60 backdrop-blur-md rounded-full px-2 py-1">
-                          <span className="text-white text-xs font-medium">Click to preview</span>
-                        </div>
-                      </div>
+
                   </div>
                 );
                 })}
