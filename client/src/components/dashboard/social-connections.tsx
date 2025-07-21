@@ -10,11 +10,14 @@ import { useToast } from "@/hooks/use-toast";
 import { handleOAuthConnection, disconnectTwitter, handleOAuthCallback, initiateTwitterLogin, type SocialConnection } from '@/lib/oauth';
 import { useEffect } from 'react';
 import { motion } from "framer-motion";
+import { EmojiReaction, useEmojiReaction, getContextualEmojiConfig } from "@/components/ui/emoji-reaction";
+import { triggerHaptic } from "@/lib/haptic";
 
 export function SocialConnections() {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { reactions, triggerReaction } = useEmojiReaction();
 
   
   const { data: userData, isLoading } = useQuery({
@@ -31,6 +34,29 @@ export function SocialConnections() {
         description: callbackResult.message,
         variant: callbackResult.type === 'error' ? 'destructive' : 'default',
       });
+
+      // Trigger contextual emoji reaction with haptic feedback
+      if (callbackResult.type === 'success') {
+        triggerHaptic("success");
+        triggerReaction({
+          type: 'socialConnect',
+          category: 'celebration',
+          style: 'burst',
+          count: 8,
+          size: 'md',
+          duration: 3500
+        });
+      } else {
+        triggerHaptic("error");
+        triggerReaction({
+          type: 'socialConnect', 
+          category: 'failure',
+          style: 'fade',
+          count: 3,
+          size: 'sm',
+          duration: 2000
+        });
+      }
       
       // Clear URL parameters
       const url = new URL(window.location.href);
@@ -43,7 +69,7 @@ export function SocialConnections() {
         queryClient.invalidateQueries({ queryKey: ["/api/users", user?.id] });
       }
     }
-  }, [toast, queryClient, user?.id]);
+  }, [toast, queryClient, user?.id, triggerReaction]);
 
   const connectMutation = useMutation({
     mutationFn: handleOAuthConnection,
@@ -226,6 +252,22 @@ export function SocialConnections() {
           </div>
         )}
       </div>
+      
+      {/* Contextual Emoji Reactions */}
+      {reactions.map((reaction) => (
+        <EmojiReaction
+          key={reaction.id}
+          type={reaction.type}
+          category={reaction.category}
+          count={reaction.count}
+          size={reaction.size}
+          duration={reaction.duration}
+          position={reaction.position}
+          style={reaction.style}
+          trigger={true}
+          onComplete={() => {}}
+        />
+      ))}
     </div>
     </div>
   );

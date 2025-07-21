@@ -37,6 +37,7 @@ import { Twitch } from 'lucide-react';
 import { Filter } from 'lucide-react';
 import { Expand, Minimize2 } from 'lucide-react';
 import { Eye } from 'lucide-react';
+import { EmojiReaction, useEmojiReaction, getContextualEmojiConfig } from "@/components/ui/emoji-reaction";
 
 // Floating Points Animation Component
 function FloatingPointsAnimation({ points, onComplete }: { points: number; onComplete: () => void }) {
@@ -98,6 +99,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const [previewTask, setPreviewTask] = useState<any>(null);
   const { toast } = useToast();
   const { user, refreshUser } = useAuth();
+  const { reactions, triggerReaction } = useEmojiReaction();
 
 
 
@@ -1561,6 +1563,58 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           if (result.success) {
             triggerHaptic("success");
             
+            // Trigger contextual emoji reaction based on task type
+            const emojiConfig = getContextualEmojiConfig(
+              'task_complete', 
+              selectedTask.platform, 
+              selectedTask.category
+            );
+            
+            // Special handling for streak milestones and MVP task
+            const isSpecialTask = selectedTask.id === 0;
+            const isStreakMilestone = (userStreak + (selectedTask.streakBonus || 1)) % 5 === 0;
+            const isHighPointTask = selectedTask.points >= 50;
+            
+            if (isSpecialTask) {
+              // Special burst for MVP completion with extra count and size
+              triggerReaction({
+                type: 'milestone',
+                category: 'firstTime',
+                style: 'burst',
+                count: 8,
+                size: 'lg',
+                duration: 4000
+              });
+            } else if (isStreakMilestone) {
+              // Streak milestone celebration
+              triggerReaction({
+                type: 'taskComplete',
+                category: 'streak',
+                style: 'cascade',
+                count: 6,
+                size: 'md',
+                duration: 3500
+              });
+            } else if (isHighPointTask) {
+              // High-value task completion
+              triggerReaction({
+                type: 'taskComplete',
+                category: 'achievement',
+                style: 'burst',
+                count: 7,
+                size: 'md',
+                duration: 3000
+              });
+            } else {
+              // Regular task completion
+              triggerReaction({
+                ...emojiConfig,
+                count: 5,
+                size: 'sm',
+                duration: 2500
+              });
+            }
+            
             // Show floating points animation only if this task hasn't been animated before
             if (lastAnimatedTaskId !== selectedTask.id) {
               setFloatingPoints(selectedTask.points);
@@ -1576,7 +1630,6 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             // Refresh user data in auth context for real-time updates
             await refreshUser();
             
-            const isSpecialTask = selectedTask.id === 0;
             const message = isSpecialTask 
               ? `Amazing! You've earned ${selectedTask.points} XP points and ${selectedTask.streakBonus || 1} day streak! AI Agent tooling is now unlocked.`
               : `Great work! You've earned ${selectedTask.points} XP points.`;
@@ -2309,6 +2362,22 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           onClose={() => setShowShareModal(false)}
         />
       )}
+      
+      {/* Contextual Emoji Reactions */}
+      {reactions.map((reaction) => (
+        <EmojiReaction
+          key={reaction.id}
+          type={reaction.type}
+          category={reaction.category}
+          count={reaction.count}
+          size={reaction.size}
+          duration={reaction.duration}
+          position={reaction.position}
+          style={reaction.style}
+          trigger={true}
+          onComplete={() => {}}
+        />
+      ))}
     </Card>
   );
 }
