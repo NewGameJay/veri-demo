@@ -1914,13 +1914,13 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                               <Button
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  handleStartTask(task);
+                                  handleTaskPreview(task);
                                 }}
                                 size="sm"
-                                className="bg-teal-500/20 backdrop-blur-md border-0 hover:bg-teal-400/30 text-teal-300 hover:text-teal-200 font-medium px-3 py-1 text-xs rounded-lg transition-all duration-300 hover:scale-105 shadow-lg"
-                                disabled={selectedTask?.id === task.id}
+                                className="relative bg-gradient-to-r from-teal-500/10 to-emerald-500/10 backdrop-blur-md border border-teal-400/30 hover:border-teal-300/60 text-teal-300 hover:text-white font-bold px-4 py-1.5 text-xs rounded-lg transition-all duration-300 hover:scale-110 hover:shadow-[0_0_20px_rgba(20,184,166,0.5)] hover:bg-gradient-to-r hover:from-teal-500/20 hover:to-emerald-500/20 group"
                               >
-                                {selectedTask?.id === task.id ? "Started" : "Start"}
+                                <span className="relative z-10">Start</span>
+                                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-teal-400/0 to-emerald-400/0 group-hover:from-teal-400/10 group-hover:to-emerald-400/10 transition-all duration-300"></div>
                               </Button>
                             </div>
                           </div>
