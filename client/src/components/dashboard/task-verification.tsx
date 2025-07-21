@@ -1870,24 +1870,25 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                   return (
                     <div 
                       key={task.id} 
-                      className="group rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in relative hover:scale-[1.02] hover:shadow-2xl"
+                      className="group rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in relative hover:scale-[1.03] hover:shadow-2xl hover:-translate-y-2 cursor-pointer transform-gpu"
                       style={{
                         animationDelay: `${task.id * 100}ms`
                       }}
+                      onClick={() => toggleTaskExpansion(task.id)}
                     >
                       {/* Full Background with Partner Gradient */}
                       <div className={`relative h-48 ${getPartnerGradient(task.brand, task.id)}`}>
                         {/* Subtle overlay for depth */}
                         <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/30"></div>
                         
-                        {/* Top Row - Partner Badge and XP */}
+                        {/* Top Row - Partner Badge and XP with pulse animation */}
                         <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-                          <Badge variant="secondary" className="bg-white/20 backdrop-blur-md text-white text-xs font-medium px-2 py-1 rounded-full border-0">
+                          <Badge variant="secondary" className="bg-white/20 backdrop-blur-md text-white text-xs font-medium px-2 py-1 rounded-full border-0 group-hover:bg-white/30 transition-all">
                             {task.brand?.replace('.gg', '').replace('.xyz', '') || 'Partner'}
                           </Badge>
-                          <Badge variant="secondary" className="bg-white/20 backdrop-blur-md text-white font-semibold text-xs px-2 py-1 rounded-full border-0 flex items-center">
-                            <span className="text-green-400 mr-1">▲</span>
-                            {task.points}
+                          <Badge variant="secondary" className="bg-gradient-to-r from-green-500/80 to-emerald-500/80 backdrop-blur-md text-white font-semibold text-xs px-2 py-1 rounded-full border-0 flex items-center animate-pulse group-hover:animate-none group-hover:from-green-400 group-hover:to-emerald-400">
+                            <span className="text-white mr-1">💎</span>
+                            {task.points} XP
                           </Badge>
                         </div>
                         
@@ -1896,11 +1897,9 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                           <div className="p-3 flex items-center justify-between">
                             {/* Left side - Platform icon and title */}
                             <div className="flex items-center space-x-3 flex-1 min-w-0">
-                              <div className="w-8 h-8 bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0 rounded-lg">
-                                <task.icon className="h-4 w-4 text-white" />
-                              </div>
+                              <task.icon className="h-5 w-5 text-white flex-shrink-0" />
                               <div className="flex-1 min-w-0">
-                                <h3 className="text-white font-semibold text-sm truncate group-hover:text-green-300 transition-colors">
+                                <h3 className="text-white font-semibold text-sm truncate group-hover:text-green-300 transition-colors group-hover:scale-105 transform">
                                   {task.title}
                                 </h3>
                                 <div className="text-white/70 text-xs capitalize">
@@ -1995,9 +1994,20 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                         </motion.div>
                       )}
                       
-                      {/* Hover indicator */}
+                      {/* Gamified hover effects */}
                       <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-2 h-2 rounded-full bg-green-400 animate-bounce"></div>
+                          <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                          <div className="w-1 h-1 rounded-full bg-green-400 animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                        </div>
+                      </div>
+                      
+                      {/* Progress indicator */}
+                      <div className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="text-xs text-green-400 font-medium bg-black/50 rounded-full px-2 py-1">
+                          Click to explore! 🎮
+                        </div>
                       </div>
                   </div>
                 );
