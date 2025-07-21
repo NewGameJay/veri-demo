@@ -137,6 +137,25 @@ The application uses a PostgreSQL database with these main entities:
 
 The application is designed to scale from MVP to full marketplace functionality, with the current implementation focusing on core creator onboarding, social connections, and gamification features.
 
+## Recent Updates (July 21, 2025)
+
+### Task Preview Enhancement (July 21, 2025)
+- ✅ **Task Preview Modal Implementation**: Full task details modal shows when clicking task cards
+  - Complete task overview with description, duration, category, and all requirements
+  - Glass morphism design matching site aesthetic with proper backdrop blur
+  - Eye icon and expand/collapse icons in bottom right corner for dual interaction options
+  - "Click to preview" hover hint guides users to preview functionality
+  - Start task button directly from preview modal for seamless workflow
+- ✅ **Enhanced Task Card Interactions**: Two clear ways to view task information
+  - Click anywhere on card to open detailed preview modal
+  - Eye icon button for quick preview access
+  - Expand/collapse chevron for inline task details
+  - Proper event handling prevents conflicts between interaction methods
+- ✅ **Improved User Experience**: Better task discovery and decision-making process
+  - Users can review complete requirements before committing to tasks
+  - Visual tooltips and hints guide users to available interaction options
+  - Consistent glass design language throughout preview experience
+
 ## Recent Updates (July 18, 2025)
 
 ### Sprint 5 Glass Morphism Enhancement (July 18, 2025)

@@ -1920,8 +1920,20 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                               </div>
                             </div>
                             
-                            {/* Right side - Expand button only */}
+                            {/* Right side - Preview and Expand buttons */}
                             <div className="flex items-center space-x-2 flex-shrink-0">
+                              <Button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleTaskPreview(task);
+                                }}
+                                size="sm"
+                                variant="ghost"
+                                className="text-white/80 hover:text-white hover:bg-white/10 p-1 h-6 w-6 rounded-full"
+                                title="Preview task details"
+                              >
+                                <Eye className="h-3 w-3" />
+                              </Button>
                               <Button
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -1930,6 +1942,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                                 size="sm"
                                 variant="ghost"
                                 className="text-white/80 hover:text-white hover:bg-white/10 p-1 h-6 w-6 rounded-full"
+                                title={isExpanded ? "Collapse details" : "Expand details"}
                               >
                                 {isExpanded ? (
                                   <ChevronUp className="h-3 w-3" />
@@ -2009,11 +2022,10 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                         </motion.div>
                       )}
                       
-                      {/* Preview hint and hover indicator */}
+                      {/* Click hint and hover indicator */}
                       <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                        <div className="flex items-center space-x-2 bg-black/60 backdrop-blur-md rounded-full px-2 py-1">
-                          <Eye className="h-3 w-3 text-white" />
-                          <span className="text-white text-xs font-medium">Preview</span>
+                        <div className="flex items-center space-x-1 bg-black/60 backdrop-blur-md rounded-full px-2 py-1">
+                          <span className="text-white text-xs font-medium">Click to preview</span>
                         </div>
                       </div>
                   </div>
