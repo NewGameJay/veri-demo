@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { TaskSkeleton } from "@/components/ui/veri-skeleton";
@@ -35,6 +36,7 @@ import { Share2 } from 'lucide-react';
 import { Twitch } from 'lucide-react';
 import { Filter } from 'lucide-react';
 import { Expand, Minimize2 } from 'lucide-react';
+import { Eye } from 'lucide-react';
 
 // Floating Points Animation Component
 function FloatingPointsAnimation({ points, onComplete }: { points: number; onComplete: () => void }) {
@@ -91,6 +93,8 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const [floatingPoints, setFloatingPoints] = useState(0);
   const [filtersExpanded, setFiltersExpanded] = useState(false);
   const [isGridExpanded, setIsGridExpanded] = useState(false);
+  const [showTaskPreview, setShowTaskPreview] = useState(false);
+  const [previewTask, setPreviewTask] = useState<any>(null);
   const { toast } = useToast();
   const { user, refreshUser } = useAuth();
 
@@ -1503,10 +1507,17 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const handleStartTask = (task: any) => {
     triggerHaptic("light");
     setSelectedTask(task);
+    setShowTaskPreview(false); // Close preview modal
     toast({
       title: "Task started!",
       description: `You've started "${task.title}". Complete it and submit for verification.`,
     });
+  };
+
+  const handleTaskPreview = (task: any) => {
+    triggerHaptic("light");
+    setPreviewTask(task);
+    setShowTaskPreview(true);
   };
 
   const handleVerifyTask = async () => {
@@ -1870,11 +1881,12 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                   return (
                     <div 
                       key={task.id} 
-                      className="group rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in relative hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-1 transform-gpu hover:z-10"
+                      className="group rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in relative hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-1 transform-gpu hover:z-10 cursor-pointer"
                       style={{
                         animationDelay: `${task.id * 100}ms`,
                         transformOrigin: 'center center'
                       }}
+                      onClick={() => handleTaskPreview(task)}
                     >
                       {/* Full Background with Partner Gradient */}
                       <div className={`relative h-48 ${getPartnerGradient(task.brand, task.id)}`}>
@@ -1997,9 +2009,12 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                         </motion.div>
                       )}
                       
-                      {/* Single hover indicator */}
-                      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></div>
+                      {/* Preview hint and hover indicator */}
+                      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                        <div className="flex items-center space-x-2 bg-black/60 backdrop-blur-md rounded-full px-2 py-1">
+                          <Eye className="h-3 w-3 text-white" />
+                          <span className="text-white text-xs font-medium">Preview</span>
+                        </div>
                       </div>
                   </div>
                 );
@@ -2254,6 +2269,116 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           onComplete={() => setShowFloatingPoints(false)} 
         />
       )}
+      {/* Task Preview Modal */}
+      <Dialog open={showTaskPreview} onOpenChange={setShowTaskPreview}>
+        <DialogContent className="glass-primary border-white/20 max-w-2xl">
+          {previewTask && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className={`w-12 h-12 rounded-xl ${getPartnerGradient(previewTask.brand, previewTask.id)} flex items-center justify-center`}>
+                    <previewTask.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <DialogTitle className="text-xl font-semibold text-white mb-1">
+                      {previewTask.title}
+                    </DialogTitle>
+                    <div className="flex items-center space-x-2">
+                      <Badge variant="secondary" className="bg-white/20 text-white text-xs">
+                        {previewTask.brand?.replace('.gg', '').replace('.xyz', '') || 'Partner'}
+                      </Badge>
+                      <Badge variant="secondary" className="bg-gradient-to-r from-green-500/80 to-emerald-500/80 text-white text-xs">
+                        💎 {previewTask.points} XP
+                      </Badge>
+                      <Badge variant="secondary" className={getDifficultyColor(previewTask.difficulty)}>
+                        {previewTask.difficulty}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              </DialogHeader>
+              
+              <DialogDescription asChild>
+                <div className="space-y-6">
+                  {/* Task Description */}
+                  <div>
+                    <h4 className="text-white font-medium mb-2 flex items-center">
+                      <Eye className="h-4 w-4 mr-2" />
+                      Task Overview
+                    </h4>
+                    <p className="text-white/80 leading-relaxed">
+                      {previewTask.description}
+                    </p>
+                  </div>
+
+                  {/* Task Details */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="glass-secondary rounded-lg p-4">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <Clock className="h-4 w-4 text-emerald-400" />
+                        <span className="text-white font-medium">Duration</span>
+                      </div>
+                      <p className="text-white/70">{previewTask.estimatedTime}</p>
+                    </div>
+                    <div className="glass-secondary rounded-lg p-4">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <Hash className="h-4 w-4 text-emerald-400" />
+                        <span className="text-white font-medium">Category</span>
+                      </div>
+                      <p className="text-white/70 capitalize">{previewTask.category.replace('_', ' ')}</p>
+                    </div>
+                  </div>
+
+                  {/* Requirements */}
+                  <div>
+                    <h4 className="text-white font-medium mb-3 flex items-center">
+                      <CheckCircle2 className="h-4 w-4 mr-2" />
+                      Requirements ({previewTask.requirements.length})
+                    </h4>
+                    <div className="space-y-2">
+                      {previewTask.requirements.map((req: string, index: number) => (
+                        <div key={index} className="flex items-start space-x-3 text-white/80">
+                          <div className="w-2 h-2 rounded-full bg-emerald-400 mt-2 flex-shrink-0"></div>
+                          <span className="text-sm leading-relaxed">{req}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowTaskPreview(false)}
+                      className="border-white/20 text-white hover:bg-white/10"
+                    >
+                      Close Preview
+                    </Button>
+                    <Button
+                      onClick={() => handleStartTask(previewTask)}
+                      className="veri-gradient text-white font-medium px-6"
+                      disabled={selectedTask?.id === previewTask.id}
+                    >
+                      {selectedTask?.id === previewTask.id ? (
+                        <>
+                          <CheckCircle2 className="mr-2 h-4 w-4" />
+                          Task Started
+                        </>
+                      ) : (
+                        <>
+                          Start Task
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </DialogDescription>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
       {/* Social Share Modal */}
       {showShareModal && shareTaskData && user && (
         <SocialShare
