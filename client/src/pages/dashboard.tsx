@@ -25,6 +25,7 @@ export default function Dashboard() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showProfileBuilder, setShowProfileBuilder] = useState(false);
   const [isTabsCollapsed, setIsTabsCollapsed] = useState(false);
+  const [isTaskGridExpanded, setIsTaskGridExpanded] = useState(false);
   const { user, needsOnboarding, completeOnboarding } = useAuth();
   const { newMilestones, clearNewMilestones } = useMilestoneTracker();
 
@@ -182,29 +183,46 @@ export default function Dashboard() {
             </div>
 
             <TabsContent value="tasks" className="mt-6">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                {/* Left Column - Main Content */}
-                <div className="lg:col-span-8 space-y-6">
+              {isTaskGridExpanded ? (
+                // Fullscreen Layout - Tasks take full width, sidebar components below
+                <div className="space-y-6">
                   <TaskVerification 
                     userId={user.id} 
                     userStreak={userStreak}
                     userXP={userXP}
                     showFilters={true}
+                    onGridExpansionChange={setIsTaskGridExpanded}
                   />
-                </div>
-
-                {/* Right Column - Sidebar Content */}
-                <div className="lg:col-span-4 space-y-6">
-                  {/* Vertical VeriScore Card */}
-                  <VeriScoreCard />
                   
-                  {/* Social Connections */}
-                  <SocialConnections />
-
-                  {/* Leaderboard */}
-                  <Leaderboard />
+                  {/* Sidebar components moved below in fullscreen */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                    <VeriScoreCard />
+                    <SocialConnections />
+                    <Leaderboard />
+                  </div>
                 </div>
-              </div>
+              ) : (
+                // Standard Layout - Sidebar on the right
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                  {/* Left Column - Main Content */}
+                  <div className="lg:col-span-8 space-y-6">
+                    <TaskVerification 
+                      userId={user.id} 
+                      userStreak={userStreak}
+                      userXP={userXP}
+                      showFilters={true}
+                      onGridExpansionChange={setIsTaskGridExpanded}
+                    />
+                  </div>
+
+                  {/* Right Column - Sidebar Content */}
+                  <div className="lg:col-span-4 space-y-6">
+                    <VeriScoreCard />
+                    <SocialConnections />
+                    <Leaderboard />
+                  </div>
+                </div>
+              )}
             </TabsContent>
 
             <TabsContent value="campaigns" className="mt-6">

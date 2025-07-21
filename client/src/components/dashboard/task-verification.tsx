@@ -70,9 +70,10 @@ interface TaskVerificationProps {
   userStreak: number;
   userXP: number;
   showFilters?: boolean;
+  onGridExpansionChange?: (isExpanded: boolean) => void;
 }
 
-export function TaskVerification({ userId, userStreak, userXP, showFilters = false }: TaskVerificationProps) {
+export function TaskVerification({ userId, userStreak, userXP, showFilters = false, onGridExpansionChange }: TaskVerificationProps) {
   const [activeTab, setActiveTab] = useState("available");
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationUrl, setVerificationUrl] = useState("");
@@ -1654,7 +1655,11 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           <div className="flex items-center space-x-3">
             {/* Grid Expansion Toggle */}
             <Button
-              onClick={() => setIsGridExpanded(!isGridExpanded)}
+              onClick={() => {
+                const newExpanded = !isGridExpanded;
+                setIsGridExpanded(newExpanded);
+                onGridExpansionChange?.(newExpanded);
+              }}
               size="sm"
               variant="ghost"
               className="text-white/70 hover:text-white hover:bg-white/10 p-2 h-8 w-8"
