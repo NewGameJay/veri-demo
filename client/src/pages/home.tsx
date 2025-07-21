@@ -41,7 +41,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-black via-gray-900 to-emerald-950/50">
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-gray-800 via-gray-900 to-emerald-950/50 animated-gradient">
       {/* Custom Glass Header for Landing Page */}
       <header className="fixed top-0 left-0 right-0 z-50 px-8 py-6 glass-header">
         <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-3 items-center">
@@ -532,7 +532,9 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <VeriLogo className="mb-4" />
+              <div className="mb-4">
+                <VeriLogo />
+              </div>
               <p className="text-sm text-white/60">The future of creator monetization and community building.</p>
             </div>
             
