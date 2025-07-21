@@ -13,6 +13,7 @@ import { Twitter } from 'lucide-react';
 import { Instagram } from 'lucide-react';
 import { Youtube } from 'lucide-react';
 import { TrendingDown } from 'lucide-react';
+import { Twitch } from 'lucide-react';
 import { Header } from "@/components/navigation/header";
 import { DashboardSidebar } from "@/components/navigation/dashboard-sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -202,22 +203,45 @@ export default function Analytics() {
     return Math.round(projected);
   }, [chartData, dynamicStats]);
 
-  // Generate top performing content based on actual data
+  // Generate top performing content with authentic gaming content
   const topContent = useMemo(() => {
     const sortedData = [...chartData].sort((a, b) => b.engagement - a.engagement).slice(0, 4);
-    const platforms = ['twitter', 'youtube', 'instagram', 'twitch'];
-    const titles = [
-      'Epic Gaming Montage - Insane Plays',
-      'Web3 Gaming Guide - Alpha Access',
-      'Breaking: New Blockchain Game Launch',
-      'Crypto Gaming Strategy Deep Dive'
+    const contentData = [
+      {
+        platform: 'youtube',
+        title: 'INSANE Fortnite Victory Royale - 20 Kill Solo Win',
+        thumbnail: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&h=600&fit=crop&crop=entropy&cs=tinysrgb',
+        duration: '12:34',
+        streamer: 'Ninja',
+        gameTitle: 'Fortnite'
+      },
+      {
+        platform: 'twitch',
+        title: 'NEW Valorant Agent First Look - Ranked Gameplay',
+        thumbnail: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&h=600&fit=crop&crop=entropy&cs=tinysrgb',
+        duration: 'LIVE',
+        streamer: 'Ninja',
+        gameTitle: 'Valorant'
+      },
+      {
+        platform: 'twitter',
+        title: 'Just hit Radiant in Valorant! Road to pro scene?',
+        content: '🎮 RADIANT RANK ACHIEVED! 🔥\n\nAfter grinding for months, finally made it to the top! The dedication pays off.\n\nNext goal: Pro tournaments? 👀\n\n#Valorant #Gaming #Esports #Ninja',
+        streamer: 'Ninja'
+      },
+      {
+        platform: 'instagram',
+        title: 'Behind the scenes - New gaming setup reveal',
+        thumbnail: 'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&h=600&fit=crop&crop=entropy&cs=tinysrgb',
+        streamer: 'Ninja',
+        gameTitle: 'Setup Tour'
+      }
     ];
     
     return sortedData.map((data, index) => ({
       id: index + 1,
-      title: titles[index],
-      platform: platforms[index],
-      icon: index === 0 ? Twitter : index === 1 ? Youtube : index === 2 ? Instagram : Youtube,
+      ...contentData[index],
+      icon: index === 0 ? Youtube : index === 1 ? Twitch : index === 2 ? Twitter : Instagram,
       engagement: data.engagement,
       views: data.views,
       likes: Math.round(data.engagement * 0.7),
@@ -498,23 +522,67 @@ export default function Analytics() {
                     >
                       {/* Content Preview */}
                       <div className="relative h-48 bg-gradient-to-br from-gray-800 to-gray-900 overflow-hidden">
-                        {content.platform === 'youtube' ? (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center">
-                              <Icon className="w-8 h-8 text-white" />
+                        {content.platform === 'youtube' || content.platform === 'twitch' ? (
+                          <>
+                            <img 
+                              src={content.thumbnail} 
+                              alt={content.title}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                // Fallback to gradient if image fails to load
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="w-16 h-16 bg-black/50 rounded-full flex items-center justify-center backdrop-blur-sm">
+                                <Icon className="w-8 h-8 text-white" />
+                              </div>
                             </div>
-                            <div className="absolute bottom-3 left-3 bg-black/80 px-2 py-1 rounded text-xs text-white">
-                              12:34
+                            <div className="absolute bottom-3 left-3 bg-black/80 px-2 py-1 rounded text-xs text-white font-medium">
+                              {content.duration}
                             </div>
-                          </div>
+                            {content.platform === 'twitch' && content.duration === 'LIVE' && (
+                              <div className="absolute top-3 left-3 bg-red-600 px-2 py-1 rounded text-xs text-white font-bold animate-pulse">
+                                🔴 LIVE
+                              </div>
+                            )}
+                          </>
                         ) : content.platform === 'twitter' ? (
-                          <div className="p-4 text-white text-sm leading-relaxed">
-                            <div className="mb-2">🚀 {content.title}</div>
-                            <div className="text-white/70">
-                              Share your thoughts below! 👇
-                              <div className="mt-2 text-blue-400">#GameDev #Web3 #CreatorEconomy</div>
+                          <div className="p-4 text-white text-sm leading-relaxed bg-black">
+                            <div className="flex items-center gap-2 mb-3">
+                              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                                <span className="text-white font-bold text-xs">N</span>
+                              </div>
+                              <div>
+                                <div className="font-medium">{content.streamer}</div>
+                                <div className="text-white/60 text-xs">@{content.streamer.toLowerCase()}</div>
+                              </div>
+                            </div>
+                            <div className="text-white/90 whitespace-pre-line">
+                              {content.content}
                             </div>
                           </div>
+                        ) : content.platform === 'instagram' ? (
+                          <>
+                            <img 
+                              src={content.thumbnail} 
+                              alt={content.title}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                            <div className="absolute bottom-3 left-3 text-white">
+                              <div className="flex items-center gap-1">
+                                <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                                  <Icon className="w-4 h-4 text-black" />
+                                </div>
+                                <span className="text-sm font-medium">{content.streamer}</span>
+                              </div>
+                            </div>
+                          </>
                         ) : (
                           <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center">
                             <Icon className="w-12 h-12 text-white" />
