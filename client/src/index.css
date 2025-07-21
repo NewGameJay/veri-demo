@@ -204,6 +204,31 @@
     animation-delay: calc(var(--stagger-delay, 0) * 0.1s);
   }
 
+  /* Custom scrollbar for task container */
+  .scrollable-tasks::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollable-tasks::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollable-tasks::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    transition: background 0.3s ease;
+  }
+
+  .scrollable-tasks::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  /* Firefox scrollbar */
+  .scrollable-tasks {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  }
+
   /* Glass card hover effects */
   .glass-card-interactive {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

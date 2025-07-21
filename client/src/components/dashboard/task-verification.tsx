@@ -84,9 +84,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
 
   const [brandFilter, setBrandFilter] = useState("all");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
-  const [tasksPerPage, setTasksPerPage] = useState(16);
-  const INITIAL_TASKS_PER_PAGE = 16;
-  const LOAD_MORE_INCREMENT = 6;
+
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareTaskData, setShareTaskData] = useState<any>(null);
   const [showFloatingPoints, setShowFloatingPoints] = useState(false);
@@ -1432,21 +1430,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
     return true;
   });
 
-  // Limit tasks based on tasksPerPage
-  const displayedTasks = availableTasksFiltered.slice(0, tasksPerPage);
-  const hasMoreTasks = availableTasksFiltered.length > tasksPerPage;
-  
 
-  
-  const handleLoadMore = () => {
-    triggerHaptic("light");
-    setTasksPerPage(prev => prev + LOAD_MORE_INCREMENT);
-  };
-  
-  const handleShowLess = () => {
-    triggerHaptic("light");
-    setTasksPerPage(INITIAL_TASKS_PER_PAGE);
-  };
 
   // Filter completed tasks from backend data
   const completedTasks = completedTasksData
@@ -1858,16 +1842,12 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           
           <TabsContent value="available" className="space-y-4">
               <div 
-                className={isGridExpanded ? "task-grid-fullscreen" : "grid gap-6 grid-cols-1 md:grid-cols-2"}
-                style={isGridExpanded ? {
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(3, 1fr)',
-                  gap: '1rem',
-                  width: '100%'
-                } : {}}
+                className={isGridExpanded ? "task-grid-fullscreen" : "max-h-[600px] overflow-y-auto scrollable-tasks pr-2"}
               >
-                {displayedTasks.map((task) => {
-                  return (
+                <div 
+                  className="grid gap-6 grid-cols-1 md:grid-cols-2"
+                >
+                  {availableTasksFiltered.map((task) => (
                     <div 
                       key={task.id} 
                       className="group rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in relative hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-1 transform-gpu hover:z-10 cursor-pointer"
@@ -1930,49 +1910,9 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                       
 
                   </div>
-                );
-                })}
+                  ))}
+                </div>
               </div>
-            
-            {/* View More Tasks Button */}
-            {hasMoreTasks && (
-              <div className="flex justify-center mt-6">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.2 }}
-                >
-                  <Button
-                    onClick={handleLoadMore}
-                    variant="outline"
-                    className="glass-subtle border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 hover-lift group px-6 py-3 font-medium"
-                  >
-                    View More Tasks ({availableTasksFiltered.length - tasksPerPage} remaining)
-                    <ChevronDown className="ml-2 h-4 w-4 group-hover:translate-y-1 transition-transform duration-300" />
-                  </Button>
-                </motion.div>
-              </div>
-            )}
-            
-            {/* Show Less Tasks Button */}
-            {tasksPerPage > INITIAL_TASKS_PER_PAGE && (
-              <div className="flex justify-center mt-6">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.2 }}
-                >
-                  <Button
-                    onClick={handleShowLess}
-                    variant="outline"
-                    className="glass-subtle border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 hover-lift group"
-                  >
-                    Show Less Tasks
-                    <ChevronUp className="ml-2 h-4 w-4 group-hover:-translate-y-1 transition-transform duration-300" />
-                  </Button>
-                </motion.div>
-              </div>
-            )}
           </TabsContent>
           
           <TabsContent value="active" className="space-y-4">
