@@ -244,7 +244,7 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
         </div>
 
         {/* Content */}
-        <div className="p-6 min-h-[500px]">
+        <div className="p-6 max-h-[600px] overflow-y-auto">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
@@ -328,7 +328,7 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
 
                   <div>
                     <Label>Interests (select up to 5)</Label>
-                    <div className="grid grid-cols-3 gap-2 mt-2">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2 max-h-40 overflow-y-auto p-2 border border-gray-200 dark:border-gray-700 rounded-lg">
                       {interests.map((interest) => (
                         <Button
                           key={interest}
@@ -337,16 +337,20 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
                           onClick={() => updateFormData('interests', toggleArrayItem(formData.interests, interest))}
                           disabled={!formData.interests.includes(interest) && formData.interests.length >= 5}
                           haptic="light"
+                          className="text-xs whitespace-nowrap"
                         >
                           {interest}
                         </Button>
                       ))}
                     </div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      {formData.interests.length}/5 selected
+                    </p>
                   </div>
 
                   <div>
                     <Label>Goals (select up to 3)</Label>
-                    <div className="grid grid-cols-2 gap-2 mt-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2 max-h-32 overflow-y-auto p-2 border border-gray-200 dark:border-gray-700 rounded-lg">
                       {goals.map((goal) => (
                         <Button
                           key={goal}
@@ -355,11 +359,15 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
                           onClick={() => updateFormData('goals', toggleArrayItem(formData.goals, goal))}
                           disabled={!formData.goals.includes(goal) && formData.goals.length >= 3}
                           haptic="light"
+                          className="text-xs whitespace-nowrap justify-start"
                         >
                           {goal}
                         </Button>
                       ))}
                     </div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      {formData.goals.length}/3 selected
+                    </p>
                   </div>
                 </div>
               )}
