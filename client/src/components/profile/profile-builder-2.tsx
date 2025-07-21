@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { VeriLogo } from "@/components/ui/veri-logo";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/auth-context";
@@ -862,40 +863,57 @@ export function ProfileBuilder2({ className = "" }: ProfileBuilder2Props) {
                   </div>
                 </div>
 
-                {/* VeriScore Card - Square Format */}
+                {/* VeriScore Card - Matching Sidebar Design */}
                 {showVeriScore && (
-                  <div className="bg-gradient-to-br from-emerald-900/20 via-teal-900/20 to-cyan-900/20 rounded-xl p-5 border border-emerald-500/30 backdrop-blur-sm">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center">
-                          <Trophy className="w-5 h-5 text-emerald-400" />
+                  <div className="veri-gradient-card border-white/20 hover-lift w-full relative bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl border rounded-xl p-6">
+                    <div className="flex flex-col space-y-6">
+                      {/* Top - Logo and VeriScore Text */}
+                      <div className="text-center space-y-4">
+                        <div className="w-16 h-16 veri-gradient rounded-2xl flex items-center justify-center shadow-lg mx-auto">
+                          <VeriLogo size="lg" showText={false} />
                         </div>
-                        <span className="text-white font-semibold">VeriScore</span>
+                        <h3 className="text-xl font-termina text-white">VeriScore</h3>
                       </div>
-                      <div className="text-2xl font-bold text-emerald-400">{veriScore}</div>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-4 mb-4">
+
+                      {/* Large VeriScore Number */}
                       <div className="text-center">
-                        <div className="text-white font-semibold">{(user?.xpPoints || 0).toLocaleString()}</div>
-                        <div className="text-xs text-emerald-400">XP Points</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-white font-semibold">{user?.streak || 0}</div>
-                        <div className="text-xs text-orange-400">Day Streak</div>
-                      </div>
-                    </div>
-                    
-                    <div className="text-center">
-                      <div className="text-purple-400 font-semibold text-lg">{totalFollowers.toLocaleString()}</div>
-                      <div className="text-xs text-slate-400">Total Reach</div>
-                    </div>
-                    
-                    <div className="mt-4 pt-3 border-t border-emerald-500/20">
-                      <div className="flex justify-center">
-                        <div className="text-xs text-emerald-400 font-medium">
-                          Tier: <span className="text-white">{tier.name}</span>
+                        <div className="text-6xl font-termina text-green-400 relative">
+                          {veriScore}
                         </div>
+                      </div>
+
+                      {/* Analytics Info Box */}
+                      <div className="bg-gray-700/50 rounded-xl p-3 text-center">
+                        <p className="text-sm text-white/70">Calculated Weekly Based on</p>
+                        <p className="text-sm text-green-400 font-medium">VeriScore Analytics™</p>
+                      </div>
+
+                      {/* VeriPoints Section */}
+                      <div className="text-center space-y-2">
+                        <h4 className="text-lg font-termina text-white">VeriPoints</h4>
+                        <div className="text-4xl font-termina text-green-400 relative">
+                          {(user?.xpPoints || 0).toLocaleString()}XP
+                        </div>
+                      </div>
+
+                      {/* Stats Cards */}
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-gray-700/50 rounded-xl p-4 text-center">
+                          <div className="text-xl font-termina text-white">{totalFollowers > 1000 ? `${Math.round(totalFollowers/1000)}K` : totalFollowers}</div>
+                          <div className="text-sm text-white/70">Total Followers</div>
+                        </div>
+                        <div className="bg-gray-700/50 rounded-xl p-4 text-center">
+                          <div className="text-xl font-termina text-white">{user?.streak || 0}</div>
+                          <div className="text-sm text-white/70">Day Streak</div>
+                        </div>
+                      </div>
+
+                      {/* User Info */}
+                      <div className="text-center space-y-1">
+                        <h5 className="text-xl font-termina text-white">
+                          {profileData.name}
+                        </h5>
+                        <p className="text-green-400 font-inter text-sm">Creator & Influencer</p>
                       </div>
                     </div>
                   </div>
