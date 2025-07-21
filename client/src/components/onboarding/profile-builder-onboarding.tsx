@@ -101,21 +101,43 @@ export function ProfileBuilderOnboarding({ onComplete, onStartProfileBuilder }: 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-teal-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="max-w-7xl mx-auto px-4 lg:px-6 py-8">
-        {/* Welcome Header */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
-        >
-          <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Hi {user?.firstName || 'Creator'} 👋
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Welcome to Veri! Let's get you set up with your creator profile and social connections.
-            <br />
-            Connect your platforms and start earning points right away.
-          </p>
-        </motion.div>
+        {/* Header with Progress Indicator */}
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8">
+          {/* Welcome Header */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex-1 text-center lg:text-left mb-6 lg:mb-0"
+          >
+            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+              Hi {user?.firstName || 'Creator'} 👋
+            </h1>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl lg:max-w-none">
+              Welcome to Veri! Let's get you set up with your creator profile and social connections.
+              <br />
+              Connect your platforms and start earning points right away.
+            </p>
+          </motion.div>
+
+          {/* Progress Indicator - Top Right */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="w-full max-w-sm lg:max-w-xs lg:ml-8"
+          >
+            <div className="glass-secondary rounded-xl p-4 border border-white/10">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Profile Setup</span>
+                <span className="text-sm font-bold text-emerald-600">{profileProgress}%</span>
+              </div>
+              <Progress value={profileProgress} className="h-2 mb-2" />
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {connectedPlatforms.length} of 4 platforms connected
+              </p>
+            </div>
+          </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Social Connections & Profile Builder */}
@@ -308,25 +330,6 @@ export function ProfileBuilderOnboarding({ onComplete, onStartProfileBuilder }: 
             </div>
           </motion.div>
         </div>
-
-        {/* Progress Indicator - Moved Below Main Content */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.6 }}
-          className="max-w-md mx-auto mt-8 mb-6"
-        >
-          <div className="glass-secondary rounded-xl p-3 border border-white/10">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Profile Setup Progress</span>
-              <span className="text-xs font-semibold text-emerald-600">{profileProgress}%</span>
-            </div>
-            <Progress value={profileProgress} className="h-1.5" />
-            <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-              {connectedPlatforms.length} of 4 platforms connected
-            </p>
-          </div>
-        </motion.div>
 
         {/* Skip for now option */}
         <motion.div 
