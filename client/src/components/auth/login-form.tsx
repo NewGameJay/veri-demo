@@ -59,7 +59,7 @@ export function LoginForm({ onSwitchToSignup, onSuccess }: LoginFormProps) {
   };
 
   return (
-    <Card className="rounded-lg border text-card-foreground shadow-sm transform-gpu w-full max-w-md glass-effect border-white/20 bg-[#121826a3]">
+    <Card className="w-full max-w-md glass-effect border-white/20">
       <CardHeader className="text-center space-y-4">
         <div className="flex justify-center">
           <VeriLogo size="lg" showText={false} />
