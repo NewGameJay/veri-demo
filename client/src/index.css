@@ -383,23 +383,25 @@
     will-change: transform, opacity, background-color, box-shadow;
   }
   
-  /* Light mode glass darker */
+  /* Light mode glass darker - 25% more opaque for better separation */
   :root .glass-darker {
-    @apply bg-gray-200 border border-gray-400 transform-gpu;
+    @apply bg-gray-300 border border-gray-500 transform-gpu;
+    background: rgba(229, 231, 235, 0.85);
     box-shadow: 
-      0 8px 32px 0 rgba(0, 0, 0, 0.08),
-      0 2px 16px 0 rgba(0, 0, 0, 0.05),
-      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      0 8px 32px 0 rgba(0, 0, 0, 0.12),
+      0 2px 16px 0 rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
   }
   
-  /* Dark mode glass darker - 20-25% darker than glass-medium */
+  /* Dark mode glass darker - 25% more opaque for better separation */
   .dark .glass-darker {
-    @apply bg-white/[0.13] border border-white/[0.25] transform-gpu;
+    @apply bg-white/[0.18] border border-white/[0.3] transform-gpu;
+    background: rgba(255, 255, 255, 0.18);
     box-shadow: 
-      0 8px 32px 0 rgba(0, 0, 0, 0.15),
-      0 2px 16px 0 rgba(0, 0, 0, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.13),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+      0 8px 32px 0 rgba(0, 0, 0, 0.2),
+      0 2px 16px 0 rgba(0, 0, 0, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   }
   
   /* Enhanced Focus States for Accessibility & Form Interactions */
