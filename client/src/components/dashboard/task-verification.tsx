@@ -97,7 +97,6 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const [isGridExpanded, setIsGridExpanded] = useState(false);
   const [showTaskPreview, setShowTaskPreview] = useState(false);
   const [previewTask, setPreviewTask] = useState<any>(null);
-  const [expandedTask, setExpandedTask] = useState<number | null>(null);
   const { toast } = useToast();
   const { user, refreshUser } = useAuth();
   const { reactions, triggerReaction } = useEmojiReaction();
@@ -1916,147 +1915,92 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           )}
           
           <TabsContent value="available" className="space-y-4">
-              <div className="space-y-3">
-                {displayedTasks.map((task, index) => {
-                  const isExpanded = expandedTask === task.id;
-                  const isActive = selectedTask?.id === task.id;
-                  
+              <div 
+                className={isGridExpanded ? "task-grid-fullscreen" : "grid gap-6 grid-cols-1 md:grid-cols-2"}
+                style={isGridExpanded ? {
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, 1fr)',
+                  gap: '1rem',
+                  width: '100%'
+                } : {}}
+              >
+                {displayedTasks.map((task) => {
                   return (
                     <div 
                       key={task.id} 
-                      className="group glass-subtle border border-white/10 rounded-lg overflow-hidden transition-all duration-300 animate-fade-in hover:border-white/20 hover:bg-white/[0.08]"
+                      className="group rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in relative hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-1 transform-gpu hover:z-10 cursor-pointer"
                       style={{
-                        animationDelay: `${index * 100}ms`
+                        animationDelay: `${task.id * 100}ms`,
+                        transformOrigin: 'center center'
                       }}
+                      onClick={() => handleTaskPreview(task)}
                     >
-                      {/* Main Task Card - Always Visible */}
-                      <div 
-                        className="p-4 cursor-pointer"
-                        onClick={() => setExpandedTask(isExpanded ? null : task.id)}
-                      >
-                        <div className="flex items-center justify-between">
-                          {/* Left side - Task info similar to reference */}
-                          <div className="flex items-center space-x-3 flex-1 min-w-0">
-                            <div className={`w-10 h-10 rounded-xl ${getPartnerGradient(task.brand, task.id)} flex items-center justify-center flex-shrink-0`}>
-                              <task.icon className="h-5 w-5 text-white" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center space-x-2 mb-1">
-                                <h3 className="text-white font-semibold text-sm truncate group-hover:text-emerald-300 transition-colors">
+                      {/* Full Background with Partner Gradient */}
+                      <div className={`relative h-48 ${getPartnerGradient(task.brand, task.id)}`}>
+                        {/* Subtle overlay for depth */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/30"></div>
+                        
+                        {/* Top Row - Partner Badge and XP with pulse animation */}
+                        <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+                          <Badge variant="secondary" className="bg-white/20 backdrop-blur-md text-white text-xs font-medium px-2 py-1 rounded-full border-0 group-hover:bg-white/30 transition-all">
+                            {task.brand?.replace('.gg', '').replace('.xyz', '') || 'Partner'}
+                          </Badge>
+                          <Badge variant="secondary" className="bg-gradient-to-r from-green-500/80 to-emerald-500/80 backdrop-blur-md text-white font-semibold text-xs px-2 py-1 rounded-full border-0 flex items-center animate-pulse group-hover:animate-none group-hover:from-green-400 group-hover:to-emerald-400">
+                            <span className="text-white mr-1">💎</span>
+                            {task.points} XP
+                          </Badge>
+                        </div>
+                        
+                        {/* Bottom Glass Overlay with Content */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-black/40 backdrop-blur-md border-t border-white/10">
+                          <div className="p-3 flex items-center justify-between">
+                            {/* Left side - Platform icon and title */}
+                            <div className="flex items-center space-x-3 flex-1 min-w-0">
+                              <task.icon className="h-5 w-5 text-white flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <h3 className="text-white font-semibold text-sm truncate group-hover:text-green-300 transition-colors">
                                   {task.title}
                                 </h3>
-                                <Badge variant="secondary" className="bg-white/20 text-white text-xs px-2 py-1">
-                                  {task.brand?.replace('.gg', '').replace('.xyz', '') || 'Partner'}
-                                </Badge>
-                              </div>
-                              <div className="flex items-center space-x-4 text-sm text-white/60">
-                                <span className="flex items-center space-x-1">
-                                  <span className="w-1 h-1 bg-white/40 rounded-full"></span>
-                                  <span>{task.estimatedTime}</span>
-                                </span>
-                                <span className="flex items-center space-x-1">
-                                  <span className="w-1 h-1 bg-white/40 rounded-full"></span>
-                                  <span className="capitalize">{task.platform}</span>
-                                </span>
-                                <Badge variant="secondary" className={getDifficultyColor(task.difficulty)}>
-                                  {task.difficulty}
-                                </Badge>
+                                <div className="text-white/70 text-xs capitalize">
+                                  {task.platform} • {task.difficulty}
+                                </div>
                               </div>
                             </div>
-                          </div>
-
-                          {/* Right side - XP and Action Button */}
-                          <div className="flex items-center space-x-3 flex-shrink-0">
-                            <div className="text-right">
-                              <div className="text-emerald-400 font-semibold text-sm">+{task.points} XP</div>
-                              {isActive && (
-                                <div className="text-orange-400 text-xs">In Progress</div>
-                              )}
-                            </div>
-                            {isActive ? (
+                            
+                            {/* Right side - Start/Finish button */}
+                            <div className="flex items-center space-x-2 flex-shrink-0">
                               <Button
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  setActiveTab("active");
+                                  if (selectedTask?.id === task.id) {
+                                    // If task is already started, switch to active tab
+                                    setActiveTab("active");
+                                  } else {
+                                    // Preview task before starting
+                                    handleTaskPreview(task);
+                                  }
                                 }}
                                 size="sm"
-                                className="bg-gradient-to-r from-orange-500 to-red-500 text-white font-medium px-4 py-2 text-xs hover:from-orange-400 hover:to-red-400 transition-all duration-300"
+                                className={`relative font-bold px-4 py-1.5 text-xs rounded-lg transition-all duration-300 hover:scale-105 group ${
+                                  selectedTask?.id === task.id
+                                    ? "bg-gradient-to-r from-orange-500/80 to-red-500/80 border border-orange-400/60 text-white hover:from-orange-400 hover:to-red-400 hover:border-orange-300 hover:shadow-[0_0_15px_rgba(251,146,60,0.6),0_0_30px_rgba(251,146,60,0.3)]"
+                                    : "bg-transparent border border-teal-400/40 text-teal-300 hover:text-white hover:border-teal-300 hover:shadow-[0_0_15px_rgba(20,184,166,0.6),0_0_30px_rgba(20,184,166,0.3)] hover:animate-pulse"
+                                }`}
                               >
-                                Verify Task
+                                <span className="relative z-10">
+                                  {selectedTask?.id === task.id ? "Finish 🏁" : "Start"}
+                                </span>
                               </Button>
-                            ) : (
-                              <Button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleStartTask(task);
-                                }}
-                                size="sm"
-                                className="veri-gradient text-white font-medium px-4 py-2 text-xs hover:opacity-90 transition-all duration-300"
-                              >
-                                Start
-                              </Button>
-                            )}
+                            </div>
                           </div>
                         </div>
                       </div>
+                      
 
-                      {/* Expandable Details Section */}
-                      {isExpanded && (
-                        <div className="border-t border-white/10 bg-white/[0.02]">
-                          <div className="p-4 space-y-4">
-                            {/* Task Description */}
-                            <div>
-                              <p className="text-white/80 text-sm leading-relaxed">
-                                {task.description}
-                              </p>
-                            </div>
+                      
 
-                            {/* Requirements */}
-                            <div>
-                              <h4 className="text-white font-medium text-sm mb-2 flex items-center">
-                                <CheckCircle2 className="h-4 w-4 mr-2 text-emerald-400" />
-                                Requirements ({task.requirements.length})
-                              </h4>
-                              <ul className="space-y-1 ml-6">
-                                {task.requirements.map((req: string, reqIndex: number) => (
-                                  <li key={reqIndex} className="text-white/70 text-sm flex items-center space-x-2">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"></div>
-                                    <span>{req}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-
-                            {/* Action Buttons Row */}
-                            <div className="flex items-center justify-between pt-3 border-t border-white/5">
-                              <div className="flex items-center space-x-4">
-                                <div className="text-xs text-white/50">
-                                  Category: <span className="text-emerald-400 capitalize">{task.category.replace('_', ' ')}</span>
-                                </div>
-                                <div className="text-xs text-white/50">
-                                  Duration: <span className="text-emerald-400">{task.estimatedTime}</span>
-                                </div>
-                              </div>
-                              {!isActive && (
-                                <Button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleStartTask(task);
-                                    setExpandedTask(null);
-                                  }}
-                                  size="sm"
-                                  className="veri-gradient text-white font-medium px-6 py-2 text-sm"
-                                >
-                                  <ArrowRight className="mr-2 h-4 w-4" />
-                                  Start Task
-                                </Button>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
+                  </div>
+                );
                 })}
               </div>
             
