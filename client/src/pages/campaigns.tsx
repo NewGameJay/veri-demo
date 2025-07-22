@@ -148,18 +148,10 @@ export default function CampaignsPage() {
               </p>
             </div>
             
-            <div className={`flex items-center gap-2 transition-all duration-300 ease-in-out ${
-              isDashboardPinned && !isCollapsed ? 'flex-wrap' : ''
-            }`}>
-              <Button 
-                variant="outline"
-                onClick={() => setActiveTab("browse")}
-                className={activeTab === "browse" ? "bg-emerald-50 border-emerald-200" : ""}
-              >
-                <Target className="h-4 w-4 mr-2" />
-                Browse Campaigns
-              </Button>
-              {isBrand && (
+            {isBrand && (
+              <div className={`flex items-center gap-2 transition-all duration-300 ease-in-out ${
+                isDashboardPinned && !isCollapsed ? 'flex-wrap' : ''
+              }`}>
                 <Button 
                   onClick={() => setActiveTab("create")}
                   className={activeTab === "create" ? "bg-emerald-600 hover:bg-emerald-700" : ""}
@@ -167,8 +159,8 @@ export default function CampaignsPage() {
                   <Plus className="h-4 w-4 mr-2" />
                   Create Campaign
                 </Button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Quick Stats */}
