@@ -162,7 +162,7 @@ export default function Leaderboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-900 hero-gradient text-white">
       <Header
         onDashboardToggle={() => setIsDashboardOpen(!isDashboardOpen)}
         onMobileMenuToggle={() => setIsDashboardOpen(!isDashboardOpen)}
@@ -261,7 +261,7 @@ export default function Leaderboard() {
                 exit={{ opacity: 0, height: 0 }}
                 className="mb-6"
               >
-                <Card className="glass-medium border-white/20">
+                <Card className="glass-subtle border-white/10 bg-gray-800/50">
                   <CardContent className="p-4">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                       {/* Search */}
@@ -372,7 +372,7 @@ export default function Leaderboard() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
                     >
-                      <Card className={`glass-medium border-white/20 relative overflow-hidden ${index === 0 ? 'md:scale-105' : ''}`}>
+                      <Card className={`glass-subtle border-white/10 bg-gray-800/50 relative overflow-hidden ${index === 0 ? 'md:scale-105' : ''}`}>
                         <div className="absolute top-0 right-0 p-4">
                           {index === 0 && <Crown className="w-8 h-8 text-yellow-400" />}
                           {index === 1 && <Medal className="w-6 h-6 text-gray-400" />}
@@ -398,7 +398,7 @@ export default function Leaderboard() {
               )}
 
               {/* Full Leaderboard Table */}
-              <Card className="glass-medium border-white/20">
+              <Card className="glass-subtle border-white/10 bg-gray-800/50">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-white flex items-center gap-2">

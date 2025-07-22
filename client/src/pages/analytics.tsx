@@ -254,7 +254,7 @@ export default function Analytics() {
   }, [chartData, timeRange]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-900 hero-gradient text-white">
       <Header
         onDashboardToggle={() => setIsDashboardOpen(!isDashboardOpen)}
         onMobileMenuToggle={() => setIsDashboardOpen(!isDashboardOpen)}
@@ -303,7 +303,7 @@ export default function Analytics() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Card className="glass-medium border-white/20">
+                  <Card className="glass-subtle border-white/10 bg-gray-800/50">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between mb-4">
                         <div className={`w-12 h-12 ${stat.bgColor} rounded-xl flex items-center justify-center`}>
@@ -323,7 +323,7 @@ export default function Analytics() {
           {/* Charts */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Engagement Chart */}
-            <Card className="glass-medium border-white/20">
+            <Card className="glass-subtle border-white/10 bg-gray-800/50">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-white flex items-center gap-2">
@@ -420,7 +420,7 @@ export default function Analytics() {
             </Card>
 
             {/* Revenue Projections */}
-            <Card className="glass-medium border-white/20">
+            <Card className="glass-subtle border-white/10 bg-gray-800/50">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
                   <DollarSign className="w-5 h-5" />
@@ -501,7 +501,7 @@ export default function Analytics() {
           </div>
 
           {/* Top Performing Content */}
-          <Card className="glass-medium border-white/20 mt-8">
+          <Card className="glass-subtle border-white/10 bg-gray-800/50 mt-8">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
                 <Star className="w-5 h-5" />
@@ -659,7 +659,7 @@ export default function Analytics() {
           </Card>
 
           {/* Recent Activity */}
-          <Card className="glass-medium border-white/20 mt-8">
+          <Card className="glass-subtle border-white/10 bg-gray-800/50 mt-8">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
                 <Calendar className="w-5 h-5" />

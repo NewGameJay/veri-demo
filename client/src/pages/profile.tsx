@@ -9,7 +9,7 @@ export default function Profile() {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-900 hero-gradient text-white">
       <Header
         onDashboardToggle={() => setIsDashboardOpen(!isDashboardOpen)}
         onMobileMenuToggle={() => setIsDashboardOpen(!isDashboardOpen)}

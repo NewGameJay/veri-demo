@@ -236,7 +236,7 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* Left Column - Main Content */}
                 <div className="lg:col-span-8 space-y-6">
-                  <div className="glass-effect p-6 rounded-xl border border-white/20 bg-[#1b1d27]">
+                  <div className="glass-subtle p-6 rounded-xl border border-white/10 bg-gray-800/50">
                     <h2 className="text-2xl font-semibold text-white mb-6">Profile Builder 2.0</h2>
                     <ProfileBuilder2 />
                   </div>
@@ -289,7 +289,7 @@ export default function Dashboard() {
                 {/* Left Column - Main Content */}
                 <div className="lg:col-span-8 space-y-6">
                   {/* Enhanced Analytics Dashboard */}
-                  <div className="glass-effect p-6 rounded-xl border border-white/20 bg-[#1b1d27]">
+                  <div className="glass-subtle p-6 rounded-xl border border-white/10 bg-gray-800/50">
                     <div className="flex items-center justify-between mb-6">
                       <h3 className="text-xl font-semibold text-white">Analytics Dashboard</h3>
                       <div className="flex space-x-2">

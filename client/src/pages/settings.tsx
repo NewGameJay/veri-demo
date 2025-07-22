@@ -48,7 +48,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-900 hero-gradient text-white">
       <Header
         onDashboardToggle={() => setIsDashboardOpen(!isDashboardOpen)}
         onMobileMenuToggle={() => setIsDashboardOpen(!isDashboardOpen)}
@@ -71,7 +71,7 @@ export default function Settings() {
 
           <div className="space-y-6">
             {/* Notifications */}
-            <Card className="glass-medium border-white/20">
+            <Card className="glass-subtle border-white/10 bg-gray-800/50">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
                   <Bell className="w-5 h-5" />
@@ -133,7 +133,7 @@ export default function Settings() {
             </Card>
 
             {/* Privacy */}
-            <Card className="glass-medium border-white/20">
+            <Card className="glass-subtle border-white/10 bg-gray-800/50">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
                   <Shield className="w-5 h-5" />
@@ -195,7 +195,7 @@ export default function Settings() {
             </Card>
 
             {/* Appearance */}
-            <Card className="glass-medium border-white/20">
+            <Card className="glass-subtle border-white/10 bg-gray-800/50">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
                   <Palette className="w-5 h-5" />
@@ -248,7 +248,7 @@ export default function Settings() {
             <VeriConnectors />
 
             {/* Subscription */}
-            <Card className="glass-medium border-white/20">
+            <Card className="glass-subtle border-white/10 bg-gray-800/50">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
                   <CreditCard className="w-5 h-5" />
