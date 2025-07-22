@@ -147,6 +147,14 @@ The application is designed to scale from MVP to full marketplace functionality,
 - ✅ **Interactive Chat Interface**: Full modal chatbot with chat input, welcome messages, and engine status display
 - ✅ **Seamless Workflow Integration**: Clicking "Launch Agent" opens chatbot and shows agent running in real-time
 
+### Task Cards Stacked Design Update (July 21, 2025)
+- ✅ **Twitter-Style Stacked Cards**: Redesigned available tasks from grid layout to vertical stacked design inspired by social media feeds
+- ✅ **Expandable Task Details**: Only active tasks are expandable to show full requirements and task description
+- ✅ **Verify Task Button Integration**: Replaced revenue display with "Verify Task" button (orange gradient) for active tasks
+- ✅ **Enhanced Task Information Display**: Each card shows task title, platform badges, XP rewards, difficulty, and estimated time
+- ✅ **Interactive Expansion**: Users can click cards to expand and view detailed requirements before starting tasks
+- ✅ **Streamlined User Experience**: Start button for new tasks, Verify Task button for active tasks with clear visual distinction
+
 ### Profile Builder VeriScore Card Integration (July 21, 2025)
 - ✅ **VeriScore Card Design Match**: Updated Profile Builder 2.0 preview to include full VeriScore Card matching sidebar design
 - ✅ **Complete Component Integration**: Added VeriLogo, analytics info box, VeriPoints display, and stats cards to profile preview
