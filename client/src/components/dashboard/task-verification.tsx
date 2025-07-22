@@ -1963,7 +1963,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                   return (
                     <div 
                       key={task.id} 
-                      className="group rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in relative hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-1 transform-gpu hover:z-10 cursor-pointer"
+                      className="group rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in relative hover:shadow-2xl hover:-translate-y-1 transform-gpu hover:z-10 cursor-pointer"
                       style={{
                         animationDelay: `${task.id * 100}ms`,
                         transformOrigin: 'center center'
@@ -2016,7 +2016,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                                   }
                                 }}
                                 size="sm"
-                                className={`relative font-bold px-4 py-1.5 text-xs rounded-lg transition-all duration-300 hover:scale-105 group ${
+                                className={`relative font-bold px-4 py-1.5 text-xs rounded-lg transition-all duration-300 group ${
                                   selectedTask?.id === task.id
                                     ? "bg-gradient-to-r from-orange-500/80 to-red-500/80 border border-orange-400/60 text-white hover:from-orange-400 hover:to-red-400 hover:border-orange-300 hover:shadow-[0_0_15px_rgba(251,146,60,0.6),0_0_30px_rgba(251,146,60,0.3)]"
                                     : "bg-transparent border border-teal-400/40 text-teal-300 hover:text-white hover:border-teal-300 hover:shadow-[0_0_15px_rgba(20,184,166,0.6),0_0_30px_rgba(20,184,166,0.3)] hover:animate-pulse"
@@ -2207,8 +2207,8 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                   >
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center group-hover:bg-green-500/30 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 relative">
-                          <CheckCircle2 className="h-4 w-4 text-green-400 group-hover:scale-110 transition-transform duration-300" />
+                        <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center group-hover:bg-green-500/30 transition-all duration-300 group-hover:rotate-6 relative">
+                          <CheckCircle2 className="h-4 w-4 text-green-400 transition-transform duration-300" />
                           <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </div>
                         <div className="group-hover:translate-x-1 transition-transform duration-300">
@@ -2218,7 +2218,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2 group-hover:scale-105 transition-transform duration-300">
+                      <div className="flex items-center space-x-2 transition-transform duration-300">
                         <Badge variant="secondary" className="bg-green-500/20 text-green-400 group-hover:bg-green-500/30 group-hover:text-green-300 transition-all duration-300">
                           <CheckCircle2 className="mr-1 h-3 w-3 group-hover:rotate-12 transition-transform duration-300" />
                           Verified
@@ -2237,7 +2237,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                         <Button
                           size="sm"
                           variant="outline"
-                          className="border-blue-500/20 text-blue-400 hover:bg-blue-500/10 hover:border-blue-400/40 hover:text-blue-300 group-hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25"
+                          className="border-blue-500/20 text-blue-400 hover:bg-blue-500/10 hover:border-blue-400/40 hover:text-blue-300 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25"
                           onClick={() => {
                             triggerHaptic("light");
                             setShareTaskData({
@@ -2258,7 +2258,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                         <Button
                           size="sm"
                           variant="outline"
-                          className="border-white/20 text-white hover:bg-green-500/10 hover:border-green-400/40 hover:text-green-400 group-hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25"
+                          className="border-white/20 text-white hover:bg-green-500/10 hover:border-green-400/40 hover:text-green-400 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25"
                           onClick={() => window.open(task.verificationUrl, '_blank')}
                         >
                           View Submission
