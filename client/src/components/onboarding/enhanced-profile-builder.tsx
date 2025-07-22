@@ -245,8 +245,7 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
         </div>
 
         {/* Content */}
-        <div className="flex-1 p-6 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 280px)' }}>
-          <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
               initial={{ opacity: 0, x: 20 }}
@@ -509,7 +508,6 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
               )}
             </motion.div>
           </AnimatePresence>
-        </div>
 
         {/* Footer */}
         <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
