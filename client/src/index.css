@@ -13,21 +13,21 @@
 
 :root {
   --background: hsl(0, 0%, 97%);
-  --foreground: hsl(0, 0%, 9%);
+  --foreground: hsl(0, 0%, 15%);
   --muted: hsl(0, 0%, 94%);
-  --muted-foreground: hsl(0, 0%, 35%);
+  --muted-foreground: hsl(0, 0%, 25%);
   --popover: hsl(0, 0%, 98%);
-  --popover-foreground: hsl(0, 0%, 9%);
+  --popover-foreground: hsl(0, 0%, 15%);
   --card: hsl(0, 0%, 98%);
-  --card-foreground: hsl(0, 0%, 9%);
+  --card-foreground: hsl(0, 0%, 15%);
   --border: hsl(0, 0%, 88%);
   --input: hsl(0, 0%, 98%);
   --primary: hsl(158, 100%, 42%);
   --primary-foreground: hsl(0, 0%, 100%);
   --secondary: hsl(0, 0%, 93%);
-  --secondary-foreground: hsl(0, 0%, 9%);
+  --secondary-foreground: hsl(0, 0%, 15%);
   --accent: hsl(0, 0%, 93%);
-  --accent-foreground: hsl(0, 0%, 9%);
+  --accent-foreground: hsl(0, 0%, 15%);
   --destructive: hsl(0, 84.2%, 60.2%);
   --destructive-foreground: hsl(0, 0%, 100%);
   --ring: hsl(0, 0%, 20%);
@@ -222,6 +222,22 @@
 
   body {
     @apply font-inter antialiased bg-background text-foreground;
+  }
+  
+  /* Light mode text visibility enhancement */
+  :root h1, :root h2, :root h3, :root h4, :root h5, :root h6,
+  :root p, :root span, :root div, :root label, :root li,
+  :root button, :root input, :root textarea, :root select,
+  :root .text-foreground, :root .text-muted-foreground {
+    color: hsl(0, 0%, 15%) !important;
+  }
+  
+  /* Dark mode preserves original text colors */
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
+  .dark p, .dark span, .dark div, .dark label, .dark li,
+  .dark button, .dark input, .dark textarea, .dark select,
+  .dark .text-foreground, .dark .text-muted-foreground {
+    color: inherit !important;
   }
   
   /* Typography Hierarchy */
