@@ -1671,9 +1671,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             // Clear requirements state for this task
             setShowRequirements(prev => {
               const updated = { ...prev };
-              if (verifyingTaskId !== null) {
-                delete updated[verifyingTaskId];
-              }
+              delete updated[verifyingTaskId];
               return updated;
             });
             
@@ -1691,7 +1689,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             setVerificationUrl("");
             setShowVerificationModal(false);
             setVerifyingTaskId(null);
-            // Stay on current tab since completed tasks are now always visible above tabs
+            setActiveTab("completed");
 
             // Show social sharing modal after floating animation completes
             setTimeout(() => {
@@ -1795,98 +1793,13 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {/* Completed Tasks Section - Always shown at top when tasks exist */}
-        {completedTasks.length > 0 && (
-          <div className="mb-6">
-            <div className="flex items-center space-x-2 mb-4">
-              <Trophy className="h-5 w-5 text-green-400" />
-              <h3 className="text-lg font-semibold text-white">Completed Tasks ({completedTasks.length})</h3>
-            </div>
-            <div className="space-y-3 max-h-96 overflow-y-auto">
-              {completedTasks.map((task, index) => (
-                <div 
-                  key={task.id} 
-                  className="group glass-subtle p-4 rounded-lg border border-green-500/20 hover:border-green-400/40 transition-all duration-300 animate-fade-in relative hover:bg-white/[0.08]"
-                  style={{
-                    animationDelay: `${index * 100}ms`
-                  }}
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center group-hover:bg-green-500/30 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 relative">
-                        <CheckCircle2 className="h-4 w-4 text-green-400 group-hover:scale-110 transition-transform duration-300" />
-                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      </div>
-                      <div className="group-hover:translate-x-1 transition-transform duration-300">
-                        <h3 className="font-medium text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
-                        <p className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">
-                          Completed {task.completedAt ? new Date(task.completedAt).toLocaleDateString() : 'Recently'}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2 group-hover:scale-105 transition-transform duration-300">
-                      <Badge variant="secondary" className="bg-green-500/20 text-green-400 group-hover:bg-green-500/30 group-hover:text-green-300 transition-all duration-300">
-                        <CheckCircle2 className="mr-1 h-3 w-3 group-hover:rotate-12 transition-transform duration-300" />
-                        Verified
-                      </Badge>
-                      <Badge variant="secondary" className="bg-blue-500/20 text-blue-400 group-hover:bg-blue-500/30 group-hover:text-blue-300 transition-all duration-300 animate-bounce-in">
-                        +{task.points} XP
-                      </Badge>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between group-hover:translate-x-1 transition-transform duration-300">
-                    <div className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">
-                      Status: <span className="text-green-300 group-hover:font-medium transition-all duration-300">{task.status}</span>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-blue-500/20 text-blue-400 hover:bg-blue-500/10 hover:border-blue-400/40 hover:text-blue-300 group-hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25"
-                        onClick={() => {
-                          triggerHaptic("light");
-                          setShareTaskData({
-                            type: "task",
-                            title: task.title,
-                            description: `Completed ${task.title} on Veri platform`,
-                            xpEarned: task.points,
-                            streakDay: userStreak,
-                            veriScore: Math.min(100, Math.floor(userXP / 10)),
-                            platform: task.platform
-                          });
-                          setShowShareModal(true);
-                        }}
-                      >
-                        <Share2 className="mr-1 h-3 w-3 group-hover:rotate-12 transition-transform duration-300" />
-                        Share
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-white/20 text-white hover:bg-green-500/10 hover:border-green-400/40 hover:text-green-400 group-hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25"
-                        onClick={() => window.open(task.verificationUrl, '_blank')}
-                      >
-                        View Submission
-                        <ExternalLink className="ml-1 h-3 w-3 group-hover:rotate-12 transition-transform duration-300" />
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  {/* Success indicator */}
-                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="w-2 h-2 rounded-full bg-green-400"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2 bg-white/5">
+          <TabsList className="grid w-full grid-cols-3 bg-white/5">
             <TabsTrigger value="available">Available ({availableTasksFiltered.length})</TabsTrigger>
             <TabsTrigger value="active">Active ({selectedTask ? 1 : 0})</TabsTrigger>
+            <TabsTrigger value="completed">Completed ({completedTasks.length})</TabsTrigger>
           </TabsList>
           
           {/* Filter Toggle Button - Show only when showFilters is true and on available tab */}
@@ -2265,6 +2178,99 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                 >
                   Browse Available Tasks
                 </Button>
+              </div>
+            )}
+          </TabsContent>
+          
+          <TabsContent value="completed" className="space-y-4">
+            {completedTasks.length === 0 ? (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 rounded-full bg-gray-500/20 flex items-center justify-center mx-auto mb-4">
+                  <Trophy className="h-8 w-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2">No Completed Tasks</h3>
+                <p className="text-white/60">
+                  Complete your first task to start building your portfolio
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {completedTasks.map((task, index) => (
+                  <div 
+                    key={task.id} 
+                    className="group glass-subtle p-4 rounded-lg border border-green-500/20 hover:border-green-400/40 transition-all duration-300 animate-fade-in relative hover:bg-white/[0.08]"
+                    style={{
+                      animationDelay: `${index * 100}ms`
+                    }}
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center group-hover:bg-green-500/30 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 relative">
+                          <CheckCircle2 className="h-4 w-4 text-green-400 group-hover:scale-110 transition-transform duration-300" />
+                          <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        <div className="group-hover:translate-x-1 transition-transform duration-300">
+                          <h3 className="font-medium text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
+                          <p className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">
+                            Completed {task.completedAt ? new Date(task.completedAt).toLocaleDateString() : 'Recently'}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2 group-hover:scale-105 transition-transform duration-300">
+                        <Badge variant="secondary" className="bg-green-500/20 text-green-400 group-hover:bg-green-500/30 group-hover:text-green-300 transition-all duration-300">
+                          <CheckCircle2 className="mr-1 h-3 w-3 group-hover:rotate-12 transition-transform duration-300" />
+                          Verified
+                        </Badge>
+                        <Badge variant="secondary" className="bg-blue-500/20 text-blue-400 group-hover:bg-blue-500/30 group-hover:text-blue-300 transition-all duration-300 animate-bounce-in">
+                          +{task.points} XP
+                        </Badge>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between group-hover:translate-x-1 transition-transform duration-300">
+                      <div className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">
+                        Status: <span className="text-green-300 group-hover:font-medium transition-all duration-300">{task.status}</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-blue-500/20 text-blue-400 hover:bg-blue-500/10 hover:border-blue-400/40 hover:text-blue-300 group-hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25"
+                          onClick={() => {
+                            triggerHaptic("light");
+                            setShareTaskData({
+                              type: "task",
+                              title: task.title,
+                              description: `Completed ${task.title} on Veri platform`,
+                              xpEarned: task.points,
+                              streakDay: userStreak,
+                              veriScore: Math.min(100, Math.floor(userXP / 10)),
+                              platform: task.platform
+                            });
+                            setShowShareModal(true);
+                          }}
+                        >
+                          <Share2 className="mr-1 h-3 w-3 group-hover:rotate-12 transition-transform duration-300" />
+                          Share
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-white/20 text-white hover:bg-green-500/10 hover:border-green-400/40 hover:text-green-400 group-hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25"
+                          onClick={() => window.open(task.verificationUrl, '_blank')}
+                        >
+                          View Submission
+                          <ExternalLink className="ml-1 h-3 w-3 group-hover:rotate-12 transition-transform duration-300" />
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    {/* Success indicator */}
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </TabsContent>
