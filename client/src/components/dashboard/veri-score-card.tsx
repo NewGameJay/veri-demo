@@ -36,8 +36,8 @@ export function VeriScoreCard() {
   const veriScore = useMemo(() => {
     if (!activeUser) return 0;
     
-    const baseScore = Math.min((activeUser.xpPoints || 0) / 10, 100);
-    const streakBonus = Math.min((activeUser.streak || 0) * 2, 20);
+    const baseScore = Math.min((activeUser?.xpPoints || 0) / 10, 100);
+    const streakBonus = Math.min((activeUser?.streak || 0) * 2, 20);
     const socialBonus = 10; // Base social connection bonus
     
     return Math.min(baseScore + streakBonus + socialBonus, 100);
@@ -217,9 +217,9 @@ export function VeriScoreCard() {
         {/* User Info */}
         <div className="text-center space-y-1">
           <h5 className="text-xl font-termina text-white">
-            {activeUser.firstName && activeUser.lastName 
+            {activeUser?.firstName && activeUser?.lastName 
               ? `${activeUser.firstName} ${activeUser.lastName}`
-              : activeUser.username}
+              : activeUser?.username || 'Creator'}
           </h5>
           <p className="text-green-400 font-inter text-sm">Creator & Influencer</p>
         </div>
