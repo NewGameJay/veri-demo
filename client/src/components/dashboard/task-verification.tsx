@@ -1963,7 +1963,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                   return (
                     <div 
                       key={task.id} 
-                      className="group rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in relative hover:shadow-2xl hover:-translate-y-1 transform-gpu hover:z-10 cursor-pointer"
+                      className="group rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in relative hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-1 transform-gpu hover:z-10 cursor-pointer"
                       style={{
                         animationDelay: `${task.id * 100}ms`,
                         transformOrigin: 'center center'
@@ -2016,7 +2016,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                                   }
                                 }}
                                 size="sm"
-                                className={`relative font-bold px-4 py-1.5 text-xs rounded-lg transition-all duration-300 group ${
+                                className={`relative font-bold px-4 py-1.5 text-xs rounded-lg transition-all duration-300 hover:scale-105 group ${
                                   selectedTask?.id === task.id
                                     ? "bg-gradient-to-r from-orange-500/80 to-red-500/80 border border-orange-400/60 text-white hover:from-orange-400 hover:to-red-400 hover:border-orange-300 hover:shadow-[0_0_15px_rgba(251,146,60,0.6),0_0_30px_rgba(251,146,60,0.3)]"
                                     : "bg-transparent border border-teal-400/40 text-teal-300 hover:text-white hover:border-teal-300 hover:shadow-[0_0_15px_rgba(20,184,166,0.6),0_0_30px_rgba(20,184,166,0.3)] hover:animate-pulse"
