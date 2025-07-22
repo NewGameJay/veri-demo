@@ -4,6 +4,7 @@ import { VeriLogo } from "@/components/ui/veri-logo";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/auth-context";
 import { useCounter } from "@/hooks/use-counter";
+import { useVeriScoreCalculator } from "@/hooks/use-veriscore-calculator";
 
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Star } from 'lucide-react';
@@ -32,29 +33,24 @@ export function VeriScoreCard() {
 
   const activeUser = currentUser || user;
 
-  // Calculate VeriScore based on user activity with memoization
-  const veriScore = useMemo(() => {
-    if (!activeUser) return 0;
-    
-    const baseScore = Math.min((activeUser.xpPoints || 0) / 10, 100);
-    const streakBonus = Math.min((activeUser.streak || 0) * 2, 20);
-    const socialBonus = 10; // Base social connection bonus
-    
-    return Math.min(baseScore + streakBonus + socialBonus, 100);
-  }, [activeUser?.xpPoints, activeUser?.streak]);
+  // Use the new VeriScore calculator that includes social connections
+  const { veriScore: calculatedVeriScore, connectedPlatformsCount } = useVeriScoreCalculator();
+  
+  // Use calculated VeriScore instead of simple calculation
+  const veriScore = calculatedVeriScore.score;
   
   // Use useEffect to handle score changes properly
   useEffect(() => {
     if (isFirstMount.current && veriScore > 0) {
       setPreviousScore(veriScore);
-      setPreviousXP(activeUser?.xpPoints || 0);
+      setPreviousXP((activeUser as any)?.xpPoints || 0);
       isFirstMount.current = false;
       return; // Don't trigger animations on first mount
     }
     
     // Only trigger animations if we're not on first mount and values actually increased
-    if (!isFirstMount.current && activeUser?.xpPoints !== undefined) {
-      const currentXP = activeUser.xpPoints;
+    if (!isFirstMount.current && (activeUser as any)?.xpPoints !== undefined) {
+      const currentXP = (activeUser as any).xpPoints;
       const prevXP = previousXP || 0;
       
       // Only animate if XP actually increased (not just different)
@@ -72,7 +68,7 @@ export function VeriScoreCard() {
       // Don't update previousScore immediately - let the animation complete first
       // setPreviousScore will be called in onComplete
     }
-  }, [veriScore, activeUser?.xpPoints]);
+  }, [veriScore, (activeUser as any)?.xpPoints]);
   
   // Use the proper start value for animation
   const animationStart = previousScore === null ? veriScore : previousScore;
@@ -95,7 +91,7 @@ export function VeriScoreCard() {
     }
   });
 
-  const currentXP = activeUser?.xpPoints || 0;
+  const currentXP = (activeUser as any)?.xpPoints || 0;
   const xpAnimationStart = previousXP === null ? currentXP : previousXP;
   
   const animatedXP = useCounter({ 
@@ -109,7 +105,7 @@ export function VeriScoreCard() {
   });
 
   const nextLevelThreshold = Math.ceil(veriScore / 25) * 25;
-  const isAIUnlocked = (activeUser?.streak || 0) >= 10;
+  const isAIUnlocked = ((activeUser as any)?.streak || 0) >= 10;
 
   if (isLoading) {
     return <VeriScoreCardSkeleton />;
@@ -217,9 +213,9 @@ export function VeriScoreCard() {
         {/* User Info */}
         <div className="text-center space-y-1">
           <h5 className="text-xl font-termina text-white">
-            {activeUser.firstName && activeUser.lastName 
-              ? `${activeUser.firstName} ${activeUser.lastName}`
-              : activeUser.username}
+            {(activeUser as any).firstName && (activeUser as any).lastName 
+              ? `${(activeUser as any).firstName} ${(activeUser as any).lastName}`
+              : (activeUser as any).username}
           </h5>
           <p className="text-green-400 font-inter text-sm">Creator & Influencer</p>
         </div>

@@ -1671,7 +1671,9 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             // Clear requirements state for this task
             setShowRequirements(prev => {
               const updated = { ...prev };
-              delete updated[verifyingTaskId];
+              if (verifyingTaskId !== null) {
+                delete updated[verifyingTaskId];
+              }
               return updated;
             });
             
