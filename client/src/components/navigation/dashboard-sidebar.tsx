@@ -106,7 +106,12 @@ export function DashboardSidebar({
 
   return (
     <div
-      className="dashboard-sidebar fixed top-0 left-0 h-full glass-primary z-30 p-6 transition-all duration-300 w-80 translate-x-0 bg-[#00000070]"
+      className={cn(
+        "dashboard-sidebar fixed top-0 left-0 h-full glass-primary z-30 p-6 transition-all duration-300",
+        isCollapsed ? "w-20" : "w-80",
+        isOpen ? "translate-x-0" : "-translate-x-full",
+        className
+      )}
     >
       <div className="flex items-center justify-between mb-8">
         {!isCollapsed && <h2 className="text-xl font-termina text-white">Dashboard</h2>}
@@ -143,6 +148,9 @@ export function DashboardSidebar({
           )}
         </div>
       </div>
+
+
+
       <div className="space-y-6">
         {/* Enhanced Navigation with Animations */}
         <nav className="space-y-2" role="navigation" aria-label="Main navigation">
