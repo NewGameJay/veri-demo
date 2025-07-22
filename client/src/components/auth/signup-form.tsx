@@ -72,7 +72,7 @@ export function SignupForm({ onSwitchToLogin, onSuccess }: SignupFormProps) {
   };
 
   return (
-    <Card className="w-full max-w-md glass-effect border-white/20">
+    <Card className="rounded-lg border text-card-foreground shadow-sm transform-gpu w-full max-w-md glass-effect border-white/20 bg-[#0000008a]">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold text-white">Join Veri</CardTitle>
         <CardDescription className="text-white/60">
@@ -101,13 +101,8 @@ export function SignupForm({ onSwitchToLogin, onSuccess }: SignupFormProps) {
           </Button>
         </div>
         
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-white/20" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-gray-800 px-2 text-white/60">Or continue with email</span>
-          </div>
+        <div className="text-center">
+          <span className="text-xs uppercase text-white/60">Or continue with email</span>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

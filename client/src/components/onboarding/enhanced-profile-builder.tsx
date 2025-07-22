@@ -197,7 +197,7 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
       case 1:
         return formData.name.trim() !== '' && formData.interests.length > 0;
       case 2:
-        return formData.bio.trim() !== '';
+        return true; // Bio is optional - users can add it later
       case 3:
         return true;
       default:
@@ -409,17 +409,17 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
                   </Card>
 
                   <div>
-                    <Label htmlFor="bio">Bio</Label>
+                    <Label htmlFor="bio">Bio <span className="text-gray-400 font-normal">(Optional)</span></Label>
                     <Textarea
                       id="bio"
                       value={formData.bio}
                       onChange={(e) => updateFormData('bio', e.target.value)}
-                      placeholder="Tell people about yourself..."
+                      placeholder="Tell people about yourself... (You can also add this later in your profile)"
                       className="mt-1 min-h-[120px]"
                       rows={5}
                     />
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                      {formData.bio.length}/500 characters
+                      {formData.bio.length}/500 characters • You can complete this later in your profile
                     </p>
                   </div>
 
