@@ -12,40 +12,41 @@
 }
 
 :root {
-  --background: hsl(0, 0%, 100%);
-  --foreground: hsl(0, 0%, 0%);
-  --muted: hsl(0, 0%, 98%);
-  --muted-foreground: hsl(0, 0%, 25%);
-  --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(0, 0%, 0%);
-  --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(0, 0%, 0%);
-  --border: hsl(0, 0%, 90%);
-  --input: hsl(0, 0%, 100%);
+  /* Inverted Grayscale Light Mode - High Contrast */
+  --background: hsl(0, 0%, 8%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(0, 0%, 15%);
+  --muted-foreground: hsl(0, 0%, 65%);
+  --popover: hsl(0, 0%, 12%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(0, 0%, 10%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(0, 0%, 20%);
+  --input: hsl(0, 0%, 18%);
   --primary: hsl(158, 100%, 42%);
-  --primary-foreground: hsl(0, 0%, 100%);
-  --secondary: hsl(0, 0%, 96%);
-  --secondary-foreground: hsl(0, 0%, 0%);
-  --accent: hsl(0, 0%, 96%);
-  --accent-foreground: hsl(0, 0%, 0%);
+  --primary-foreground: hsl(0, 0%, 5%);
+  --secondary: hsl(0, 0%, 15%);
+  --secondary-foreground: hsl(0, 0%, 90%);
+  --accent: hsl(0, 0%, 18%);
+  --accent-foreground: hsl(0, 0%, 95%);
   --destructive: hsl(0, 84.2%, 60.2%);
-  --destructive-foreground: hsl(0, 0%, 100%);
-  --ring: hsl(0, 0%, 0%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(0, 0%, 85%);
   --radius: 0.5rem;
   
-  /* Veri Brand Colors */
+  /* Veri Brand Colors - Preserved across light/dark modes */
   --veri-primary-500: hsl(158, 100%, 42%);
   --veri-primary-400: hsl(158, 79%, 36%);
   --veri-primary-600: hsl(158, 100%, 39%);
   --veri-accent-violet-500: hsl(256, 100%, 67%);
   --veri-accent-violet-400: hsl(256, 100%, 72%);
   --veri-accent-violet-600: hsl(256, 100%, 62%);
-  --veri-neutral-800: hsl(231, 19%, 13%);
-  --veri-neutral-700: hsl(230, 14%, 19%);
-  --veri-neutral-100: hsl(222, 16%, 95%);
-  --veri-neutral-50: hsl(220, 20%, 98%);
-  --veri-surface-100: hsl(210, 11%, 96%);
-  --veri-surface-900: hsl(222, 24%, 8%);
+  --veri-neutral-800: hsl(0, 0%, 13%);
+  --veri-neutral-700: hsl(0, 0%, 19%);
+  --veri-neutral-100: hsl(0, 0%, 95%);
+  --veri-neutral-50: hsl(0, 0%, 98%);
+  --veri-surface-100: hsl(0, 0%, 96%);
+  --veri-surface-900: hsl(0, 0%, 8%);
 }
 
 .dark {
@@ -236,6 +237,46 @@
   p, span, div, input, button {
     @apply font-inter;
   }
+  
+  /* High Contrast Text Colors for Inverted Light Mode */
+  .text-high-contrast {
+    @apply text-white;
+  }
+  
+  .text-medium-contrast {
+    @apply text-gray-300;
+  }
+  
+  .text-low-contrast {
+    @apply text-gray-500;
+  }
+  
+  /* Preserve Veri Brand Colors in Both Modes */
+  .veri-text-primary {
+    color: var(--veri-primary-500) !important;
+  }
+  
+  .veri-bg-primary {
+    background-color: var(--veri-primary-500) !important;
+  }
+  
+  .veri-border-primary {
+    border-color: var(--veri-primary-500) !important;
+  }
+  
+  /* Veri Gradient - Preserved in Both Modes */
+  .veri-gradient {
+    background: linear-gradient(135deg, var(--veri-primary-500), var(--veri-primary-400)) !important;
+  }
+  
+  /* Force high contrast for critical text elements */
+  .force-white-text {
+    color: hsl(0, 0%, 98%) !important;
+  }
+  
+  .force-dark-bg {
+    background-color: hsl(0, 0%, 8%) !important;
+  }
 }
 
 @layer components {
@@ -245,91 +286,45 @@
   .glass-primary {
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform, opacity, background-color, box-shadow;
-  }
-  
-  /* Light mode glass primary */
-  :root .glass-primary {
-    @apply bg-white border border-gray-200 transform-gpu;
-    box-shadow: 
-      0 8px 32px 0 rgba(0, 0, 0, 0.08),
-      0 2px 16px 0 rgba(0, 0, 0, 0.04),
-      inset 0 1px 0 rgba(255, 255, 255, 1);
-  }
-  
-  /* Dark mode glass primary */
-  .dark .glass-primary {
     @apply bg-white/[0.1] border border-white/[0.2] transform-gpu;
     box-shadow: 
       0 8px 32px 0 rgba(0, 0, 0, 0.1),
       0 2px 16px 0 rgba(0, 0, 0, 0.06),
       inset 0 1px 0 rgba(255, 255, 255, 0.1),
       inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity, background-color, box-shadow;
   }
   
   /* Secondary Glass Effect - Cards & Content Areas */
   .glass-secondary {
     backdrop-filter: blur(15px) saturate(160%);
     -webkit-backdrop-filter: blur(15px) saturate(160%);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform, opacity, background-color, box-shadow;
-  }
-  
-  /* Light mode glass secondary */
-  :root .glass-secondary {
-    @apply bg-gray-50 border border-gray-100 transform-gpu;
-    box-shadow: 
-      0 4px 16px 0 rgba(0, 0, 0, 0.04),
-      0 1px 8px 0 rgba(0, 0, 0, 0.02);
-  }
-  
-  /* Dark mode glass secondary */
-  .dark .glass-secondary {
     @apply bg-white/[0.05] border border-white/[0.1] transform-gpu;
     box-shadow: 
       0 4px 16px 0 rgba(0, 0, 0, 0.05),
       0 1px 8px 0 rgba(0, 0, 0, 0.03),
       inset 0 1px 0 rgba(255, 255, 255, 0.05),
       inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity, background-color, box-shadow;
   }
   
   /* Interactive Glass Effect - Buttons & Hover States */
   .glass-interactive {
     backdrop-filter: blur(25px) saturate(200%);
     -webkit-backdrop-filter: blur(25px) saturate(200%);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform, opacity, background-color, box-shadow;
-  }
-  
-  /* Light mode glass interactive */
-  :root .glass-interactive {
-    @apply bg-gray-100 border border-gray-200 transform-gpu;
-    box-shadow: 
-      0 12px 40px 0 rgba(0, 0, 0, 0.06),
-      0 4px 20px 0 rgba(0, 0, 0, 0.04);
-  }
-  
-  /* Dark mode glass interactive */
-  .dark .glass-interactive {
     @apply bg-white/[0.15] border border-white/[0.3] transform-gpu;
     box-shadow: 
       0 12px 40px 0 rgba(0, 0, 0, 0.12),
       0 4px 20px 0 rgba(0, 0, 0, 0.08),
       inset 0 1px 0 rgba(255, 255, 255, 0.15),
       inset 0 -1px 0 rgba(0, 0, 0, 0.04);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity, background-color, box-shadow;
   }
   
-  /* Light mode interactive hover */
-  :root .glass-interactive:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-      0 16px 48px 0 rgba(0, 0, 0, 0.08),
-      0 6px 24px 0 rgba(0, 0, 0, 0.06);
-  }
-  
-  /* Dark mode interactive hover */
-  .dark .glass-interactive:hover {
+  .glass-interactive:hover {
     transform: translateY(-2px);
     box-shadow: 
       0 16px 48px 0 rgba(0, 0, 0, 0.15),
@@ -347,32 +342,6 @@
   
   .glass-strong {
     @apply glass-interactive;
-  }
-  
-  /* Light mode legacy variants */
-  :root .glass-subtle {
-    @apply bg-gray-50 border border-gray-100;
-  }
-  
-  :root .glass-medium {
-    @apply bg-white border border-gray-200;
-  }
-  
-  :root .glass-strong {
-    @apply bg-gray-100 border border-gray-200;
-  }
-  
-  /* Dark mode legacy variants */
-  .dark .glass-subtle {
-    @apply bg-white/[0.05] border border-white/[0.1];
-  }
-  
-  .dark .glass-medium {
-    @apply bg-white/[0.1] border border-white/[0.2];
-  }
-  
-  .dark .glass-strong {
-    @apply bg-white/[0.15] border border-white/[0.3];
   }
   
   /* Enhanced Focus States for Accessibility & Form Interactions */
