@@ -12,41 +12,40 @@
 }
 
 :root {
-  /* Inverted Grayscale Light Mode - High Contrast */
-  --background: hsl(0, 0%, 8%);
-  --foreground: hsl(0, 0%, 98%);
-  --muted: hsl(0, 0%, 15%);
-  --muted-foreground: hsl(0, 0%, 65%);
-  --popover: hsl(0, 0%, 12%);
-  --popover-foreground: hsl(0, 0%, 98%);
-  --card: hsl(0, 0%, 10%);
-  --card-foreground: hsl(0, 0%, 98%);
-  --border: hsl(0, 0%, 20%);
-  --input: hsl(0, 0%, 18%);
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
   --primary: hsl(158, 100%, 42%);
-  --primary-foreground: hsl(0, 0%, 5%);
-  --secondary: hsl(0, 0%, 15%);
-  --secondary-foreground: hsl(0, 0%, 90%);
-  --accent: hsl(0, 0%, 18%);
-  --accent-foreground: hsl(0, 0%, 95%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
   --destructive: hsl(0, 84.2%, 60.2%);
-  --destructive-foreground: hsl(0, 0%, 98%);
-  --ring: hsl(0, 0%, 85%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
   --radius: 0.5rem;
   
-  /* Veri Brand Colors - Preserved across light/dark modes */
+  /* Veri Brand Colors */
   --veri-primary-500: hsl(158, 100%, 42%);
   --veri-primary-400: hsl(158, 79%, 36%);
   --veri-primary-600: hsl(158, 100%, 39%);
   --veri-accent-violet-500: hsl(256, 100%, 67%);
   --veri-accent-violet-400: hsl(256, 100%, 72%);
   --veri-accent-violet-600: hsl(256, 100%, 62%);
-  --veri-neutral-800: hsl(0, 0%, 13%);
-  --veri-neutral-700: hsl(0, 0%, 19%);
-  --veri-neutral-100: hsl(0, 0%, 95%);
-  --veri-neutral-50: hsl(0, 0%, 98%);
-  --veri-surface-100: hsl(0, 0%, 96%);
-  --veri-surface-900: hsl(0, 0%, 8%);
+  --veri-neutral-800: hsl(231, 19%, 13%);
+  --veri-neutral-700: hsl(230, 14%, 19%);
+  --veri-neutral-100: hsl(222, 16%, 95%);
+  --veri-neutral-50: hsl(220, 20%, 98%);
+  --veri-surface-100: hsl(210, 11%, 96%);
+  --veri-surface-900: hsl(222, 24%, 8%);
 }
 
 .dark {
@@ -236,46 +235,6 @@
   
   p, span, div, input, button {
     @apply font-inter;
-  }
-  
-  /* High Contrast Text Colors for Inverted Light Mode */
-  .text-high-contrast {
-    @apply text-white;
-  }
-  
-  .text-medium-contrast {
-    @apply text-gray-300;
-  }
-  
-  .text-low-contrast {
-    @apply text-gray-500;
-  }
-  
-  /* Preserve Veri Brand Colors in Both Modes */
-  .veri-text-primary {
-    color: var(--veri-primary-500) !important;
-  }
-  
-  .veri-bg-primary {
-    background-color: var(--veri-primary-500) !important;
-  }
-  
-  .veri-border-primary {
-    border-color: var(--veri-primary-500) !important;
-  }
-  
-  /* Veri Gradient - Preserved in Both Modes */
-  .veri-gradient {
-    background: linear-gradient(135deg, var(--veri-primary-500), var(--veri-primary-400)) !important;
-  }
-  
-  /* Force high contrast for critical text elements */
-  .force-white-text {
-    color: hsl(0, 0%, 98%) !important;
-  }
-  
-  .force-dark-bg {
-    background-color: hsl(0, 0%, 8%) !important;
   }
 }
 
