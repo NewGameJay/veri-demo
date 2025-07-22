@@ -88,7 +88,7 @@ export default function Dashboard() {
   const isMemorizzUnlocked = userStreak >= 10;
 
   return (
-    <div className="min-h-screen bg-gray-900 hero-gradient pb-12 relative">
+    <div className="min-h-screen bg-background animated-gradient pb-12 relative">
       {/* Enhanced background pattern for glass showcase */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-emerald-500/30 to-blue-500/30 rounded-full blur-xl"></div>
@@ -116,9 +116,9 @@ export default function Dashboard() {
               {/* Welcome Text */}
               <div>
                 <h1 className="text-3xl font-termina mb-2 tracking-tight">
-                  🚀 <span className="bg-gradient-to-r from-white via-emerald-300 to-white bg-clip-text text-transparent animate-gradient-shift font-semibold">Welcome back, {user.firstName || user.username}!</span>
+                  🚀 <span className="bg-gradient-to-r from-foreground via-emerald-500 to-foreground bg-clip-text text-transparent animate-gradient-shift font-semibold">Welcome back, {user.firstName || user.username}!</span>
                 </h1>
-                <p className="text-white/60 font-inter leading-relaxed">
+                <p className="text-foreground/60 font-inter leading-relaxed">
                   Here's your creator dashboard with all your progress and opportunities.
                 </p>
               </div>
@@ -131,7 +131,7 @@ export default function Dashboard() {
                       <span className="text-lg font-termina text-white">{userStreak}</span>
                     </div>
                     <div>
-                      <div className="text-white font-termina text-sm">
+                      <div className="text-foreground font-termina text-sm">
                         {userStreak} Day Streak 🔥
                       </div>
                       <div className="text-emerald-400 font-inter text-xs">
@@ -154,29 +154,29 @@ export default function Dashboard() {
                 : 'glass-primary rounded-lg mb-6 p-1 pl-[0px] pr-[0px] pt-[0px] pb-[0px] transform scale-100 translate-y-0'
             }`}>
               <TabsList className="grid w-full grid-cols-5 bg-transparent border-0 transition-all duration-500 ease-in-out">
-                <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">Quests</TabsTrigger>
-                <TabsTrigger value="campaigns" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">
+                <TabsTrigger value="tasks" className="text-foreground data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">Quests</TabsTrigger>
+                <TabsTrigger value="campaigns" className="text-foreground data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">
                   Campaigns
                 </TabsTrigger>
-                <TabsTrigger value="profile" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">
+                <TabsTrigger value="profile" className="text-foreground data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">
                   Profile
                 </TabsTrigger>
                 <TabsTrigger 
                   value="ai-agent" 
-                  className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out relative group data-[state=active]:transform data-[state=active]:translateY(-1px)"
+                  className="text-foreground data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out relative group data-[state=active]:transform data-[state=active]:translateY(-1px)"
                   disabled={!isMemorizzUnlocked}
                   title={!isMemorizzUnlocked ? "Complete 10 Day Task Streak to Unlock your Veri AI Agent" : ""}
                 >
                   AI Agent {!isMemorizzUnlocked && "🔒"}
                   {!isMemorizzUnlocked && (
-                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 px-4 py-3 glass-effect bg-black/95 backdrop-blur-xl text-white text-sm rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap z-50 border border-emerald-400/30 shadow-xl shadow-emerald-500/20">
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 px-4 py-3 glass-effect bg-popover backdrop-blur-xl text-popover-foreground text-sm rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap z-50 border border-emerald-400/30 shadow-xl shadow-emerald-500/20">
                       <div className="text-emerald-400 font-medium mb-1">🔒 AI Agent Locked</div>
-                      <div className="text-white/90">Complete 10 Day Task Streak to Unlock your Veri AI Agent Studio</div>
-                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-3 h-3 bg-black/95 rotate-45 border-r border-b border-emerald-400/30 -mt-1.5"></div>
+                      <div className="text-popover-foreground/90">Complete 10 Day Task Streak to Unlock your Veri AI Agent Studio</div>
+                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-3 h-3 bg-popover rotate-45 border-r border-b border-emerald-400/30 -mt-1.5"></div>
                     </div>
                   )}
                 </TabsTrigger>
-                <TabsTrigger value="analytics" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">
+                <TabsTrigger value="analytics" className="text-foreground data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">
                   Analytics
                 </TabsTrigger>
               </TabsList>

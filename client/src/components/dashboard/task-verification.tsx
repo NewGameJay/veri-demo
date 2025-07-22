@@ -1740,12 +1740,12 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   };
 
   return (
-    <Card className="glass-medium border-white/20">
+    <Card className="glass-medium border-border">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Target className="h-5 w-5 text-green-400" />
-            <CardTitle className="text-white">Partner Quests</CardTitle>
+            <CardTitle className="text-foreground">Partner Quests</CardTitle>
           </div>
           <div className="flex items-center space-x-3">
             <Badge variant="secondary" className="bg-purple-500/20 text-purple-400">
@@ -1763,7 +1763,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
               }}
               size="sm"
               variant="ghost"
-              className="text-white/70 hover:text-white hover:bg-white/10 p-2 h-8 w-8"
+              className="text-foreground/70 hover:text-foreground hover:bg-accent p-2 h-8 w-8"
               title={isGridExpanded ? "Exit fullscreen view" : "Expand to fullscreen view"}
             >
               {isGridExpanded ? (
@@ -1774,20 +1774,20 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             </Button>
           </div>
         </div>
-        <CardDescription className="text-white/60 space-y-3">
+        <CardDescription className="text-foreground/60 space-y-3">
           <div>Complete tasks to earn XP points and build your creator streak</div>
           
           {/* Streak Progress Bar */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-white/70">Daily Streak Progress</span>
+              <span className="text-foreground/70">Daily Streak Progress</span>
               <span className="text-orange-400 font-medium">{userStreak}/30 days</span>
             </div>
             <Progress 
               value={(userStreak / 30) * 100} 
-              className="h-2 bg-white/10"
+              className="h-2 bg-accent/20"
             />
-            <div className="flex justify-between text-xs text-white/50">
+            <div className="flex justify-between text-xs text-foreground/50">
               <span>Start</span>
               <span>Monthly Goal</span>
             </div>
@@ -1798,7 +1798,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
 
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3 bg-white/5">
+          <TabsList className="grid w-full grid-cols-3 bg-accent/20">
             <TabsTrigger value="available">Available ({availableTasksFiltered.length})</TabsTrigger>
             <TabsTrigger value="active">Active ({selectedTask ? 1 : 0})</TabsTrigger>
             <TabsTrigger value="completed">Completed ({completedTasks.length})</TabsTrigger>
@@ -1811,7 +1811,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                 onClick={() => setFiltersExpanded(!filtersExpanded)}
                 variant="outline"
                 size="sm"
-                className="glass-subtle border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 mb-3"
+                className="glass-subtle border-border text-foreground hover:bg-accent hover:border-border/60 transition-all duration-300 mb-3"
               >
                 <Filter className="h-4 w-4 mr-2" />
                 Filters
@@ -2148,10 +2148,10 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="overflow-hidden border-t border-white/10"
+                        className="overflow-hidden border-t border-border/50"
                       >
-                        <div className="p-4 bg-white/5 space-y-3">
-                          <h4 className="text-sm font-medium text-white flex items-center">
+                        <div className="p-4 bg-accent/5 space-y-3">
+                          <h4 className="text-sm font-medium text-foreground flex items-center">
                             <CheckCircle2 className="h-4 w-4 mr-2 text-emerald-400" />
                             Task Requirements
                           </h4>
@@ -2212,8 +2212,8 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                           <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </div>
                         <div className="group-hover:translate-x-1 transition-transform duration-300">
-                          <h3 className="font-medium text-white group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
-                          <p className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">
+                          <h3 className="font-medium text-foreground group-hover:text-green-300 transition-colors duration-300">{task.title}</h3>
+                          <p className="text-sm text-foreground/70 group-hover:text-foreground/90 transition-colors duration-300">
                             Completed {task.completedAt ? new Date(task.completedAt).toLocaleDateString() : 'Recently'}
                           </p>
                         </div>
@@ -2230,7 +2230,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                     </div>
                     
                     <div className="flex items-center justify-between group-hover:translate-x-1 transition-transform duration-300">
-                      <div className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300">
+                      <div className="text-sm text-foreground/70 group-hover:text-foreground/90 transition-colors duration-300">
                         Status: <span className="text-green-300 group-hover:font-medium transition-all duration-300">{task.status}</span>
                       </div>
                       <div className="flex gap-2">
@@ -2287,27 +2287,27 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
       )}
       {/* Verification Modal */}
       <Dialog open={showVerificationModal} onOpenChange={setShowVerificationModal}>
-        <DialogContent className="glass-primary border-white/20 max-w-md">
+        <DialogContent className="glass-primary border-border max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-white flex items-center space-x-2">
+            <DialogTitle className="text-foreground flex items-center space-x-2">
               <CheckCircle2 className="h-5 w-5 text-emerald-400" />
               <span>Verify Task Completion</span>
             </DialogTitle>
-            <DialogDescription className="text-white/70">
+            <DialogDescription className="text-foreground/70">
               Submit proof of your completed task for verification and XP rewards.
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4">
             <div>
-              <Label className="text-white text-sm">Verification URL</Label>
+              <Label className="text-foreground text-sm">Verification URL</Label>
               <Input
                 placeholder="Paste the URL of your completed task (e.g., Tweet URL, Instagram post URL)"
                 value={verificationUrl}
                 onChange={(e) => setVerificationUrl(e.target.value)}
-                className="mt-1 glass-effect border-white/20 bg-white/10 text-white placeholder-white/40"
+                className="mt-1 glass-effect border-border bg-background/50 text-foreground placeholder-foreground/40"
               />
-              <p className="text-xs text-white/50 mt-1">
+              <p className="text-xs text-foreground/50 mt-1">
                 Provide a link to prove you completed the task
               </p>
             </div>
@@ -2337,7 +2337,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
               <Button
                 onClick={() => setShowVerificationModal(false)}
                 variant="outline"
-                className="border-white/20 text-white hover:bg-white/10"
+                className="border-border text-foreground hover:bg-accent"
               >
                 Cancel
               </Button>

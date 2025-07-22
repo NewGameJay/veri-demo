@@ -515,8 +515,18 @@
   animation: conic-spin 4s linear infinite;
 }
 
-/* Static Background Gradient - Consistent with Ready to Transform Section */
+/* Static Background Gradient - Theme-aware */
 .animated-gradient {
+  background: linear-gradient(135deg, rgb(17, 24, 39) 0%, rgb(6, 12, 20) 40%, rgba(5, 46, 22, 0.8) 100%);
+}
+
+/* Light mode background gradient */
+:root .animated-gradient {
+  background: linear-gradient(135deg, rgb(248, 250, 252) 0%, rgb(241, 245, 249) 40%, rgba(226, 232, 240, 0.8) 100%);
+}
+
+/* Dark mode background gradient */
+.dark .animated-gradient {
   background: linear-gradient(135deg, rgb(17, 24, 39) 0%, rgb(6, 12, 20) 40%, rgba(5, 46, 22, 0.8) 100%);
 }
 
