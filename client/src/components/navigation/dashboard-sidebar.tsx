@@ -169,7 +169,7 @@ export function DashboardSidebar({
                   "focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2",
                   // Active/selected state - should be applied last to override hover
                   (location === item.path || activeItem === item.id) ? 
-                    "bg-gray-900/95 text-white shadow-lg shadow-emerald-500/50 transform translateY(-1px) hover:bg-gray-900/95 hover:text-white border-emerald-500/30" :
+                    "bg-gray-900/95 text-white border-emerald-400/60 shadow-2xl shadow-emerald-400/40 ring-1 ring-emerald-400/50 scale-[1.02] transform translateY(-1px) hover:bg-gray-900/95 hover:text-white" :
                     "hover:bg-gray-900/95 hover:text-white hover:border-emerald-400/60 hover:shadow-2xl hover:shadow-emerald-400/40 hover:scale-[1.02] hover:ring-1 hover:ring-emerald-400/50"
                 )}
                 title={isCollapsed ? `${item.label} (Alt+${index + 1})` : `Alt+${index + 1}`}
