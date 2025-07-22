@@ -209,47 +209,7 @@ export function DashboardSidebar({
           </Button>
         </div>
 
-        {/* Enhanced Leaderboard Preview - hidden when collapsed */}
-        {!isCollapsed && (
-          <div className="glass-secondary rounded-xl p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 veri-gradient rounded-lg flex items-center justify-center">
-                <Trophy className="w-4 h-4 text-white" />
-              </div>
-              <h3 className="text-lg font-termina text-white">Leaderboard</h3>
-            </div>
-            <div className="text-sm text-green-400 font-inter mb-2">Top VeriScore Rankings</div>
-            
-            {/* Sample leaderboard entries with animations */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center text-xs font-bold text-black">1</div>
-                  <span className="text-white font-inter text-sm">Alex Chen</span>
-                </div>
-                <span className="text-green-400 text-sm font-medium">2,847</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-xs font-bold text-white">2</div>
-                  <span className="text-white font-inter text-sm">You</span>
-                </div>
-                <span className="text-green-400 text-sm font-medium pulse-glow">75</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-xs font-bold text-white">3</div>
-                  <span className="text-white font-inter text-sm">Maya Patel</span>
-                </div>
-                <span className="text-green-400 text-sm font-medium">2,156</span>
-              </div>
-            </div>
-
-            <Button className="w-full mt-4 veri-gradient hover:scale-105 transition-all duration-300 font-inter">
-              View Full Leaderboard
-            </Button>
-          </div>
-        )}
+        
       </div>
     </div>
   );
