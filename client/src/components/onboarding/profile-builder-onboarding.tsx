@@ -20,8 +20,6 @@ import { useAuth } from "@/contexts/auth-context";
 import { motion } from "framer-motion";
 import { triggerHaptic } from "@/lib/haptic";
 import { EnhancedProfileBuilder } from "./enhanced-profile-builder";
-import { useVeriScoreCalculator } from "@/hooks/use-veriscore-calculator";
-import { useQuery } from "@tanstack/react-query";
 
 interface ProfileBuilderOnboardingProps {
   onComplete: () => void;
@@ -30,14 +28,8 @@ interface ProfileBuilderOnboardingProps {
 
 export function ProfileBuilderOnboarding({ onComplete, onStartProfileBuilder }: ProfileBuilderOnboardingProps) {
   const { user } = useAuth();
+  const [connectedPlatforms, setConnectedPlatforms] = useState<string[]>([]);
   const [showEnhancedBuilder, setShowEnhancedBuilder] = useState(false);
-  const { veriScore, connectedPlatformsCount, totalPlatforms } = useVeriScoreCalculator();
-
-  // Fetch actual social connections
-  const { data: socialConnections = [] } = useQuery({
-    queryKey: [`/api/social-connections/${user?.id}`],
-    enabled: !!user?.id,
-  });
   
   const socialPlatforms = [
     {
@@ -47,7 +39,7 @@ export function ProfileBuilderOnboarding({ onComplete, onStartProfileBuilder }: 
       color: 'bg-black',
       textColor: 'text-white',
       points: 500,
-      connected: (socialConnections as any[]).some((conn: any) => conn.platform === 'twitter' && conn.isConnected)
+      connected: connectedPlatforms.includes('twitter')
     },
     {
       id: 'youtube',
@@ -56,7 +48,7 @@ export function ProfileBuilderOnboarding({ onComplete, onStartProfileBuilder }: 
       color: 'bg-red-500',
       textColor: 'text-white',
       points: 500,
-      connected: (socialConnections as any[]).some((conn: any) => conn.platform === 'youtube' && conn.isConnected)
+      connected: connectedPlatforms.includes('youtube')
     },
     {
       id: 'instagram',
@@ -65,7 +57,7 @@ export function ProfileBuilderOnboarding({ onComplete, onStartProfileBuilder }: 
       color: 'bg-gradient-to-r from-purple-500 to-pink-500',
       textColor: 'text-white',
       points: 500,
-      connected: (socialConnections as any[]).some((conn: any) => conn.platform === 'instagram' && conn.isConnected)
+      connected: false
     },
     {
       id: 'linkedin',
@@ -74,19 +66,13 @@ export function ProfileBuilderOnboarding({ onComplete, onStartProfileBuilder }: 
       color: 'bg-blue-600',
       textColor: 'text-white',
       points: 300,
-      connected: (socialConnections as any[]).some((conn: any) => conn.platform === 'linkedin' && conn.isConnected)
+      connected: false
     }
   ];
 
   const handleSocialConnect = (platformId: string) => {
     triggerHaptic("success");
-    // This would normally redirect to OAuth flow
-    // For now, we'll show a coming soon message for non-Twitter platforms
-    if (platformId === 'twitter') {
-      window.open('/api/auth/twitter', '_blank');
-    } else {
-      alert(`${platformId.charAt(0).toUpperCase() + platformId.slice(1)} integration coming soon!`);
-    }
+    setConnectedPlatforms(prev => [...prev, platformId]);
   };
 
   const handleBuildProfile = () => {
@@ -99,8 +85,8 @@ export function ProfileBuilderOnboarding({ onComplete, onStartProfileBuilder }: 
     // Show "Complete profile to unlock" message
   };
 
-  const profileProgress = Math.round((connectedPlatformsCount / 4) * 100);
-  const hasMinimumConnection = connectedPlatformsCount >= 1;
+  const profileProgress = Math.round((connectedPlatforms.length / 4) * 100);
+  const hasMinimumConnection = connectedPlatforms.length >= 1;
 
   // Show enhanced profile builder when requested
   if (showEnhancedBuilder) {
@@ -147,7 +133,7 @@ export function ProfileBuilderOnboarding({ onComplete, onStartProfileBuilder }: 
               </div>
               <Progress value={profileProgress} className="h-2 mb-2" />
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                {connectedPlatformsCount} of 4 platforms connected
+                {connectedPlatforms.length} of 4 platforms connected
               </p>
             </div>
           </motion.div>
@@ -274,57 +260,15 @@ export function ProfileBuilderOnboarding({ onComplete, onStartProfileBuilder }: 
                   <Shield className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">VeriScore</h3>
-                <motion.div 
-                  key={veriScore.score}
-                  initial={{ scale: 1.2, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                  className={`text-4xl font-bold mb-2 ${
-                    veriScore.score > 0 
-                      ? 'text-emerald-500 dark:text-emerald-400' 
-                      : 'text-gray-400 dark:text-gray-500'
-                  }`}
-                >
-                  {veriScore.score > 0 ? veriScore.score : '--'}
-                </motion.div>
-                <div className="flex items-center justify-center gap-2 mb-4">
-                  <Badge 
-                    variant={veriScore.score > 0 ? "default" : "secondary"}
-                    className={veriScore.score > 0 ? "bg-emerald-500/20 text-emerald-600 border-emerald-500/30" : ""}
-                  >
-                    {veriScore.tier}
-                  </Badge>
-                  {veriScore.change && veriScore.change > 0 && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center text-emerald-500 text-sm"
-                    >
-                      <TrendingUp className="w-4 h-4 mr-1" />
-                      +{veriScore.change}
-                    </motion.div>
-                  )}
-                </div>
+                <div className="text-4xl font-bold text-gray-400 dark:text-gray-500 mb-2">--</div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
-                  {connectedPlatformsCount > 0 
-                    ? `${connectedPlatformsCount}/${totalPlatforms} platforms connected`
-                    : 'Connect platforms to calculate your VeriScore'
-                  }
+                  Connect platforms to calculate your VeriScore
                 </p>
                 <div className="space-y-2">
                   <div className="text-sm font-medium text-gray-700 dark:text-gray-300">VeriPoints</div>
-                  <div className={`text-2xl font-bold ${
-                    user?.xpPoints && user.xpPoints > 0 
-                      ? 'text-emerald-500 dark:text-emerald-400' 
-                      : 'text-gray-400 dark:text-gray-500'
-                  }`}>
-                    {user?.xpPoints ? `${user.xpPoints} XP` : '0 XP'}
-                  </div>
+                  <div className="text-2xl font-bold text-gray-400 dark:text-gray-500">0 XP</div>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {user?.xpPoints && user.xpPoints > 0 
-                      ? 'Keep engaging to earn more XP' 
-                      : 'Start earning by connecting platforms'
-                    }
+                    Start earning by connecting platforms
                   </p>
                 </div>
               </CardContent>
