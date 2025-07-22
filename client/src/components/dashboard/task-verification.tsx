@@ -2049,9 +2049,9 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           
           <TabsContent value="active" className="space-y-3">
             {selectedTask ? (
-              <>
-                {/* Active Task Card */}
-                <div className="glass-subtle p-4 rounded-lg border border-white/10 h-20 flex items-center justify-between">
+              <div className="glass-subtle rounded-lg border border-white/10 overflow-hidden">
+                {/* Main Task Card */}
+                <div className="p-4 h-20 flex items-center justify-between">
                   <div className="flex items-center space-x-3 flex-1">
                     <div className="w-10 h-10 rounded-lg bg-gray-500/20 flex items-center justify-center">
                       <selectedTask.icon className={`h-5 w-5 ${selectedTask.color}`} />
@@ -2077,79 +2077,53 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                       <div className="text-emerald-400 font-medium">+{selectedTask.points} XP</div>
                     </div>
                   </div>
-                  <Button
-                    onClick={() => setShowVerificationModal(true)}
-                    className="veri-gradient px-6 h-10"
-                  >
-                    Verify Task
-                  </Button>
-                </div>
-
-                {/* Additional Active Tasks (Demo) */}
-                <div className="glass-subtle p-4 rounded-lg border border-white/10 h-20 flex items-center justify-between opacity-60">
-                  <div className="flex items-center space-x-3 flex-1">
-                    <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center">
-                      <Twitter className="h-5 w-5 text-orange-400" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-1">
-                        <h3 className="font-semibold text-white">Retweet Gaming Content</h3>
-                        <Badge variant="secondary" className="bg-orange-500/20 text-orange-400 text-xs">
-                          Hyve
-                        </Badge>
-                      </div>
-                      <div className="flex items-center space-x-3 text-sm text-white/70">
-                        <span>• 1 minute</span>
-                        <span>• Twitter</span>
-                        <Badge variant="secondary" className="bg-green-500/20 text-green-400 text-xs">
-                          Easy
-                        </Badge>
-                      </div>
-                    </div>
-                    <div className="text-right mr-4">
-                      <div className="text-emerald-400 font-medium">+10 XP</div>
-                    </div>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      onClick={() => setShowRequirements(!showRequirements)}
+                      variant="ghost"
+                      size="sm"
+                      className="text-white/70 hover:text-white hover:bg-white/5 px-3"
+                    >
+                      Requirements ({selectedTask.requirements.length})
+                      {showRequirements ? (
+                        <ChevronUp className="ml-1 h-4 w-4" />
+                      ) : (
+                        <ChevronDown className="ml-1 h-4 w-4" />
+                      )}
+                    </Button>
+                    <Button
+                      onClick={() => setShowVerificationModal(true)}
+                      className="veri-gradient px-6 h-10"
+                    >
+                      Verify Task
+                    </Button>
                   </div>
-                  <Button
-                    onClick={() => setShowVerificationModal(true)}
-                    className="veri-gradient px-6 h-10"
-                  >
-                    Verify Task
-                  </Button>
                 </div>
-
-                <div className="glass-subtle p-4 rounded-lg border border-white/10 h-20 flex items-center justify-between opacity-60">
-                  <div className="flex items-center space-x-3 flex-1">
-                    <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                      <Instagram className="h-5 w-5 text-purple-400" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-1">
-                        <h3 className="font-semibold text-white">Share Blog Post to IG Stories</h3>
-                        <Badge variant="secondary" className="bg-blue-500/20 text-blue-400 text-xs">
-                          Luster Labs
-                        </Badge>
-                      </div>
-                      <div className="flex items-center space-x-3 text-sm text-white/70">
-                        <span>• 3-5 minutes</span>
-                        <span>• Instagram</span>
-                        <Badge variant="secondary" className="bg-green-500/20 text-green-400 text-xs">
-                          Easy
-                        </Badge>
-                      </div>
-                    </div>
-                    <div className="text-right mr-4">
-                      <div className="text-emerald-400 font-medium">+15 XP</div>
-                    </div>
-                  </div>
-                  <Button
-                    onClick={() => setShowVerificationModal(true)}
-                    className="veri-gradient px-6 h-10"
+                
+                {/* Expandable Requirements */}
+                {showRequirements && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden border-t border-white/10"
                   >
-                    Verify Task
-                  </Button>
-                </div>
-              </>
+                    <div className="p-4 bg-white/5 space-y-3">
+                      <h4 className="text-sm font-medium text-white flex items-center">
+                        <CheckCircle2 className="h-4 w-4 mr-2 text-emerald-400" />
+                        Task Requirements
+                      </h4>
+                      {selectedTask.requirements.map((req: string, index: number) => (
+                        <div key={index} className="flex items-start space-x-3">
+                          <div className="w-2 h-2 rounded-full bg-emerald-400 mt-2 flex-shrink-0"></div>
+                          <span className="text-sm text-white/80 leading-relaxed">{req}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </div>
             ) : (
               <div className="text-center py-8">
                 <div className="w-16 h-16 rounded-full bg-gray-500/20 flex items-center justify-center mx-auto mb-4">
@@ -2278,6 +2252,9 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
               <CheckCircle2 className="h-5 w-5 text-emerald-400" />
               <span>Verify Task Completion</span>
             </DialogTitle>
+            <DialogDescription className="text-white/70">
+              Submit proof of your completed task for verification and XP rewards.
+            </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4">
