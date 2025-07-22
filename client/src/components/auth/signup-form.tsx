@@ -72,7 +72,7 @@ export function SignupForm({ onSwitchToLogin, onSuccess }: SignupFormProps) {
   };
 
   return (
-    <Card className="rounded-lg border text-card-foreground shadow-sm transform-gpu w-full max-w-md glass-effect border-white/20 bg-[#0f152463]">
+    <Card className="rounded-lg border text-card-foreground shadow-sm transform-gpu w-full max-w-md glass-effect border-white/20" style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)' }}>
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold text-white">Join Veri</CardTitle>
         <CardDescription className="text-white/60">
