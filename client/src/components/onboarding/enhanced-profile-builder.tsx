@@ -208,12 +208,13 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
   const progress = ((currentStep + 1) / steps.length) * 100;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center" style={{ padding: '15px' }}>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="w-full max-w-2xl bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden"
+        className="w-full max-w-2xl bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden max-h-full flex flex-col"
+        style={{ maxHeight: 'calc(100vh - 30px)' }}
       >
         {/* Header */}
         <div className="bg-gradient-to-r from-emerald-500 to-teal-600 p-6 text-white">
@@ -244,7 +245,7 @@ export function EnhancedProfileBuilder({ onComplete, onClose }: EnhancedProfileB
         </div>
 
         {/* Content */}
-        <div className="p-6 max-h-[600px] overflow-y-auto">
+        <div className="flex-1 p-6 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 280px)' }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}

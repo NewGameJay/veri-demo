@@ -100,7 +100,7 @@ export function ProfileBuilderOnboarding({ onComplete, onStartProfileBuilder }: 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-teal-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 overflow-y-auto">
-      <div className="max-w-7xl mx-auto px-4 lg:px-6 py-8 min-h-full">
+      <div className="max-w-7xl mx-auto px-4 lg:px-6 min-h-full" style={{ paddingTop: '15px', paddingBottom: '15px' }}>
         {/* Header with Progress Indicator */}
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8">
           {/* Welcome Header */}
