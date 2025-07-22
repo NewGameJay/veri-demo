@@ -173,7 +173,7 @@ export function VeriScoreCard() {
         </div>
 
         {/* Analytics Info Box */}
-        <div className="rounded-xl p-3 text-center bg-[#6a6c7a80]">
+        <div className="rounded-xl p-3 text-center bg-[#6a6c7a52]">
           <p className="text-sm text-white/70">Calculated Weekly Based on</p>
           <p className="text-sm text-green-400 font-medium">VeriScore Analytics™</p>
         </div>
