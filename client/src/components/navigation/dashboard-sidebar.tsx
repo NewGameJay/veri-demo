@@ -121,7 +121,7 @@ export function DashboardSidebar({
             variant="ghost"
             size="icon"
             onClick={onToggleCollapse}
-            className="p-2 glass-secondary hover:glass-interactive rounded-xl button-3d press-animation ripple-effect transition-all duration-300 touch-manipulation hover:shadow-xl hover:shadow-emerald-500/25 hover:scale-110"
+            className="p-2 glass-secondary hover:glass-interactive rounded-xl button-3d press-animation ripple-effect transition-all duration-300 touch-manipulation hover:shadow-xl hover:shadow-emerald-400/40 hover:scale-110 hover:ring-2 hover:ring-emerald-400/30 hover:border-emerald-400/60"
             title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             haptic="light"
@@ -138,7 +138,7 @@ export function DashboardSidebar({
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="p-2 glass-secondary hover:glass-interactive rounded-xl button-3d press-animation ripple-effect transition-all duration-300 touch-manipulation hover:shadow-xl hover:shadow-emerald-500/25 hover:scale-110"
+              className="p-2 glass-secondary hover:glass-interactive rounded-xl button-3d press-animation ripple-effect transition-all duration-300 touch-manipulation hover:shadow-xl hover:shadow-emerald-400/40 hover:scale-110 hover:ring-2 hover:ring-emerald-400/30 hover:border-emerald-400/60"
               title="Close sidebar"
               aria-label="Close sidebar"
               haptic="light"
@@ -170,7 +170,7 @@ export function DashboardSidebar({
                   // Active/selected state - should be applied last to override hover
                   (location === item.path || activeItem === item.id) ? 
                     "bg-gray-900/95 text-white shadow-lg shadow-emerald-500/50 transform translateY(-1px) hover:bg-gray-900/95 hover:text-white border-emerald-500/30" :
-                    "hover:bg-gray-900/95 hover:text-white hover:border-emerald-500/30 hover:shadow-2xl hover:shadow-emerald-500/30 hover:scale-[1.02]"
+                    "hover:bg-gray-900/95 hover:text-white hover:border-emerald-400/60 hover:shadow-2xl hover:shadow-emerald-400/40 hover:scale-[1.02] hover:ring-2 hover:ring-emerald-400/30"
                 )}
                 title={isCollapsed ? `${item.label} (Alt+${index + 1})` : `Alt+${index + 1}`}
                 aria-label={`Navigate to ${item.label}`}
@@ -195,7 +195,7 @@ export function DashboardSidebar({
             className={cn(
               "w-full p-3 glass-secondary rounded-xl font-inter text-red-400 hover:text-red-300 touch-manipulation relative",
               "button-3d depth-shadow press-animation ripple-effect",
-              "hover:glass-interactive hover:shadow-2xl hover:shadow-red-500/30 hover:scale-[1.02]",
+              "hover:glass-interactive hover:shadow-2xl hover:shadow-red-400/40 hover:scale-[1.02] hover:ring-2 hover:ring-red-400/30 hover:border-red-400/60",
               "transition-all duration-300 ease-out",
               isCollapsed ? "justify-center" : "justify-start gap-3",
               "focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2"
