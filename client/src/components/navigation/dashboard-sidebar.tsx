@@ -25,6 +25,8 @@ interface DashboardSidebarProps {
   onClose: () => void;
   onPin: () => void;
   onToggleCollapse: () => void;
+  activeTab?: string;
+  onTabChange?: (tab: string) => void;
   className?: string;
 }
 
@@ -35,6 +37,8 @@ export function DashboardSidebar({
   onClose, 
   onPin, 
   onToggleCollapse,
+  activeTab,
+  onTabChange,
   className 
 }: DashboardSidebarProps) {
   const [location, setLocation] = useLocation();
@@ -42,23 +46,29 @@ export function DashboardSidebar({
   const [activeItem, setActiveItem] = useState("dashboard");
 
   const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: Home, path: "/dashboard" },
-    { id: "profile", label: "Profile", icon: User, path: "/profile" },
-    { id: "analytics", label: "Analytics", icon: BarChart, path: "/analytics" },
+    { id: "tasks", label: "Dashboard", icon: Home, path: "/dashboard", tab: "tasks" },
+    { id: "profile", label: "Profile", icon: User, path: "/dashboard", tab: "profile" },
+    { id: "analytics", label: "Analytics", icon: BarChart, path: "/dashboard", tab: "analytics" },
     { id: "leaderboard", label: "Leaderboard", icon: Trophy, path: "/leaderboard" },
     { id: "campaigns", label: "Campaigns", icon: Target, path: "/campaigns" },
-    { id: "ai-agent", label: "AI Agent", icon: Bot, path: "/ai-agent" },
+    { id: "ai-agent", label: "AI Agent", icon: Bot, path: "/dashboard", tab: "ai-agent" },
     { id: "settings", label: "Settings", icon: Settings, path: "/settings" },
   ];
 
-  // Update active item based on current location
+  // Update active item based on current location and active tab
   useEffect(() => {
     const currentPath = location;
-    const activeMenuItem = menuItems.find(item => item.path === currentPath);
-    if (activeMenuItem) {
-      setActiveItem(activeMenuItem.id);
+    if (currentPath === "/dashboard" && activeTab) {
+      // For dashboard tabs, use the active tab
+      setActiveItem(activeTab);
+    } else {
+      // For other routes, use path-based matching
+      const activeMenuItem = menuItems.find(item => item.path === currentPath);
+      if (activeMenuItem) {
+        setActiveItem(activeMenuItem.id);
+      }
     }
-  }, [location]);
+  }, [location, activeTab]);
 
   // Keyboard navigation support
   useEffect(() => {
@@ -86,7 +96,15 @@ export function DashboardSidebar({
   const handleNavigation = (item: typeof menuItems[0]) => {
     triggerHaptic("light");
     setActiveItem(item.id);
-    setLocation(item.path);
+    
+    if (item.tab && onTabChange && location === "/dashboard") {
+      // For dashboard tabs, change tab instead of navigating
+      onTabChange(item.tab);
+    } else {
+      // For other routes, navigate normally
+      setLocation(item.path);
+    }
+    
     if (!isPinned) {
       onClose();
     }
