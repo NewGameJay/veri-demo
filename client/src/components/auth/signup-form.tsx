@@ -106,7 +106,7 @@ export function SignupForm({ onSwitchToLogin, onSuccess }: SignupFormProps) {
             <span className="w-full border-t border-white/20" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-gray-800 px-2 text-white/60">Or continue with email</span>
+            <span className="px-2 text-white/60 bg-[#1f293787]">Or continue with email</span>
           </div>
         </div>
 
