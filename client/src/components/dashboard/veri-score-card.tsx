@@ -204,7 +204,7 @@ export function VeriScoreCard() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-gray-700/50 rounded-xl p-4 text-center">
+          <div className="rounded-xl p-4 text-center bg-[#6a6c7a80]">
             <div className="text-xl font-termina text-white">8.7K</div>
             <div className="text-sm text-white/70">Total Followers</div>
           </div>
