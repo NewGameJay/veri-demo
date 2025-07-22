@@ -91,8 +91,13 @@ export function LoginForm({ onSwitchToSignup, onSuccess }: LoginFormProps) {
           </Button>
         </div>
         
-        <div className="text-center">
-          <span className="text-xs uppercase text-white/60">Or continue with email</span>
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-white/20" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-gray-800 px-2 text-white/60">Or continue with email</span>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
