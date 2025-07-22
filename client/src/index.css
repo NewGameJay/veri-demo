@@ -383,25 +383,29 @@
     will-change: transform, opacity, background-color, box-shadow;
   }
   
-  /* Light mode glass darker - 25% more opaque for better separation */
+  /* Light mode glass darker - Much more opaque for better separation */
   :root .glass-darker {
-    @apply bg-gray-300 border border-gray-500 transform-gpu;
-    background: rgba(229, 231, 235, 0.85);
+    @apply bg-gray-400 border border-gray-600 transform-gpu;
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     box-shadow: 
-      0 8px 32px 0 rgba(0, 0, 0, 0.12),
-      0 2px 16px 0 rgba(0, 0, 0, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      0 8px 32px 0 rgba(0, 0, 0, 0.15),
+      0 2px 16px 0 rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
   }
   
-  /* Dark mode glass darker - 25% more opaque for better separation */
+  /* Dark mode glass darker - Much more opaque for better separation */
   .dark .glass-darker {
-    @apply bg-white/[0.18] border border-white/[0.3] transform-gpu;
-    background: rgba(255, 255, 255, 0.18);
+    @apply bg-white/[0.25] border border-white/[0.4] transform-gpu;
+    background: rgba(0, 0, 0, 0.4) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     box-shadow: 
-      0 8px 32px 0 rgba(0, 0, 0, 0.2),
-      0 2px 16px 0 rgba(0, 0, 0, 0.12),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+      0 8px 32px 0 rgba(0, 0, 0, 0.3),
+      0 2px 16px 0 rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   }
   
   /* Enhanced Focus States for Accessibility & Form Interactions */
