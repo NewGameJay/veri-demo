@@ -183,7 +183,7 @@ export function SocialConnections() {
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
           </svg>
         </div>
-        <h3 className="text-lg font-termina text-white">Social Connections</h3>
+        <h3 className="text-lg font-termina text-foreground">Social Connections</h3>
       </div>
       
       <div className="space-y-4">
@@ -205,10 +205,10 @@ export function SocialConnections() {
                     <Icon className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-sm font-inter font-medium text-white">
+                    <div className="text-sm font-inter font-medium text-foreground">
                       {platform.charAt(0).toUpperCase() + platform.slice(1)}
                     </div>
-                    <div className="text-xs text-white/60 font-inter">
+                    <div className="text-xs text-foreground/60 font-inter">
                       {connection?.platformUsername ? `@${connection.platformUsername}` : 'Not connected'}
                     </div>
                   </div>
@@ -232,9 +232,9 @@ export function SocialConnections() {
               </div>
               
               {connection?.isConnected && (
-                <div className="mt-3 pt-3 border-t border-white/10">
+                <div className="mt-3 pt-3 border-t border-border">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-white/60 font-inter">Followers</span>
+                    <span className="text-foreground/60 font-inter">Followers</span>
                     <span className="text-green-400 font-medium">
                       {(connection.followerCount || 1250).toLocaleString()}
                     </span>
@@ -247,8 +247,8 @@ export function SocialConnections() {
         
         {!userData?.socialConnections?.length && (
           <div className="text-center py-8">
-            <div className="text-white/40 font-inter text-sm mb-2">No platforms connected yet</div>
-            <div className="text-white/60 font-inter text-xs">Connect your social media to start earning XP!</div>
+            <div className="text-foreground/40 font-inter text-sm mb-2">No platforms connected yet</div>
+            <div className="text-foreground/60 font-inter text-xs">Connect your social media to start earning XP!</div>
           </div>
         )}
       </div>
