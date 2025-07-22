@@ -1740,7 +1740,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   };
 
   return (
-    <Card className="glass-darker border-white/20">
+    <Card className="glass-medium border-white/20">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
