@@ -1811,7 +1811,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                 onClick={() => setFiltersExpanded(!filtersExpanded)}
                 variant="outline"
                 size="sm"
-                className="glass-interactive-dark border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 mb-3"
+                className="glass-subtle border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 mb-3"
               >
                 <Filter className="h-4 w-4 mr-2" />
                 Filters
@@ -1834,7 +1834,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="p-4 glass-interactive-dark rounded-lg border border-white/10"
+                  className="p-4 glass-subtle rounded-lg border border-white/10"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     {/* Filter Label and Tags */}
@@ -2050,7 +2050,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                   <Button
                     onClick={handleLoadMore}
                     variant="outline"
-                    className="glass-interactive-dark border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 hover-lift group px-6 py-3 font-medium"
+                    className="glass-subtle border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 hover-lift group px-6 py-3 font-medium"
                   >
                     View More Tasks ({availableTasksFiltered.length - tasksPerPage} remaining)
                     <ChevronDown className="ml-2 h-4 w-4 group-hover:translate-y-1 transition-transform duration-300" />
@@ -2070,7 +2070,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                   <Button
                     onClick={handleShowLess}
                     variant="outline"
-                    className="glass-interactive-dark border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 hover-lift group"
+                    className="glass-subtle border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 hover-lift group"
                   >
                     Show Less Tasks
                     <ChevronUp className="ml-2 h-4 w-4 group-hover:-translate-y-1 transition-transform duration-300" />
@@ -2168,7 +2168,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                 ))}
               </>
             ) : (
-              <div className="glass-interactive-dark rounded-lg p-8 text-center border border-white/10">
+              <div className="glass-subtle rounded-lg p-8 text-center border border-white/10">
                 <div className="w-16 h-16 rounded-full bg-gray-500/20 flex items-center justify-center mx-auto mb-4">
                   <Target className="h-8 w-8 text-gray-400" />
                 </div>
