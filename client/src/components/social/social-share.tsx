@@ -160,7 +160,7 @@ export function SocialShare({
           className="w-full max-w-md"
         >
           <Card className="glass-medium border-white/20 overflow-hidden">
-            <CardContent className="p-6 space-y-6">
+            <CardContent className="p-6 space-y-6 bg-[#0c1019b3]">
               {/* Header */}
               <div className="text-center space-y-3">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center mx-auto">
