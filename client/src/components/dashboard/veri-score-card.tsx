@@ -208,7 +208,7 @@ export function VeriScoreCard() {
             <div className="text-xl font-termina text-white">8.7K</div>
             <div className="text-sm text-white/70">Total Followers</div>
           </div>
-          <div className="bg-gray-700/50 rounded-xl p-4 text-center">
+          <div className="rounded-xl p-4 text-center bg-[#6a6c7a80]">
             <div className="text-xl font-termina text-white">12.5K</div>
             <div className="text-sm text-white/70">Engagement</div>
           </div>
