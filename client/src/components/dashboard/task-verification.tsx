@@ -1738,7 +1738,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   };
 
   return (
-    <Card className="veri-gradient-card rounded-xl hover-scale animate-fade-in">
+    <Card className="glass-medium border-white/20">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
