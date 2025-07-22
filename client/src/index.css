@@ -12,25 +12,25 @@
 }
 
 :root {
-  --background: hsl(0, 0%, 100%);
-  --foreground: hsl(0, 0%, 0%);
-  --muted: hsl(0, 0%, 98%);
-  --muted-foreground: hsl(0, 0%, 25%);
-  --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(0, 0%, 0%);
-  --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(0, 0%, 0%);
-  --border: hsl(0, 0%, 90%);
-  --input: hsl(0, 0%, 100%);
+  --background: hsl(0, 0%, 97%);
+  --foreground: hsl(0, 0%, 9%);
+  --muted: hsl(0, 0%, 94%);
+  --muted-foreground: hsl(0, 0%, 35%);
+  --popover: hsl(0, 0%, 98%);
+  --popover-foreground: hsl(0, 0%, 9%);
+  --card: hsl(0, 0%, 98%);
+  --card-foreground: hsl(0, 0%, 9%);
+  --border: hsl(0, 0%, 88%);
+  --input: hsl(0, 0%, 98%);
   --primary: hsl(158, 100%, 42%);
   --primary-foreground: hsl(0, 0%, 100%);
-  --secondary: hsl(0, 0%, 96%);
-  --secondary-foreground: hsl(0, 0%, 0%);
-  --accent: hsl(0, 0%, 96%);
-  --accent-foreground: hsl(0, 0%, 0%);
+  --secondary: hsl(0, 0%, 93%);
+  --secondary-foreground: hsl(0, 0%, 9%);
+  --accent: hsl(0, 0%, 93%);
+  --accent-foreground: hsl(0, 0%, 9%);
   --destructive: hsl(0, 84.2%, 60.2%);
   --destructive-foreground: hsl(0, 0%, 100%);
-  --ring: hsl(0, 0%, 0%);
+  --ring: hsl(0, 0%, 20%);
   --radius: 0.5rem;
   
   /* Veri Brand Colors */
@@ -251,11 +251,11 @@
   
   /* Light mode glass primary */
   :root .glass-primary {
-    @apply bg-white border border-gray-200 transform-gpu;
+    @apply bg-gray-50 border border-gray-300 transform-gpu;
     box-shadow: 
-      0 8px 32px 0 rgba(0, 0, 0, 0.08),
-      0 2px 16px 0 rgba(0, 0, 0, 0.04),
-      inset 0 1px 0 rgba(255, 255, 255, 1);
+      0 8px 32px 0 rgba(0, 0, 0, 0.06),
+      0 2px 16px 0 rgba(0, 0, 0, 0.03),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
   }
   
   /* Dark mode glass primary */
@@ -278,9 +278,9 @@
   
   /* Light mode glass secondary */
   :root .glass-secondary {
-    @apply bg-gray-50 border border-gray-100 transform-gpu;
+    @apply bg-gray-100 border border-gray-200 transform-gpu;
     box-shadow: 
-      0 4px 16px 0 rgba(0, 0, 0, 0.04),
+      0 4px 16px 0 rgba(0, 0, 0, 0.03),
       0 1px 8px 0 rgba(0, 0, 0, 0.02);
   }
   
@@ -304,10 +304,10 @@
   
   /* Light mode glass interactive */
   :root .glass-interactive {
-    @apply bg-gray-100 border border-gray-200 transform-gpu;
+    @apply bg-gray-200 border border-gray-300 transform-gpu;
     box-shadow: 
-      0 12px 40px 0 rgba(0, 0, 0, 0.06),
-      0 4px 20px 0 rgba(0, 0, 0, 0.04);
+      0 12px 40px 0 rgba(0, 0, 0, 0.05),
+      0 4px 20px 0 rgba(0, 0, 0, 0.03);
   }
   
   /* Dark mode glass interactive */
@@ -351,15 +351,15 @@
   
   /* Light mode legacy variants */
   :root .glass-subtle {
-    @apply bg-gray-50 border border-gray-100;
+    @apply bg-gray-100 border border-gray-200;
   }
   
   :root .glass-medium {
-    @apply bg-white border border-gray-200;
+    @apply bg-gray-50 border border-gray-300;
   }
   
   :root .glass-strong {
-    @apply bg-gray-100 border border-gray-200;
+    @apply bg-gray-200 border border-gray-300;
   }
   
   /* Dark mode legacy variants */
