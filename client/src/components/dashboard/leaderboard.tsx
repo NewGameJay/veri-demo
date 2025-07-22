@@ -59,8 +59,8 @@ export function Leaderboard() {
             <Trophy className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-foreground">Leaderboard</h3>
-            <p className="text-sm text-foreground/60">Top VeriScore Rankings</p>
+            <h3 className="text-lg font-semibold text-white">Leaderboard</h3>
+            <p className="text-sm text-white/60">Top VeriScore Rankings</p>
           </div>
         </div>
         <div className="pulse-ring w-3 h-3 bg-green-500 rounded-full" aria-label="Live updates active"></div>
@@ -83,7 +83,7 @@ export function Leaderboard() {
             {/* Rank Badge */}
             <div className="flex items-center gap-2 flex-shrink-0">
               {getRankIcon(creator.rank)}
-              <span className="text-sm font-medium text-foreground/80">#{creator.rank}</span>
+              <span className="text-sm font-medium text-white/80">#{creator.rank}</span>
             </div>
 
             {/* Avatar */}
@@ -94,14 +94,14 @@ export function Leaderboard() {
             {/* Creator Info */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3 mb-1">
-                <h4 className="font-semibold text-foreground text-base">{creator.name}</h4>
+                <h4 className="font-semibold text-white text-base">{creator.name}</h4>
                 <Badge variant="secondary" className={`bg-gradient-to-r ${getTierColor(creator.tier)} text-white text-xs px-2 py-1`}>
                   {creator.tier}
                 </Badge>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-foreground/60">VeriScore:</span>
-                <span className="font-bold text-foreground">{creator.score.toLocaleString()}</span>
+                <span className="text-sm text-white/60">VeriScore:</span>
+                <span className="font-bold text-white">{creator.score.toLocaleString()}</span>
               </div>
             </div>
 
@@ -122,20 +122,20 @@ export function Leaderboard() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: (index + 3) * 0.05 }}
-            className="flex items-center gap-3 p-2.5 sm:p-3 rounded-lg bg-accent/10 hover:bg-accent/20 transition-colors"
+            className="flex items-center gap-3 p-2.5 sm:p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
           >
-            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gray-600 rounded-full flex items-center justify-center text-foreground text-xs font-bold flex-shrink-0">
+            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gray-600 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
               {creator.rank}
             </div>
             <div className={`w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br ${getTierColor(creator.tier)} rounded-full flex items-center justify-center font-bold text-xs text-white flex-shrink-0`}>
               {creator.avatar}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="font-medium text-foreground text-sm sm:text-base whitespace-nowrap overflow-hidden text-ellipsis">{creator.name}</div>
-              <div className="text-xs text-foreground/60">{creator.tier} Tier</div>
+              <div className="font-medium text-white text-sm sm:text-base whitespace-nowrap overflow-hidden text-ellipsis">{creator.name}</div>
+              <div className="text-xs text-white/60">{creator.tier} Tier</div>
             </div>
             <div className="text-right flex-shrink-0">
-              <div className="font-bold text-foreground text-sm sm:text-base">{creator.score.toLocaleString()}</div>
+              <div className="font-bold text-white text-sm sm:text-base">{creator.score.toLocaleString()}</div>
               <div className="text-xs text-green-400 flex items-center justify-end gap-1">
                 <TrendingUp className="w-3 h-3" />
                 {creator.change}

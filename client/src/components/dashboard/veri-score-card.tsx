@@ -146,7 +146,7 @@ export function VeriScoreCard() {
           >
             <VeriLogo size="lg" showText={false} />
           </motion.div>
-          <h3 className="text-xl font-termina text-foreground">VeriScore</h3>
+          <h3 className="text-xl font-termina text-white">VeriScore</h3>
         </div>
 
         {/* Large VeriScore Number */}
@@ -173,14 +173,14 @@ export function VeriScoreCard() {
         </div>
 
         {/* Analytics Info Box */}
-        <div className="rounded-xl p-3 text-center bg-accent/20">
-          <p className="text-sm text-foreground/70">Calculated Weekly Based on</p>
+        <div className="rounded-xl p-3 text-center bg-[#6a6c7a52]">
+          <p className="text-sm text-white/70">Calculated Weekly Based on</p>
           <p className="text-sm text-green-400 font-medium">VeriScore Analytics™</p>
         </div>
 
         {/* VeriPoints Section */}
         <div className="text-center space-y-2">
-          <h4 className="text-lg font-termina text-foreground">VeriPoints</h4>
+          <h4 className="text-lg font-termina text-white">VeriPoints</h4>
           <div 
             ref={xpRef}
             className="text-4xl font-termina text-green-400 relative"
@@ -204,19 +204,19 @@ export function VeriScoreCard() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl p-4 text-center bg-accent/20">
-            <div className="text-xl font-termina text-foreground">8.7K</div>
-            <div className="text-sm text-foreground/70">Total Followers</div>
+          <div className="rounded-xl p-4 text-center bg-[#6a6c7a52]">
+            <div className="text-xl font-termina text-white">8.7K</div>
+            <div className="text-sm text-white/70">Total Followers</div>
           </div>
-          <div className="rounded-xl p-4 text-center bg-accent/20">
-            <div className="text-xl font-termina text-foreground">12.5K</div>
-            <div className="text-sm text-foreground/70">Engagement</div>
+          <div className="rounded-xl p-4 text-center bg-[#6a6c7a52]">
+            <div className="text-xl font-termina text-white">12.5K</div>
+            <div className="text-sm text-white/70">Engagement</div>
           </div>
         </div>
 
         {/* User Info */}
         <div className="text-center space-y-1">
-          <h5 className="text-xl font-termina text-foreground">
+          <h5 className="text-xl font-termina text-white">
             {activeUser?.firstName && activeUser?.lastName 
               ? `${activeUser.firstName} ${activeUser.lastName}`
               : activeUser?.username || 'Creator'}
