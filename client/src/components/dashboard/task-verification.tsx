@@ -82,8 +82,10 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationUrl, setVerificationUrl] = useState("");
   const [selectedTask, setSelectedTask] = useState<any>(null);
-  const [showRequirements, setShowRequirements] = useState(false);
+  const [activeTasks, setActiveTasks] = useState<any[]>([]);
+  const [showRequirements, setShowRequirements] = useState<{[key: number]: boolean}>({});
   const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [verifyingTaskId, setVerifyingTaskId] = useState<number | null>(null);
 
   const [brandFilter, setBrandFilter] = useState("all");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
@@ -1501,9 +1503,22 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
 
   const handleStartTask = (task: any) => {
     triggerHaptic("light");
-    setSelectedTask(task);
+    
+    // Check if task is already active
+    if (activeTasks.find(activeTask => activeTask.id === task.id)) {
+      toast({
+        title: "Task Already Active",
+        description: `${task.title} is already in your active tasks.`,
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Add task to active tasks array
+    setActiveTasks(prev => [...prev, task]);
     setShowTaskPreview(false); // Close preview modal
     setActiveTab("active"); // Switch to active tab to encourage task completion
+    
     toast({
       title: "Task started!",
       description: `You've started "${task.title}". Complete it and submit for verification.`,
@@ -1534,7 +1549,12 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
       
       // Check if this is the MVP Demo Test Task
       let isValid = false;
-      if (selectedTask?.id === 0) {
+      const taskToVerify = activeTasks.find(task => task.id === verifyingTaskId);
+      if (!taskToVerify) {
+        throw new Error('Task not found');
+      }
+      
+      if (taskToVerify.id === 0) {
         // MVP Demo Test Task - always verify successfully if URL contains "test", "demo", or "veri"
         isValid = verificationUrl.toLowerCase().includes('test') || 
                   verificationUrl.toLowerCase().includes('demo') || 
@@ -1552,13 +1572,13 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             "POST",
             "/api/tasks/verify",
             {
-              taskId: selectedTask.id,
+              taskId: taskToVerify.id,
               verificationUrl: verificationUrl,
-              points: selectedTask.points,
-              title: selectedTask.title,
-              description: selectedTask.description,
-              category: selectedTask.category,
-              streakBonus: selectedTask.streakBonus || 1
+              points: taskToVerify.points,
+              title: taskToVerify.title,
+              description: taskToVerify.description,
+              category: taskToVerify.category,
+              streakBonus: taskToVerify.streakBonus || 1
             }
           );
           
@@ -1569,14 +1589,14 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             // Trigger contextual emoji reaction based on task type
             const emojiConfig = getContextualEmojiConfig(
               'task_complete', 
-              selectedTask.platform, 
-              selectedTask.category
+              taskToVerify.platform, 
+              taskToVerify.category
             );
             
             // Special handling for streak milestones and MVP task
-            const isSpecialTask = selectedTask.id === 0;
-            const isStreakMilestone = (userStreak + (selectedTask.streakBonus || 1)) % 5 === 0;
-            const isHighPointTask = selectedTask.points >= 50;
+            const isSpecialTask = taskToVerify.id === 0;
+            const isStreakMilestone = (userStreak + (taskToVerify.streakBonus || 1)) % 5 === 0;
+            const isHighPointTask = taskToVerify.points >= 50;
             
             if (isSpecialTask) {
               // Special burst for MVP completion with extra count and size
@@ -1619,10 +1639,10 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             }
             
             // Show floating points animation only if this task hasn't been animated before
-            if (lastAnimatedTaskId !== selectedTask.id) {
-              setFloatingPoints(selectedTask.points);
+            if (lastAnimatedTaskId !== taskToVerify.id) {
+              setFloatingPoints(taskToVerify.points);
               setShowFloatingPoints(true);
-              setLastAnimatedTaskId(selectedTask.id);
+              setLastAnimatedTaskId(taskToVerify.id);
             }
             
             // Invalidate queries immediately for real-time updates
@@ -1634,8 +1654,8 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             await refreshUser();
             
             const message = isSpecialTask 
-              ? `Amazing! You've earned ${selectedTask.points} XP points and ${selectedTask.streakBonus || 1} day streak! AI Agent tooling is now unlocked.`
-              : `Great work! You've earned ${selectedTask.points} XP points.`;
+              ? `Amazing! You've earned ${taskToVerify.points} XP points and ${taskToVerify.streakBonus || 1} day streak! AI Agent tooling is now unlocked.`
+              : `Great work! You've earned ${taskToVerify.points} XP points.`;
             
             // Delayed toast to appear after floating animation starts
             setTimeout(() => {
@@ -1645,19 +1665,30 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
               });
             }, 800);
 
+            // Remove completed task from active tasks
+            setActiveTasks(prev => prev.filter(task => task.id !== verifyingTaskId));
+            
+            // Clear requirements state for this task
+            setShowRequirements(prev => {
+              const updated = { ...prev };
+              delete updated[verifyingTaskId];
+              return updated;
+            });
+            
             // Prepare share data and show social sharing modal
             setShareTaskData({
               type: "task",
-              title: selectedTask.title,
-              description: selectedTask.description || `Completed ${selectedTask.title} on Veri platform`,
-              xpEarned: selectedTask.points,
-              streakDay: userStreak + (selectedTask.streakBonus || 1), // Add streak bonus
-              veriScore: Math.min(100, Math.floor((userXP + selectedTask.points) / 10)), // Calculate new VeriScore
-              platform: selectedTask.platform
+              title: taskToVerify.title,
+              description: taskToVerify.description || `Completed ${taskToVerify.title} on Veri platform`,
+              xpEarned: taskToVerify.points,
+              streakDay: userStreak + (taskToVerify.streakBonus || 1), // Add streak bonus
+              veriScore: Math.min(100, Math.floor((userXP + taskToVerify.points) / 10)), // Calculate new VeriScore
+              platform: taskToVerify.platform
             });
             
-            setSelectedTask(null);
             setVerificationUrl("");
+            setShowVerificationModal(false);
+            setVerifyingTaskId(null);
             setActiveTab("completed");
 
             // Show social sharing modal after floating animation completes
@@ -2048,94 +2079,102 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
           </TabsContent>
           
           <TabsContent value="active" className="space-y-3">
-            {selectedTask ? (
-              <div className="glass-subtle rounded-lg border border-white/10 overflow-hidden">
-                {/* Main Task Card */}
-                <div className="p-4 h-20 flex items-center justify-between">
-                  <div className="flex items-center space-x-3 flex-1">
-                    <div className="w-10 h-10 rounded-lg bg-gray-500/20 flex items-center justify-center">
-                      <selectedTask.icon className={`h-5 w-5 ${selectedTask.color}`} />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-1">
-                        <h3 className="font-semibold text-white">{selectedTask.title}</h3>
-                        {selectedTask.brand && (
-                          <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 text-xs">
-                            {selectedTask.brand}
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="flex items-center space-x-3 text-sm text-white/70">
-                        <span>• 30 seconds</span>
-                        <span>• Demo</span>
-                        <Badge variant="secondary" className="bg-green-500/20 text-green-400 text-xs">
-                          Easy
-                        </Badge>
-                      </div>
-                    </div>
-                    <div className="text-right mr-4">
-                      <div className="text-emerald-400 font-medium">+{selectedTask.points} XP</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      onClick={() => setShowRequirements(!showRequirements)}
-                      variant="ghost"
-                      size="sm"
-                      className="text-white/70 hover:text-white hover:bg-white/5 px-3"
-                    >
-                      Requirements ({selectedTask.requirements.length})
-                      {showRequirements ? (
-                        <ChevronUp className="ml-1 h-4 w-4" />
-                      ) : (
-                        <ChevronDown className="ml-1 h-4 w-4" />
-                      )}
-                    </Button>
-                    <Button
-                      onClick={() => setShowVerificationModal(true)}
-                      className="veri-gradient px-6 h-10"
-                    >
-                      Verify Task
-                    </Button>
-                  </div>
-                </div>
-                
-                {/* Expandable Requirements */}
-                {showRequirements && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden border-t border-white/10"
-                  >
-                    <div className="p-4 bg-white/5 space-y-3">
-                      <h4 className="text-sm font-medium text-white flex items-center">
-                        <CheckCircle2 className="h-4 w-4 mr-2 text-emerald-400" />
-                        Task Requirements
-                      </h4>
-                      {selectedTask.requirements.map((req: string, index: number) => (
-                        <div key={index} className="flex items-start space-x-3">
-                          <div className="w-2 h-2 rounded-full bg-emerald-400 mt-2 flex-shrink-0"></div>
-                          <span className="text-sm text-white/80 leading-relaxed">{req}</span>
+            {activeTasks.length > 0 ? (
+              <>
+                {activeTasks.map((task) => (
+                  <div key={task.id} className="glass-subtle rounded-lg border border-white/10 overflow-hidden">
+                    {/* Main Task Card */}
+                    <div className="p-4 h-20 flex items-center justify-between">
+                      <div className="flex items-center space-x-3 flex-1">
+                        <div className="w-10 h-10 rounded-lg bg-gray-500/20 flex items-center justify-center">
+                          <task.icon className={`h-5 w-5 ${task.color}`} />
                         </div>
-                      ))}
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-1">
+                            <h3 className="font-semibold text-white">{task.title}</h3>
+                            {task.brand && (
+                              <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 text-xs">
+                                {task.brand}
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="flex items-center space-x-3 text-sm text-white/70">
+                            <span>• {task.estimatedTime || '30 seconds'}</span>
+                            <span>• {task.category || 'Demo'}</span>
+                            <Badge variant="secondary" className="bg-green-500/20 text-green-400 text-xs">
+                              {task.difficulty || 'Easy'}
+                            </Badge>
+                          </div>
+                        </div>
+                        <div className="text-right mr-4">
+                          <div className="text-emerald-400 font-medium">+{task.points} XP</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          onClick={() => setShowRequirements({
+                            ...showRequirements,
+                            [task.id]: !showRequirements[task.id]
+                          })}
+                          variant="ghost"
+                          size="sm"
+                          className="text-white/70 hover:text-white hover:bg-white/5 px-3"
+                        >
+                          Requirements ({task.requirements?.length || 0})
+                          {showRequirements[task.id] ? (
+                            <ChevronUp className="ml-1 h-4 w-4" />
+                          ) : (
+                            <ChevronDown className="ml-1 h-4 w-4" />
+                          )}
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            setVerifyingTaskId(task.id);
+                            setShowVerificationModal(true);
+                          }}
+                          className="veri-gradient px-6 h-10"
+                        >
+                          Verify Task
+                        </Button>
+                      </div>
                     </div>
-                  </motion.div>
-                )}
-              </div>
+                    
+                    {/* Expandable Requirements */}
+                    {showRequirements[task.id] && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden border-t border-white/10"
+                      >
+                        <div className="p-4 bg-white/5 space-y-3">
+                          <h4 className="text-sm font-medium text-white flex items-center">
+                            <CheckCircle2 className="h-4 w-4 mr-2 text-emerald-400" />
+                            Task Requirements
+                          </h4>
+                          {(task.requirements || []).map((req: string, index: number) => (
+                            <div key={index} className="flex items-start space-x-3">
+                              <div className="w-2 h-2 rounded-full bg-emerald-400 mt-2 flex-shrink-0"></div>
+                              <span className="text-sm text-white/80 leading-relaxed">{req}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </div>
+                ))}
+              </>
             ) : (
-              <div className="text-center py-8">
+              <div className="glass-subtle rounded-lg p-8 text-center border border-white/10">
                 <div className="w-16 h-16 rounded-full bg-gray-500/20 flex items-center justify-center mx-auto mb-4">
                   <Target className="h-8 w-8 text-gray-400" />
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">No Active Tasks</h3>
-                <p className="text-white/60 mb-4">
-                  Start a task from the available list to begin earning XP
-                </p>
+                <p className="text-white/60 mb-4">Start some tasks to see them here and earn XP points.</p>
                 <Button
                   onClick={() => setActiveTab("available")}
-                  className="veri-gradient"
+                  className="veri-gradient px-6"
                 >
                   Browse Available Tasks
                 </Button>
