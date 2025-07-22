@@ -104,7 +104,6 @@ export default function CampaignsPage() {
         onDashboardToggle={handleDashboardToggle}
         onMobileMenuToggle={() => setIsMobileNavOpen(!isMobileNavOpen)}
       />
-      
       <DashboardSidebar 
         isOpen={isDashboardOpen}
         isPinned={isDashboardPinned}
@@ -116,12 +115,10 @@ export default function CampaignsPage() {
         onPin={handlePin}
         onToggleCollapse={handleToggleCollapse}
       />
-      
       <MobileNav 
         isOpen={isMobileNavOpen}
         onClose={() => setIsMobileNavOpen(false)}
       />
-      
       <main className={`pt-20 px-4 lg:px-6 transition-all duration-500 ease-in-out ${
         isDashboardPinned && isDashboardOpen && !isCollapsed ? 'lg:ml-80' : 
         isDashboardPinned && isDashboardOpen && isCollapsed ? 'lg:ml-20' : 
@@ -139,7 +136,7 @@ export default function CampaignsPage() {
             'md:flex-row md:items-center'
           }`}>
             <div>
-              <h1 className="text-3xl font-bold">Campaigns</h1>
+              <h1 className="text-3xl font-bold mt-[18px] mb-[18px]">Campaigns</h1>
               <p className="text-muted-foreground">
                 {isBrand 
                   ? "Create and manage brand campaigns to connect with creators"
