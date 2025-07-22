@@ -168,7 +168,7 @@ export function DashboardSidebar({
                   isCollapsed ? "justify-center" : "justify-start gap-3",
                   "focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2",
                   // Active/selected state - should be applied last to override hover
-                  location === item.path ? 
+                  (location === item.path || activeItem === item.id) ? 
                     "glass-interactive text-white shadow-lg shadow-emerald-500/50 transform translateY(-1px) hover:glass-interactive hover:text-white" :
                     "hover:glass-interactive hover:text-emerald-100"
                 )}
