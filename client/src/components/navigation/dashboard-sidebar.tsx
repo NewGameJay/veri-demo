@@ -164,11 +164,13 @@ export function DashboardSidebar({
                 className={cn(
                   "w-full p-3 glass-secondary rounded-xl font-inter touch-manipulation relative",
                   "button-3d depth-shadow press-animation ripple-effect",
-                  "hover:glass-interactive hover:text-emerald-100",
                   "transition-all duration-300 ease-out",
                   isCollapsed ? "justify-center" : "justify-start gap-3",
-                  location === item.path && "glass-interactive text-white shadow-lg shadow-emerald-500/50 transform translateY(-1px)",
-                  "focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
+                  "focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2",
+                  // Active/selected state - should be applied last to override hover
+                  location === item.path ? 
+                    "glass-interactive text-white shadow-lg shadow-emerald-500/50 transform translateY(-1px) hover:glass-interactive hover:text-white" :
+                    "hover:glass-interactive hover:text-emerald-100"
                 )}
                 title={isCollapsed ? `${item.label} (Alt+${index + 1})` : `Alt+${index + 1}`}
                 aria-label={`Navigate to ${item.label}`}
