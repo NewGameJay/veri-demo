@@ -23,6 +23,10 @@ export const users = pgTable("users", {
   customUsername: text("custom_username").unique(), // Custom username for public profile
   website: text("website"), // Personal website URL
   showcaseContent: text("showcase_content"), // JSON string for featured content pieces
+  // Onboarding fields
+  creatorType: text("creator_type"), // Selected creator type from onboarding
+  interests: text("interests").array(), // Array of user interests
+  goals: text("goals").array(), // Array of user goals
   // Web3 Wallet Fields
   veriAccountId: text("veri_account_id").unique(), // Unique identifier for Veri account
   walletAddress: text("wallet_address").unique(), // Public wallet address

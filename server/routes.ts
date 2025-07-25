@@ -183,6 +183,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Save user onboarding data
+  app.post("/api/users/:id/onboarding", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = parseInt(req.params.id);
+      const { creatorType, interests, goals, bio } = req.body;
+
+      const user = await storage.updateUser(userId, {
+        creatorType,
+        interests: interests || [],
+        goals: goals || [],
+        bio,
+        hasCompletedOnboarding: true,
+        profileCompleted: true
+      });
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error saving onboarding data:", error);
+      res.status(500).json({ error: "Failed to save onboarding data" });
+    }
+  });
+
   // OAuth routes - use real OAuth if credentials are available, demo otherwise
   const useDemo = !process.env.TWITTER_CLIENT_ID || !process.env.TWITTER_CLIENT_SECRET;
   

@@ -16,28 +16,31 @@ import { MilestoneCelebration } from "@/components/milestones/milestone-celebrat
 import { useMilestoneTracker } from "@/hooks/use-milestone-tracker";
 import { useAuth } from "@/contexts/auth-context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { InteractiveTour } from "@/components/onboarding/interactive-tour-simple";
+import { FullScreenOnboarding } from "@/components/onboarding/full-screen-onboarding";
 import { TrendingUp, Users, DollarSign } from "lucide-react";
 import { FaTwitter, FaYoutube, FaInstagram, FaTiktok } from "react-icons/fa";
 
 export default function Dashboard() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [showInteractiveTour, setShowInteractiveTour] = useState(false);
-  const [tourCompleted, setTourCompleted] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [onboardingCompleted, setOnboardingCompleted] = useState(false);
   const [isTabsCollapsed, setIsTabsCollapsed] = useState(false);
   const [isTaskGridExpanded, setIsTaskGridExpanded] = useState(false);
   const { user, needsOnboarding, completeOnboarding } = useAuth();
   
-  // Check if user has completed their profile (at least has interests or creator type)
-  const hasCompletedProfile = user && (user.interests?.length > 0 || user.creatorType);
-  const shouldLockFeatures = !hasCompletedProfile;
   const { newMilestones, clearNewMilestones } = useMilestoneTracker();
 
   const { data: connections } = useQuery({
-    queryKey: ["/api/social-connections", user?.id],
+    queryKey: [`/api/social-connections/${user?.id}`],
     enabled: !!user?.id,
   });
+
+  // Check if user has completed onboarding and has social connections
+  const hasCompletedProfile = user && (user.interests?.length > 0 || user.creatorType);
+  const hasSocialConnections = connections && connections.length > 0;
+  const shouldLockFeatures = !hasCompletedProfile || !hasSocialConnections;
+  const needsOnboardingFlow = !hasCompletedProfile;
 
   const { data: userTasks } = useQuery({
     queryKey: ["/api/tasks", user?.id],
@@ -80,21 +83,21 @@ export default function Dashboard() {
     return null;
   }
 
-  // Show interactive tour for new users immediately when they reach dashboard
+  // Show onboarding for new users immediately when they reach dashboard
   useEffect(() => {
-    if (needsOnboarding && !showInteractiveTour && !tourCompleted) {
+    if (needsOnboardingFlow && !showOnboarding && !onboardingCompleted) {
       // Small delay to ensure dashboard is rendered
       const timer = setTimeout(() => {
-        setShowInteractiveTour(true);
+        setShowOnboarding(true);
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [needsOnboarding, showInteractiveTour, tourCompleted]);
+  }, [needsOnboardingFlow, showOnboarding, onboardingCompleted]);
 
-  const handleTourComplete = async () => {
-    setShowInteractiveTour(false);
-    setTourCompleted(true);
-    // Mark onboarding as complete but keep features locked except profile
+  const handleOnboardingComplete = async () => {
+    setShowOnboarding(false);
+    setOnboardingCompleted(true);
+    // Onboarding saves profile data, now user can access dashboard
     try {
       await completeOnboarding();
     } catch (error) {
@@ -511,11 +514,10 @@ export default function Dashboard() {
         />
       )}
 
-      {/* Interactive Tour Modal */}
-      <InteractiveTour
-        isOpen={showInteractiveTour}
-        onClose={() => setShowInteractiveTour(false)}
-        onComplete={handleTourComplete}
+      {/* Full Screen Onboarding Modal */}
+      <FullScreenOnboarding
+        isOpen={showOnboarding}
+        onComplete={handleOnboardingComplete}
       />
     </div>
   );
