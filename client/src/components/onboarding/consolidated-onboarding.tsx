@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { VeriLogo } from "@/components/ui/veri-logo";
 import { ArrowRight, ArrowLeft, X, Sparkles, Zap, Users, Target, Twitter, Youtube, Instagram } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { InterestSelector } from "@/components/profile/interest-selector";
+// import { InterestSelector } from "@/components/profile/interest-selector";
 import { VeriScoreReveal } from "./veriscore-reveal";
 import { useAuth } from "@/contexts/auth-context";
 import { apiRequest } from "@/lib/queryClient";
@@ -353,12 +353,37 @@ export function ConsolidatedOnboarding({ isOpen, onComplete, onShowDashboardTour
                             Your Interests
                           </h3>
                           <p className="text-white/60 text-sm mb-4">Select 3-5 interests that describe your content</p>
-                          <InterestSelector
-                            interests={interests}
-                            onChange={setInterests}
-                            maxSelections={5}
-                            minSelections={3}
-                          />
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            {[
+                              'gaming', 'tech', 'fitness', 'food', 'travel', 'fashion', 
+                              'music', 'art', 'education', 'business', 'crypto', 'nft', 
+                              'defi', 'lifestyle', 'entertainment', 'sports'
+                            ].map((interest) => (
+                              <motion.button
+                                key={interest}
+                                onClick={() => {
+                                  if (interests.includes(interest)) {
+                                    setInterests(interests.filter(i => i !== interest));
+                                  } else if (interests.length < 5) {
+                                    setInterests([...interests, interest]);
+                                  }
+                                }}
+                                disabled={!interests.includes(interest) && interests.length >= 5}
+                                className={`p-3 rounded-lg border-2 transition-all duration-300 text-sm font-medium ${
+                                  interests.includes(interest)
+                                    ? "border-emerald-500 bg-emerald-500/10 text-emerald-400 shadow-lg shadow-emerald-500/20"
+                                    : "border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                                }`}
+                                whileHover={{ scale: interests.includes(interest) || interests.length < 5 ? 1.02 : 1 }}
+                                whileTap={{ scale: interests.includes(interest) || interests.length < 5 ? 0.98 : 1 }}
+                              >
+                                {interest.charAt(0).toUpperCase() + interest.slice(1)}
+                              </motion.button>
+                            ))}
+                          </div>
+                          <p className="text-emerald-400 text-sm mt-3">
+                            {interests.length}/5 interests selected (minimum 3 required)
+                          </p>
                         </CardContent>
                       </Card>
 
