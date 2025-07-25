@@ -31,6 +31,19 @@ export default function Dashboard() {
   const [hasSeenTour, setHasSeenTour] = useState(() => 
     localStorage.getItem('veri-dashboard-tour-seen') === 'true'
   );
+
+  const handleOpenTour = () => {
+    setShowInteractiveTour(true);
+  };
+
+  const handleCloseTour = () => {
+    setShowInteractiveTour(false);
+  };
+
+  const handleCompleteTour = () => {
+    setHasSeenTour(true);
+    localStorage.setItem('veri-dashboard-tour-seen', 'true');
+  };
   const { user, needsOnboarding, completeOnboarding } = useAuth();
   const { newMilestones, clearNewMilestones } = useMilestoneTracker();
 
@@ -74,20 +87,7 @@ export default function Dashboard() {
     setIsDashboardOpen(!isDashboardOpen);
   };
 
-  // Interactive Tour handlers
-  const handleOpenTour = () => {
-    setShowInteractiveTour(true);
-  };
 
-  const handleCompleteTour = () => {
-    setShowInteractiveTour(false);
-    setHasSeenTour(true);
-    localStorage.setItem('veri-dashboard-tour-seen', 'true');
-  };
-
-  const handleCloseTour = () => {
-    setShowInteractiveTour(false);
-  };
 
   if (!user) {
     return null;

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { SignupForm } from "./signup-form";
 import { LoginForm } from "./login-form";
-import { OnboardingModal } from "@/components/modals/onboarding-modal";
+import { StreamlinedOnboardingModal } from "@/components/modals/streamlined-onboarding-modal";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -62,7 +62,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "signup", onSuccess }
         </DialogContent>
       </Dialog>
       
-      <OnboardingModal 
+      <StreamlinedOnboardingModal 
         isOpen={showOnboarding} 
         onClose={handleOnboardingComplete}
       />

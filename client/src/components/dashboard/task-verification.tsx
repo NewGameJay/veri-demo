@@ -1546,7 +1546,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
       // Simulate task verification process
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Check if this is the MVP Demo Test Task
+      // Check if this is the Partner Quest task
       let isValid = false;
       const taskToVerify = activeTasks.find(task => task.id === verifyingTaskId);
       if (!taskToVerify) {

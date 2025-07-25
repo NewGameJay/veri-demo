@@ -1,23 +1,11 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  X, 
-  TrendingUp, 
-  Zap, 
-  Users, 
-  BarChart3, 
-  Bot, 
-  User, 
-  Target,
-  Sparkles,
-  Play
-} from "lucide-react";
 import { VeriLogo } from "@/components/ui/veri-logo";
+import { ArrowRight, ArrowLeft, X, Star, Trophy, Target, Users, Zap, Settings, HelpCircle, Sparkles } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface InteractiveTourProps {
   isOpen: boolean;
@@ -25,102 +13,253 @@ interface InteractiveTourProps {
   onComplete: () => void;
 }
 
+interface TourTriggerProps {
+  onOpenTour: () => void;
+}
+
+export function TourTrigger({ onOpenTour }: TourTriggerProps) {
+  return (
+    <motion.div
+      className="fixed bottom-6 right-6 z-50"
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ delay: 2, duration: 0.5, ease: "easeOut" }}
+    >
+      <motion.button
+        onClick={onOpenTour}
+        className="group relative bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-full p-4 shadow-lg hover:shadow-xl transition-all duration-300"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        {/* Pulsing ring animation */}
+        <motion.div
+          className="absolute inset-0 bg-emerald-400 rounded-full opacity-30"
+          animate={{ scale: [1, 1.5], opacity: [0.3, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+        />
+        
+        <HelpCircle className="h-6 w-6 relative z-10" />
+        
+        {/* Tooltip */}
+        <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+          Take a quick tour
+          <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+        </div>
+      </motion.button>
+    </motion.div>
+  );
+}
+
 export function InteractiveTour({ isOpen, onClose, onComplete }: InteractiveTourProps) {
   const [currentStep, setCurrentStep] = useState(0);
 
   const tourSteps = [
     {
-      title: "Welcome to Your Dashboard!",
-      description: "Let's take a quick tour of your creator command center",
+      title: "Welcome to Veri!",
+      description: "Let's take a quick tour of your creator dashboard and show you how to start earning points.",
       icon: Sparkles,
-      content: "This is where you'll manage your entire creator journey - from completing tasks to tracking your growth and connecting with brands.",
-      action: "Let's explore"
+      content: (
+        <div className="text-center space-y-4">
+          <div className="flex justify-center mb-4">
+            <VeriLogo />
+          </div>
+          <p className="text-white/80">
+            Your creator dashboard is designed to help you monetize your content and grow your audience. 
+            This quick tour will show you everything you need to know.
+          </p>
+        </div>
+      )
     },
     {
-      title: "VeriScore & Points",
-      description: "Track your creator reputation and XP",
-      icon: TrendingUp,
-      content: "Your VeriScore shows your credibility as a creator. Complete tasks and connect social platforms to earn XP and increase your score.",
-      action: "Next: Tasks"
+      title: "Your VeriScore Card",
+      description: "Track your reputation and earnings in real-time",
+      icon: Star,
+      content: (
+        <div className="space-y-4">
+          <div className="glass-effect p-4 rounded-lg border border-emerald-500/30">
+            <div className="flex items-center gap-3 mb-3">
+              <Star className="h-5 w-5 text-emerald-400" />
+              <span className="text-white font-semibold">VeriScore: 85</span>
+              <Badge className="bg-emerald-500/20 text-emerald-300">Diamond</Badge>
+            </div>
+            <p className="text-white/70 text-sm">
+              Your VeriScore reflects your reputation and engagement quality. Higher scores unlock better opportunities!
+            </p>
+          </div>
+        </div>
+      )
     },
     {
-      title: "Task Verification",
+      title: "Partner Quests & Tasks",
       description: "Complete tasks to earn XP and unlock features",
-      icon: Zap,
-      content: "Tasks are quick actions that help you grow your audience and earn points. Your first Partner Quest task is to share your Veri profile!",
-      action: "Next: Campaigns"
-    },
-    {
-      title: "Campaign Explorer",
-      description: "Discover brand collaboration opportunities",
       icon: Target,
-      content: "Build a 3-day task streak to unlock Veri+ Creator status and access high-paying brand campaigns. Filter by your interests!",
-      action: "Next: Analytics"
+      content: (
+        <div className="space-y-4">
+          <div className="glass-effect p-4 rounded-lg border border-blue-500/30">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-white font-semibold">Partner Quest: Share Your Profile</span>
+              <Badge className="bg-emerald-500/20 text-emerald-300">+10,000 XP</Badge>
+            </div>
+            <p className="text-white/70 text-sm mb-3">
+              Share your Veri profile on social media to unlock AI Agent tooling
+            </p>
+            <Button size="sm" className="veri-gradient">
+              Start Quest
+            </Button>
+          </div>
+        </div>
+      )
     },
     {
-      title: "Analytics Dashboard",
-      description: "Track your content performance across platforms",
-      icon: BarChart3,
-      content: "View your content metrics, audience insights, and revenue tracking all in one place. See what's working best for your brand.",
-      action: "Next: AI Agents"
+      title: "Social Connections",
+      description: "Connect your platforms to verify your audience",
+      icon: Users,
+      content: (
+        <div className="space-y-3">
+          {["Twitter", "YouTube", "Instagram"].map((platform) => (
+            <div key={platform} className="glass-effect p-3 rounded-lg border border-white/20 flex items-center justify-between">
+              <span className="text-white">{platform}</span>
+              <Button size="sm" variant="outline" className="border-emerald-500/50 text-emerald-300">
+                Connect
+              </Button>
+            </div>
+          ))}
+          <p className="text-white/70 text-sm">
+            Each platform connection earns you 500 XP and helps brands discover you!
+          </p>
+        </div>
+      )
+    },
+    {
+      title: "Global Leaderboard",
+      description: "See how you rank against other creators worldwide",
+      icon: Trophy,
+      content: (
+        <div className="space-y-3">
+          <div className="glass-effect p-4 rounded-lg border border-yellow-500/30">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-white">Your Rank</span>
+                <Badge className="bg-yellow-500/20 text-yellow-300">#247</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-white/70">Tier</span>
+                <span className="text-yellow-300">Gold</span>
+              </div>
+            </div>
+          </div>
+          <p className="text-white/70 text-sm">
+            Climb the ranks by completing tasks and maintaining engagement!
+          </p>
+        </div>
+      )
     },
     {
       title: "AI Agent Studio",
-      description: "Get AI-powered insights for your content",
-      icon: Bot,
-      content: "Launch AI agents to optimize your content strategy, analyze engagement patterns, and get personalized recommendations.",
-      action: "Next: Profile"
+      description: "Unlock AI-powered content optimization tools",
+      icon: Zap,
+      content: (
+        <div className="space-y-4">
+          <div className="glass-effect p-4 rounded-lg border border-purple-500/30">
+            <div className="flex items-center gap-3 mb-3">
+              <Zap className="h-5 w-5 text-purple-400" />
+              <span className="text-white font-semibold">AI Content Optimizer</span>
+              <Badge className="bg-orange-500/20 text-orange-300">Locked</Badge>
+            </div>
+            <p className="text-white/70 text-sm">
+              Complete the Partner Quest to unlock AI agents that help optimize your content for maximum engagement!
+            </p>
+          </div>
+        </div>
+      )
     },
     {
-      title: "Profile Builder",
-      description: "Showcase your creator brand to the world",
-      icon: User,
-      content: "Build your public Veri profile with custom URLs, featured content, and social connections. Share it to attract collaborations!",
-      action: "Next: Community"
+      title: "Campaign Explorer",
+      description: "Discover sponsored collaboration opportunities",
+      icon: Settings,
+      content: (
+        <div className="space-y-4">
+          <div className="glass-effect p-4 rounded-lg border border-pink-500/30">
+            <h4 className="text-white font-semibold mb-2">Featured Campaigns</h4>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-white/80">Gaming Content</span>
+                <Badge className="bg-green-500/20 text-green-300">$500</Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/80">Tech Reviews</span>
+                <Badge className="bg-blue-500/20 text-blue-300">$750</Badge>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     },
     {
-      title: "Community & Leaderboard",
-      description: "Connect with other creators and compete",
-      icon: Users,
-      content: "Climb the global leaderboard, see top performers, and connect with fellow creators in your niche.",
-      action: "Start creating!"
+      title: "You're All Set!",
+      description: "Start your creator journey and earn your first XP",
+      icon: Sparkles,
+      content: (
+        <div className="text-center space-y-4">
+          <div className="flex justify-center">
+            <div className="bg-emerald-500/20 p-4 rounded-full">
+              <Sparkles className="h-8 w-8 text-emerald-400" />
+            </div>
+          </div>
+          <p className="text-white/80">
+            You're ready to start earning! Begin with the Partner Quest to unlock AI features, 
+            then explore campaigns and connect your social platforms.
+          </p>
+          <div className="glass-effect p-3 rounded-lg border border-emerald-500/30">
+            <p className="text-emerald-300 font-semibold">Pro Tip: Complete daily tasks to maintain your streak and earn bonus XP!</p>
+          </div>
+        </div>
+      )
     }
   ];
 
+  const currentStepData = tourSteps[currentStep];
+  const isLastStep = currentStep === tourSteps.length - 1;
+  const isFirstStep = currentStep === 0;
+
   const handleNext = () => {
-    if (currentStep < tourSteps.length - 1) {
-      setCurrentStep(prev => prev + 1);
-    } else {
+    if (isLastStep) {
       onComplete();
+      onClose();
+    } else {
+      setCurrentStep(prev => prev + 1);
     }
   };
 
   const handlePrevious = () => {
-    if (currentStep > 0) {
-      setCurrentStep(prev => prev - 1);
-    }
+    setCurrentStep(prev => Math.max(0, prev - 1));
   };
 
   const handleSkip = () => {
+    onComplete();
     onClose();
   };
 
-  const currentTour = tourSteps[currentStep];
-  const progress = ((currentStep + 1) / tourSteps.length) * 100;
+  // Reset to first step when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentStep(0);
+    }
+  }, [isOpen]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-lg glass-effect border-white/20 bg-gray-900/95">
         <DialogHeader>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <VeriLogo />
-              <DialogTitle className="text-white">Interactive Tour</DialogTitle>
+            <div className="flex items-center gap-3">
+              <currentStepData.icon className="h-6 w-6 text-emerald-400" />
+              <DialogTitle className="text-white">{currentStepData.title}</DialogTitle>
             </div>
-            <Button
-              variant="ghost"
+            <Button 
+              variant="ghost" 
               size="sm"
-              onClick={handleSkip}
+              onClick={onClose}
               className="text-white/60 hover:text-white"
             >
               <X className="h-4 w-4" />
@@ -133,19 +272,22 @@ export function InteractiveTour({ isOpen, onClose, onComplete }: InteractiveTour
           <div className="space-y-2">
             <div className="flex justify-between text-sm text-white/60">
               <span>Step {currentStep + 1} of {tourSteps.length}</span>
-              <span>{Math.round(progress)}%</span>
+              <span>{Math.round(((currentStep + 1) / tourSteps.length) * 100)}%</span>
             </div>
             <div className="w-full bg-white/10 rounded-full h-2">
-              <motion.div
+              <motion.div 
                 className="bg-emerald-500 h-2 rounded-full"
                 initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }}
-                transition={{ duration: 0.3 }}
+                animate={{ width: `${((currentStep + 1) / tourSteps.length) * 100}%` }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
               />
             </div>
           </div>
 
-          {/* Tour Content */}
+          {/* Step Description */}
+          <p className="text-white/60">{currentStepData.description}</p>
+
+          {/* Step Content */}
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
@@ -153,124 +295,53 @@ export function InteractiveTour({ isOpen, onClose, onComplete }: InteractiveTour
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="space-y-4"
             >
-              <div className="text-center">
-                <div className="flex justify-center mb-4">
-                  <div className="p-3 rounded-full bg-emerald-500/20 border border-emerald-500/30">
-                    <currentTour.icon className="h-8 w-8 text-emerald-400" />
-                  </div>
-                </div>
-                
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  {currentTour.title}
-                </h3>
-                
-                <Badge variant="secondary" className="bg-emerald-500/20 text-emerald-300 mb-3">
-                  {currentTour.description}
-                </Badge>
-                
-                <p className="text-white/70 leading-relaxed">
-                  {currentTour.content}
-                </p>
-              </div>
+              {currentStepData.content}
             </motion.div>
           </AnimatePresence>
 
           {/* Navigation */}
-          <div className="flex items-center justify-between">
-            <Button
-              variant="outline"
-              onClick={handlePrevious}
-              disabled={currentStep === 0}
-              className="border-white/20 text-white/70 hover:bg-white/10 disabled:opacity-50"
-            >
-              <ChevronLeft className="mr-2 h-4 w-4" />
-              Previous
-            </Button>
-
-            <div className="flex gap-2">
-              {tourSteps.map((_, index) => (
-                <div
-                  key={index}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    index === currentStep
-                      ? "bg-emerald-500"
-                      : index < currentStep
-                      ? "bg-emerald-500/50"
-                      : "bg-white/20"
-                  }`}
-                />
-              ))}
-            </div>
-
+          <div className="flex gap-3">
+            {!isFirstStep && (
+              <Button
+                onClick={handlePrevious}
+                variant="outline"
+                className="border-white/20 text-white/70 hover:bg-white/10"
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Previous
+              </Button>
+            )}
+            
             <Button
               onClick={handleNext}
-              className="veri-gradient font-semibold"
+              className="flex-1 veri-gradient font-semibold"
             >
-              {currentStep === tourSteps.length - 1 ? (
+              {isLastStep ? (
                 <>
-                  <Play className="mr-2 h-4 w-4" />
-                  {currentTour.action}
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  Start Creating!
                 </>
               ) : (
                 <>
-                  {currentTour.action}
-                  <ChevronRight className="ml-2 h-4 w-4" />
+                  Next
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </>
               )}
             </Button>
-          </div>
 
-          {/* Skip Option */}
-          <div className="text-center">
-            <Button
-              variant="ghost"
-              onClick={handleSkip}
-              className="text-white/50 hover:text-white/70 text-sm"
-            >
-              Skip tour and explore on my own
-            </Button>
+            {!isLastStep && (
+              <Button
+                onClick={handleSkip}
+                variant="ghost"
+                className="text-white/60 hover:text-white"
+              >
+                Skip Tour
+              </Button>
+            )}
           </div>
         </div>
       </DialogContent>
     </Dialog>
-  );
-}
-
-// Persistent Tour Trigger Component for bottom-right corner
-interface TourTriggerProps {
-  onOpenTour: () => void;
-}
-
-export function TourTrigger({ onOpenTour }: TourTriggerProps) {
-  const [isVisible, setIsVisible] = useState(true);
-
-  if (!isVisible) return null;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="fixed bottom-6 right-6 z-50"
-    >
-      <Button
-        onClick={onOpenTour}
-        className="glass-effect border border-emerald-500/30 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 shadow-lg shadow-emerald-500/25 rounded-full p-3"
-        size="sm"
-      >
-        <Play className="h-4 w-4 mr-2" />
-        Tour
-      </Button>
-      
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => setIsVisible(false)}
-        className="absolute -top-2 -right-2 h-6 w-6 p-0 rounded-full bg-gray-800 hover:bg-gray-700 text-white/60 hover:text-white"
-      >
-        <X className="h-3 w-3" />
-      </Button>
-    </motion.div>
   );
 }
