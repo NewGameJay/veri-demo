@@ -42,7 +42,10 @@ export function MilestoneCelebration({ milestone, onClose }: MilestoneCelebratio
       category: milestone.type,
       type: 'milestone'
     });
-  }, [milestone, triggerCelebration]);
+    
+    // Call onClose to clear the milestone state immediately since global manager handles display
+    onClose();
+  }, [milestone, triggerCelebration, onClose]);
 
   // Return null since the global celebration manager handles display
   return null;
