@@ -280,7 +280,6 @@ export function ConsolidatedOnboarding({ isOpen, onComplete, onShowWalkthrough }
                       Welcome to 
                       <div className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-sm">
                         <VeriLogo className="h-10 w-auto" />
-                        <span className="veri-gradient bg-clip-text text-transparent font-termina">Veri</span>
                       </div>
                     </h1>
                     <p className="text-xl text-white/70 mb-8 max-w-2xl mx-auto">
