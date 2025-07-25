@@ -12,7 +12,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { TaskSkeleton } from "@/components/ui/veri-skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { triggerHaptic } from "@/lib/haptic";
-import { SocialShare } from "@/components/social/social-share";
+import { TaskCelebrationCard } from "@/components/celebrations/task-celebration-card";
 import { useAuth } from "@/contexts/auth-context";
 import type { Task } from "@shared/schema";
 import { motion } from "framer-motion";
@@ -92,8 +92,8 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const [tasksPerPage, setTasksPerPage] = useState(16);
   const INITIAL_TASKS_PER_PAGE = 16;
   const LOAD_MORE_INCREMENT = 6;
-  const [showShareModal, setShowShareModal] = useState(false);
-  const [shareTaskData, setShareTaskData] = useState<any>(null);
+  const [showCelebrationCard, setShowCelebrationCard] = useState(false);
+  const [celebrationData, setCelebrationData] = useState<any>(null);
   const [showFloatingPoints, setShowFloatingPoints] = useState(false);
   const [floatingPoints, setFloatingPoints] = useState(0);
   const [lastAnimatedTaskId, setLastAnimatedTaskId] = useState<number | null>(null);
@@ -1677,15 +1677,14 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
               return updated;
             });
             
-            // Prepare share data and show social sharing modal
-            setShareTaskData({
-              type: "task",
-              title: taskToVerify.title,
-              description: taskToVerify.description || `Completed ${taskToVerify.title} on Veri platform`,
+            // Prepare celebration data
+            setCelebrationData({
               xpEarned: taskToVerify.points,
-              streakDay: userStreak + (taskToVerify.streakBonus || 1), // Add streak bonus
-              veriScore: Math.min(100, Math.floor((userXP + taskToVerify.points) / 10)), // Calculate new VeriScore
-              platform: taskToVerify.platform
+              taskName: taskToVerify.title,
+              shareEnabled: true,
+              isSpecialTask: isSpecialTask,
+              streakBonus: taskToVerify.streakBonus || 1,
+              category: taskToVerify.category
             });
             
             setVerificationUrl("");
@@ -1693,9 +1692,9 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             setVerifyingTaskId(null);
             setActiveTab("completed");
 
-            // Show social sharing modal after floating animation completes
+            // Show celebration card after floating animation completes
             setTimeout(() => {
-              setShowShareModal(true);
+              setShowCelebrationCard(true);
             }, 2500);
           } else {
             throw new Error("Backend verification failed");
@@ -2240,16 +2239,15 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                           className="border-blue-500/20 text-blue-400 hover:bg-blue-500/10 hover:border-blue-400/40 hover:text-blue-300 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25"
                           onClick={() => {
                             triggerHaptic("light");
-                            setShareTaskData({
-                              type: "task",
-                              title: task.title,
-                              description: `Completed ${task.title} on Veri platform`,
+                            setCelebrationData({
                               xpEarned: task.points,
-                              streakDay: userStreak,
-                              veriScore: Math.min(100, Math.floor(userXP / 10)),
-                              platform: task.platform
+                              taskName: task.title,
+                              shareEnabled: true,
+                              isSpecialTask: false,
+                              streakBonus: 1,
+                              category: task.platform
                             });
-                            setShowShareModal(true);
+                            setShowCelebrationCard(true);
                           }}
                         >
                           <Share2 className="mr-1 h-3 w-3 group-hover:rotate-12 transition-transform duration-300" />
@@ -2456,17 +2454,16 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
         </DialogContent>
       </Dialog>
 
-      {/* Social Share Modal */}
-      {showShareModal && shareTaskData && user && (
-        <SocialShare
-          type={shareTaskData.type}
-          title={shareTaskData.title}
-          description={shareTaskData.description}
-          xpEarned={shareTaskData.xpEarned}
-          streakDay={shareTaskData.streakDay}
-          veriScore={shareTaskData.veriScore}
-          platform={shareTaskData.platform}
-          onClose={() => setShowShareModal(false)}
+      {/* Task Celebration Card */}
+      {showCelebrationCard && celebrationData && (
+        <TaskCelebrationCard
+          xpEarned={celebrationData.xpEarned}
+          taskName={celebrationData.taskName}
+          shareEnabled={celebrationData.shareEnabled}
+          isSpecialTask={celebrationData.isSpecialTask}
+          streakBonus={celebrationData.streakBonus}
+          category={celebrationData.category}
+          onClose={() => setShowCelebrationCard(false)}
         />
       )}
       
