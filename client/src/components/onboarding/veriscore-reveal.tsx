@@ -83,172 +83,236 @@ export function VeriScoreReveal({ isOpen, onComplete, userScore = 85, userName =
         initial={{ scale: 0.8, opacity: 0, rotateY: 180 }}
         animate={{ scale: 1, opacity: 1, rotateY: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className="relative max-w-lg w-full"
+        className="relative w-full max-w-sm"
+        style={{ perspective: "1000px" }}
       >
-        {/* Main VeriScore Card */}
+        {/* Credit Card Style VeriScore Card */}
         <motion.div
           whileHover={{ 
-            rotateY: 5,
-            rotateX: 5,
-            scale: 1.02,
+            rotateY: 15,
+            rotateX: 10,
+            scale: 1.05,
           }}
-          transition={{ duration: 0.3 }}
-          className="perspective-1000"
+          transition={{ duration: 0.4, type: "spring", stiffness: 300 }}
+          className="relative w-full h-64"
+          style={{ transformStyle: "preserve-3d" }}
         >
-          <Card className="glass-effect border-emerald-500/20 shadow-2xl shadow-emerald-500/10 bg-gradient-to-br from-gray-900/90 to-gray-800/90 hover:from-gray-800/90 hover:to-gray-700/90 transition-all duration-300">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
+          <Card className="absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-emerald-500/30 shadow-2xl shadow-emerald-500/20 overflow-hidden"
+                style={{ 
+                  background: "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%)",
+                  boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(16, 185, 129, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)"
+                }}>
+            {/* Card Header - Credit Card Style */}
+            <div className="absolute inset-0 p-6 flex flex-col justify-between">
+              {/* Top Section */}
+              <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <VeriLogo size="sm" />
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.3, type: "spring" }}
+                  >
+                    <VeriLogo size="md" />
+                  </motion.div>
                   <div>
-                    <CardTitle className="text-white text-lg font-termina">VeriScore</CardTitle>
-                    <p className="text-white/60 text-sm">Creator Rating</p>
+                    <motion.h2 
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.5 }}
+                      className="text-xl font-termina text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400"
+                    >
+                      VeriScore
+                    </motion.h2>
+                    <motion.p 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.6 }}
+                      className="text-white/60 text-sm font-medium"
+                    >
+                      Creator Rating
+                    </motion.p>
                   </div>
                 </div>
-                <Badge 
-                  variant="secondary" 
-                  className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 font-medium px-3 py-1"
-                >
-                  {userScore >= 80 ? "Diamond" : userScore >= 60 ? "Gold" : userScore >= 40 ? "Silver" : "Bronze"}
-                </Badge>
-              </div>
-            </CardHeader>
-            
-            <CardContent className="pt-0">
-              {/* Main Score Circle */}
-              <motion.div 
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.5, type: "spring", bounce: 0.4 }}
-                className="relative w-24 h-24 mx-auto mb-6"
-              >
-                {/* Animated background circle */}
-                <motion.div 
-                  className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-400/20 to-teal-500/20"
-                  animate={{ 
-                    rotate: 360,
-                    scale: [1, 1.05, 1]
-                  }}
-                  transition={{ 
-                    rotate: { duration: 10, repeat: Infinity, ease: "linear" },
-                    scale: { duration: 3, repeat: Infinity }
-                  }}
-                />
                 
-                {/* Score circle */}
-                <div className="absolute inset-1 bg-gray-900/80 rounded-full border border-emerald-500/30 flex items-center justify-center backdrop-blur-sm">
-                  <motion.span 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.8 }}
-                    className="text-2xl font-termina text-emerald-400"
-                  >
-                    {userScore}
-                  </motion.span>
-                </div>
-                
-                {/* Tier icon */}
-                <motion.div 
+                <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ delay: 1, type: "spring" }}
-                  className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-500/20 rounded-full border border-emerald-500/50 flex items-center justify-center"
+                  transition={{ delay: 0.7, type: "spring" }}
+                  className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-full px-3 py-1 text-xs font-bold backdrop-blur-sm"
                 >
-                  {userScore >= 80 ? <Crown className="h-3 w-3 text-emerald-400" /> :
-                   userScore >= 60 ? <Trophy className="h-3 w-3 text-emerald-400" /> :
-                   userScore >= 40 ? <Award className="h-3 w-3 text-emerald-400" /> :
-                   <Star className="h-3 w-3 text-emerald-400" />}
+                  {userScore >= 80 ? "DIAMOND" : userScore >= 60 ? "GOLD" : userScore >= 40 ? "SILVER" : "BRONZE"}
                 </motion.div>
-              </motion.div>
+              </div>
 
-              {/* Score breakdown */}
+              {/* Center Section - Main Score */}
+              <div className="flex items-center justify-center">
+                <motion.div 
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.8, type: "spring", bounce: 0.4 }}
+                  className="relative"
+                >
+                  <div className="text-center">
+                    <div className="relative w-20 h-20 mx-auto mb-3">
+                      {/* Animated ring */}
+                      <motion.div 
+                        className="absolute inset-0 rounded-full border-4 border-emerald-400/30"
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                      />
+                      <motion.div 
+                        className="absolute inset-2 rounded-full border-2 border-emerald-500/50"
+                        animate={{ rotate: -360 }}
+                        transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                      />
+                      
+                      {/* Score */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <motion.span 
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 1 }}
+                          className="text-4xl font-termina text-emerald-400 drop-shadow-lg"
+                        >
+                          {userScore}
+                        </motion.span>
+                      </div>
+                      
+                      {/* Tier icon */}
+                      <motion.div 
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 1.2, type: "spring" }}
+                        className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center shadow-lg"
+                      >
+                        {userScore >= 80 ? <Crown className="h-4 w-4 text-white" /> :
+                         userScore >= 60 ? <Trophy className="h-4 w-4 text-white" /> :
+                         userScore >= 40 ? <Award className="h-4 w-4 text-white" /> :
+                         <Star className="h-4 w-4 text-white" />}
+                      </motion.div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Bottom Section - Stats */}
               <motion.div 
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.7 }}
-                className="space-y-3 mb-6"
-              >
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-white/70">Authenticity</span>
-                  <span className="text-emerald-400 font-medium">{Math.min(userScore + 5, 100)}/100</span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-white/70">Engagement</span>
-                  <span className="text-emerald-400 font-medium">{Math.min(userScore + 3, 100)}/100</span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-white/70">Growth</span>
-                  <span className="text-emerald-400 font-medium">{Math.max(userScore - 10, 0)}/100</span>
-                </div>
-              </motion.div>
-
-              {/* Success message */}
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.9 }}
-                className="text-center mb-6"
-              >
-                <h3 className="text-xl font-termina text-white mb-2">Congratulations!</h3>
-                <p className="text-white/70 text-sm">Your creator profile is ready to grow</p>
-              </motion.div>
-
-              {/* Share Section */}
-              <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 1 }}
-                className="space-y-4"
+                className="grid grid-cols-3 gap-4 text-center"
               >
-                <h3 className="text-white font-semibold mb-4">Share your achievement and earn +500 XP</h3>
-                
-                <div className="flex justify-center gap-3">
-                  <Button
-                    onClick={() => handleShare('twitter')}
-                    disabled={isSharing}
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 text-sm"
-                  >
-                    <Twitter className="h-4 w-4 mr-2" />
-                    Twitter
-                  </Button>
-                  
-                  <Button
-                    onClick={() => handleShare('linkedin')}
-                    disabled={isSharing}
-                    className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 text-sm"
-                  >
-                    <Linkedin className="h-4 w-4 mr-2" />
-                    LinkedIn
-                  </Button>
-                  
-                  <Button
-                    onClick={() => handleShare('copy')}
-                    disabled={isSharing}
-                    variant="outline"
-                    className="border-white/20 text-white hover:bg-white/10 px-4 py-2 text-sm"
-                  >
-                    <Copy className="h-4 w-4 mr-2" />
-                    Copy
-                  </Button>
+                <div>
+                  <div className="text-emerald-400 text-lg font-bold font-termina">{Math.min(userScore + 5, 100)}</div>
+                  <div className="text-white/60 text-xs">Authenticity</div>
                 </div>
-
-                <div className="pt-6">
-                  <Button
-                    onClick={handleContinue}
-                    className="veri-gradient w-full py-3"
-                    size="lg"
-                  >
-                    Continue to Dashboard
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
+                <div>
+                  <div className="text-emerald-400 text-lg font-bold font-termina">{Math.min(userScore + 3, 100)}</div>
+                  <div className="text-white/60 text-xs">Engagement</div>
                 </div>
-
-                <p className="text-white/50 text-xs mt-4">
-                  You can always share your VeriScore later from your profile
-                </p>
+                <div>
+                  <div className="text-emerald-400 text-lg font-bold font-termina">{Math.max(userScore - 10, 0)}</div>
+                  <div className="text-white/60 text-xs">Growth</div>
+                </div>
               </motion.div>
-            </CardContent>
+
+              {/* Subtle pattern overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent via-emerald-500/5 to-transparent pointer-events-none" />
+              
+              {/* Floating sparkles */}
+              <motion.div
+                animate={{ 
+                  rotate: 360,
+                  scale: [1, 1.1, 1]
+                }}
+                transition={{ 
+                  rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+                  scale: { duration: 4, repeat: Infinity }
+                }}
+                className="absolute top-6 right-16 opacity-30"
+              >
+                <Sparkles className="h-4 w-4 text-emerald-400" />
+              </motion.div>
+              
+              <motion.div
+                animate={{ 
+                  rotate: -360,
+                  scale: [1, 1.2, 1]
+                }}
+                transition={{ 
+                  rotate: { duration: 15, repeat: Infinity, ease: "linear" },
+                  scale: { duration: 3, repeat: Infinity, delay: 2 }
+                }}
+                className="absolute bottom-8 left-8 opacity-20"
+              >
+                <Sparkles className="h-3 w-3 text-teal-400" />
+              </motion.div>
+            </div>
+
           </Card>
+        </motion.div>
+
+        {/* Success Message & Actions Below Card */}
+        <motion.div
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="mt-8 text-center space-y-6"
+        >
+          <div>
+            <h3 className="text-2xl font-termina text-white mb-2">Congratulations!</h3>
+            <p className="text-white/70">Your VeriScore card is ready to share</p>
+          </div>
+
+          {/* Share Section */}
+          <div className="space-y-4">
+            <p className="text-emerald-400 font-medium">Share your achievement and earn +500 XP</p>
+            
+            <div className="flex justify-center gap-3">
+              <Button
+                onClick={() => handleShare('twitter')}
+                disabled={isSharing}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 text-sm"
+              >
+                <Twitter className="h-4 w-4 mr-2" />
+                Twitter
+              </Button>
+              
+              <Button
+                onClick={() => handleShare('linkedin')}
+                disabled={isSharing}
+                className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 text-sm"
+              >
+                <Linkedin className="h-4 w-4 mr-2" />
+                LinkedIn
+              </Button>
+              
+              <Button
+                onClick={() => handleShare('copy')}
+                disabled={isSharing}
+                variant="outline"
+                className="border-white/20 text-white hover:bg-white/10 px-4 py-2 text-sm"
+              >
+                <Copy className="h-4 w-4 mr-2" />
+                Copy
+              </Button>
+            </div>
+
+            <div className="pt-4">
+              <Button
+                onClick={handleContinue}
+                className="veri-gradient w-full py-3"
+                size="lg"
+              >
+                Continue to Dashboard
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+
+            <p className="text-white/50 text-xs">
+              You can always share your VeriScore later from your profile
+            </p>
+          </div>
         </motion.div>
       </motion.div>
     </div>

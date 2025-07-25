@@ -268,7 +268,7 @@ export function ConsolidatedOnboarding({ isOpen, onComplete, onShowWalkthrough }
                     <h1 className="text-4xl md:text-6xl font-termina text-white mb-4 flex items-center justify-center gap-4 flex-wrap">
                       Welcome to 
                       <div className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-sm">
-                        <VeriLogo className="h-10 w-auto" />
+                        <VeriLogo size="lg" />
                       </div>
                     </h1>
                     <p className="text-xl text-white/70 mb-8 max-w-2xl mx-auto">
