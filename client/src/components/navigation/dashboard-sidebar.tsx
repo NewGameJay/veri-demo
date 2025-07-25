@@ -25,8 +25,6 @@ interface DashboardSidebarProps {
   onClose: () => void;
   onPin: () => void;
   onToggleCollapse: () => void;
-  activeTab?: string;
-  onTabChange?: (tab: string) => void;
   className?: string;
 }
 
@@ -37,8 +35,6 @@ export function DashboardSidebar({
   onClose, 
   onPin, 
   onToggleCollapse,
-  activeTab,
-  onTabChange,
   className 
 }: DashboardSidebarProps) {
   const [location, setLocation] = useLocation();
@@ -46,29 +42,23 @@ export function DashboardSidebar({
   const [activeItem, setActiveItem] = useState("dashboard");
 
   const menuItems = [
-    { id: "tasks", label: "Dashboard", icon: Home, path: "/dashboard", tab: "tasks" },
-    { id: "profile", label: "Profile", icon: User, path: "/dashboard", tab: "profile" },
-    { id: "analytics", label: "Analytics", icon: BarChart, path: "/dashboard", tab: "analytics" },
+    { id: "dashboard", label: "Dashboard", icon: Home, path: "/dashboard" },
+    { id: "profile", label: "Profile", icon: User, path: "/profile" },
+    { id: "analytics", label: "Analytics", icon: BarChart, path: "/analytics" },
     { id: "leaderboard", label: "Leaderboard", icon: Trophy, path: "/leaderboard" },
     { id: "campaigns", label: "Campaigns", icon: Target, path: "/campaigns" },
-    { id: "ai-agent", label: "AI Agent", icon: Bot, path: "/dashboard", tab: "ai-agent" },
+    { id: "ai-agent", label: "AI Agent", icon: Bot, path: "/ai-agent" },
     { id: "settings", label: "Settings", icon: Settings, path: "/settings" },
   ];
 
-  // Update active item based on current location and active tab
+  // Update active item based on current location
   useEffect(() => {
     const currentPath = location;
-    if (currentPath === "/dashboard" && activeTab) {
-      // For dashboard tabs, use the active tab
-      setActiveItem(activeTab);
-    } else {
-      // For other routes, use path-based matching
-      const activeMenuItem = menuItems.find(item => item.path === currentPath);
-      if (activeMenuItem) {
-        setActiveItem(activeMenuItem.id);
-      }
+    const activeMenuItem = menuItems.find(item => item.path === currentPath);
+    if (activeMenuItem) {
+      setActiveItem(activeMenuItem.id);
     }
-  }, [location, activeTab]);
+  }, [location]);
 
   // Keyboard navigation support
   useEffect(() => {
@@ -96,15 +86,7 @@ export function DashboardSidebar({
   const handleNavigation = (item: typeof menuItems[0]) => {
     triggerHaptic("light");
     setActiveItem(item.id);
-    
-    if (item.tab && onTabChange && location === "/dashboard") {
-      // For dashboard tabs, change tab instead of navigating
-      onTabChange(item.tab);
-    } else {
-      // For other routes, navigate normally
-      setLocation(item.path);
-    }
-    
+    setLocation(item.path);
     if (!isPinned) {
       onClose();
     }
@@ -187,7 +169,7 @@ export function DashboardSidebar({
                   "focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2",
                   // Active/selected state - should be applied last to override hover
                   (location === item.path || activeItem === item.id) ? 
-                    "bg-gray-900/95 text-white border-emerald-400/60 shadow-2xl shadow-emerald-400/40 ring-1 ring-emerald-400/50 scale-[1.02] transform translateY(-1px) hover:bg-gray-900/95 hover:text-white" :
+                    "bg-gray-900/95 text-white shadow-lg shadow-emerald-500/50 transform translateY(-1px) hover:bg-gray-900/95 hover:text-white border-emerald-500/30" :
                     "hover:bg-gray-900/95 hover:text-white hover:border-emerald-400/60 hover:shadow-2xl hover:shadow-emerald-400/40 hover:scale-[1.02] hover:ring-1 hover:ring-emerald-400/50"
                 )}
                 title={isCollapsed ? `${item.label} (Alt+${index + 1})` : `Alt+${index + 1}`}

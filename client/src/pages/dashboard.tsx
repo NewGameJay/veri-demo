@@ -26,7 +26,6 @@ export default function Dashboard() {
   const [showProfileBuilder, setShowProfileBuilder] = useState(false);
   const [isTabsCollapsed, setIsTabsCollapsed] = useState(false);
   const [isTaskGridExpanded, setIsTaskGridExpanded] = useState(false);
-  const [activeTab, setActiveTab] = useState("tasks");
   const { user, needsOnboarding, completeOnboarding } = useAuth();
   const { newMilestones, clearNewMilestones } = useMilestoneTracker();
 
@@ -108,8 +107,6 @@ export default function Dashboard() {
         onClose={() => setIsDashboardOpen(false)}
         onPin={() => {}} // Removed pin functionality
         onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
       />
       <main className="pt-20 px-4 lg:px-6">
         <div className="max-w-7xl mx-auto">
@@ -150,7 +147,7 @@ export default function Dashboard() {
           </div>
 
           {/* Enhanced Dashboard Tabs with Glass Effect - Sticky Navigation */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full animate-slide-in mb-6">
+          <Tabs defaultValue="tasks" className="w-full animate-slide-in mb-6">
             <div className={`sticky top-20 z-20 overflow-hidden transition-all duration-500 ease-in-out ${
               isTabsCollapsed 
                 ? 'h-0 opacity-0 pointer-events-none transform scale-95 -translate-y-2' 
