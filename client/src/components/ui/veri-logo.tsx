@@ -34,19 +34,19 @@ export function VeriLogo({ size = "md", showText = true, clickable = true }: Ver
   };
 
   return (
-    <div 
-      className={`flex items-center gap-2 animate-bounce-in ${clickable ? 'cursor-pointer hover:opacity-80 transition-opacity duration-200' : ''}`}
-      onClick={handleClick}
-      role={clickable ? "button" : undefined}
-      tabIndex={clickable ? 0 : undefined}
-      onKeyDown={clickable ? (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          handleClick();
-        }
-      } : undefined}
-    >
-      <div className={`${containerSize[size]} flex items-center justify-center hover-scale`}>
+    <>
+      <div 
+        className={`${containerSize[size]} flex items-center justify-center hover-scale animate-bounce-in ${clickable ? 'cursor-pointer hover:opacity-80 transition-opacity duration-200' : ''}`}
+        onClick={handleClick}
+        role={clickable ? "button" : undefined}
+        tabIndex={clickable ? 0 : undefined}
+        onKeyDown={clickable ? (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleClick();
+          }
+        } : undefined}
+      >
         <img 
           src={veriIconPath} 
           alt="Veri Logo" 
@@ -58,6 +58,6 @@ export function VeriLogo({ size = "md", showText = true, clickable = true }: Ver
           veri
         </span>
       )}
-    </div>
+    </>
   );
 }
