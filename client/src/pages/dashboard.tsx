@@ -93,15 +93,15 @@ export default function Dashboard() {
     return null;
   }
 
-  // Show onboarding for new users
-  if (needsOnboarding && !showProfileBuilder) {
-    return (
-      <ProfileBuilderOnboarding
-        onComplete={completeOnboarding}
-        onStartProfileBuilder={() => setShowProfileBuilder(true)}
-      />
-    );
-  }
+  // Show onboarding for new users - this is now handled by the auth modal's ImmersiveOnboarding
+  // if (needsOnboarding && !showProfileBuilder) {
+  //   return (
+  //     <ProfileBuilderOnboarding
+  //       onComplete={completeOnboarding}
+  //       onStartProfileBuilder={() => setShowProfileBuilder(true)}
+  //     />
+  //   );
+  // }
 
   const userStreak = user.streak || 0;
   const userXP = user.xpPoints || 0;
