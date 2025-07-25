@@ -163,7 +163,7 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
 
     const tooltipWidth = 320;
     const tooltipHeight = 180;
-    const offset = 20;
+    const offset = 16;
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
 
@@ -189,9 +189,9 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
         break;
     }
 
-    // Keep tooltip within viewport bounds
-    x = Math.max(10, Math.min(x, viewportWidth - tooltipWidth - 10));
-    y = Math.max(10, Math.min(y, viewportHeight - tooltipHeight - 10));
+    // Keep tooltip within viewport bounds with more padding
+    x = Math.max(20, Math.min(x, viewportWidth - tooltipWidth - 20));
+    y = Math.max(20, Math.min(y, viewportHeight - tooltipHeight - 20));
 
     return {
       left: `${x}px`,
@@ -214,7 +214,7 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
               top: `${targetPosition.y - 4}px`,
               width: `${targetPosition.width + 8}px`,
               height: `${targetPosition.height + 8}px`,
-              animation: 'pulse 2s infinite'
+              animation: 'pulse 3s infinite'
             }}
           />
         )}
@@ -239,10 +239,10 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
         {isVisible && currentStep && (
           <motion.div
             ref={tooltipRef}
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
             className="absolute pointer-events-auto z-60"
             style={getTooltipPosition()}
           >
