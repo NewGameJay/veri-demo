@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { VeriLogo } from "@/components/ui/veri-logo";
-import { ArrowRight, Sparkles, Zap, Users, Target } from "lucide-react";
+import { ArrowRight, Sparkles, Zap, Users, Target, ArrowLeft, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { InterestSelector } from "@/components/profile/interest-selector";
 import { AIBioGenerator } from "@/components/profile/ai-bio-generator";
@@ -53,6 +53,14 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
     }
   };
 
+  const handleBack = () => {
+    triggerHaptic('light');
+    const prevIndex = currentStepIndex - 1;
+    if (prevIndex >= 0) {
+      setCurrentStep(steps[prevIndex]);
+    }
+  };
+
   const handleSkip = () => {
     triggerHaptic('light');
     if (currentStep === 'social') {
@@ -71,6 +79,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
       // Save onboarding data
       await apiRequest(`/api/users/${user?.id}/onboarding`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           creatorType,
           interests,
@@ -105,7 +114,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-gray-900 overflow-auto">
+    <div className="fixed inset-0 z-50 bg-gray-900">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-gray-900 via-gray-800 to-black"></div>
@@ -114,18 +123,53 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-emerald-500/5 to-purple-500/5 rounded-full blur-2xl"></div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="sticky top-0 left-0 right-0 h-1 bg-gray-800 z-10">
-        <motion.div
-          className="h-full bg-gradient-to-r from-emerald-500 to-teal-500"
-          initial={{ width: 0 }}
-          animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-        />
+      {/* Top Navigation Bar */}
+      <div className="relative z-20 flex items-center justify-between p-4 bg-gray-900/50 backdrop-blur-sm">
+        {/* Back Button */}
+        {currentStep !== 'welcome' && (
+          <Button
+            onClick={handleBack}
+            variant="ghost"
+            size="sm"
+            className="text-white/70 hover:text-white hover:bg-white/10"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+        )}
+        {currentStep === 'welcome' && <div className="w-20" />}
+
+        {/* Progress Bar */}
+        <div className="flex-1 mx-6">
+          <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            />
+          </div>
+          <div className="text-center mt-2">
+            <span className="text-white/50 text-sm">
+              Step {currentStepIndex + 1} of {steps.length}
+            </span>
+          </div>
+        </div>
+
+        {/* Close Button */}
+        <Button
+          onClick={() => handleComplete()}
+          variant="ghost"
+          size="sm"
+          className="text-white/70 hover:text-white hover:bg-white/10"
+        >
+          <X className="h-4 w-4" />
+        </Button>
       </div>
 
-      {/* Main Content */}
-      <div className="relative min-h-screen flex items-center justify-center p-4 py-12">
+      {/* Main Scrollable Content */}
+      <div className="relative h-[calc(100vh-80px)] overflow-y-auto">
+        <div className="min-h-full flex items-center justify-center p-4 py-12">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
@@ -178,7 +222,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
 
             {/* Creator Type Step */}
             {currentStep === 'creator-type' && (
-              <div className="space-y-8 max-h-[80vh] overflow-y-auto">
+              <div className="space-y-8 w-full">
                 <div className="text-center">
                   <h2 className="text-3xl font-termina text-white mb-4">What type of creator are you?</h2>
                   <p className="text-white/70 text-lg">Choose the option that best describes your content style</p>
@@ -214,7 +258,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
                   ))}
                 </div>
 
-                <div className="flex justify-center gap-4 sticky bottom-0 bg-gray-900/90 backdrop-blur-sm p-4 rounded-lg">
+                <div className="flex justify-center gap-4 pt-8">
                   <Button
                     onClick={handleNext}
                     disabled={!canProceed()}
@@ -236,7 +280,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
 
             {/* Interests Step */}
             {currentStep === 'interests' && (
-              <div className="space-y-8 max-h-[80vh] overflow-y-auto">
+              <div className="space-y-8 w-full">
                 <div className="text-center">
                   <h2 className="text-3xl font-termina text-white mb-4">What are your interests?</h2>
                   <p className="text-white/70 text-lg">Select 3-5 topics you're passionate about</p>
@@ -253,7 +297,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
                   />
                 </div>
 
-                <div className="flex justify-center gap-4 sticky bottom-0 bg-gray-900/90 backdrop-blur-sm p-4 rounded-lg">
+                <div className="flex justify-center gap-4 pt-8">
                   <Button
                     onClick={handleNext}
                     disabled={!canProceed()}
@@ -275,7 +319,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
 
             {/* Goals Step */}
             {currentStep === 'goals' && (
-              <div className="space-y-8 max-h-[80vh] overflow-y-auto">
+              <div className="space-y-8 w-full">
                 <div className="text-center">
                   <h2 className="text-3xl font-termina text-white mb-4">What are your goals?</h2>
                   <p className="text-white/70 text-lg">Choose 2-3 objectives you want to achieve</p>
@@ -292,7 +336,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
                   />
                 </div>
 
-                <div className="flex justify-center gap-4 sticky bottom-0 bg-gray-900/90 backdrop-blur-sm p-4 rounded-lg">
+                <div className="flex justify-center gap-4 pt-8">
                   <Button
                     onClick={handleNext}
                     disabled={!canProceed()}
@@ -351,7 +395,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
 
             {/* Social Step */}
             {currentStep === 'social' && (
-              <div className="space-y-8 max-h-[80vh] overflow-y-auto">
+              <div className="space-y-8 w-full">
                 <div className="text-center">
                   <h2 className="text-3xl font-termina text-white mb-4">Connect Your Platforms</h2>
                   <p className="text-white/70 text-lg">Connect your social media accounts to verify your audience and unlock features</p>
@@ -399,7 +443,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
                       </Button>
                     </div>
 
-                    <div className="text-center pt-4 sticky bottom-0 bg-gray-900/90 backdrop-blur-sm p-4 rounded-lg">
+                    <div className="text-center pt-4">
                       <p className="text-white/50 text-sm mb-4">
                         Don't worry, you can always connect more platforms later in your settings.
                       </p>
@@ -426,6 +470,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
 
           </motion.div>
         </AnimatePresence>
+        </div>
       </div>
     </div>
   );
