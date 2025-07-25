@@ -12,14 +12,6 @@ interface Milestone {
 
 const MILESTONES: Milestone[] = [
   {
-    id: "first_task",
-    title: "First Steps",
-    description: "Complete your first task",
-    requirement: 1,
-    type: "tasks",
-    achieved: false
-  },
-  {
     id: "xp_100",
     title: "XP Rookie",
     description: "Earn 100 XP points",
