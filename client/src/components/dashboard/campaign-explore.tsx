@@ -12,11 +12,25 @@ interface CampaignExploreProps {
 }
 
 export function CampaignExplore({ userStreak, userXP }: CampaignExploreProps) {
-  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("popular");
 
   // Check if user is Veri+ Creator (3+ day streak)
   const isVeriPlusCreator = userStreak >= 3;
+
+  // Handle tag selection
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prev => 
+      prev.includes(tag) 
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    );
+  };
+
+  // Clear all selected tags
+  const clearAllTags = () => {
+    setSelectedTags([]);
+  };
 
   // Sample campaigns based on web3/blockchain gaming niche
   const campaigns = [
@@ -118,10 +132,10 @@ export function CampaignExplore({ userStreak, userXP }: CampaignExploreProps) {
     }
   ];
 
-  // Filter campaigns
+  // Filter campaigns - show all if no tags selected, otherwise match ANY selected tag
   const filteredCampaigns = campaigns.filter(campaign => {
-    if (categoryFilter === "all") return true;
-    return campaign.category === categoryFilter;
+    if (selectedTags.length === 0) return true;
+    return selectedTags.includes(campaign.category);
   });
 
   // Sort campaigns
@@ -166,21 +180,31 @@ export function CampaignExplore({ userStreak, userXP }: CampaignExploreProps) {
         </div>
         
         <div className="flex gap-3 flex-wrap">
-          {/* Category Filter Buttons */}
-          <div className="flex gap-2 flex-wrap">
-            {["all", "nft", "gaming", "defi", "blockchain", "esports", "marketplace"].map((category) => (
+          {/* Multi-Select Tag Filter Buttons */}
+          <div className="flex gap-2 flex-wrap items-center">
+            {["nft", "gaming", "defi", "blockchain", "esports", "marketplace"].map((tag) => (
               <button
-                key={category}
-                onClick={() => setCategoryFilter(category)}
+                key={tag}
+                onClick={() => toggleTag(tag)}
                 className={`px-3 py-1 text-xs rounded-lg transition-all duration-300 ${
-                  categoryFilter === category 
-                    ? "bg-emerald-500/30 text-emerald-300 border border-emerald-500/50" 
-                    : "bg-white/10 text-white/70 border border-white/20 hover:bg-white/20 hover:text-white"
+                  selectedTags.includes(tag)
+                    ? "bg-emerald-500/30 text-emerald-300 border border-emerald-500/50 shadow-lg shadow-emerald-500/25" 
+                    : "bg-white/10 text-white/70 border border-white/20 hover:bg-white/20 hover:text-white hover:border-white/30"
                 }`}
               >
-                {category === "all" ? "All Categories" : category.toUpperCase()}
+                {tag.toUpperCase()}
               </button>
             ))}
+            
+            {/* Clear All Button - only show when tags are selected */}
+            {selectedTags.length > 0 && (
+              <button
+                onClick={clearAllTags}
+                className="px-3 py-1 text-xs rounded-lg transition-all duration-300 bg-red-500/20 text-red-300 border border-red-500/30 hover:bg-red-500/30 hover:text-red-200 hover:border-red-400/50"
+              >
+                Clear All
+              </button>
+            )}
           </div>
           
           {/* Sort Filter Buttons */}
