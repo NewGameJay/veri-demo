@@ -263,8 +263,6 @@ export function ConsolidatedOnboarding({ isOpen, onComplete, onShowWalkthrough }
               {/* Welcome Step */}
               {currentStep === 'welcome' && (
                 <div className="text-center space-y-8">
-                  <VeriLogo className="w-24 h-24 mx-auto mb-6" />
-                  
                   <motion.div
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
