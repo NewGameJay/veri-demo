@@ -16,7 +16,7 @@ import { MilestoneCelebration } from "@/components/milestones/milestone-celebrat
 import { useMilestoneTracker } from "@/hooks/use-milestone-tracker";
 import { useAuth } from "@/contexts/auth-context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FullScreenOnboarding } from "@/components/onboarding/full-screen-onboarding";
+import { ConsolidatedOnboarding } from "@/components/onboarding/consolidated-onboarding";
 import { DashboardTour } from "@/components/dashboard/dashboard-tour";
 import { TrendingUp, Users, DollarSign } from "lucide-react";
 import { FaTwitter, FaYoutube, FaInstagram, FaTiktok } from "react-icons/fa";
@@ -536,8 +536,8 @@ export default function Dashboard() {
         />
       )}
 
-      {/* Full Screen Onboarding Modal */}
-      <FullScreenOnboarding
+      {/* Consolidated Onboarding Modal */}
+      <ConsolidatedOnboarding
         isOpen={showOnboarding}
         onComplete={completeOnboardingFlow}
         onShowDashboardTour={handleShowDashboardTour}

@@ -17,7 +17,7 @@ interface FullScreenOnboardingProps {
   onShowDashboardTour?: () => void;
 }
 
-type OnboardingStep = 'welcome' | 'creator-type' | 'interests' | 'goals' | 'bio' | 'social';
+type OnboardingStep = 'welcome' | 'profile-setup' | 'social';
 
 export function FullScreenOnboarding({ isOpen, onComplete, onShowDashboardTour }: FullScreenOnboardingProps) {
   const { user } = useAuth();
