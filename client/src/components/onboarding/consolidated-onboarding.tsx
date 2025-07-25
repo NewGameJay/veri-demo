@@ -128,12 +128,20 @@ export function ConsolidatedOnboarding({ isOpen, onComplete, onShowDashboardTour
     setIsCompleting(true);
     try {
       // Save onboarding data
-      await apiRequest(`/api/users/${user?.id}/onboarding`, 'POST', {
-        creatorType,
-        interests,
-        goals,
-        bio: `${creatorTypes.find(t => t.id === creatorType)?.emoji} ${creatorTypes.find(t => t.id === creatorType)?.label} | ${interests.slice(0, 3).join(', ')} | ${goals.slice(0, 2).join(' & ')}`
+      const response = await fetch(`/api/users/${user?.id}/onboarding`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          creatorType,
+          interests,
+          goals,
+          bio: `${creatorTypes.find(t => t.id === creatorType)?.emoji} ${creatorTypes.find(t => t.id === creatorType)?.label} | ${interests.slice(0, 3).join(', ')} | ${goals.slice(0, 2).join(' & ')}`
+        })
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       triggerHaptic('success');
       setShowVeriScoreReveal(true);
