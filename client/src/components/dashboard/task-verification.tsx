@@ -160,16 +160,16 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const microTasks = [
     {
       id: 0,
-      title: "MVP Demo Test Task",
-      description: "Complete this test task to unlock features",
-      platform: "demo",
-      icon: Trophy,
-      color: "text-green-400",
+      title: "Partner Quest: Share Your Veri Profile",
+      description: "Share your custom Veri profile to unlock premium features",
+      platform: "social",
+      icon: Share2,
+      color: "text-emerald-400",
       points: 10000,
       difficulty: "Easy",
-      estimatedTime: "30 seconds",
-      requirements: ["Enter any URL containing 'test', 'demo', or 'veri'", "Perfect for demos!", "Unlocks AI Agent tooling with 30-day streak"],
-      category: "mvp_demo",
+      estimatedTime: "2 minutes",
+      requirements: ["Share your veri.club/username profile link", "Post on any social platform", "Include #VeriCreator hashtag", "Unlocks AI Agent tooling with 30-day streak"],
+      category: "partner_quest",
       brand: "Veri Platform",
       streakBonus: 30
     },
@@ -1554,10 +1554,13 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
       }
       
       if (taskToVerify.id === 0) {
-        // MVP Demo Test Task - always verify successfully if URL contains "test", "demo", or "veri"
-        isValid = verificationUrl.toLowerCase().includes('test') || 
-                  verificationUrl.toLowerCase().includes('demo') || 
-                  verificationUrl.toLowerCase().includes('veri') ||
+        // Partner Quest Task - verify if URL contains social platform or veri profile sharing
+        isValid = verificationUrl.toLowerCase().includes('twitter') || 
+                  verificationUrl.toLowerCase().includes('instagram') || 
+                  verificationUrl.toLowerCase().includes('linkedin') ||
+                  verificationUrl.toLowerCase().includes('facebook') ||
+                  verificationUrl.toLowerCase().includes('veri.club') ||
+                  verificationUrl.toLowerCase().includes('vericreator') ||
                   verificationUrl === 'demo.veri.app';
       } else {
         // Regular tasks - mock verification with 80% success rate
@@ -1710,7 +1713,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
         toast({
           title: "Verification failed",
           description: selectedTask?.id === 0 ? 
-            "URL must contain 'test', 'demo', or 'veri' for the MVP Test Task" : 
+            "URL must be a social media post sharing your Veri profile with #VeriCreator hashtag" : 
             "We couldn't verify your task. Please check the URL and requirements.",
           variant: "destructive",
         });

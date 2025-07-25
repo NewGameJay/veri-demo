@@ -17,6 +17,7 @@ import { useMilestoneTracker } from "@/hooks/use-milestone-tracker";
 import { useAuth } from "@/contexts/auth-context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfileBuilderOnboarding } from "@/components/onboarding/profile-builder-onboarding";
+import { InteractiveTour, TourTrigger } from "@/components/onboarding/interactive-tour";
 import { TrendingUp, Users, DollarSign } from "lucide-react";
 import { FaTwitter, FaYoutube, FaInstagram, FaTiktok } from "react-icons/fa";
 
@@ -26,6 +27,10 @@ export default function Dashboard() {
   const [showProfileBuilder, setShowProfileBuilder] = useState(false);
   const [isTabsCollapsed, setIsTabsCollapsed] = useState(false);
   const [isTaskGridExpanded, setIsTaskGridExpanded] = useState(false);
+  const [showInteractiveTour, setShowInteractiveTour] = useState(false);
+  const [hasSeenTour, setHasSeenTour] = useState(() => 
+    localStorage.getItem('veri-dashboard-tour-seen') === 'true'
+  );
   const { user, needsOnboarding, completeOnboarding } = useAuth();
   const { newMilestones, clearNewMilestones } = useMilestoneTracker();
 
@@ -67,6 +72,21 @@ export default function Dashboard() {
   // Handle hamburger menu toggle
   const handleDashboardToggle = () => {
     setIsDashboardOpen(!isDashboardOpen);
+  };
+
+  // Interactive Tour handlers
+  const handleOpenTour = () => {
+    setShowInteractiveTour(true);
+  };
+
+  const handleCompleteTour = () => {
+    setShowInteractiveTour(false);
+    setHasSeenTour(true);
+    localStorage.setItem('veri-dashboard-tour-seen', 'true');
+  };
+
+  const handleCloseTour = () => {
+    setShowInteractiveTour(false);
   };
 
   if (!user) {
@@ -490,6 +510,18 @@ export default function Dashboard() {
           milestone={newMilestones[0]}
           onClose={() => clearNewMilestones()}
         />
+      )}
+
+      {/* Interactive Tour Modal */}
+      <InteractiveTour
+        isOpen={showInteractiveTour}
+        onClose={handleCloseTour}
+        onComplete={handleCompleteTour}
+      />
+
+      {/* Tour Trigger (bottom-right corner) */}
+      {!hasSeenTour && !showInteractiveTour && (
+        <TourTrigger onOpenTour={handleOpenTour} />
       )}
     </div>
   );

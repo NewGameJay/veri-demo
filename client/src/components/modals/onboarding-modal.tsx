@@ -6,16 +6,13 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/auth-context";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Twitter } from 'lucide-react';
-import { Youtube } from 'lucide-react';
-import { Instagram } from 'lucide-react';
-import { CheckCircle2 } from 'lucide-react';
-import { ArrowRight } from 'lucide-react';
-import { Users } from 'lucide-react';
-import { TrendingUp } from 'lucide-react';
+import { Twitter, Youtube, Instagram, CheckCircle2, ArrowRight, Users, TrendingUp, Sparkles, Star, Gamepad2, Camera, Music, Palette, Pen, Code, Monitor } from 'lucide-react';
+import { VeriLogo } from "@/components/ui/veri-logo";
+import { motion } from "framer-motion";
 
 interface OnboardingModalProps {
   isOpen: boolean;
@@ -28,6 +25,12 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [connectedPlatforms, setConnectedPlatforms] = useState<string[]>([]);
+  const [selectedCreatorType, setSelectedCreatorType] = useState<string>("");
+  const [profileData, setProfileData] = useState({
+    bio: "",
+    displayName: user?.firstName && user?.lastName ? `${user?.firstName} ${user?.lastName}` : user?.username || "",
+    website: "",
+  });
 
   const handleConnectSocial = async (platform: string) => {
     setIsLoading(true);
@@ -69,87 +72,58 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     onClose();
   };
 
-  const steps = [
-    {
-      title: "Welcome to Veri!",
-      description: "Let's get you set up to start earning points",
-      content: (
-        <div className="space-y-6">
-          <div className="text-center">
-            <h3 className="text-xl font-semibold text-white mb-2">
-              Welcome, {user?.firstName || user?.username}!
-            </h3>
-            <p className="text-white/60">
-              You've successfully created your Veri account. Let's get you started with earning points
-              through authentic social engagement.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="glass-effect p-4 rounded-lg border border-white/20">
-              <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="h-5 w-5 text-green-400" />
-                <h4 className="font-semibold text-white">Earn Points</h4>
-              </div>
-              <p className="text-sm text-white/60">
-                Complete tasks and connect social platforms to earn XP points
-              </p>
-            </div>
-            
-            <div className="glass-effect p-4 rounded-lg border border-white/20">
-              <div className="flex items-center gap-2 mb-2">
-                <Users className="h-5 w-5 text-purple-400" />
-                <h4 className="font-semibold text-white">Build Your Profile</h4>
-              </div>
-              <p className="text-sm text-white/60">
-                Create your creator profile and showcase your work
-              </p>
-            </div>
-          </div>
+  const creatorTypes = [
+    { id: "gaming", name: "Gaming Creator", icon: Gamepad2, description: "Gaming content, streams, reviews" },
+    { id: "lifestyle", name: "Lifestyle Creator", icon: Camera, description: "Lifestyle, fashion, daily vlogs" },
+    { id: "music", name: "Music Creator", icon: Music, description: "Music production, covers, performances" },
+    { id: "art", name: "Art Creator", icon: Palette, description: "Digital art, design, creative content" },
+    { id: "tech", name: "Tech Creator", icon: Monitor, description: "Tech reviews, tutorials, coding" },
+    { id: "writing", name: "Content Writer", icon: Pen, description: "Blogs, articles, copywriting" },
+  ];
 
-          <Button 
-            onClick={() => setStep(2)}
-            className="w-full veri-gradient font-semibold"
-          >
-            Get Started
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-      )
-    },
+  const steps = [
     {
       title: "Connect Your Social Platforms",
       description: "Link your social accounts to start earning points",
       content: (
         <div className="space-y-6">
+          {/* Veri Branding Header */}
           <div className="text-center">
+            <div className="flex justify-center mb-4">
+              <VeriLogo />
+            </div>
             <h3 className="text-xl font-semibold text-white mb-2">
               Connect Your Social Platforms
             </h3>
             <p className="text-white/60">
               Connect your social media accounts to verify your audience and start earning points.
-              Each connection earns you 25 XP!
+              Each connection earns you 500 XP!
             </p>
           </div>
 
           <div className="space-y-4">
             {[
-              { platform: "twitter", name: "Twitter", icon: Twitter, color: "text-blue-400" },
+              { platform: "twitter", name: "Twitter/X", icon: Twitter, color: "text-blue-400" },
               { platform: "youtube", name: "YouTube", icon: Youtube, color: "text-red-400" },
               { platform: "instagram", name: "Instagram", icon: Instagram, color: "text-pink-400" },
             ].map(({ platform, name, icon: Icon, color }) => (
-              <div key={platform} className="glass-effect p-4 rounded-lg border border-white/20">
+              <motion.div 
+                key={platform} 
+                className="glass-effect p-4 rounded-lg border border-white/20"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Icon className={`h-6 w-6 ${color}`} />
                     <div>
                       <h4 className="font-semibold text-white">{name}</h4>
-                      <p className="text-sm text-white/60">Connect to earn 25 XP</p>
+                      <p className="text-sm text-white/60">Connect to earn 500 XP</p>
                     </div>
                   </div>
                   
                   {connectedPlatforms.includes(platform) ? (
-                    <Badge variant="secondary" className="bg-green-500/20 text-green-400">
+                    <Badge variant="secondary" className="bg-emerald-500/20 text-emerald-400">
                       <CheckCircle2 className="mr-1 h-3 w-3" />
                       Connected
                     </Badge>
@@ -158,59 +132,120 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                       onClick={() => handleConnectSocial(platform)}
                       disabled={isLoading}
                       size="sm"
-                      className="veri-gradient"
+                      className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/50"
                     >
                       Connect
                     </Button>
                   )}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
 
-          <Button 
-            onClick={() => setStep(3)}
-            className="w-full veri-gradient font-semibold"
-            disabled={connectedPlatforms.length === 0}
-          >
-            Continue
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          <div className="flex gap-3">
+            <Button 
+              onClick={() => setStep(2)}
+              className="flex-1 veri-gradient font-semibold"
+              disabled={connectedPlatforms.length === 0}
+            >
+              Continue
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+            <Button 
+              onClick={() => setStep(2)}
+              variant="outline"
+              className="border-white/20 text-white/70 hover:bg-white/10"
+            >
+              Skip for now
+            </Button>
+          </div>
         </div>
       )
     },
     {
-      title: "You're All Set!",
-      description: "Start earning points through authentic engagement",
+      title: "Build Your Veri Profile",
+      description: "Tell us about yourself (optional - skip to dashboard anytime)",
       content: (
         <div className="space-y-6">
-          <div className="text-center">
-            <CheckCircle2 className="h-16 w-16 text-green-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-white mb-2">
-              You're All Set!
-            </h3>
-            <p className="text-white/60">
-              You've successfully connected {connectedPlatforms.length} platform(s) and earned{" "}
-              {25 + connectedPlatforms.length * 25} XP points!
-            </p>
+          {/* Creator Type Selection */}
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-3">What type of creator are you?</h3>
+            <div className="grid grid-cols-2 gap-3">
+              {creatorTypes.map((type) => (
+                <motion.button
+                  key={type.id}
+                  onClick={() => setSelectedCreatorType(type.id)}
+                  className={`p-3 rounded-lg border transition-all duration-300 text-left ${
+                    selectedCreatorType === type.id
+                      ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-300"
+                      : "glass-effect border-white/20 text-white/70 hover:bg-white/10"
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <type.icon className="h-5 w-5" />
+                    <span className="font-medium text-sm">{type.name}</span>
+                  </div>
+                  <p className="text-xs opacity-70">{type.description}</p>
+                </motion.button>
+              ))}
+            </div>
           </div>
 
-          <div className="glass-effect p-4 rounded-lg border border-white/20">
-            <h4 className="font-semibold text-white mb-2">What's Next?</h4>
-            <ul className="space-y-2 text-sm text-white/60">
-              <li>• Complete tasks to earn more XP points</li>
-              <li>• Build your creator profile</li>
-              <li>• Climb the leaderboard</li>
-              <li>• Unlock AI agent features with higher streak</li>
-            </ul>
+          {/* Optional Profile Details */}
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="displayName" className="text-white mb-2 block">Display Name</Label>
+              <Input
+                id="displayName"
+                value={profileData.displayName}
+                onChange={(e) => setProfileData(prev => ({ ...prev, displayName: e.target.value }))}
+                className="glass-secondary border-white/20 text-white"
+                placeholder="Your display name"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="bio" className="text-white mb-2 block">Bio (Optional)</Label>
+              <Textarea
+                id="bio"
+                value={profileData.bio}
+                onChange={(e) => setProfileData(prev => ({ ...prev, bio: e.target.value }))}
+                className="glass-secondary border-white/20 text-white resize-none"
+                placeholder="Tell us about yourself and what you create..."
+                rows={3}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="website" className="text-white mb-2 block">Website (Optional)</Label>
+              <Input
+                id="website"
+                value={profileData.website}
+                onChange={(e) => setProfileData(prev => ({ ...prev, website: e.target.value }))}
+                className="glass-secondary border-white/20 text-white"
+                placeholder="https://yourwebsite.com"
+              />
+            </div>
           </div>
 
-          <Button 
-            onClick={handleComplete}
-            className="w-full veri-gradient font-semibold"
-          >
-            Start Using Veri
-          </Button>
+          <div className="flex gap-3">
+            <Button 
+              onClick={handleComplete}
+              className="flex-1 veri-gradient font-semibold"
+            >
+              <Sparkles className="mr-2 h-4 w-4" />
+              Complete Setup
+            </Button>
+            <Button 
+              onClick={handleComplete}
+              variant="outline"
+              className="border-white/20 text-white/70 hover:bg-white/10"
+            >
+              Skip to Dashboard
+            </Button>
+          </div>
         </div>
       )
     }
