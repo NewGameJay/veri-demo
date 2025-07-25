@@ -1553,18 +1553,20 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
         throw new Error('Task not found');
       }
       
+      // For demo users, allow any valid URL to complete tasks
+      const isValidUrl = verificationUrl.trim().startsWith('http') || 
+                         verificationUrl.trim().startsWith('www.') ||
+                         verificationUrl.trim().includes('.com') ||
+                         verificationUrl.trim().includes('.org') ||
+                         verificationUrl.trim().includes('.net') ||
+                         verificationUrl.trim().length > 5; // Basic URL validation
+      
       if (taskToVerify.id === 0) {
-        // Partner Quest Task - verify if URL contains social platform or veri profile sharing
-        isValid = verificationUrl.toLowerCase().includes('twitter') || 
-                  verificationUrl.toLowerCase().includes('instagram') || 
-                  verificationUrl.toLowerCase().includes('linkedin') ||
-                  verificationUrl.toLowerCase().includes('facebook') ||
-                  verificationUrl.toLowerCase().includes('veri.club') ||
-                  verificationUrl.toLowerCase().includes('vericreator') ||
-                  verificationUrl === 'demo.veri.app';
+        // Partner Quest Task - any valid link works for demo
+        isValid = isValidUrl;
       } else {
-        // Regular tasks - mock verification with 80% success rate
-        isValid = Math.random() > 0.2;
+        // Regular tasks - any valid URL works for demo testing
+        isValid = isValidUrl;
       }
       
       if (isValid) {
@@ -2300,13 +2302,13 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
             <div>
               <Label className="text-white text-sm">Verification URL</Label>
               <Input
-                placeholder="Paste the URL of your completed task (e.g., Tweet URL, Instagram post URL)"
+                placeholder="Paste any link for demo testing (e.g., https://example.com)"
                 value={verificationUrl}
                 onChange={(e) => setVerificationUrl(e.target.value)}
                 className="mt-1 glass-effect border-white/20 bg-white/10 text-white placeholder-white/40"
               />
               <p className="text-xs text-white/50 mt-1">
-                Provide a link to prove you completed the task
+                Demo mode: Any valid URL will complete the task
               </p>
             </div>
             

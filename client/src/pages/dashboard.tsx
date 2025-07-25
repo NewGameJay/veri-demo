@@ -17,7 +17,7 @@ import { useMilestoneTracker } from "@/hooks/use-milestone-tracker";
 import { useAuth } from "@/contexts/auth-context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ConsolidatedOnboarding } from "@/components/onboarding/consolidated-onboarding";
-import { DashboardTour } from "@/components/dashboard/dashboard-tour";
+
 import { InteractiveWalkthrough } from "@/components/onboarding/interactive-walkthrough";
 import { TrendingUp, Users, DollarSign } from "lucide-react";
 import { FaTwitter, FaYoutube, FaInstagram, FaTiktok } from "react-icons/fa";
@@ -26,7 +26,7 @@ export default function Dashboard() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [showDashboardTour, setShowDashboardTour] = useState(false);
+
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
   const [isTabsCollapsed, setIsTabsCollapsed] = useState(false);
@@ -41,7 +41,7 @@ export default function Dashboard() {
   });
 
   // Check if user has completed onboarding and has social connections
-  const hasCompletedProfile = user && (user.interests?.length > 0 || user.creatorType);
+  const hasCompletedProfile = user && ((Array.isArray(user.interests) && user.interests.length > 0) || user.creatorType);
   const hasSocialConnections = connections && connections.length > 0;
   const shouldLockFeatures = !hasCompletedProfile || !hasSocialConnections;
   const needsOnboardingFlow = !hasCompletedProfile;
@@ -87,22 +87,7 @@ export default function Dashboard() {
     completeOnboarding();
   };
 
-  const handleShowDashboardTour = () => {
-    setShowDashboardTour(true);
-  };
 
-  const handleTourComplete = () => {
-    setShowDashboardTour(false);
-    localStorage.setItem('dashboardTourCompleted', 'true');
-    // Start interactive walkthrough after tour completes
-    setTimeout(() => {
-      setShowWalkthrough(true);
-    }, 500);
-  };
-
-  const handleTourClose = () => {
-    setShowDashboardTour(false);
-  };
 
   const handleWalkthroughComplete = () => {
     setShowWalkthrough(false);
@@ -562,14 +547,7 @@ export default function Dashboard() {
       <ConsolidatedOnboarding
         isOpen={showOnboarding}
         onComplete={completeOnboardingFlow}
-        onShowDashboardTour={handleShowDashboardTour}
-      />
-
-      {/* Dashboard Tour */}
-      <DashboardTour
-        isOpen={showDashboardTour}
-        onComplete={handleTourComplete}
-        onClose={handleTourClose}
+        onShowWalkthrough={() => setShowWalkthrough(true)}
       />
 
       {/* Interactive Walkthrough */}

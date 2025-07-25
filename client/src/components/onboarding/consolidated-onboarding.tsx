@@ -14,7 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 interface ConsolidatedOnboardingProps {
   isOpen: boolean;
   onComplete: () => void;
-  onShowDashboardTour?: () => void;
+  onShowWalkthrough: () => void;
 }
 
 type OnboardingStep = 'welcome' | 'profile-setup' | 'social';
@@ -58,7 +58,7 @@ const creatorTypes = [
   }
 ];
 
-export function ConsolidatedOnboarding({ isOpen, onComplete, onShowDashboardTour }: ConsolidatedOnboardingProps) {
+export function ConsolidatedOnboarding({ isOpen, onComplete, onShowWalkthrough }: ConsolidatedOnboardingProps) {
   const { user } = useAuth();
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState<OnboardingStep>('welcome');
@@ -163,7 +163,7 @@ export function ConsolidatedOnboarding({ isOpen, onComplete, onShowDashboardTour
     onComplete();
     // Show dashboard tour after a short delay
     setTimeout(() => {
-      onShowDashboardTour?.();
+      onShowWalkthrough();
     }, 500);
   };
 
