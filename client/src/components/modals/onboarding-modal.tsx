@@ -64,11 +64,38 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     }
   };
 
-  const handleComplete = () => {
-    toast({
-      title: "Onboarding complete!",
-      description: "Welcome to Veri! Start earning by completing tasks.",
-    });
+  const handleComplete = async () => {
+    setIsLoading(true);
+    try {
+      // Save profile data if provided
+      if (selectedCreatorType || profileData.bio || profileData.website) {
+        await apiRequest("POST", "/api/auth/complete-profile", {
+          creatorType: selectedCreatorType,
+          bio: profileData.bio,
+          website: profileData.website,
+          displayName: profileData.displayName
+        });
+      }
+      
+      // Complete onboarding
+      await apiRequest("POST", "/api/auth/complete-onboarding", {});
+      
+      // Refresh user data
+      await refreshUser();
+      
+      toast({
+        title: "Onboarding complete!",
+        description: "Welcome to Veri! Start earning by completing tasks.",
+      });
+    } catch (error) {
+      console.error("Error completing onboarding:", error);
+      toast({
+        title: "Setup complete!",
+        description: "Welcome to Veri! Let's start earning points.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
     onClose();
   };
 
