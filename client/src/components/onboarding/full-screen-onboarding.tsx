@@ -6,6 +6,7 @@ import { ArrowRight, Sparkles, Zap, Users, Target, ArrowLeft, X } from "lucide-r
 import { motion, AnimatePresence } from "framer-motion";
 import { InterestSelector } from "@/components/profile/interest-selector";
 import { AIBioGenerator } from "@/components/profile/ai-bio-generator";
+import { VeriScoreReveal } from "./veriscore-reveal";
 import { useAuth } from "@/contexts/auth-context";
 import { apiRequest } from "@/lib/queryClient";
 import { triggerHaptic } from "@/lib/haptic";
@@ -13,14 +14,16 @@ import { triggerHaptic } from "@/lib/haptic";
 interface FullScreenOnboardingProps {
   isOpen: boolean;
   onComplete: () => void;
+  onShowDashboardTour?: () => void;
 }
 
 type OnboardingStep = 'welcome' | 'creator-type' | 'interests' | 'goals' | 'bio' | 'social';
 
-export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardingProps) {
+export function FullScreenOnboarding({ isOpen, onComplete, onShowDashboardTour }: FullScreenOnboardingProps) {
   const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState<OnboardingStep>('welcome');
   const [isCompleting, setIsCompleting] = useState(false);
+  const [showVeriScoreReveal, setShowVeriScoreReveal] = useState(false);
   
   // Form data
   const [creatorType, setCreatorType] = useState("");
@@ -89,13 +92,22 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
       });
 
       triggerHaptic('success');
-      onComplete();
+      setShowVeriScoreReveal(true);
     } catch (error) {
       console.error('Failed to complete onboarding:', error);
       triggerHaptic('error');
     } finally {
       setIsCompleting(false);
     }
+  };
+
+  const handleVeriScoreComplete = () => {
+    setShowVeriScoreReveal(false);
+    onComplete();
+    // Show dashboard tour after a short delay
+    setTimeout(() => {
+      onShowDashboardTour?.();
+    }, 500);
   };
 
   const canProceed = () => {
@@ -195,8 +207,12 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.4, duration: 0.6 }}
                 >
-                  <h1 className="text-4xl md:text-6xl font-termina text-white mb-4">
-                    Welcome to <span className="veri-gradient bg-clip-text text-transparent">Veri</span>
+                  <h1 className="text-4xl md:text-6xl font-termina text-white mb-4 flex items-center justify-center gap-4 flex-wrap">
+                    Welcome to 
+                    <div className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-sm">
+                      <VeriLogo className="h-10 w-auto" />
+                      <span className="veri-gradient bg-clip-text text-transparent font-termina">Veri</span>
+                    </div>
                   </h1>
                   <p className="text-xl text-white/70 mb-8 max-w-2xl mx-auto">
                     Let's set up your creator profile in just a few steps. This will help us personalize your experience and connect you with the right opportunities.
@@ -472,6 +488,14 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
         </AnimatePresence>
         </div>
       </div>
+
+      {/* VeriScore Reveal Modal */}
+      <VeriScoreReveal
+        isOpen={showVeriScoreReveal}
+        onComplete={handleVeriScoreComplete}
+        userScore={85}
+        userName={user?.username}
+      />
     </div>
   );
 }

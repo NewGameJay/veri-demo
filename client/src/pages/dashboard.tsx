@@ -17,6 +17,7 @@ import { useMilestoneTracker } from "@/hooks/use-milestone-tracker";
 import { useAuth } from "@/contexts/auth-context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FullScreenOnboarding } from "@/components/onboarding/full-screen-onboarding";
+import { DashboardTour } from "@/components/dashboard/dashboard-tour";
 import { TrendingUp, Users, DollarSign } from "lucide-react";
 import { FaTwitter, FaYoutube, FaInstagram, FaTiktok } from "react-icons/fa";
 
@@ -24,6 +25,7 @@ export default function Dashboard() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showDashboardTour, setShowDashboardTour] = useState(false);
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
   const [isTabsCollapsed, setIsTabsCollapsed] = useState(false);
   const [isTaskGridExpanded, setIsTaskGridExpanded] = useState(false);
@@ -75,6 +77,25 @@ export default function Dashboard() {
   // Handle hamburger menu toggle
   const handleDashboardToggle = () => {
     setIsDashboardOpen(!isDashboardOpen);
+  };
+
+  const completeOnboardingFlow = () => {
+    setShowOnboarding(false);
+    setOnboardingCompleted(true);
+    completeOnboarding();
+  };
+
+  const handleShowDashboardTour = () => {
+    setShowDashboardTour(true);
+  };
+
+  const handleTourComplete = () => {
+    setShowDashboardTour(false);
+    localStorage.setItem('dashboardTourCompleted', 'true');
+  };
+
+  const handleTourClose = () => {
+    setShowDashboardTour(false);
   };
 
 
@@ -176,14 +197,15 @@ export default function Dashboard() {
                 : 'glass-primary rounded-lg mb-6 p-1 pl-[0px] pr-[0px] pt-[0px] pb-[0px] transform scale-100 translate-y-0'
             }`}>
               <TabsList className="grid w-full grid-cols-5 bg-transparent border-0 transition-all duration-500 ease-in-out">
-                <TabsTrigger value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">Quests</TabsTrigger>
-                <TabsTrigger value="campaigns" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">
+                <TabsTrigger data-tour="questing" value="tasks" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">Quests</TabsTrigger>
+                <TabsTrigger data-tour="campaigns" value="campaigns" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">
                   Campaigns
                 </TabsTrigger>
-                <TabsTrigger value="profile" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">
+                <TabsTrigger data-tour="profile-builder" value="profile" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">
                   Profile
                 </TabsTrigger>
                 <TabsTrigger 
+                  data-tour="ai-agent"
                   value="ai-agent" 
                   className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out relative group data-[state=active]:transform data-[state=active]:translateY(-1px)"
                   disabled={!isMemorizzUnlocked}
@@ -198,7 +220,7 @@ export default function Dashboard() {
                     </div>
                   )}
                 </TabsTrigger>
-                <TabsTrigger value="analytics" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">
+                <TabsTrigger data-tour="analytics" value="analytics" className="text-white data-[state=active]:veri-gradient data-[state=active]:text-white font-inter button-3d press-animation ripple-effect transition-all duration-300 ease-out data-[state=active]:transform data-[state=active]:translateY(-1px)">
                   Analytics
                 </TabsTrigger>
               </TabsList>
@@ -517,7 +539,15 @@ export default function Dashboard() {
       {/* Full Screen Onboarding Modal */}
       <FullScreenOnboarding
         isOpen={showOnboarding}
-        onComplete={handleOnboardingComplete}
+        onComplete={completeOnboardingFlow}
+        onShowDashboardTour={handleShowDashboardTour}
+      />
+
+      {/* Dashboard Tour */}
+      <DashboardTour
+        isOpen={showDashboardTour}
+        onComplete={handleTourComplete}
+        onClose={handleTourClose}
       />
     </div>
   );
