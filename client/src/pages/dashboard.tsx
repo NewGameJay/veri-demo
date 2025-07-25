@@ -18,6 +18,7 @@ import { useAuth } from "@/contexts/auth-context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ConsolidatedOnboarding } from "@/components/onboarding/consolidated-onboarding";
 import { DashboardTour } from "@/components/dashboard/dashboard-tour";
+import { InteractiveWalkthrough } from "@/components/onboarding/interactive-walkthrough";
 import { TrendingUp, Users, DollarSign } from "lucide-react";
 import { FaTwitter, FaYoutube, FaInstagram, FaTiktok } from "react-icons/fa";
 
@@ -26,6 +27,7 @@ export default function Dashboard() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showDashboardTour, setShowDashboardTour] = useState(false);
+  const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
   const [isTabsCollapsed, setIsTabsCollapsed] = useState(false);
   const [isTaskGridExpanded, setIsTaskGridExpanded] = useState(false);
@@ -92,10 +94,22 @@ export default function Dashboard() {
   const handleTourComplete = () => {
     setShowDashboardTour(false);
     localStorage.setItem('dashboardTourCompleted', 'true');
+    // Start interactive walkthrough after tour completes
+    setTimeout(() => {
+      setShowWalkthrough(true);
+    }, 500);
   };
 
   const handleTourClose = () => {
     setShowDashboardTour(false);
+  };
+
+  const handleWalkthroughComplete = () => {
+    setShowWalkthrough(false);
+  };
+
+  const handleWalkthroughClose = () => {
+    setShowWalkthrough(false);
   };
 
 
@@ -240,8 +254,12 @@ export default function Dashboard() {
                   
                   {/* Sidebar components moved below in fullscreen */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-                    <VeriScoreCard />
-                    <SocialConnections />
+                    <div data-tour="veriscore-card">
+                      <VeriScoreCard />
+                    </div>
+                    <div data-tour="social-connections">
+                      <SocialConnections />
+                    </div>
                     <Leaderboard />
                   </div>
                 </div>
@@ -261,8 +279,12 @@ export default function Dashboard() {
 
                   {/* Right Column - Sidebar Content */}
                   <div className="lg:col-span-4 space-y-6">
-                    <VeriScoreCard />
-                    <SocialConnections />
+                    <div data-tour="veriscore-card">
+                      <VeriScoreCard />
+                    </div>
+                    <div data-tour="social-connections">
+                      <SocialConnections />
+                    </div>
                     <Leaderboard />
                   </div>
                 </div>
@@ -548,6 +570,13 @@ export default function Dashboard() {
         isOpen={showDashboardTour}
         onComplete={handleTourComplete}
         onClose={handleTourClose}
+      />
+
+      {/* Interactive Walkthrough */}
+      <InteractiveWalkthrough
+        isOpen={showWalkthrough}
+        onComplete={handleWalkthroughComplete}
+        onClose={handleWalkthroughClose}
       />
     </div>
   );
