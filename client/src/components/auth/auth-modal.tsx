@@ -23,12 +23,9 @@ export function AuthModal({ isOpen, onClose, initialMode = "signup", onSuccess }
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   const handleAuthSuccess = () => {
-    if (mode === "signup") {
-      setShowOnboarding(true);
-    } else {
-      onClose();
-      onSuccess?.();
-    }
+    // Simply close auth modal and go to dashboard for both login and signup
+    onClose();
+    onSuccess?.();
   };
 
   const handleOnboardingComplete = () => {
@@ -62,10 +59,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "signup", onSuccess }
         </DialogContent>
       </Dialog>
       
-      <ImmersiveOnboarding 
-        isOpen={showOnboarding} 
-        onClose={handleOnboardingComplete}
-      />
+
     </>
   );
 }

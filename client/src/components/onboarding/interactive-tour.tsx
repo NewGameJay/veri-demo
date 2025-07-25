@@ -52,6 +52,11 @@ export function TourTrigger({ onOpenTour }: TourTriggerProps) {
 
 export function InteractiveTour({ isOpen, onClose, onComplete }: InteractiveTourProps) {
   const [currentStep, setCurrentStep] = useState(0);
+  
+  const handleComplete = () => {
+    onComplete();
+    onClose();
+  };
 
   const tourSteps = [
     {
@@ -247,25 +252,58 @@ export function InteractiveTour({ isOpen, onClose, onComplete }: InteractiveTour
     }
   }, [isOpen]);
 
+  if (!isOpen) return null;
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg glass-effect border-white/20 bg-gray-900/95">
-        <DialogHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <currentStepData.icon className="h-6 w-6 text-emerald-400" />
-              <DialogTitle className="text-white">{currentStepData.title}</DialogTitle>
+    <div className="fixed inset-0 z-50 bg-gray-900/95 backdrop-blur-xl flex items-center justify-center p-4">
+      {/* Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 -left-1/4 w-96 h-96 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 -right-1/4 w-96 h-96 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
+
+      {/* Main Content */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="relative w-full max-w-2xl glass-effect border border-white/20 rounded-2xl p-8"
+      >
+        {/* Header */}
+        <div className="relative pb-6">
+          <button
+            onClick={onClose}
+            className="absolute -top-2 -right-2 w-8 h-8 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors z-10"
+          >
+            <X className="h-4 w-4 text-white" />
+          </button>
+          
+          <div className="text-center">
+            <div className="flex justify-center mb-4">
+              <div className="bg-emerald-500/20 p-3 rounded-full">
+                <currentStepData.icon className="h-8 w-8 text-emerald-400" />
+              </div>
             </div>
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={onClose}
-              className="text-white/60 hover:text-white"
-            >
-              <X className="h-4 w-4" />
-            </Button>
+            <h1 className="text-2xl font-termina text-white mb-2">
+              {currentStepData.title}
+            </h1>
+            <p className="text-white/70 mb-4">{currentStepData.description}</p>
+            
+            <div className="flex justify-center gap-2">
+              {tourSteps.map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    index <= currentStep
+                      ? "bg-emerald-400"
+                      : "bg-white/20"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
-        </DialogHeader>
+        </div>
         
         <div className="space-y-6">
           {/* Progress Bar */}
@@ -341,7 +379,7 @@ export function InteractiveTour({ isOpen, onClose, onComplete }: InteractiveTour
             )}
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </motion.div>
+    </div>
   );
 }

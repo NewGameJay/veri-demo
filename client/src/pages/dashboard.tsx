@@ -16,35 +16,22 @@ import { MilestoneCelebration } from "@/components/milestones/milestone-celebrat
 import { useMilestoneTracker } from "@/hooks/use-milestone-tracker";
 import { useAuth } from "@/contexts/auth-context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ProfileBuilderOnboarding } from "@/components/onboarding/profile-builder-onboarding";
-import { InteractiveTour, TourTrigger } from "@/components/onboarding/interactive-tour";
+import { InteractiveTour } from "@/components/onboarding/interactive-tour-simple";
 import { TrendingUp, Users, DollarSign } from "lucide-react";
 import { FaTwitter, FaYoutube, FaInstagram, FaTiktok } from "react-icons/fa";
 
 export default function Dashboard() {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [showProfileBuilder, setShowProfileBuilder] = useState(false);
+  const [showInteractiveTour, setShowInteractiveTour] = useState(false);
+  const [tourCompleted, setTourCompleted] = useState(false);
   const [isTabsCollapsed, setIsTabsCollapsed] = useState(false);
   const [isTaskGridExpanded, setIsTaskGridExpanded] = useState(false);
-  const [showInteractiveTour, setShowInteractiveTour] = useState(false);
-  const [hasSeenTour, setHasSeenTour] = useState(() => 
-    localStorage.getItem('veri-dashboard-tour-seen') === 'true'
-  );
-
-  const handleOpenTour = () => {
-    setShowInteractiveTour(true);
-  };
-
-  const handleCloseTour = () => {
-    setShowInteractiveTour(false);
-  };
-
-  const handleCompleteTour = () => {
-    setHasSeenTour(true);
-    localStorage.setItem('veri-dashboard-tour-seen', 'true');
-  };
   const { user, needsOnboarding, completeOnboarding } = useAuth();
+  
+  // Check if user has completed their profile (at least has interests or creator type)
+  const hasCompletedProfile = user && (user.interests?.length > 0 || user.creatorType);
+  const shouldLockFeatures = !hasCompletedProfile;
   const { newMilestones, clearNewMilestones } = useMilestoneTracker();
 
   const { data: connections } = useQuery({
@@ -93,15 +80,27 @@ export default function Dashboard() {
     return null;
   }
 
-  // Show onboarding for new users - this is now handled by the auth modal's ImmersiveOnboarding
-  // if (needsOnboarding && !showProfileBuilder) {
-  //   return (
-  //     <ProfileBuilderOnboarding
-  //       onComplete={completeOnboarding}
-  //       onStartProfileBuilder={() => setShowProfileBuilder(true)}
-  //     />
-  //   );
-  // }
+  // Show interactive tour for new users immediately when they reach dashboard
+  useEffect(() => {
+    if (needsOnboarding && !showInteractiveTour && !tourCompleted) {
+      // Small delay to ensure dashboard is rendered
+      const timer = setTimeout(() => {
+        setShowInteractiveTour(true);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [needsOnboarding, showInteractiveTour, tourCompleted]);
+
+  const handleTourComplete = async () => {
+    setShowInteractiveTour(false);
+    setTourCompleted(true);
+    // Mark onboarding as complete but keep features locked except profile
+    try {
+      await completeOnboarding();
+    } catch (error) {
+      console.error("Error completing onboarding:", error);
+    }
+  };
 
   const userStreak = user.streak || 0;
   const userXP = user.xpPoints || 0;
@@ -515,14 +514,9 @@ export default function Dashboard() {
       {/* Interactive Tour Modal */}
       <InteractiveTour
         isOpen={showInteractiveTour}
-        onClose={handleCloseTour}
-        onComplete={handleCompleteTour}
+        onClose={() => setShowInteractiveTour(false)}
+        onComplete={handleTourComplete}
       />
-
-      {/* Tour Trigger (bottom-right corner) */}
-      {!hasSeenTour && !showInteractiveTour && (
-        <TourTrigger onOpenTour={handleOpenTour} />
-      )}
     </div>
   );
 }
