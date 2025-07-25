@@ -105,7 +105,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-gray-900 overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-gray-900 overflow-auto">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-gray-900 via-gray-800 to-black"></div>
@@ -115,7 +115,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
       </div>
 
       {/* Progress Bar */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gray-800 z-10">
+      <div className="sticky top-0 left-0 right-0 h-1 bg-gray-800 z-10">
         <motion.div
           className="h-full bg-gradient-to-r from-emerald-500 to-teal-500"
           initial={{ width: 0 }}
@@ -125,7 +125,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
       </div>
 
       {/* Main Content */}
-      <div className="relative h-full flex items-center justify-center p-4">
+      <div className="relative min-h-screen flex items-center justify-center p-4 py-12">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
@@ -178,7 +178,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
 
             {/* Creator Type Step */}
             {currentStep === 'creator-type' && (
-              <div className="space-y-8">
+              <div className="space-y-8 max-h-[80vh] overflow-y-auto">
                 <div className="text-center">
                   <h2 className="text-3xl font-termina text-white mb-4">What type of creator are you?</h2>
                   <p className="text-white/70 text-lg">Choose the option that best describes your content style</p>
@@ -214,7 +214,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
                   ))}
                 </div>
 
-                <div className="flex justify-center gap-4">
+                <div className="flex justify-center gap-4 sticky bottom-0 bg-gray-900/90 backdrop-blur-sm p-4 rounded-lg">
                   <Button
                     onClick={handleNext}
                     disabled={!canProceed()}
@@ -236,7 +236,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
 
             {/* Interests Step */}
             {currentStep === 'interests' && (
-              <div className="space-y-8">
+              <div className="space-y-8 max-h-[80vh] overflow-y-auto">
                 <div className="text-center">
                   <h2 className="text-3xl font-termina text-white mb-4">What are your interests?</h2>
                   <p className="text-white/70 text-lg">Select 3-5 topics you're passionate about</p>
@@ -253,7 +253,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
                   />
                 </div>
 
-                <div className="flex justify-center gap-4">
+                <div className="flex justify-center gap-4 sticky bottom-0 bg-gray-900/90 backdrop-blur-sm p-4 rounded-lg">
                   <Button
                     onClick={handleNext}
                     disabled={!canProceed()}
@@ -275,7 +275,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
 
             {/* Goals Step */}
             {currentStep === 'goals' && (
-              <div className="space-y-8">
+              <div className="space-y-8 max-h-[80vh] overflow-y-auto">
                 <div className="text-center">
                   <h2 className="text-3xl font-termina text-white mb-4">What are your goals?</h2>
                   <p className="text-white/70 text-lg">Choose 2-3 objectives you want to achieve</p>
@@ -292,7 +292,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
                   />
                 </div>
 
-                <div className="flex justify-center gap-4">
+                <div className="flex justify-center gap-4 sticky bottom-0 bg-gray-900/90 backdrop-blur-sm p-4 rounded-lg">
                   <Button
                     onClick={handleNext}
                     disabled={!canProceed()}
@@ -351,7 +351,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
 
             {/* Social Step */}
             {currentStep === 'social' && (
-              <div className="space-y-8">
+              <div className="space-y-8 max-h-[80vh] overflow-y-auto">
                 <div className="text-center">
                   <h2 className="text-3xl font-termina text-white mb-4">Connect Your Platforms</h2>
                   <p className="text-white/70 text-lg">Connect your social media accounts to verify your audience and unlock features</p>
@@ -399,7 +399,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
                       </Button>
                     </div>
 
-                    <div className="text-center pt-4">
+                    <div className="text-center pt-4 sticky bottom-0 bg-gray-900/90 backdrop-blur-sm p-4 rounded-lg">
                       <p className="text-white/50 text-sm mb-4">
                         Don't worry, you can always connect more platforms later in your settings.
                       </p>
@@ -423,6 +423,7 @@ export function FullScreenOnboarding({ isOpen, onComplete }: FullScreenOnboardin
                 </Card>
               </div>
             )}
+
           </motion.div>
         </AnimatePresence>
       </div>
