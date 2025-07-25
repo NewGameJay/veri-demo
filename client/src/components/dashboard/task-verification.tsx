@@ -12,7 +12,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { TaskSkeleton } from "@/components/ui/veri-skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { triggerHaptic } from "@/lib/haptic";
-import { TaskCelebrationCard } from "@/components/celebrations/task-celebration-card";
+import { useCelebration } from "@/contexts/celebration-context";
 import { useAuth } from "@/contexts/auth-context";
 import type { Task } from "@shared/schema";
 import { motion } from "framer-motion";
@@ -92,8 +92,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
   const [tasksPerPage, setTasksPerPage] = useState(16);
   const INITIAL_TASKS_PER_PAGE = 16;
   const LOAD_MORE_INCREMENT = 6;
-  const [showCelebrationCard, setShowCelebrationCard] = useState(false);
-  const [celebrationData, setCelebrationData] = useState<any>(null);
+  const { triggerCelebration } = useCelebration();
   const [showFloatingPoints, setShowFloatingPoints] = useState(false);
   const [floatingPoints, setFloatingPoints] = useState(0);
   const [lastAnimatedTaskId, setLastAnimatedTaskId] = useState<number | null>(null);
@@ -1677,16 +1676,6 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
               return updated;
             });
             
-            // Prepare celebration data
-            setCelebrationData({
-              xpEarned: taskToVerify.points,
-              taskName: taskToVerify.title,
-              shareEnabled: true,
-              isSpecialTask: isSpecialTask,
-              streakBonus: taskToVerify.streakBonus || 1,
-              category: taskToVerify.category
-            });
-            
             setVerificationUrl("");
             setShowVerificationModal(false);
             setVerifyingTaskId(null);
@@ -1694,7 +1683,15 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
 
             // Show celebration card after floating animation completes
             setTimeout(() => {
-              setShowCelebrationCard(true);
+              triggerCelebration({
+                xpEarned: taskToVerify.points,
+                taskName: taskToVerify.title,
+                shareEnabled: true,
+                isSpecialTask: isSpecialTask,
+                streakBonus: taskToVerify.streakBonus || 1,
+                category: taskToVerify.category,
+                type: isSpecialTask ? 'milestone' : 'task'
+              });
             }, 2500);
           } else {
             throw new Error("Backend verification failed");
@@ -2239,15 +2236,15 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                           className="border-blue-500/20 text-blue-400 hover:bg-blue-500/10 hover:border-blue-400/40 hover:text-blue-300 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25"
                           onClick={() => {
                             triggerHaptic("light");
-                            setCelebrationData({
+                            triggerCelebration({
                               xpEarned: task.points,
                               taskName: task.title,
                               shareEnabled: true,
                               isSpecialTask: false,
                               streakBonus: 1,
-                              category: task.platform
+                              category: task.platform,
+                              type: 'task'
                             });
-                            setShowCelebrationCard(true);
                           }}
                         >
                           <Share2 className="mr-1 h-3 w-3 group-hover:rotate-12 transition-transform duration-300" />
@@ -2454,18 +2451,7 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
         </DialogContent>
       </Dialog>
 
-      {/* Task Celebration Card */}
-      {showCelebrationCard && celebrationData && (
-        <TaskCelebrationCard
-          xpEarned={celebrationData.xpEarned}
-          taskName={celebrationData.taskName}
-          shareEnabled={celebrationData.shareEnabled}
-          isSpecialTask={celebrationData.isSpecialTask}
-          streakBonus={celebrationData.streakBonus}
-          category={celebrationData.category}
-          onClose={() => setShowCelebrationCard(false)}
-        />
-      )}
+
       
       {/* Contextual Emoji Reactions */}
       {reactions.map((reaction) => (

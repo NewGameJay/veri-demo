@@ -1,4 +1,5 @@
-import { TaskCelebrationCard } from "@/components/celebrations/task-celebration-card";
+import { useCelebration } from "@/contexts/celebration-context";
+import { useEffect } from "react";
 
 interface MilestoneCelebrationProps {
   milestone: {
@@ -12,6 +13,8 @@ interface MilestoneCelebrationProps {
 }
 
 export function MilestoneCelebration({ milestone, onClose }: MilestoneCelebrationProps) {
+  const { triggerCelebration } = useCelebration();
+  
   // Calculate XP equivalent for the milestone for display purposes
   const getMilestoneXP = () => {
     switch (milestone.type) {
@@ -28,15 +31,19 @@ export function MilestoneCelebration({ milestone, onClose }: MilestoneCelebratio
     }
   };
 
-  return (
-    <TaskCelebrationCard
-      xpEarned={getMilestoneXP()}
-      taskName={milestone.title}
-      shareEnabled={true}
-      isSpecialTask={true}
-      streakBonus={1}
-      category={milestone.type}
-      onClose={onClose}
-    />
-  );
+  useEffect(() => {
+    // Automatically trigger the celebration when component mounts
+    triggerCelebration({
+      xpEarned: getMilestoneXP(),
+      taskName: milestone.title,
+      shareEnabled: true,
+      isSpecialTask: true,
+      streakBonus: 1,
+      category: milestone.type,
+      type: 'milestone'
+    });
+  }, [milestone, triggerCelebration]);
+
+  // Return null since the global celebration manager handles display
+  return null;
 }

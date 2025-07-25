@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/theme-context";
 import { AuthProvider, useAuth } from "@/contexts/auth-context";
+import { CelebrationProvider } from "@/contexts/celebration-context";
+import { GlobalCelebrationManager } from "@/components/celebrations/global-celebration-manager";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Dashboard from "@/pages/dashboard";
@@ -55,10 +57,13 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="veri-ui-theme">
         <AuthProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Router />
-          </TooltipProvider>
+          <CelebrationProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Router />
+              <GlobalCelebrationManager />
+            </TooltipProvider>
+          </CelebrationProvider>
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
