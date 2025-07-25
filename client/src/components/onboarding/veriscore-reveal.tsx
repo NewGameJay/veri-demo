@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { VeriLogo } from "@/components/ui/veri-logo";
-import { Share2, Twitter, Linkedin, Copy, Sparkles, Trophy, ArrowRight } from "lucide-react";
+import { Share2, Twitter, Linkedin, Copy, Sparkles, Trophy, ArrowRight, Star, Zap, Award, Crown } from "lucide-react";
 import { triggerHaptic } from "@/lib/haptic";
 import { useToast } from "@/hooks/use-toast";
 
@@ -94,83 +95,102 @@ export function VeriScoreReveal({ isOpen, onComplete, userScore = 85, userName =
           transition={{ duration: 0.3 }}
           className="perspective-1000"
         >
-          <Card className="glass-effect border-emerald-500/20 shadow-2xl shadow-emerald-500/10 overflow-hidden">
-            <CardContent className="p-8 text-center relative">
-              {/* Success Animation */}
-              <motion.div
+          <Card className="glass-effect border-emerald-500/20 shadow-2xl shadow-emerald-500/10 bg-gradient-to-br from-gray-900/90 to-gray-800/90 hover:from-gray-800/90 hover:to-gray-700/90 transition-all duration-300">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <VeriLogo size="sm" />
+                  <div>
+                    <CardTitle className="text-white text-lg font-termina">VeriScore</CardTitle>
+                    <p className="text-white/60 text-sm">Creator Rating</p>
+                  </div>
+                </div>
+                <Badge 
+                  variant="secondary" 
+                  className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 font-medium px-3 py-1"
+                >
+                  {userScore >= 80 ? "Diamond" : userScore >= 60 ? "Gold" : userScore >= 40 ? "Silver" : "Bronze"}
+                </Badge>
+              </div>
+            </CardHeader>
+            
+            <CardContent className="pt-0">
+              {/* Main Score Circle */}
+              <motion.div 
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.5, duration: 0.5 }}
-                className="absolute top-4 right-4"
+                transition={{ delay: 0.5, type: "spring", bounce: 0.4 }}
+                className="relative w-24 h-24 mx-auto mb-6"
               >
-                <div className="w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center">
-                  <Trophy className="h-6 w-6 text-emerald-400" />
+                {/* Animated background circle */}
+                <motion.div 
+                  className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-400/20 to-teal-500/20"
+                  animate={{ 
+                    rotate: 360,
+                    scale: [1, 1.05, 1]
+                  }}
+                  transition={{ 
+                    rotate: { duration: 10, repeat: Infinity, ease: "linear" },
+                    scale: { duration: 3, repeat: Infinity }
+                  }}
+                />
+                
+                {/* Score circle */}
+                <div className="absolute inset-1 bg-gray-900/80 rounded-full border border-emerald-500/30 flex items-center justify-center backdrop-blur-sm">
+                  <motion.span 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.8 }}
+                    className="text-2xl font-termina text-emerald-400"
+                  >
+                    {userScore}
+                  </motion.span>
+                </div>
+                
+                {/* Tier icon */}
+                <motion.div 
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 1, type: "spring" }}
+                  className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-500/20 rounded-full border border-emerald-500/50 flex items-center justify-center"
+                >
+                  {userScore >= 80 ? <Crown className="h-3 w-3 text-emerald-400" /> :
+                   userScore >= 60 ? <Trophy className="h-3 w-3 text-emerald-400" /> :
+                   userScore >= 40 ? <Award className="h-3 w-3 text-emerald-400" /> :
+                   <Star className="h-3 w-3 text-emerald-400" />}
+                </motion.div>
+              </motion.div>
+
+              {/* Score breakdown */}
+              <motion.div 
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.7 }}
+                className="space-y-3 mb-6"
+              >
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-white/70">Authenticity</span>
+                  <span className="text-emerald-400 font-medium">{Math.min(userScore + 5, 100)}/100</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-white/70">Engagement</span>
+                  <span className="text-emerald-400 font-medium">{Math.min(userScore + 3, 100)}/100</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-white/70">Growth</span>
+                  <span className="text-emerald-400 font-medium">{Math.max(userScore - 10, 0)}/100</span>
                 </div>
               </motion.div>
 
-              {/* Sparkle Effects */}
-              <motion.div
-                animate={{ 
-                  rotate: 360,
-                  scale: [1, 1.1, 1]
-                }}
-                transition={{ 
-                  rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-                  scale: { duration: 2, repeat: Infinity }
-                }}
-                className="absolute top-6 left-6"
-              >
-                <Sparkles className="h-5 w-5 text-yellow-400/60" />
-              </motion.div>
-
-              <motion.div
-                animate={{ 
-                  rotate: -360,
-                  scale: [1, 1.2, 1]
-                }}
-                transition={{ 
-                  rotate: { duration: 15, repeat: Infinity, ease: "linear" },
-                  scale: { duration: 3, repeat: Infinity, delay: 1 }
-                }}
-                className="absolute bottom-6 right-8"
-              >
-                <Sparkles className="h-4 w-4 text-purple-400/60" />
-              </motion.div>
-
-              {/* Header */}
+              {/* Success message */}
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="mb-6"
+                transition={{ delay: 0.9 }}
+                className="text-center mb-6"
               >
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <VeriLogo className="h-8 w-auto" />
-                  <span className="text-2xl font-termina text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-500">
-                    VeriScore
-                  </span>
-                </div>
-                <h2 className="text-3xl font-termina text-white mb-2">Congratulations!</h2>
-                <p className="text-white/70">Your creator profile is ready</p>
-              </motion.div>
-
-              {/* VeriScore Display */}
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.7, type: "spring", bounce: 0.5 }}
-                className="mb-8"
-              >
-                <div className="relative w-32 h-32 mx-auto mb-4">
-                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full animate-pulse opacity-20"></div>
-                  <div className="absolute inset-2 bg-gray-900 rounded-full flex items-center justify-center border-2 border-emerald-500/30">
-                    <span className="text-4xl font-termina text-emerald-400">{userScore}</span>
-                  </div>
-                </div>
-                <div className="text-center">
-                  <p className="text-white/80 text-lg">Your VeriScore</p>
-                  <p className="text-emerald-400 text-sm font-medium">Ready to grow!</p>
-                </div>
+                <h3 className="text-xl font-termina text-white mb-2">Congratulations!</h3>
+                <p className="text-white/70 text-sm">Your creator profile is ready to grow</p>
               </motion.div>
 
               {/* Share Section */}

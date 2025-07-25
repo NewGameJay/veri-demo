@@ -185,10 +185,7 @@ export function ConsolidatedOnboarding({ isOpen, onComplete, onShowWalkthrough }
       variant: "default",
     });
 
-    // Auto-advance after connecting one platform
-    setTimeout(() => {
-      handleComplete();
-    }, 1500);
+    // Don't auto-advance - let user choose to connect more or reveal score
   };
 
   if (!isOpen) return null;
@@ -444,7 +441,8 @@ export function ConsolidatedOnboarding({ isOpen, onComplete, onShowWalkthrough }
                 <div className="space-y-8">
                   <div className="text-center">
                     <h2 className="text-3xl font-termina text-white mb-4">Connect Your Social Media</h2>
-                    <p className="text-white/70 text-lg">Connect at least one platform to calculate your VeriScore</p>
+                    <p className="text-white/70 text-lg mb-2">Connect your platforms to calculate your VeriScore</p>
+                    <p className="text-emerald-400 text-sm font-medium">💡 More connections = Higher VeriScore</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
@@ -519,7 +517,7 @@ export function ConsolidatedOnboarding({ isOpen, onComplete, onShowWalkthrough }
                     <p className="text-white/60 text-sm mb-6">
                       {connectedPlatforms.length > 0 
                         ? `Great! ${connectedPlatforms.length} platform${connectedPlatforms.length > 1 ? 's' : ''} connected. Ready to reveal your VeriScore!`
-                        : "Connect at least one platform to continue"
+                        : "Connect at least one platform to see your score"
                       }
                     </p>
                     
