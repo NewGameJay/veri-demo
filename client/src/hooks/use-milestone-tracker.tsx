@@ -92,20 +92,22 @@ export function useMilestoneTracker() {
       tasks: user.xpPoints ? Math.floor((user.xpPoints || 0) / 25) : 0 // Approximate tasks completed
     };
 
-    // Check for new milestones if we have previous stats
-    if (previousStats) {
-      const justAchieved = MILESTONES.filter(milestone => {
-        const currentValue = currentStats[milestone.type];
-        const previousValue = previousStats[milestone.type];
+    // Milestone tracking temporarily disabled to prevent duplicate celebrations
+    // Only task completion celebrations will show
+    // if (previousStats) {
+    //   const justAchieved = MILESTONES.filter(milestone => {
+    //     const currentValue = currentStats[milestone.type];
+    //     const previousValue = previousStats[milestone.type];
         
-        return currentValue >= milestone.requirement && 
-               previousValue < milestone.requirement;
-      });
+    //     return currentValue >= milestone.requirement && 
+    //            previousValue < milestone.requirement;
+    //   });
 
-      if (justAchieved.length > 0) {
-        setNewMilestones(justAchieved);
-      }
-    }
+    //   // Only show the first milestone achieved to prevent multiple celebrations
+    //   if (justAchieved.length > 0) {
+    //     setNewMilestones([justAchieved[0]]);
+    //   }
+    // }
 
     setPreviousStats(currentStats);
   }, [user?.xpPoints, user?.streak]);
