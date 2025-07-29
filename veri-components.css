@@ -1,0 +1,444 @@
+/* Veri Design System - Components */
+/* Extracted from production Veri MVP codebase */
+
+/* ========================
+   GLASS MORPHISM SYSTEM
+   ======================== */
+
+/* Primary Glass Effect - Core Navigation & High Priority Elements */
+.veri-glass-primary {
+  backdrop-filter: blur(var(--glass-blur-light)) saturate(var(--glass-saturation-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light)) saturate(var(--glass-saturation-medium));
+  transition: all var(--duration-normal) var(--ease-out);
+  will-change: transform, opacity, background-color, box-shadow;
+  transform: translateZ(0); /* GPU acceleration */
+}
+
+/* Light mode glass primary */
+:root .veri-glass-primary {
+  background: hsl(210, 11%, 96%);
+  border: 1px solid hsl(0, 0%, 75%);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.06),
+    0 2px 16px 0 rgba(0, 0, 0, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Dark mode glass primary */
+.dark .veri-glass-primary {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.1),
+    0 2px 16px 0 rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Secondary Glass Effect - Cards & Content Areas */
+.veri-glass-secondary {
+  backdrop-filter: blur(var(--glass-blur-medium)) saturate(var(--glass-saturation-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium)) saturate(var(--glass-saturation-light));
+  transition: all var(--duration-normal) var(--ease-out);
+  will-change: transform, opacity, background-color, box-shadow;
+  transform: translateZ(0);
+}
+
+/* Light mode glass secondary */
+:root .veri-glass-secondary {
+  background: hsl(0, 0%, 98%);
+  border: 1px solid hsl(0, 0%, 88%);
+  box-shadow: 
+    0 4px 16px 0 rgba(0, 0, 0, 0.03),
+    0 1px 8px 0 rgba(0, 0, 0, 0.02);
+}
+
+/* Dark mode glass secondary */
+.dark .veri-glass-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 4px 16px 0 rgba(0, 0, 0, 0.05),
+    0 1px 8px 0 rgba(0, 0, 0, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+}
+
+/* Interactive Glass Effect - Buttons & Hover States */
+.veri-glass-interactive {
+  backdrop-filter: blur(var(--glass-blur-heavy)) saturate(var(--glass-saturation-heavy));
+  -webkit-backdrop-filter: blur(var(--glass-blur-heavy)) saturate(var(--glass-saturation-heavy));
+  transition: all var(--duration-normal) var(--ease-out);
+  will-change: transform, opacity, background-color, box-shadow;
+  transform: translateZ(0);
+}
+
+/* Light mode glass interactive */
+:root .veri-glass-interactive {
+  background: hsl(0, 0%, 85%);
+  border: 1px solid hsl(0, 0%, 75%);
+  box-shadow: 
+    0 12px 40px 0 rgba(0, 0, 0, 0.05),
+    0 4px 20px 0 rgba(0, 0, 0, 0.03);
+}
+
+/* Dark mode glass interactive */
+.dark .veri-glass-interactive {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 12px 40px 0 rgba(0, 0, 0, 0.12),
+    0 4px 20px 0 rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.04);
+}
+
+/* Hover States */
+:root .veri-glass-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 16px 48px 0 rgba(0, 0, 0, 0.08),
+    0 6px 24px 0 rgba(0, 0, 0, 0.06);
+}
+
+.dark .veri-glass-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 16px 48px 0 rgba(0, 0, 0, 0.15),
+    0 6px 24px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* ========================
+   BUTTON COMPONENTS
+   ======================== */
+
+.veri-button-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: var(--touch-target-min);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  font-family: var(--font-inter);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out);
+  transform: translateZ(0);
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.veri-button-primary:hover {
+  background: hsl(158, 100%, 39%);
+  transform: translateY(-1px);
+}
+
+.veri-button-primary:active {
+  transform: translateY(0) scale(0.98);
+  transition-duration: var(--duration-fast);
+}
+
+.veri-button-primary:focus-visible {
+  outline: none;
+  box-shadow: var(--glow-focus);
+}
+
+/* Veri Gradient Button */
+.veri-button-gradient {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: var(--touch-target-min);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  font-family: var(--font-inter);
+  background: linear-gradient(135deg, var(--veri-primary-500) 0%, var(--veri-accent-violet-500) 100%);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-apple);
+  transform: translateZ(0);
+  box-shadow: var(--glow-primary);
+}
+
+.veri-button-gradient:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 
+    0 12px 48px 0 rgba(0, 211, 162, 0.35),
+    0 4px 16px 0 rgba(0, 211, 162, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Glass Button */
+.veri-button-glass {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: var(--touch-target-min);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  font-family: var(--font-inter);
+  cursor: pointer;
+  transform: translateZ(0);
+}
+
+.veri-button-glass {
+  @apply veri-glass-interactive;
+}
+
+/* ========================
+   INPUT COMPONENTS
+   ======================== */
+
+.veri-input {
+  display: flex;
+  min-height: var(--touch-target-min);
+  width: 100%;
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.75rem;
+  font-size: var(--font-size-base);
+  font-family: var(--font-inter);
+  transition: all var(--duration-normal) var(--ease-out);
+  touch-action: manipulation;
+}
+
+.veri-input {
+  @apply veri-glass-secondary;
+}
+
+.veri-input:focus-visible {
+  outline: none;
+  border-color: rgba(0, 214, 162, 0.6);
+  box-shadow: var(--glow-focus);
+}
+
+.veri-input::placeholder {
+  color: var(--muted-foreground);
+}
+
+.veri-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Textarea */
+.veri-textarea {
+  display: flex;
+  min-height: 80px;
+  width: 100%;
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.75rem;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-inter);
+  transition: all var(--duration-normal) var(--ease-out);
+  resize: none;
+  touch-action: manipulation;
+}
+
+.veri-textarea {
+  @apply veri-glass-secondary;
+}
+
+.veri-textarea:focus-visible {
+  outline: none;
+  border-color: rgba(0, 214, 162, 0.6);
+  box-shadow: var(--glow-focus);
+}
+
+/* ========================
+   CARD COMPONENTS
+   ======================== */
+
+.veri-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--card-foreground);
+  box-shadow: var(--shadow-sm);
+  transform: translateZ(0);
+}
+
+.veri-card-glass {
+  border-radius: var(--radius-lg);
+  transform: translateZ(0);
+}
+
+.veri-card-glass {
+  @apply veri-glass-secondary;
+}
+
+.veri-card-interactive {
+  transition: all var(--duration-normal) var(--ease-out);
+  cursor: pointer;
+}
+
+.veri-card-interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 16px 48px rgba(16, 185, 129, 0.1);
+}
+
+/* Gradient Card */
+.veri-card-gradient {
+  background: linear-gradient(135deg, rgba(0, 211, 162, 0.08) 0%, rgba(132, 86, 255, 0.08) 100%);
+  border-radius: var(--radius-lg);
+  transform: translateZ(0);
+}
+
+.veri-card-gradient {
+  @apply veri-glass-secondary;
+}
+
+/* ========================
+   NAVIGATION COMPONENTS
+   ======================== */
+
+.veri-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  backdrop-filter: blur(var(--glass-blur-extreme)) saturate(var(--glass-saturation-extreme)) brightness(1.1);
+  -webkit-backdrop-filter: blur(var(--glass-blur-extreme)) saturate(var(--glass-saturation-extreme)) brightness(1.1);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.12));
+  transform: translateZ(0);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.12),
+    0 16px 64px 0 rgba(0, 211, 162, 0.05);
+}
+
+/* ========================
+   PROGRESS COMPONENTS
+   ======================== */
+
+.veri-progress {
+  position: relative;
+  height: 1rem;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--secondary);
+}
+
+.veri-progress-indicator {
+  height: 100%;
+  width: 100%;
+  flex: 1;
+  background: var(--primary);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+/* ========================
+   STATUS INDICATORS
+   ======================== */
+
+.veri-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  padding: 0.25rem 0.625rem;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  transition: all var(--duration-normal) var(--ease-out);
+  focus: outline-none;
+  focus: ring-2;
+  focus: ring-var(--ring);
+  focus: ring-offset-2;
+}
+
+.veri-badge-success {
+  background: hsl(142, 76%, 36%);
+  color: white;
+  border-color: hsl(142, 76%, 30%);
+}
+
+.veri-badge-warning {
+  background: hsl(38, 92%, 50%);
+  color: white;
+  border-color: hsl(38, 92%, 44%);
+}
+
+.veri-badge-error {
+  background: var(--destructive);
+  color: var(--destructive-foreground);
+  border-color: hsl(0, 84.2%, 54%);
+}
+
+/* ========================
+   LOADING STATES
+   ======================== */
+
+.veri-skeleton {
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transform: translateZ(0);
+  animation: veri-pulse 2s ease-in-out infinite;
+}
+
+@keyframes veri-pulse {
+  0%, 100% {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.05);
+  }
+  50% {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+}
+
+.veri-spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--muted);
+  border-top: 2px solid var(--primary);
+  border-radius: 50%;
+  animation: veri-spin 1s linear infinite;
+}
+
+@keyframes veri-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ========================
+   FOCUS STATES
+   ======================== */
+
+.veri-focus-ring:focus-visible {
+  outline: none;
+  box-shadow: var(--glow-focus);
+}
+
+/* Enhanced focus for glass elements */
+.veri-glass-primary:focus-within,
+.veri-glass-secondary:focus-within,
+.veri-glass-interactive:focus-within {
+  border-color: rgba(0, 214, 162, 0.6);
+  box-shadow: 
+    0 0 0 3px rgba(0, 214, 162, 0.15),
+    0 8px 32px 0 rgba(0, 214, 162, 0.1),
+    inset 0 1px 0 rgba(0, 214, 162, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.02);
+}

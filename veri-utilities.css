@@ -1,0 +1,601 @@
+/* Veri Design System - Utilities */
+/* Extracted from production Veri MVP codebase */
+
+/* ========================
+   ANIMATION UTILITIES
+   ======================== */
+
+/* GPU Acceleration */
+.veri-transform-gpu {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Hover Animations */
+.veri-hover-lift {
+  transition: all var(--duration-normal) var(--ease-out);
+  will-change: transform, box-shadow;
+}
+
+.veri-hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 16px 48px rgba(16, 185, 129, 0.1);
+}
+
+.veri-hover-lift-subtle {
+  transition: all var(--duration-fast) var(--ease-out);
+  will-change: transform;
+}
+
+.veri-hover-lift-subtle:hover {
+  transform: translateY(-1px);
+}
+
+.veri-hover-scale {
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.veri-hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Press Animation */
+.veri-press-animation {
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.veri-press-animation:active {
+  transform: scale(0.98);
+}
+
+/* Interactive Focus */
+.veri-interactive-focus {
+  transition: all var(--duration-fast) var(--ease-out);
+  will-change: transform, box-shadow;
+}
+
+.veri-interactive-focus:focus-visible {
+  outline: none;
+  transform: translateY(-1px);
+  box-shadow: var(--glow-focus);
+}
+
+.veri-interactive-focus:active {
+  transform: translateY(0px) scale(0.98);
+}
+
+/* Button 3D Effect */
+.veri-button-3d {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.veri-button-3d:hover {
+  transform: translateY(-2px) translateZ(10px);
+}
+
+.veri-button-3d:active {
+  transform: translateY(0px) translateZ(5px);
+  transition-duration: var(--duration-fast);
+}
+
+/* Ripple Effect */
+.veri-ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.veri-ripple-effect::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease-out, height 0.6s ease-out;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.veri-ripple-effect:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* ========================
+   GRADIENT UTILITIES
+   ======================== */
+
+.veri-gradient {
+  background: linear-gradient(135deg, var(--veri-primary-500) 0%, var(--veri-accent-violet-500) 100%);
+  box-shadow: var(--glow-primary);
+  transition: all var(--duration-normal) var(--ease-apple);
+}
+
+.veri-gradient:hover {
+  box-shadow: 
+    0 12px 48px 0 rgba(0, 211, 162, 0.35),
+    0 4px 16px 0 rgba(0, 211, 162, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.veri-gradient-card {
+  background: linear-gradient(135deg, rgba(0, 211, 162, 0.08) 0%, rgba(132, 86, 255, 0.08) 100%);
+}
+
+.veri-text-gradient {
+  background: linear-gradient(135deg, var(--veri-primary-500) 0%, var(--veri-accent-violet-500) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hero Gradient Background */
+.veri-hero-gradient {
+  background: 
+    radial-gradient(ellipse at top, 
+      #0d1421 0%, 
+      #1a2332 35%, 
+      #0f1419 70%, 
+      #000000 100%
+    ),
+    linear-gradient(180deg, 
+      #0d1421 0%, 
+      #0a0f1c 50%, 
+      #000000 100%
+    );
+  background-size: 100% 200%, 100% 100%;
+  animation: veri-slow-radial-shift 45s ease-in-out infinite;
+}
+
+@keyframes veri-slow-radial-shift {
+  0%, 100% {
+    background-position: 0% 0%, 0% 0%;
+  }
+  50% {
+    background-position: 0% 100%, 0% 0%;
+  }
+}
+
+/* ========================
+   SHADOW UTILITIES
+   ======================== */
+
+.veri-shadow-depth-1 {
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.veri-shadow-depth-2 {
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.06),
+    0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.veri-shadow-depth-3 {
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.08),
+    0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.veri-shadow-depth-4 {
+  box-shadow: 
+    0 16px 32px rgba(0, 0, 0, 0.1),
+    0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.veri-shadow-glow-green {
+  box-shadow: 
+    0 0 20px rgba(0, 214, 162, 0.3),
+    0 0 40px rgba(0, 214, 162, 0.1);
+}
+
+.veri-shadow-glow-purple {
+  box-shadow: 
+    0 0 20px rgba(132, 86, 255, 0.3),
+    0 0 40px rgba(132, 86, 255, 0.1);
+}
+
+.veri-glow {
+  box-shadow: var(--glow-primary);
+}
+
+/* ========================
+   ANIMATION KEYFRAMES
+   ======================== */
+
+@keyframes veri-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes veri-gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes veri-conic-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes veri-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes veri-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes veri-bounce-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes veri-staggered-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes veri-pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(0, 211, 162, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 211, 162, 0.8);
+  }
+}
+
+/* ========================
+   ANIMATION CLASSES
+   ======================== */
+
+.veri-animate-shimmer {
+  animation: veri-shimmer 2s ease-in-out infinite;
+}
+
+.veri-animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: veri-gradient-shift 3s ease-in-out infinite;
+}
+
+.veri-animate-conic-spin {
+  animation: veri-conic-spin 4s linear infinite;
+}
+
+.veri-animate-slide-in {
+  animation: veri-slide-in 0.8s var(--ease-out);
+  animation-fill-mode: both;
+}
+
+.veri-animate-fade-in {
+  animation: veri-fade-in 0.6s var(--ease-out);
+  animation-fill-mode: both;
+}
+
+.veri-animate-bounce-in {
+  animation: veri-bounce-in 0.8s var(--ease-bounce);
+  animation-fill-mode: both;
+}
+
+.veri-animate-staggered {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: veri-staggered-fade-in 0.6s var(--ease-out) forwards;
+}
+
+.veri-pulse-glow {
+  animation: veri-pulse-glow 2s ease-in-out infinite;
+}
+
+/* Staggered animation delays */
+.veri-stagger-1 { animation-delay: 0.1s; }
+.veri-stagger-2 { animation-delay: 0.2s; }
+.veri-stagger-3 { animation-delay: 0.3s; }
+.veri-stagger-4 { animation-delay: 0.4s; }
+.veri-stagger-5 { animation-delay: 0.5s; }
+
+/* ========================
+   TYPOGRAPHY UTILITIES
+   ======================== */
+
+.veri-font-termina {
+  font-family: var(--font-termina);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.veri-font-machina {
+  font-family: var(--font-machina);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.veri-font-inter {
+  font-family: var(--font-inter);
+  font-weight: 400;
+}
+
+/* Line Clamp Utilities */
+.veri-line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.veri-line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.veri-line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* ========================
+   LAYOUT UTILITIES
+   ======================== */
+
+.veri-container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .veri-container {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .veri-container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .veri-container {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .veri-container {
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .veri-container {
+    max-width: 1536px;
+  }
+}
+
+/* Flex Utilities */
+.veri-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.veri-flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.veri-flex-col-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ========================
+   PARTICLE EFFECTS
+   ======================== */
+
+.veri-particle-burst {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.veri-particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--veri-primary-500);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.veri-particle:nth-child(1) { animation: veri-particle-0 1s ease-out forwards; }
+.veri-particle:nth-child(2) { animation: veri-particle-30 1s ease-out forwards; }
+.veri-particle:nth-child(3) { animation: veri-particle-60 1s ease-out forwards; }
+.veri-particle:nth-child(4) { animation: veri-particle-90 1s ease-out forwards; }
+.veri-particle:nth-child(5) { animation: veri-particle-120 1s ease-out forwards; }
+.veri-particle:nth-child(6) { animation: veri-particle-150 1s ease-out forwards; }
+
+@keyframes veri-particle-0 {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(40px, 0) scale(0); }
+}
+
+@keyframes veri-particle-30 {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(35px, -20px) scale(0); }
+}
+
+@keyframes veri-particle-60 {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(20px, -35px) scale(0); }
+}
+
+@keyframes veri-particle-90 {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(0, -40px) scale(0); }
+}
+
+@keyframes veri-particle-120 {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-20px, -35px) scale(0); }
+}
+
+@keyframes veri-particle-150 {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-35px, -20px) scale(0); }
+}
+
+/* ========================
+   ACCESSIBILITY UTILITIES
+   ======================== */
+
+.veri-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.veri-focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.veri-focus-visible:focus-visible {
+  outline: 2px solid var(--veri-primary-500);
+  outline-offset: 2px;
+}
+
+/* Touch Target Optimization */
+.veri-touch-target {
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+  touch-action: manipulation;
+}
+
+/* ========================
+   RESPONSIVE UTILITIES
+   ======================== */
+
+.veri-mobile-only {
+  display: block;
+}
+
+.veri-desktop-only {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .veri-mobile-only {
+    display: none;
+  }
+  
+  .veri-desktop-only {
+    display: block;
+  }
+}
+
+/* ========================
+   LIQUID GLASS BUTTON
+   ======================== */
+
+.veri-liquid-glass-button {
+  position: relative;
+  overflow: hidden;
+  border-radius: 9999px;
+  font-weight: 500;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-lg);
+  transition: all 0.5s ease-out;
+  transform: translateZ(0);
+}
+
+.veri-liquid-glass-button:hover {
+  transform: scale(1.02) translateY(-1px);
+}
+
+.veri-liquid-glass-button:active {
+  transform: scale(0.95);
+}
+
+.veri-liquid-glass-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  opacity: 0;
+  transition: all 0.7s ease-out;
+  background: linear-gradient(to right, rgba(16, 185, 129, 0.3), rgba(168, 85, 247, 0.2), rgba(59, 130, 246, 0.3));
+}
+
+.veri-liquid-glass-button:hover::before {
+  opacity: 1;
+}
+
+.veri-liquid-glass-button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  opacity: 0;
+  transition: all 1s ease-out;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: veri-shimmer 2s infinite;
+}
+
+.veri-liquid-glass-button:hover::after {
+  opacity: 1;
+}
