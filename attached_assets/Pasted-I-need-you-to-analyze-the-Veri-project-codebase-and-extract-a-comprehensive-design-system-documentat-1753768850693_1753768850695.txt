@@ -1,0 +1,103 @@
+I need you to analyze the Veri project codebase and extract a comprehensive design system documentation that I can copy into other Replit projects. Please provide:
+
+## 1. Extract All Design Tokens
+Look through the entire codebase (especially in /styles, /components, and any CSS/SCSS files) and document:
+
+- **Color Variables**: All color definitions (hex, rgb, hsl)
+- **Typography**: Font families, sizes, weights, line heights
+- **Spacing**: Padding, margin, gap values
+- **Border Radius**: All radius values used
+- **Shadows**: Box shadow definitions
+- **Transitions**: Animation timings and easings
+- **Breakpoints**: Responsive design breakpoints
+
+## 2. Component Styles
+Find and document the exact CSS/styling for:
+
+- **Glass Panels**: The glassmorphism effect classes
+- **Buttons**: Primary, secondary, ghost variants
+- **Input Fields**: Text inputs, textareas, selects
+- **Cards**: Content cards, metric cards
+- **Status Indicators**: Success, error, warning, info
+- **Loading States**: Spinners, skeletons, progress bars
+- **Modals/Overlays**: Backdrop and modal styling
+
+## 3. Layout Patterns
+Document:
+
+- **Grid Systems**: Column definitions, gaps
+- **Flex Patterns**: Common flex layouts
+- **Container Widths**: Max widths, padding
+- **Navigation**: Header, sidebar patterns
+
+## 4. Interaction Patterns
+Extract:
+
+- **Hover States**: All hover effects
+- **Focus States**: Keyboard navigation styling
+- **Active States**: Button presses, selections
+- **Disabled States**: Opacity, cursor changes
+
+## 5. Animation Library
+List all:
+
+- **Micro-animations**: Subtle UI movements
+- **Page Transitions**: Route changes
+- **Loading Animations**: Specific keyframes
+- **Notification Animations**: Toast/alert entries
+
+## 6. Icon System
+Document:
+
+- **Icon Library Used**: (Lucide, Heroicons, etc.)
+- **Icon Sizes**: Standard sizes used
+- **Icon Colors**: How colors are applied
+
+## 7. Create Copy-Paste Ready Files
+
+Based on your analysis, create these files I can directly copy:
+
+### veri-design-tokens.css
+```css
+/* All CSS variables in one file */
+:root {
+  /* Colors */
+  /* Typography */
+  /* Spacing */
+  /* etc... */
+}
+veri-components.css
+css/* All reusable component classes */
+.veri-glass-panel { }
+.veri-button { }
+.veri-input { }
+/* etc... */
+veri-utilities.css
+css/* Utility classes */
+.veri-text-gradient { }
+.veri-glow { }
+/* etc... */
+veri-style-guide.md
+markdown# Veri Design System Guide
+
+## Quick Implementation
+1. Copy these 3 CSS files to your project
+2. Import in this order:
+   - veri-design-tokens.css
+   - veri-components.css
+   - veri-utilities.css
+
+## Component Usage Examples
+[Show actual HTML snippets with classes]
+
+## Best Practices
+[Any specific patterns or rules]
+Please analyze the ACTUAL Veri codebase and provide the EXACT values, not generic examples. I need the specific hex colors, pixel values, and class names that Veri uses so our MVP agents match perfectly.
+Focus especially on:
+
+The exact glassmorphism implementation
+The exact purple/blue gradient values
+The exact input field styling
+The exact animation timings
+
+Output everything in a format I can directly copy-paste into new projects.
