@@ -290,7 +290,6 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
           />
         )}
       </div>
-
       {/* Tooltip */}
       <AnimatePresence mode="wait">
         {isVisible && currentStep && isPositionStable && (
@@ -309,7 +308,7 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
             style={getTooltipPosition()}
           >
             <Card className="glass-effect border-emerald-500/30 shadow-2xl onboarding-stable">
-              <CardContent className="p-6">
+              <CardContent className="p-6 bg-[#080808cc]">
                 <div className="flex items-start gap-4 mb-4">
                   <div className="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center flex-shrink-0">
                     <div className="text-emerald-400">{currentStep.icon}</div>
@@ -399,7 +398,6 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
           </motion.div>
         )}
       </AnimatePresence>
-
       {/* Skip walkthrough button */}
       <div className="absolute top-6 right-6 pointer-events-auto">
         <Button
@@ -411,7 +409,6 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
           Skip Walkthrough
         </Button>
       </div>
-
       {/* Progress indicator */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 pointer-events-auto">
         <div className="flex items-center gap-3 px-4 py-2 bg-black/50 rounded-full backdrop-blur-sm">
