@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, ArrowLeft, X, Target, Sparkles, Brain, TrendingUp, Users } from "lucide-react";
@@ -83,15 +83,21 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [targetPosition, setTargetPosition] = useState({ x: 0, y: 0, width: 0, height: 0 });
   const [isVisible, setIsVisible] = useState(false);
+  const [isPositionStable, setIsPositionStable] = useState(false);
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const positionUpdateRef = useRef<NodeJS.Timeout>();
+  const repositionTimeoutRef = useRef<NodeJS.Timeout>();
 
   const currentStep = walkthroughSteps[currentStepIndex];
   const isLastStep = currentStepIndex === walkthroughSteps.length - 1;
 
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const updateTargetPosition = () => {
+  // Debounced position update function
+  const debouncedUpdatePosition = useCallback(() => {
+    if (positionUpdateRef.current) {
+      clearTimeout(positionUpdateRef.current);
+    }
+    
+    positionUpdateRef.current = setTimeout(() => {
       if (!currentStep) return;
 
       const targetElement = document.querySelector(currentStep.targetSelector);
@@ -104,34 +110,83 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
           height: rect.height
         });
         setIsVisible(true);
-
-        // Scroll target into view
-        targetElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-          inline: 'center'
-        });
       } else {
         setIsVisible(false);
       }
+    }, 100); // Reduced debounce time for responsiveness
+  }, [currentStep]);
+
+  const updateTargetPosition = useCallback(() => {
+    if (!currentStep) return;
+
+    setIsPositionStable(false);
+    
+    const targetElement = document.querySelector(currentStep.targetSelector);
+    if (targetElement) {
+      const rect = targetElement.getBoundingClientRect();
+      setTargetPosition({
+        x: rect.left,
+        y: rect.top,
+        width: rect.width,
+        height: rect.height
+      });
+      setIsVisible(true);
+
+      // Scroll target into view with reduced movement
+      targetElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest', // Changed from 'center' to reduce scroll jumping
+        inline: 'nearest'
+      });
+
+      // Mark position as stable after scroll completes
+      if (repositionTimeoutRef.current) {
+        clearTimeout(repositionTimeoutRef.current);
+      }
+      repositionTimeoutRef.current = setTimeout(() => {
+        setIsPositionStable(true);
+      }, 300);
+    } else {
+      setIsVisible(false);
+    }
+  }, [currentStep]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // Initial position update with delay for DOM settling
+    const initialTimeoutId = setTimeout(updateTargetPosition, 250);
+
+    // Throttled resize and scroll handlers
+    let resizeTimeout: NodeJS.Timeout;
+    const handleResize = () => {
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(debouncedUpdatePosition, 150);
     };
 
-    // Update position after a short delay to allow for DOM updates
-    const timeoutId = setTimeout(updateTargetPosition, 200);
+    let scrollTimeout: NodeJS.Timeout;
+    const handleScroll = () => {
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(debouncedUpdatePosition, 50);
+    };
 
-    // Update position on window resize
-    window.addEventListener('resize', updateTargetPosition);
-    window.addEventListener('scroll', updateTargetPosition);
+    window.addEventListener('resize', handleResize, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener('resize', updateTargetPosition);
-      window.removeEventListener('scroll', updateTargetPosition);
+      clearTimeout(initialTimeoutId);
+      if (positionUpdateRef.current) clearTimeout(positionUpdateRef.current);
+      if (repositionTimeoutRef.current) clearTimeout(repositionTimeoutRef.current);
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleScroll);
     };
-  }, [currentStep, isOpen]);
+  }, [currentStep, isOpen, updateTargetPosition, debouncedUpdatePosition]);
 
   const handleNext = () => {
     triggerHaptic('light');
+    setIsPositionStable(false); // Reset stability for transition
     if (isLastStep) {
       handleComplete();
     } else {
@@ -141,6 +196,7 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
 
   const handlePrevious = () => {
     triggerHaptic('light');
+    setIsPositionStable(false); // Reset stability for transition
     if (currentStepIndex > 0) {
       setCurrentStepIndex(prev => prev - 1);
     }
@@ -158,12 +214,12 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
     handleComplete();
   };
 
-  const getTooltipPosition = () => {
-    if (!currentStep || !isVisible) return {};
+  const getTooltipPosition = useCallback(() => {
+    if (!currentStep || !isVisible || !isPositionStable) return {};
 
     const tooltipWidth = 320;
     const tooltipHeight = 180;
-    const offset = 16;
+    const offset = 20; // Increased offset for better separation
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
 
@@ -189,16 +245,17 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
         break;
     }
 
-    // Keep tooltip within viewport bounds with more padding
-    x = Math.max(20, Math.min(x, viewportWidth - tooltipWidth - 20));
-    y = Math.max(20, Math.min(y, viewportHeight - tooltipHeight - 20));
+    // Keep tooltip within viewport bounds with generous padding
+    const padding = 24;
+    x = Math.max(padding, Math.min(x, viewportWidth - tooltipWidth - padding));
+    y = Math.max(padding, Math.min(y, viewportHeight - tooltipHeight - padding));
 
     return {
-      left: `${x}px`,
-      top: `${y}px`,
+      left: `${Math.round(x)}px`, // Round to prevent sub-pixel rendering
+      top: `${Math.round(y)}px`,
       width: `${tooltipWidth}px`
     };
-  };
+  }, [currentStep, isVisible, isPositionStable, targetPosition]);
 
   if (!isOpen) return null;
 
@@ -235,18 +292,23 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
       </div>
 
       {/* Tooltip */}
-      <AnimatePresence>
-        {isVisible && currentStep && (
+      <AnimatePresence mode="wait">
+        {isVisible && currentStep && isPositionStable && (
           <motion.div
             ref={tooltipRef}
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute pointer-events-auto z-60"
+            key={`tooltip-${currentStepIndex}`} // Add key for proper remounting
+            initial={{ opacity: 0, y: 8 }} // Removed scale to prevent shake
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ 
+              duration: 0.2, 
+              ease: [0.23, 1, 0.32, 1], // Smooth Apple-like easing
+              delay: isPositionStable ? 0 : 0.1 // Small delay for position stability
+            }}
+            className="absolute pointer-events-auto z-60 walkthrough-tooltip"
             style={getTooltipPosition()}
           >
-            <Card className="glass-effect border-emerald-500/30 shadow-2xl">
+            <Card className="glass-effect border-emerald-500/30 shadow-2xl onboarding-stable">
               <CardContent className="p-6">
                 <div className="flex items-start gap-4 mb-4">
                   <div className="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center flex-shrink-0">

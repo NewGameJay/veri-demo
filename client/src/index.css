@@ -216,6 +216,26 @@
       0 16px 48px rgba(16, 185, 129, 0.1);
   }
 
+  /* Interactive walkthrough stabilization */
+  .walkthrough-tooltip {
+    transform: translateZ(0);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  .walkthrough-tooltip .glass-effect {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* Prevent animation conflicts in onboarding */
+  .onboarding-stable {
+    animation: none !important;
+    transition-duration: 0.2s !important;
+    transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1) !important;
+  }
+
   * {
     @apply border-border;
   }
