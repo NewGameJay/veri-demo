@@ -18,66 +18,6 @@ export function CampaignExplore({ userStreak, userXP }: CampaignExploreProps) {
   // Check if user is Veri+ Creator (3+ day streak)
   const isVeriPlusCreator = userStreak >= 3;
 
-  // Function to get campaign-specific preview image and overlay
-  const getCampaignPreviewImage = (campaign: any) => {
-    const category = campaign.category;
-    
-    // Campaign-specific preview images with veri teal overlay
-    const previewImages = {
-      // NFT/Gaming campaigns
-      'nft': `
-        <div class="absolute inset-0 bg-gradient-to-br from-orange-500 via-red-500 to-purple-700">
-          <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.08"%3E%3Cpath d="M25 10l10 5v20l-10 10-10-10V15z"/%3E%3Cpath d="M25 20l5 2.5v10l-5 5-5-5v-10z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-25"></div>
-          <div class="absolute inset-0 bg-gradient-to-br from-teal-500/40 via-transparent to-teal-600/30 backdrop-blur-[1px]"></div>
-        </div>
-      `,
-      // Gaming campaigns
-      'gaming': `
-        <div class="absolute inset-0 bg-gradient-to-br from-purple-500 via-blue-500 to-indigo-600">
-          <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.06"%3E%3Ccircle cx="20" cy="20" r="3"/%3E%3Ccircle cx="40" cy="20" r="3"/%3E%3Crect x="25" y="15" width="10" height="10" rx="2"/%3E%3Crect x="15" y="35" width="30" height="8" rx="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
-          <div class="absolute inset-0 bg-gradient-to-br from-teal-500/40 via-transparent to-teal-600/30 backdrop-blur-[1px]"></div>
-        </div>
-      `,
-      // DeFi campaigns
-      'defi': `
-        <div class="absolute inset-0 bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600">
-          <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.08"%3E%3Ccircle cx="20" cy="20" r="8" stroke="%23ffffff" stroke-width="2" fill="none"/%3E%3Cpath d="M20 12v16M12 20h16" stroke="%23ffffff" stroke-width="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-25"></div>
-          <div class="absolute inset-0 bg-gradient-to-br from-teal-500/40 via-transparent to-teal-600/30 backdrop-blur-[1px]"></div>
-        </div>
-      `,
-      // Blockchain campaigns
-      'blockchain': `
-        <div class="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-600">
-          <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="45" height="45" viewBox="0 0 45 45" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.07"%3E%3Crect x="5" y="5" width="8" height="8" rx="1"/%3E%3Crect x="18" y="5" width="8" height="8" rx="1"/%3E%3Crect x="31" y="5" width="8" height="8" rx="1"/%3E%3Crect x="5" y="18" width="8" height="8" rx="1"/%3E%3Crect x="31" y="18" width="8" height="8" rx="1"/%3E%3Crect x="5" y="31" width="8" height="8" rx="1"/%3E%3Crect x="18" y="31" width="8" height="8" rx="1"/%3E%3Crect x="31" y="31" width="8" height="8" rx="1"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
-          <div class="absolute inset-0 bg-gradient-to-br from-teal-500/40 via-transparent to-teal-600/30 backdrop-blur-[1px]"></div>
-        </div>
-      `,
-      // Esports campaigns
-      'esports': `
-        <div class="absolute inset-0 bg-gradient-to-br from-yellow-500 via-orange-500 to-red-600">
-          <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="55" height="55" viewBox="0 0 55 55" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.08"%3E%3Cpath d="M27.5 10l10 17.5-10 17.5-10-17.5z"/%3E%3Ccircle cx="27.5" cy="27.5" r="5"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
-          <div class="absolute inset-0 bg-gradient-to-br from-teal-500/40 via-transparent to-teal-600/30 backdrop-blur-[1px]"></div>
-        </div>
-      `,
-      // Marketplace campaigns
-      'marketplace': `
-        <div class="absolute inset-0 bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-600">
-          <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.08"%3E%3Crect x="8" y="8" width="24" height="16" rx="2" stroke="%23ffffff" stroke-width="1.5" fill="none"/%3E%3Crect x="12" y="12" width="6" height="4" rx="1"/%3E%3Crect x="22" y="12" width="6" height="4" rx="1"/%3E%3Crect x="12" y="18" width="16" height="2" rx="1"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-25"></div>
-          <div class="absolute inset-0 bg-gradient-to-br from-teal-500/40 via-transparent to-teal-600/30 backdrop-blur-[1px]"></div>
-        </div>
-      `,
-      // Default for other categories
-      'default': `
-        <div class="absolute inset-0 bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600">
-          <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.06"%3E%3Cpolygon points="25 8 40 18 40 32 25 42 10 32 10 18"/%3E%3Cpolygon points="25 15 32 20 32 30 25 35 18 30 18 20"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
-          <div class="absolute inset-0 bg-gradient-to-br from-teal-500/40 via-transparent to-teal-600/30 backdrop-blur-[1px]"></div>
-        </div>
-      `
-    };
-
-    return previewImages[category as keyof typeof previewImages] || previewImages['default'];
-  };
-
   // Handle tag selection
   const toggleTag = (tag: string) => {
     setSelectedTags(prev => 
@@ -328,19 +268,9 @@ export function CampaignExplore({ userStreak, userXP }: CampaignExploreProps) {
               }`}
               onClick={() => handleCampaignClick(campaign)}
             >
-              {/* Campaign Preview Image Header */}
-              <div className="h-32 relative overflow-hidden">
-                {/* Campaign-specific preview image with frosted glass overlay */}
-                <div 
-                  className="absolute inset-0"
-                  dangerouslySetInnerHTML={{ __html: getCampaignPreviewImage(campaign) }}
-                />
-                
-                {/* Enhanced frosted glass overlay with veri teal accent */}
-                <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-br from-teal-500/35 via-black/25 to-teal-600/30"></div>
-                
-                {/* Subtle depth overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-black/15 via-transparent to-black/20"></div>
+              {/* Campaign Image Header */}
+              <div className={`h-32 relative ${campaign.image} overflow-hidden`}>
+                <div className="absolute inset-0 bg-black/20"></div>
                 
                 {/* Urgent Badge */}
                 {campaign.urgent && (
