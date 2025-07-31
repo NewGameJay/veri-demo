@@ -335,11 +335,11 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="flex gap-1">
+                    <div className="flex gap-1.5">
                       {walkthroughSteps.map((_, index) => (
                         <div
                           key={index}
-                          className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                          className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                             index <= currentStepIndex 
                               ? 'bg-emerald-400 shadow-sm shadow-emerald-400/50' 
                               : 'bg-white/20 hover:bg-white/30'
@@ -415,11 +415,11 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 pointer-events-auto">
         <div className="flex items-center gap-2 px-4 py-2 bg-gray-900/90 rounded-full backdrop-blur-md border border-white/10">
           <span className="text-white/70 text-sm">Walkthrough Progress</span>
-          <div className="flex gap-1">
+          <div className="flex gap-1.5">
             {walkthroughSteps.map((_, index) => (
               <div
                 key={index}
-                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
                   index <= currentStepIndex 
                     ? 'bg-emerald-400' 
                     : 'bg-white/20'
