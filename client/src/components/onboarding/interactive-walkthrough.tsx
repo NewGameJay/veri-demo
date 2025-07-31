@@ -262,7 +262,7 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
   return (
     <div className="fixed inset-0 z-50 pointer-events-none">
       {/* Overlay with spotlight effect */}
-      <div className="absolute inset-0 bg-black/80 pointer-events-auto">
+      <div className="absolute inset-0 bg-black/60 pointer-events-auto">
         {isVisible && currentStep.highlight && (
           <div
             className="absolute border-2 border-emerald-400 rounded-lg shadow-lg shadow-emerald-400/50 pointer-events-none"
@@ -285,7 +285,7 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
               top: `${targetPosition.y}px`,
               width: `${targetPosition.width}px`,
               height: `${targetPosition.height}px`,
-              boxShadow: `0 0 0 9999px rgba(0, 0, 0, 0.8)`
+              boxShadow: `0 0 0 9999px rgba(0, 0, 0, 0.6)`
             }}
           />
         )}
@@ -308,7 +308,7 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
             className="absolute pointer-events-auto z-60 walkthrough-tooltip"
             style={getTooltipPosition()}
           >
-            <Card className="bg-gray-900/95 backdrop-blur-md border-emerald-500/40 shadow-2xl onboarding-stable">
+            <Card className="glass-effect border-emerald-500/30 shadow-2xl onboarding-stable">
               <CardContent className="p-6">
                 <div className="flex items-start gap-4 mb-4">
                   <div className="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center flex-shrink-0">
@@ -334,15 +334,16 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="flex gap-1.5">
+                  <div className="flex items-center gap-2">
+                    <span className="text-white/60 text-sm">
+                      {currentStepIndex + 1} of {walkthroughSteps.length}
+                    </span>
+                    <div className="flex gap-1">
                       {walkthroughSteps.map((_, index) => (
                         <div
                           key={index}
-                          className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                            index <= currentStepIndex 
-                              ? 'bg-emerald-400 shadow-sm shadow-emerald-400/50' 
-                              : 'bg-white/20 hover:bg-white/30'
+                          className={`w-2 h-2 rounded-full transition-colors ${
+                            index <= currentStepIndex ? 'bg-emerald-400' : 'bg-white/20'
                           }`}
                         />
                       ))}
@@ -413,20 +414,19 @@ export function InteractiveWalkthrough({ isOpen, onComplete, onClose }: Interact
 
       {/* Progress indicator */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 pointer-events-auto">
-        <div className="flex items-center gap-2 px-4 py-2 bg-gray-900/90 rounded-full backdrop-blur-md border border-white/10">
+        <div className="flex items-center gap-3 px-4 py-2 bg-black/50 rounded-full backdrop-blur-sm">
           <span className="text-white/70 text-sm">Walkthrough Progress</span>
-          <div className="flex gap-1.5">
-            {walkthroughSteps.map((_, index) => (
-              <div
-                key={index}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  index <= currentStepIndex 
-                    ? 'bg-emerald-400' 
-                    : 'bg-white/20'
-                }`}
-              />
-            ))}
+          <div className="w-32 h-2 bg-white/20 rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-emerald-500 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${((currentStepIndex + 1) / walkthroughSteps.length) * 100}%` }}
+              transition={{ duration: 0.5 }}
+            />
           </div>
+          <span className="text-emerald-400 text-sm font-medium">
+            {Math.round(((currentStepIndex + 1) / walkthroughSteps.length) * 100)}%
+          </span>
         </div>
       </div>
     </div>
