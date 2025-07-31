@@ -106,6 +106,95 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
 
 
 
+  // Function to get task-specific preview image and overlay
+  const getTaskPreviewImage = (task: any) => {
+    const category = task.category;
+    const platform = task.platform;
+    
+    // Task-specific preview images with veri teal overlay
+    const previewImages = {
+      // Gaming content
+      'gaming_content': `
+        <div class="absolute inset-0 bg-gradient-to-br from-purple-600 via-blue-500 to-indigo-700">
+          <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Cpath d="M30 30l10-10v10h10l-10 10v10h-10l10-10z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+          <div class="absolute inset-0 bg-gradient-to-br from-teal-500/40 via-transparent to-teal-600/30 backdrop-blur-[1px]"></div>
+        </div>
+      `,
+      // Live streaming
+      'live_streaming': `
+        <div class="absolute inset-0 bg-gradient-to-br from-red-500 via-pink-500 to-purple-600">
+          <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.08"%3E%3Ccircle cx="20" cy="20" r="4"/%3E%3Ccircle cx="20" cy="20" r="8" stroke="%23ffffff" stroke-width="1" fill="none"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
+          <div class="absolute inset-0 bg-gradient-to-br from-teal-500/40 via-transparent to-teal-600/30 backdrop-blur-[1px]"></div>
+        </div>
+      `,
+      // Educational content
+      'educational_content': `
+        <div class="absolute inset-0 bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600">
+          <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.06"%3E%3Cpath d="M25 5l15 15-15 15-15-15z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-25"></div>
+          <div class="absolute inset-0 bg-gradient-to-br from-teal-500/40 via-transparent to-teal-600/30 backdrop-blur-[1px]"></div>
+        </div>
+      `,
+      // Hardware reviews
+      'hardware_review': `
+        <div class="absolute inset-0 bg-gradient-to-br from-gray-600 via-slate-500 to-zinc-600">
+          <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.07"%3E%3Crect x="5" y="5" width="20" height="20" rx="2"/%3E%3Crect x="8" y="8" width="14" height="14" rx="1"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+          <div class="absolute inset-0 bg-gradient-to-br from-teal-500/40 via-transparent to-teal-600/30 backdrop-blur-[1px]"></div>
+        </div>
+      `,
+      // Social media
+      'social_media': `
+        <div class="absolute inset-0 bg-gradient-to-br from-pink-500 via-rose-500 to-red-500">
+          <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="35" height="35" viewBox="0 0 35 35" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.08"%3E%3Ccircle cx="17.5" cy="17.5" r="3"/%3E%3Ccircle cx="17.5" cy="17.5" r="8" stroke="%23ffffff" stroke-width="1" fill="none"/%3E%3Ccircle cx="26" cy="9" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-25"></div>
+          <div class="absolute inset-0 bg-gradient-to-br from-teal-500/40 via-transparent to-teal-600/30 backdrop-blur-[1px]"></div>
+        </div>
+      `,
+      // Default for other categories
+      'default': `
+        <div class="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
+          <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="45" height="45" viewBox="0 0 45 45" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.06"%3E%3Cpolygon points="22.5 5 35 15 35 30 22.5 40 10 30 10 15"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+          <div class="absolute inset-0 bg-gradient-to-br from-teal-500/40 via-transparent to-teal-600/30 backdrop-blur-[1px]"></div>
+        </div>
+      `
+    };
+
+    // Map categories to preview types
+    const categoryMap: { [key: string]: string } = {
+      'gaming_content': 'gaming_content',
+      'live_streaming': 'live_streaming', 
+      'educational_content': 'educational_content',
+      'hardware_review': 'hardware_review',
+      'hardware_benchmark': 'hardware_review',
+      'hardware_comparison': 'hardware_review',
+      'setup_showcase': 'hardware_review',
+      'tutorial_content': 'educational_content',
+      'career_advice': 'educational_content',
+      'productivity_content': 'educational_content',
+      'community_guide': 'educational_content',
+      'leadership_content': 'educational_content',
+      'health_content': 'educational_content',
+      'reaction_content': 'live_streaming',
+      'speedrun_content': 'live_streaming',
+      'retro_gaming': 'gaming_content',
+      'mobile_gaming': 'gaming_content',
+      'fighting_game': 'gaming_content',
+      'puzzle_gaming': 'gaming_content',
+      'racing_content': 'gaming_content',
+      'vr_gaming': 'gaming_content',
+      'music_analysis': 'educational_content',
+      'community_engagement': 'social_media',
+      'community_showcase': 'social_media',
+      'collaboration': 'social_media',
+      'social_media': 'social_media',
+      'brand_partnership': 'social_media',
+      'lifestyle_content': 'social_media',
+      'marathon_challenge': 'live_streaming',
+      'multiplayer_content': 'live_streaming'
+    };
+
+    const previewType = categoryMap[category] || 'default';
+    return previewImages[previewType as keyof typeof previewImages] || previewImages['default'];
+  };
+
   const getPartnerGradient = (brand: string, taskId: number) => {
     // Create unique gradients for different partners and tasks
     switch (brand) {
@@ -1971,10 +2060,19 @@ export function TaskVerification({ userId, userStreak, userXP, showFilters = fal
                       }}
                       onClick={() => handleTaskPreview(task)}
                     >
-                      {/* Full Background with Partner Gradient */}
-                      <div className={`relative h-48 ${getPartnerGradient(task.brand, task.id)}`}>
-                        {/* Subtle overlay for depth */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/30"></div>
+                      {/* Task Preview Image Background */}
+                      <div className="relative h-48 overflow-hidden">
+                        {/* Task-specific preview image with frosted glass overlay */}
+                        <div 
+                          className="absolute inset-0"
+                          dangerouslySetInnerHTML={{ __html: getTaskPreviewImage(task) }}
+                        />
+                        
+                        {/* Enhanced frosted glass overlay with veri teal accent */}
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-br from-teal-500/30 via-black/20 to-teal-600/25"></div>
+                        
+                        {/* Subtle depth overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/15 via-transparent to-black/20"></div>
                         
                         {/* Top Row - Partner Badge and XP with pulse animation */}
                         <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
