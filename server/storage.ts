@@ -754,4 +754,39 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new DatabaseStorage();
+// Initialize storage based on demo mode
+async function initializeStorage() {
+  try {
+    const { isDemoMode } = await import('./demo-config');
+    if (isDemoMode()) {
+      const { DemoStorage } = await import('./demo-storage');
+      return new DemoStorage();
+    } else {
+      return new DatabaseStorage();
+    }
+  } catch (error) {
+    console.error('Error determining storage mode, falling back to demo:', error);
+    const { DemoStorage } = await import('./demo-storage');
+    return new DemoStorage();
+  }
+}
+
+// Export a promise that resolves to the appropriate storage
+export const storagePromise = initializeStorage();
+
+// Legacy export for backward compatibility - will be async
+let storageInstance: IStorage | null = null;
+export const storage = new Proxy({} as IStorage, {
+  get(target, prop) {
+    if (!storageInstance) {
+      throw new Error('Storage not initialized. Use await storage methods or storagePromise.');
+    }
+    return (storageInstance as any)[prop];
+  }
+});
+
+// Initialize storage immediately
+storagePromise.then(instance => {
+  storageInstance = instance;
+  console.log('Storage initialized:', instance.constructor.name);
+});

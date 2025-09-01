@@ -31,6 +31,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
   app.post("/api/auth/signup", async (req, res) => {
     try {
+      // Check for demo mode
+      const { isDemoMode } = await import('./demo-config');
+      if (isDemoMode()) {
+        // In demo mode, always return the demo user
+        const demoUser = await storage.getUser(1);
+        if (demoUser) {
+          // Generate demo tokens
+          const { accessToken, refreshToken } = generateTokens(demoUser.id, demoUser.email);
+          setAuthCookies(res, accessToken, refreshToken);
+          req.session.userId = demoUser.id;
+          return res.status(201).json(demoUser);
+        }
+      }
+
       const userData = insertUserSchema.parse(req.body);
       
       // Check if user already exists
@@ -67,6 +81,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/auth/login", async (req, res) => {
     try {
+      // Check for demo mode
+      const { isDemoMode } = await import('./demo-config');
+      if (isDemoMode()) {
+        // In demo mode, always return the demo user
+        const demoUser = await storage.getUser(1);
+        if (demoUser) {
+          // Generate demo tokens
+          const { accessToken, refreshToken } = generateTokens(demoUser.id, demoUser.email);
+          setAuthCookies(res, accessToken, refreshToken);
+          req.session.userId = demoUser.id;
+          return res.json(demoUser);
+        }
+      }
+
       const { email, password } = req.body;
       
       const user = await storage.getUserByEmail(email);
