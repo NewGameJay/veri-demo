@@ -1,17 +1,18 @@
-import serverless from 'serverless-http';
+const serverless = require('serverless-http');
 
 // Cache the serverless handler
 let cachedHandler;
 
-export const handler = async (event, context) => {
+exports.handler = async (event, context) => {
   // Set demo mode for Netlify deployment
   process.env.DEMO_MODE = 'true';
   process.env.NODE_ENV = 'production';
   
   if (!cachedHandler) {
     try {
-      // Import the Express app creator
-      const { createApp } = await import('../../dist/index.js');
+      // Use dynamic import for ES modules
+      const appModule = await import('../../dist/index.js');
+      const { createApp } = appModule;
       
       // Initialize the app with routes
       const app = await createApp();

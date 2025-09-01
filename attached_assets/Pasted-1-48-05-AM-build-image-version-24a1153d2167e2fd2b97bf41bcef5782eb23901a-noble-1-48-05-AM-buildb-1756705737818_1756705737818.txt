@@ -1,0 +1,101 @@
+1:48:05 AM: build-image version: 24a1153d2167e2fd2b97bf41bcef5782eb23901a (noble)
+1:48:05 AM: buildbot version: e003b962686ea5d1e068eb508ce90ec3003c9b2b
+1:48:05 AM: Fetching cached dependencies
+1:48:05 AM: Starting to download cache of 422.9MB (Last modified: 2025-09-01 04:47:58 +0000 UTC)
+1:48:07 AM: Finished downloading cache in 1.296s
+1:48:07 AM: Starting to extract cache
+1:48:10 AM: Finished extracting cache in 3.348s
+1:48:10 AM: Finished fetching cache in 4.754s
+1:48:10 AM: Starting to prepare the repo for build
+1:48:10 AM: Preparing Git Reference refs/heads/main
+1:48:11 AM: Custom publish path detected. Proceeding with the specified path: 'dist/public'
+1:48:11 AM: Custom functions path detected. Proceeding with the specified path: 'netlify/functions'
+1:48:12 AM: Starting to install dependencies
+1:48:12 AM: Started restoring cached python cache
+1:48:12 AM: Finished restoring cached python cache
+1:48:12 AM: Started restoring cached ruby cache
+1:48:13 AM: Finished restoring cached ruby cache
+1:48:13 AM: Started restoring cached go cache
+1:48:13 AM: Finished restoring cached go cache
+1:48:14 AM: Started restoring cached Node.js version
+1:48:15 AM: Finished restoring cached Node.js version
+1:48:15 AM: Downloading and installing node v18.20.8...
+1:48:15 AM: Downloading https://nodejs.org/dist/v18.20.8/node-v18.20.8-linux-x64.tar.xz...
+1:48:15 AM: Computing checksum with sha256sum
+1:48:15 AM: Checksums matched!
+1:48:18 AM: Now using node v18.20.8 (npm v10.8.2)
+1:48:18 AM: Enabling Node.js Corepack
+1:48:18 AM: Started restoring cached build plugins
+1:48:18 AM: Finished restoring cached build plugins
+1:48:18 AM: Started restoring cached corepack dependencies
+1:48:18 AM: Finished restoring cached corepack dependencies
+1:48:18 AM: No npm workspaces detected
+1:48:18 AM: Started restoring cached node modules
+1:48:18 AM: Finished restoring cached node modules
+1:48:18 AM: Installing npm packages using npm version 10.8.2
+1:48:19 AM: added 1 package, and changed 2 packages in 829ms
+1:48:19 AM: npm packages installed
+1:48:20 AM: Successfully installed dependencies
+1:48:20 AM: Starting build script
+1:48:20 AM: Detected 1 framework(s)
+1:48:20 AM: "vite" at version "5.4.19"
+1:48:20 AM: Section completed: initializing
+1:48:21 AM: ​
+1:48:21 AM: Netlify Build                                                 
+1:48:21 AM: ────────────────────────────────────────────────────────────────
+1:48:21 AM: ​
+1:48:21 AM: ❯ Version
+1:48:21 AM:   @netlify/build 35.1.3
+1:48:21 AM: ​
+1:48:21 AM: ❯ Flags
+1:48:21 AM:   accountId: 66510138b84e23808164953f
+1:48:21 AM:   baseRelDir: true
+1:48:21 AM:   buildId: 68b5339401f02e000820114d
+1:48:21 AM:   deployId: 68b5339401f02e000820114f
+1:48:22 AM: ​
+1:48:22 AM: ❯ Current directory
+1:48:22 AM:   /opt/build/repo
+1:48:22 AM: ​
+1:48:22 AM: ❯ Config file
+1:48:22 AM:   /opt/build/repo/netlify.toml
+1:48:22 AM: ​
+1:48:22 AM: ❯ Context
+1:48:22 AM:   production
+1:48:22 AM: ​
+1:48:22 AM: build.command from netlify.toml                               
+1:48:22 AM: ────────────────────────────────────────────────────────────────
+1:48:22 AM: ​
+1:48:22 AM: $ npm run build
+1:48:22 AM: > rest-express@1.0.0 build
+1:48:22 AM: > vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+1:48:22 AM: vite v5.4.19 building for production...
+1:48:22 AM: transforming...
+1:48:22 AM: Browserslist: browsers data (caniuse-lite) is 11 months old. Please run:
+1:48:22 AM:   npx update-browserslist-db@latest
+1:48:22 AM:   Why you should do it regularly: https://github.com/browserslist/update-db#readme
+1:48:26 AM: A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+✓ 2118 modules transformed.
+1:48:27 AM: rendering chunks...
+1:48:27 AM: computing gzip size...
+1:48:27 AM: ../dist/public/index.html                                     0.63 kB │ gzip:   0.38 kB
+1:48:27 AM: ../dist/public/assets/Veri Icon_1752165362121-BG5DO38h.png   19.97 kB
+1:48:27 AM: ../dist/public/assets/index-CAkkwUdS.css                    171.47 kB │ gzip:  24.82 kB
+1:48:27 AM: ../dist/public/assets/index-CiY51id2.js                     950.47 kB │ gzip: 265.90 kB
+1:48:27 AM: 
+1:48:27 AM: (!) Some chunks are larger than 500 kB after minification. Consider:
+1:48:27 AM: - Using dynamic import() to code-split the application
+1:48:27 AM: - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+1:48:27 AM: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+1:48:27 AM: ✓ built in 5.06s
+1:48:27 AM:   dist/index.js  212.3kb
+1:48:27 AM: ⚡ Done in 10ms
+1:48:27 AM: ​
+1:48:27 AM: (build.command completed in 5.4s)
+1:48:27 AM: ​
+1:48:27 AM: Functions bundling                                            
+1:48:27 AM: ────────────────────────────────────────────────────────────────
+1:48:27 AM: ​
+1:48:27 AM: Packaging Functions from netlify/functions directory:
+1:48:27 AM:  - server.js
+1:48:27 AM: ​
+1:48:38 AM: Failed during stage 'building site': Build script returned non-zero exit code: 2 (https://ntl.fyi/exit-code-2)
