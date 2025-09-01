@@ -47,13 +47,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
   app.post("/api/auth/signup", async (req, res) => {
     try {
-      // Check for demo mode
+      // Check for demo mode - users still need to submit forms first
       const { isDemoMode } = await import('./demo-config');
       if (isDemoMode()) {
-        // In demo mode, always return the demo user
+        console.log('📝 DEMO SIGNUP: Creating demo user after form submission');
+        // In demo mode, return demo user but only AFTER form submission
         const demoUser = await storage.getUser(1);
         if (demoUser) {
-          // Generate demo tokens
+          // Generate demo tokens only after user submits signup form
           const { accessToken, refreshToken } = generateTokens(demoUser.id, demoUser.email);
           setAuthCookies(res, accessToken, refreshToken);
           req.session.userId = demoUser.id;
@@ -97,13 +98,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/auth/login", async (req, res) => {
     try {
-      // Check for demo mode
+      // Check for demo mode - users still need to submit forms first  
       const { isDemoMode } = await import('./demo-config');
       if (isDemoMode()) {
-        // In demo mode, always return the demo user
+        console.log('📝 DEMO LOGIN: Authenticating demo user after form submission');
+        // In demo mode, return demo user but only AFTER form submission
         const demoUser = await storage.getUser(1);
         if (demoUser) {
-          // Generate demo tokens
+          // Generate demo tokens only after user submits login form
           const { accessToken, refreshToken } = generateTokens(demoUser.id, demoUser.email);
           setAuthCookies(res, accessToken, refreshToken);
           req.session.userId = demoUser.id;
