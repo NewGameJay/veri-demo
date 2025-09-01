@@ -74,8 +74,16 @@ export function clearAuthCookies(res: Response) {
 }
 
 export async function authMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-  // Note: In demo mode, we still require actual authentication tokens
-  // Users must go through signup/login first, even in demo mode
+  // In demo mode, block all existing authentication to force signup/login flow
+  try {
+    const { isDemoMode } = await import('./demo-config');
+    if (isDemoMode()) {
+      console.log('🚫 AUTH MIDDLEWARE: Blocking authentication in demo mode');
+      return res.status(401).json({ error: 'Not authenticated' });
+    }
+  } catch (error) {
+    console.error('Error checking demo mode in authMiddleware:', error);
+  }
 
   const accessToken = req.cookies.accessToken;
   const refreshToken = req.cookies.refreshToken;

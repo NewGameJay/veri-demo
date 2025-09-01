@@ -19,6 +19,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Apply rate limiting middleware (dormant unless enabled)
   app.use(rateLimitMiddleware);
   
+  // Clear auth cookies in demo mode to ensure clean slate
+  app.use(async (req, res, next) => {
+    try {
+      const { isDemoMode } = await import('./demo-config');
+      if (isDemoMode() && (req.cookies.accessToken || req.cookies.refreshToken)) {
+        console.log('🧹 DEMO MODE: Clearing existing auth cookies');
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken'); 
+        res.clearCookie('connect.sid');
+      }
+    } catch (error) {
+      console.error('Error clearing demo cookies:', error);
+    }
+    next();
+  });
+  
   // Health check routes
   app.use('/api', healthRoutes);
   
