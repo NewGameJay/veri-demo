@@ -149,12 +149,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/auth/refresh", async (req, res) => {
+  // Handle both GET and POST requests for /api/auth/refresh
+  const handleRefresh = async (req, res) => {
     try {
       // In demo mode, don't auto-refresh tokens from previous sessions
       // Users must explicitly sign up/login first
       const { isDemoMode } = await import('./demo-config');
+      console.log('🔍 REFRESH TOKEN DEBUG: isDemoMode =', isDemoMode());
       if (isDemoMode()) {
+        console.log('🚫 BLOCKING refresh token in demo mode');
         return res.status(401).json({ message: "Token refresh disabled in demo mode" });
       }
 
@@ -183,7 +186,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       res.status(500).json({ message: "Token refresh failed" });
     }
-  });
+  };
+
+  app.post("/api/auth/refresh", handleRefresh);
+  app.get("/api/auth/refresh", handleRefresh);
 
   app.post("/api/auth/complete-onboarding", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {

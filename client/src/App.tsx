@@ -31,10 +31,23 @@ function Router() {
     );
   }
 
+  console.log('🔍 APP ROUTER: user =', user ? `${user.username} (ID: ${user.id})` : 'null');
+  console.log('🔍 APP ROUTER: isLoading =', isLoading);
+  
   return (
     <Switch>
       <Route path="/">
-        {user ? <Dashboard /> : <Home />}
+        {user ? (
+          <>
+            {console.log('🔍 APP ROUTER: Redirecting to Dashboard for user:', user.username)}
+            <Dashboard />
+          </>
+        ) : (
+          <>
+            {console.log('🔍 APP ROUTER: Showing Home page (no user)')}
+            <Home />
+          </>
+        )}
       </Route>
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/profile" component={Profile} />

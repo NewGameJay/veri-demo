@@ -35,32 +35,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Check if user is already logged in
     const checkAuth = async () => {
+      console.log('🔍 AUTH CHECK: Starting auth check...');
       try {
         const response = await fetch("/api/auth/me", {
           credentials: 'include' // Include cookies for JWT authentication
         });
+        console.log('🔍 AUTH CHECK: /api/auth/me response status:', response.status);
+        
         if (response.ok) {
           const userData = await response.json();
+          console.log('✅ AUTH CHECK: User authenticated from /api/auth/me:', userData.username);
           setUser(userData);
         } else if (response.status === 401) {
+          console.log('🔍 AUTH CHECK: /api/auth/me failed, trying refresh token...');
           // Try refresh token
           const refreshResponse = await fetch("/api/auth/refresh", {
             credentials: 'include'
           });
+          console.log('🔍 AUTH CHECK: /api/auth/refresh response status:', refreshResponse.status);
+          
           if (refreshResponse.ok) {
+            console.log('✅ AUTH CHECK: Refresh token successful, retrying /api/auth/me...');
             // Try getting user again after refresh
             const retryResponse = await fetch("/api/auth/me", {
               credentials: 'include'
             });
+            console.log('🔍 AUTH CHECK: Retry /api/auth/me response status:', retryResponse.status);
+            
             if (retryResponse.ok) {
               const userData = await retryResponse.json();
+              console.log('✅ AUTH CHECK: User authenticated after refresh:', userData.username);
               setUser(userData);
+            } else {
+              console.log('❌ AUTH CHECK: Retry /api/auth/me failed');
             }
+          } else {
+            console.log('❌ AUTH CHECK: Refresh token failed');
           }
         }
       } catch (error) {
-        console.error("Auth check failed:", error);
+        console.error("❌ AUTH CHECK: Auth check failed:", error);
       } finally {
+        console.log('🔍 AUTH CHECK: Completed, isLoading = false');
         setIsLoading(false);
       }
     };
