@@ -1,0 +1,106 @@
+1:44:49 AM: build-image version: 24a1153d2167e2fd2b97bf41bcef5782eb23901a (noble)
+1:44:49 AM: buildbot version: e003b962686ea5d1e068eb508ce90ec3003c9b2b
+1:44:49 AM: Fetching cached dependencies
+1:44:49 AM: Starting to download cache of 422.9MB (Last modified: 2025-09-01 04:47:58 +0000 UTC)
+1:44:50 AM: Finished downloading cache in 1.232s
+1:44:50 AM: Starting to extract cache
+1:44:55 AM: Finished extracting cache in 4.328s
+1:44:55 AM: Finished fetching cache in 5.634s
+1:44:55 AM: Starting to prepare the repo for build
+1:44:55 AM: Preparing Git Reference refs/heads/main
+1:44:56 AM: Custom publish path detected. Proceeding with the specified path: 'dist/public'
+1:44:56 AM: Custom functions path detected. Proceeding with the specified path: 'netlify/functions'
+1:44:56 AM: Starting to install dependencies
+1:44:56 AM: Started restoring cached python cache
+1:44:57 AM: Finished restoring cached python cache
+1:44:57 AM: Started restoring cached ruby cache
+1:44:57 AM: Finished restoring cached ruby cache
+1:44:57 AM: Started restoring cached go cache
+1:44:57 AM: Finished restoring cached go cache
+1:44:58 AM: Started restoring cached Node.js version
+1:44:58 AM: Finished restoring cached Node.js version
+1:44:58 AM: Downloading and installing node v18.20.8...
+1:44:59 AM: Downloading https://nodejs.org/dist/v18.20.8/node-v18.20.8-linux-x64.tar.xz...
+1:44:59 AM: Computing checksum with sha256sum
+1:44:59 AM: Checksums matched!
+1:45:01 AM: Now using node v18.20.8 (npm v10.8.2)
+1:45:01 AM: Enabling Node.js Corepack
+1:45:01 AM: Started restoring cached build plugins
+1:45:01 AM: Finished restoring cached build plugins
+1:45:01 AM: WARNING: The environment variable 'NODE_ENV' is set to 'production'. Any 'devDependencies' in package.json will not be installed
+1:45:01 AM: Started restoring cached corepack dependencies
+1:45:01 AM: Finished restoring cached corepack dependencies
+1:45:01 AM: No npm workspaces detected
+1:45:01 AM: Started restoring cached node modules
+1:45:01 AM: Finished restoring cached node modules
+1:45:01 AM: Installing npm packages using npm version 10.8.2
+1:45:02 AM: added 1 package in 811ms
+1:45:02 AM: npm packages installed
+1:45:02 AM: Successfully installed dependencies
+1:45:02 AM: Starting build script
+1:45:03 AM: Detected 1 framework(s)
+1:45:03 AM: "vite" at version "5.4.19"
+1:45:03 AM: Section completed: initializing
+1:45:04 AM: ​
+1:45:04 AM: Netlify Build                                                 
+1:45:04 AM: ────────────────────────────────────────────────────────────────
+1:45:04 AM: ​
+1:45:04 AM: ❯ Version
+1:45:04 AM:   @netlify/build 35.1.3
+1:45:04 AM: ​
+1:45:04 AM: ❯ Flags
+1:45:04 AM:   accountId: 66510138b84e23808164953f
+1:45:04 AM:   baseRelDir: true
+1:45:04 AM:   buildId: 68b532d01129af0008d57296
+1:45:04 AM:   deployId: 68b532d01129af0008d57298
+1:45:04 AM: ​
+1:45:04 AM: ❯ Current directory
+1:45:04 AM:   /opt/build/repo
+1:45:04 AM: ​
+1:45:04 AM: ❯ Config file
+1:45:04 AM:   /opt/build/repo/netlify.toml
+1:45:04 AM: ​
+1:45:04 AM: ❯ Context
+1:45:04 AM:   production
+1:45:04 AM: ​
+1:45:04 AM: build.command from netlify.toml                               
+1:45:04 AM: ────────────────────────────────────────────────────────────────
+1:45:04 AM: ​
+1:45:04 AM: $ npm run build
+1:45:04 AM: > rest-express@1.0.0 build
+1:45:04 AM: > vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+1:45:04 AM: sh: 1: vite: not found
+1:45:04 AM: ​
+1:45:04 AM: "build.command" failed                                        
+1:45:04 AM: ────────────────────────────────────────────────────────────────
+1:45:04 AM: ​
+1:45:04 AM:   Error message
+1:45:04 AM:   Command failed with exit code 127: npm run build (https://ntl.fyi/exit-code-127)
+1:45:04 AM: ​
+1:45:04 AM:   Error location
+1:45:04 AM:   In build.command from netlify.toml:
+1:45:04 AM:   npm run build
+1:45:04 AM: ​
+1:45:04 AM:   Resolved config
+1:45:04 AM:   build:
+1:45:04 AM:     command: npm run build
+1:45:04 AM:     commandOrigin: config
+1:45:04 AM:     environment:
+1:45:04 AM:       - NODE_VERSION
+1:45:04 AM:       - NODE_ENV
+1:45:04 AM:       - DEMO_MODE
+1:45:04 AM:     publish: /opt/build/repo/dist/public
+1:45:04 AM:     publishOrigin: config
+1:45:04 AM:   functionsDirectory: /opt/build/repo/netlify/functions
+1:45:04 AM:   redirects:
+1:45:05 AM: Failed during stage 'building site': Build script returned non-zero exit code: 2 (https://ntl.fyi/exit-code-2)
+1:45:05 AM:     - from: /api/*
+      status: 200
+      to: /.netlify/functions/server/:splat
+    - from: /*
+      status: 200
+      to: /index.html
+  redirectsOrigin: config
+1:45:05 AM: Build failed due to a user error: Build script returned non-zero exit code: 2
+1:45:05 AM: Failing build: Failed to build site
+1:45:05 AM: Finished processing build request in 15.972s
