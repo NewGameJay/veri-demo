@@ -130,6 +130,46 @@ exports.handler = async (event, context) => {
       };
     }
     
+    // Handle onboarding completion (save demo profile preferences)
+    if (path === '/api/users/1/onboarding' && httpMethod === 'POST') {
+      // In demo mode, we'll accept the onboarding data and return success
+      // The preferences are saved for the session (in a real app this would persist)
+      console.log('Demo onboarding data received:', body);
+      
+      // Return updated demo user with any preferences applied
+      const updatedDemoUser = {
+        ...demoUser,
+        // Apply any onboarding preferences from the body
+        ...body,
+        onboardingCompleted: true,
+        updatedAt: new Date().toISOString()
+      };
+      
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedDemoUser)
+      };
+    }
+    
+    // Handle other user updates 
+    if (path.startsWith('/api/users/1') && httpMethod === 'PATCH') {
+      console.log('Demo user update received:', body);
+      
+      // Return updated demo user 
+      const updatedDemoUser = {
+        ...demoUser,
+        ...body,
+        updatedAt: new Date().toISOString()
+      };
+      
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedDemoUser)
+      };
+    }
+    
     // Default response for unhandled routes
     return {
       statusCode: 404,
