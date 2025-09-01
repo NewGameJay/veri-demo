@@ -74,18 +74,8 @@ export function clearAuthCookies(res: Response) {
 }
 
 export async function authMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-  // Check for demo mode
-  try {
-    const { isDemoMode } = await import('./demo-config');
-    if (isDemoMode()) {
-      // In demo mode, automatically authenticate as demo user
-      req.userId = 1; // Demo user ID
-      req.user = { userId: 1, email: 'demo@veri.club', type: 'access' as const };
-      return next();
-    }
-  } catch (error) {
-    console.error('Error checking demo mode:', error);
-  }
+  // Note: In demo mode, we still require actual authentication tokens
+  // Users must go through signup/login first, even in demo mode
 
   const accessToken = req.cookies.accessToken;
   const refreshToken = req.cookies.refreshToken;

@@ -38,9 +38,9 @@ export const isDemoMode = (): boolean => {
 
 export const getDemoConfig = () => ({
   isDemo: isDemoMode(),
-  skipAuth: isDemoMode(),
+  skipAuth: false, // Users must go through signup/login first
   skipExternalServices: isDemoMode(),
-  autoLogin: isDemoMode(),
+  autoLogin: false, // No automatic login - users must click signup/login
   demoUserId: 1, // Default demo user ID
 });
 
