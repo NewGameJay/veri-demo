@@ -151,6 +151,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/auth/refresh", async (req, res) => {
     try {
+      // In demo mode, don't auto-refresh tokens from previous sessions
+      // Users must explicitly sign up/login first
+      const { isDemoMode } = await import('./demo-config');
+      if (isDemoMode()) {
+        return res.status(401).json({ message: "Token refresh disabled in demo mode" });
+      }
+
       const refreshToken = req.cookies.refreshToken;
       if (!refreshToken) {
         return res.status(401).json({ message: "No refresh token provided" });
