@@ -21,22 +21,7 @@ app.use(session({
   }
 }));
 
-// Extend the session interface
-declare module "express-session" {
-  interface SessionData {
-    userId?: number;
-  }
-}
-
-// Extend the request interface
-declare global {
-  namespace Express {
-    interface Request {
-      userId?: number;
-    }
-  }
-}
-
+// Request logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -67,46 +52,29 @@ app.use((req, res, next) => {
   next();
 });
 
-(async () => {
+// Register routes - will be called in an async context
+let server: any;
+
+// Error handling middleware
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  const status = err.status || err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+
+  res.status(status).json({ message });
+  console.error(err);
+});
+
+// Initialize app for serverless deployment
+export async function createApp() {
   const server = await registerRoutes(app);
-
-  // Initialize MCP server if enabled
-  try {
-    const { mcpServer } = await import("./mcp/mcpServer");
-    await mcpServer.initialize(8080);
-  } catch (error) {
-    console.error('Failed to initialize MCP server:', error);
-  }
-
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-
-    res.status(status).json({ message });
-    throw err;
-  });
-
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
+  
+  // Static file serving for production
+  if (process.env.NODE_ENV === 'production') {
     serveStatic(app);
   }
+  
+  return app;
+}
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
-  });
-})();
-
-// Export the createApp function for serverless deployment
-export { createApp } from './app.js';
+// Export the app (for serverless functions to import)
+export default app;
